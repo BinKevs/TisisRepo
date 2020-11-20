@@ -2,7 +2,7 @@ import { Layout, Menu, Breadcrumb } from "antd"
 import React from "react"
 import { Link, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
-import * as actions from "../store/actions/auth"
+import * as actions from "../../store/actions/Authentication/auth"
 const { Header, Content } = Layout
 class CustomLayout extends React.Component {
   render() {

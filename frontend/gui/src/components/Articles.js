@@ -1,7 +1,7 @@
 import React from "react"
 import { List, Avatar, Space, Button } from "antd"
 import { MessageOutlined, LikeOutlined, StarOutlined } from "@ant-design/icons"
-import { deleteArticle } from "../store/actions/articles"
+import { deleteArticle } from "../store/actions/Article/articles"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 const IconText = ({ icon, text }) => (

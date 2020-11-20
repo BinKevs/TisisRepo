@@ -1,9 +1,9 @@
 import React from "react"
 import { Route } from "react-router-dom"
-import ArticleList from "./containers/ArticleListView"
-import ArticleDetail from "./containers/ArticleDetailView"
-import Login from "./containers/Login"
-import RegistrationForm from "./containers/Signup"
+import ArticleList from "./containers/Article/ArticleListView"
+import ArticleDetail from "./containers/Article/ArticleDetailView"
+import Login from "./containers/Authentication/Login"
+import RegistrationForm from "./containers/Authentication/Signup"
 
 const BaseRouter = () => (
   <div>

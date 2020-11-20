@@ -3,7 +3,7 @@ import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons"
 import { Form, Input, Button } from "antd"
 import { NavLink } from "react-router-dom"
 import { connect } from "react-redux"
-import * as actions from "../store/actions/auth"
+import * as actions from "../../store/actions/Authentication/auth"
 class RegistrationForm extends React.Component {
   onFinish = (values) => {
     console.log("Received values of form: ", values)

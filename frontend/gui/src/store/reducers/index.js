@@ -1,6 +1,6 @@
 import { combineReducers } from "redux"
-import reducer from "./auth"
-import articles from "./articles"
+import reducer from "./Authentication/auth"
+import articles from "./Article/articles"
 export default combineReducers({
   reducer,
   articles,

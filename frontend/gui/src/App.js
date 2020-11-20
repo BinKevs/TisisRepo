@@ -3,9 +3,9 @@ import { BrowserRouter as Router } from "react-router-dom"
 import { connect } from "react-redux"
 import BaseRouter from "./Routes"
 import "antd/dist/antd.css"
-import * as actions from "./store/actions/auth"
+import * as actions from "./store/actions/Authentication/auth"
 
-import CustomLayout from "./containers/Layout"
+import CustomLayout from "./containers/Layout/Layout"
 
 class App extends Component {
   componentDidMount() {

@@ -3,7 +3,8 @@ import {
   GET_ARTICLE,
   DELETE_ARTICLE,
   ADD_ARTICLE,
-} from "../actions/ActionTypesOfArticle"
+  UPDATE_ARTICLE,
+} from "../../actions/Article/actionTypes"
 const initialState = {
   articles: [],
   article: {},
@@ -32,6 +33,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         articles: [...state.articles, action.payload],
+      }
+    case UPDATE_ARTICLE:
+      return {
+        ...state,
+        article: action.payload,
       }
     default:
       return state

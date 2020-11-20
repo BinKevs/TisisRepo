@@ -1,11 +1,11 @@
 import React, { Component } from "react"
 import { Card, Button } from "antd"
 import axios from "axios"
-import CustomForm from "../components/Form"
+import CustomForm from "../../components/Form"
 
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import { getArticle } from "../store/actions/articles"
+import { getArticle } from "../../store/actions/Article/articles"
 
 class ArticleDetail extends Component {
   static propTypes = {
@@ -43,6 +43,8 @@ class ArticleDetail extends Component {
           requestType='PUT'
           articleID={this.props.match.params.articleID}
           btnText='Update'
+          title={this.props.article.title}
+          content={this.props.article.content}
         />
         <form onSubmit={this.handleDelete}>
           <Button type='danger' htmlType='submit'>

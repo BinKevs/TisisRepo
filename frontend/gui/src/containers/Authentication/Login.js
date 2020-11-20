@@ -4,7 +4,7 @@ import { Component } from "react"
 import { NavLink } from "react-router-dom"
 import { Spin } from "antd"
 import { connect } from "react-redux"
-import * as actions from "../store/actions/auth"
+import * as actions from "../../store/actions/Authentication/auth"
 class Login extends Component {
   onFinish = (values) => {
     this.props.onAuth(values.username, values.password)

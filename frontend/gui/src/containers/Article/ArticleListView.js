@@ -1,10 +1,10 @@
 import React, { Component } from "react"
-import Articles from "../components/Articles"
-import CustomForm from "../components/Form"
+import Articles from "../../components/Articles"
+import CustomForm from "../../components/Form"
 
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import { getArticlesList } from "../store/actions/articles"
+import { getArticlesList } from "../../store/actions/Article/articles"
 
 import axios from "axios"
 class ArticleList extends Component {
