@@ -1,0 +1,4 @@
+export const GET_ARTICLES_LIST = "GET_ARTICLES_LIST"
+export const GET_ARTICLE = "GET_ARTICLE"
+export const DELETE_ARTICLE = "DELETE_ARTICLE"
+export const ADD_ARTICLE = "ADD_ARTICLE"
