@@ -8,31 +8,45 @@ class CustomLayout extends React.Component {
   render() {
     return (
       <>
-        <nav class='navbar navbar-expand-lg navbar-dark bg-primary'>
-          <div class='collapse navbar-collapse' id='navbarColor01'>
-            <ul class='navbar-nav mr-auto pl-5'>
+        <nav class='navbar navbar-expand-sm navbar-dark bg-primary '>
+          <button
+            class='navbar-toggler collapsed'
+            type='button'
+            data-toggle='collapse'
+            data-target='#navbarsExample10'
+            aria-controls='navbarsExample10'
+            aria-expanded='false'
+            aria-label='Toggle navigation'>
+            <span class='navbar-toggler-icon'></span>
+          </button>
+
+          <div
+            class='navbar-collapse justify-content-sm-center collapse'
+            id='navbarsExample10'>
+            <ul class='navbar-nav'>
               {this.props.isAuthenticated ? (
-                <li class='nav-item'>
-                  <a class='nav-link' onClick={this.props.logout} href='#'>
-                    Logout
-                  </a>
+                <li class='nav-item active'>
+                  <Link class='nav-link' onClick={this.props.logout} href='#'>
+                    Logout <span class='sr-only'>(current)</span>
+                  </Link>
                 </li>
               ) : (
-                <li class='nav-item'>
+                <li class='nav-item active'>
                   <Link class='nav-link' to='/login'>
-                    Login
+                    Login <span class='sr-only'>(current)</span>
                   </Link>
                 </li>
               )}
               <li class='nav-item'>
                 <Link class='nav-link' to='/'>
-                  Post
+                  Posts
                 </Link>
               </li>
             </ul>
           </div>
         </nav>
-        <Layout className='layout'>
+
+        {/* <Layout className='layout'>
           <Header>
             <div className='logo' />
             <Menu theme='dark' mode='horizontal' defaultSelectedKeys={["2"]}>
@@ -61,8 +75,8 @@ class CustomLayout extends React.Component {
             </Breadcrumb>
             <div className='site-layout-content'>{this.props.children}</div>
           </Content>
-          {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer> */}
-        </Layout>
+          {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer> </Layout> */}
+        <div className='container pt-5'>{this.props.children}</div>
       </>
     )
   }

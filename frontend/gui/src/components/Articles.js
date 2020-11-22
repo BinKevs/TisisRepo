@@ -17,9 +17,10 @@ class Articles extends React.Component {
   static propTypes = {
     deleteArticle: PropTypes.func.isRequired,
   }
+
   render() {
     return (
-      <div>
+      <>
         <List
           itemLayout='vertical'
           size='large'
@@ -79,7 +80,7 @@ class Articles extends React.Component {
             </List.Item>
           )}
         />
-      </div>
+      </>
     )
   }
 }
