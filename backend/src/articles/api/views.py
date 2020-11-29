@@ -1,5 +1,5 @@
-# from rest_framework.generics import (ListAPIView, 
-#                                     RetrieveAPIView , 
+# from rest_framework.generics import (ListAPIView,
+#                                     RetrieveAPIView ,
 #                                     CreateAPIView,
 #                                     UpdateAPIView,
 #                                     DestroyAPIView)
@@ -26,8 +26,19 @@
 #     queryset = Article.objects.all()
 #     serializer_class = ArticleSerializer
 from articles.models import Article
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .serializers import ArticleSerializer
+
+
 class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
-    queryset = Article.objects.all()
+    # queryset = Article.objects.all()
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+
+    def get_queryset(self):
+        return self.request.user.articles.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

@@ -31,24 +31,38 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # 'django.contrib.admin',
+    # 'django.contrib.auth',
+    # 'django.contrib.contenttypes',
+    # 'django.contrib.sessions',
+    # 'django.contrib.messages',
+    # 'django.contrib.staticfiles',
+
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'corsheaders',
+    # 'rest_auth',
+    # 'rest_auth.registration',
+    # 'rest_framework',
+    # 'rest_framework.authtoken',
+    # 'django.contrib.sites',
+
+    # 'knox',
+    # 'articles',
+    # 'accounts',
+
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'corsheaders',
-    'rest_auth',
-    'rest_auth.registration',
+    'articles',
     'rest_framework',
-    'rest_framework.authtoken',
-    'django.contrib.sites',
-
-    'articles'
+    'knox',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +103,7 @@ WSGI_APPLICATION = 'djreact.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djreact',
+        'NAME': 'articlesapplication',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -139,14 +153,17 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-        # 'rest_framework.permissions.AllowAny'
-        'rest_framework.permissions.AllowAny',
-    ]
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    #     # 'rest_framework.permissions.AllowAny'
+    #     'rest_framework.permissions.AllowAny',
+    # ]
+
+    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
 }
 CORS_ORIGIN_ALLOW_ALL = True
-SITE_ID = 1
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = False
+# SITE_ID = 1
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_AUTHENTICATION_METHOD = 'username'
+# ACCOUNT_EMAIL_REQUIRED = False

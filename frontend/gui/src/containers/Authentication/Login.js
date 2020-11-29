@@ -1,92 +1,75 @@
-import { Form, Input, Button } from "antd"
-import { UserOutlined, LockOutlined } from "@ant-design/icons"
 import { Component } from "react"
-import { NavLink } from "react-router-dom"
-import { Spin } from "antd"
+import { Link, Redirect } from "react-router-dom"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import * as actions from "../../store/actions/Authentication/auth"
+import { login } from "../../store/actions/Accounts/auth"
 class Login extends Component {
-  onFinish = (values) => {
-    this.props.onAuth(values.username, values.password)
-    this.props.history.push("/")
+  state = {
+    username: "",
+    password: "",
+  }
+
+  static propTypes = {
+    login: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
+  }
+  onChange = (e) => this.setState({ [e.target.name]: e.target.value })
+
+  onSubmit = (e) => {
+    e.preventDefault()
+    this.props.login(this.state.username, this.state.password)
   }
   render() {
-    let errorMessage = null
-    if (this.props.error) {
-      errorMessage = <h3>{this.props.error.message}</h3>
+    if (this.props.isAuthenticated) {
+      return <Redirect to={"/articles"} />
     }
+    const { username, password } = this.state
     return (
       <>
-        {errorMessage}
-        {this.props.loading ? (
-          <Spin size='large' />
-        ) : (
-          <Form
-            name='normal_login'
-            className='login-form'
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={this.onFinish}>
-            <Form.Item
-              name='username'
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Username!",
-                },
-              ]}>
-              <Input
-                prefix={<UserOutlined className='site-form-item-icon' />}
-                placeholder='Username'
-              />
-            </Form.Item>
-            <Form.Item
-              name='password'
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Password!",
-                },
-              ]}>
-              <Input
-                prefix={<LockOutlined className='site-form-item-icon' />}
-                type='password'
-                placeholder='Password'
-              />
-            </Form.Item>
+        <div className='col-md-6 m-auto'>
+          <div className='card card-body mt-5'>
+            <h2 className='text-center'>Login</h2>
+            <form onSubmit={this.onSubmit}>
+              <div className='form-group'>
+                <label>Username</label>
+                <input
+                  type='text'
+                  className='form-control'
+                  name='username'
+                  onChange={this.onChange}
+                  value={username}
+                />
+              </div>
 
-            <Form.Item>
-              <Button
-                type='primary'
-                htmlType='submit'
-                className='login-form-button'>
-                Log in
-              </Button>
-              {"   "}
-              Or
-              {"   "}
-              <NavLink style={{ marginRight: "10px" }} to='/signup/'>
-                Signup
-              </NavLink>
-            </Form.Item>
-          </Form>
-        )}
+              <div className='form-group'>
+                <label>Password</label>
+                <input
+                  type='password'
+                  className='form-control'
+                  name='password'
+                  onChange={this.onChange}
+                  value={password}
+                />
+              </div>
+
+              <div className='form-group'>
+                <button type='submit' className='btn btn-primary'>
+                  Login
+                </button>
+              </div>
+              <p>
+                Don't have an account? <Link to='/Signup'>Register</Link>
+              </p>
+            </form>
+          </div>
+        </div>
       </>
     )
   }
 }
 const mapStateToProps = (state) => {
   return {
-    loading: state.loading,
-    error: state.error,
+    isAuthenticated: state.AuthReducer.isAuthenticated,
   }
 }
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onAuth: (username, password) =>
-      dispatch(actions.authLogin(username, password)),
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, { login })(Login)

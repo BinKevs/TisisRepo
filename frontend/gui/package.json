@@ -12,6 +12,8 @@
     "jshint": "^2.12.0",
     "prop-types": "^15.7.2",
     "react": "next",
+    "react-alert": "^7.0.2",
+    "react-alert-template-basic": "^1.0.0",
     "react-dom": "next",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",

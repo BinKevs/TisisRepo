@@ -1,121 +1,121 @@
-import React from "react"
-import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons"
-import { Form, Input, Button } from "antd"
-import { NavLink } from "react-router-dom"
+import { Component } from "react"
+import { Link, Redirect } from "react-router-dom"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import * as actions from "../../store/actions/Authentication/auth"
-class RegistrationForm extends React.Component {
-  onFinish = (values) => {
-    console.log("Received values of form: ", values)
-    this.props.onAuth(
-      values.username,
-      values.email,
-      values.password1,
-      values.password2,
-    )
-    this.props.history.push("/")
+import { register } from "../../store/actions/Accounts/auth"
+import { createMessage } from "../../store/actions/messages"
+class RegistrationForm extends Component {
+  state = {
+    username: "",
+    email: "",
+    password: "",
+    password2: "",
   }
+  static propTypes = {
+    register: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool,
+  }
+  onSubmit = (e) => {
+    e.preventDefault()
+    const { username, email, password, password2 } = this.state
+    if (password !== password2) {
+      this.props.createMessage({ messageError: "Passwords do not match" })
+    } else {
+      const newUser = {
+        username,
+        password,
+        email,
+      }
+      this.props.register(newUser)
+    }
+  }
+  onChange = (e) => this.setState({ [e.target.name]: e.target.value })
+
   render() {
+    if (this.props.isAuthenticated) {
+      return <Redirect to='/' />
+    }
+    const { username, email, password, password2 } = this.state
     return (
-      <Form name='register' onFinish={this.onFinish}>
-        <Form.Item
-          name='username'
-          rules={[
-            {
-              required: true,
-              message: "Please input your Username!",
-            },
-          ]}>
-          <Input
-            prefix={<UserOutlined className='site-form-item-icon' />}
-            placeholder='Username'
-          />
-        </Form.Item>
-        <Form.Item
-          name='email'
-          rules={[
-            {
-              type: "email",
-              message: "The input is not valid E-mail!",
-            },
-            {
-              required: true,
-              message: "Please input your E-mail!",
-            },
-          ]}>
-          <Input
-            prefix={<MailOutlined className='site-form-item-icon' />}
-            placeholder='Email'
-          />
-        </Form.Item>
-
-        <Form.Item
-          name='password1'
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!",
-            },
-          ]}
-          hasFeedback>
-          <Input.Password
-            prefix={<LockOutlined className='site-form-item-icon' />}
-            placeholder='Password'
-          />
-        </Form.Item>
-
-        <Form.Item
-          name='password2'
-          dependencies={["password1"]}
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: "Please confirm your password!",
-            },
-            ({ getFieldValue }) => ({
-              validator(rule, value) {
-                if (!value || getFieldValue("password1") === value) {
-                  return Promise.resolve()
-                }
-                return Promise.reject(
-                  "The two passwords that you entered do not match!",
-                )
-              },
-            }),
-          ]}>
-          <Input.Password
-            prefix={<LockOutlined className='site-form-item-icon' />}
-            placeholder='Confirm Password'
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button type='primary' htmlType='submit'>
-            Sign Up
-          </Button>
-          {"   "}
-          Or
-          {"   "}
-          <NavLink style={{ marginRight: "10px" }} to='/login/'>
-            Login
-          </NavLink>
-        </Form.Item>
-      </Form>
+      <div className='col-md-6 m-auto'>
+        <div className='card card-body mt-5'>
+          <h2 className='text-center'>Register</h2>
+          <form onSubmit={this.onSubmit}>
+            <div className='form-group'>
+              <label>Username</label>
+              <input
+                type='text'
+                className='form-control'
+                name='username'
+                onChange={this.onChange}
+                value={username}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Email</label>
+              <input
+                type='email'
+                className='form-control'
+                name='email'
+                onChange={this.onChange}
+                value={email}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Password</label>
+              <input
+                type='password'
+                className='form-control'
+                name='password'
+                onChange={this.onChange}
+                value={password}
+              />
+            </div>
+            <div className='form-group'>
+              <label>Confirm Password</label>
+              <input
+                type='password'
+                className='form-control'
+                name='password2'
+                onChange={this.onChange}
+                value={password2}
+              />
+            </div>
+            <div className='form-group'>
+              <button type='submit' className='btn btn-primary'>
+                Register
+              </button>
+            </div>
+            <p>
+              Already have an account? <Link to='/login'>Login</Link>
+            </p>
+          </form>
+        </div>
+      </div>
     )
   }
 }
+
+// const mapStateToProps = (state) => {
+//   return {
+//     loading: state.loading,
+//     error: state.error,
+//   }
+// }
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     onAuth: (username, email, password1, password2) =>
+//       dispatch(actions.authSignup(username, email, password1, password2)),
+//   }
+// }mapStateToProps, mapDispatchToProps
+// export default connect()(RegistrationForm)
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.loading,
-    error: state.error,
+    isAuthenticated: state.AuthReducer.isAuthenticated,
   }
 }
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onAuth: (username, email, password1, password2) =>
-      dispatch(actions.authSignup(username, email, password1, password2)),
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(RegistrationForm)
+export default connect(mapStateToProps, { register, createMessage })(
+  RegistrationForm,
+)

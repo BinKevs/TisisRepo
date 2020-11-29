@@ -7,15 +7,9 @@ import { Provider } from "react-redux"
 // import thunk from "redux-thunk"
 // import reducer from "./store/reducers/auth"
 
-import store from "./store/store"
-
 // const composeEnhances = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 // const store = createStore(reducer, composeEnhances(applyMiddleware(thunk)))
 
-const app = (
-  <Provider store={store}>
-    <App />
-  </Provider>
-)
+const app = <App />
 ReactDOM.render(app, document.getElementById("root"))
 registerServiceWorker()

@@ -1,153 +1,72 @@
-import { Layout, Menu, Breadcrumb } from "antd"
 import React from "react"
-import { Link, withRouter } from "react-router-dom"
+import { Link, withRouter, NavLink } from "react-router-dom"
 import { connect } from "react-redux"
-import * as actions from "../../store/actions/Authentication/auth"
-const { Header, Content } = Layout
+import { logout } from "../../store/actions/Accounts/auth"
+import Alerts from "../../components/Alerts"
+import PropTypes from "prop-types"
 class CustomLayout extends React.Component {
+  static propTypes = {
+    AuthReducer: PropTypes.object.isRequired,
+    // logout: PropTypes.func.isRequired,
+  }
+
   render() {
+    const { user } = this.props.AuthReducer
     return (
       <>
-        <nav class='navbar navbar-expand-sm navbar-dark bg-primary '>
+        <Alerts />
+        <span className='navbar-text mr-3'>
+          {user ? `Welcome ${user.username}` : ""}
+        </span>
+        <nav className='navbar navbar-expand-sm navbar-dark bg-primary '>
           <button
-            class='navbar-toggler collapsed'
+            className='navbar-toggler collapsed'
             type='button'
             data-toggle='collapse'
             data-target='#navbarsExample10'
             aria-controls='navbarsExample10'
             aria-expanded='false'
             aria-label='Toggle navigation'>
-            <span class='navbar-toggler-icon'></span>
+            <span className='navbar-toggler-icon'></span>
           </button>
 
           <div
-            class='navbar-collapse justify-content-sm-center collapse'
+            className='navbar-collapse justify-content-sm-center collapse'
             id='navbarsExample10'>
-            <ul class='navbar-nav'>
-              {this.props.isAuthenticated ? (
-                <li class='nav-item active'>
-                  <Link class='nav-link' onClick={this.props.logout} href='#'>
-                    Logout <span class='sr-only'>(current)</span>
-                  </Link>
+            <ul className='navbar-nav'>
+              {this.props.AuthReducer.isAuthenticated ? (
+                <li className='nav-item active'>
+                  <NavLink
+                    className='nav-link'
+                    onClick={this.props.logout}
+                    to='/login'>
+                    Logout <span className='sr-only'>(current)</span>
+                  </NavLink>
                 </li>
               ) : (
-                <li class='nav-item active'>
-                  <Link class='nav-link' to='/login'>
-                    Login <span class='sr-only'>(current)</span>
-                  </Link>
+                <li className='nav-item active'>
+                  <NavLink className='nav-link' to='/login'>
+                    Login <span className='sr-only'>(current)</span>
+                  </NavLink>
                 </li>
               )}
-              <li class='nav-item'>
-                <Link class='nav-link' to='/'>
+              <li className='nav-item'>
+                <NavLink className='nav-link' to={"/articles"}>
                   Posts
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </div>
         </nav>
 
-        {/* <Layout className='layout'>
-          <Header>
-            <div className='logo' />
-            <Menu theme='dark' mode='horizontal' defaultSelectedKeys={["2"]}>
-              {this.props.isAuthenticated ? (
-                <Menu.Item key='2' onClick={this.props.logout}>
-                  Logout
-                </Menu.Item>
-              ) : (
-                <Menu.Item key='2'>
-                  <Link to='/login'>Login</Link>
-                </Menu.Item>
-              )}
-              <Menu.Item key='1'>
-                <Link to='/'>Post</Link>
-              </Menu.Item>
-            </Menu>
-          </Header>
-          <Content style={{ padding: "0 50px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>
-                <Link to='/'>Home</Link>
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <Link to='/'>List</Link>
-              </Breadcrumb.Item>
-            </Breadcrumb>
-            <div className='site-layout-content'>{this.props.children}</div>
-          </Content>
-          {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer> </Layout> */}
         <div className='container pt-5'>{this.props.children}</div>
       </>
     )
   }
 }
-
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
   return {
-    logout: () => dispatch(actions.logout()),
+    AuthReducer: state.AuthReducer,
   }
 }
-export default withRouter(connect(null, mapDispatchToProps)(CustomLayout))
-
-// import React from "react"
-// import { Layout, Menu, Breadcrumb } from "antd"
-// import { Link, withRouter } from "react-router-dom"
-// import { connect } from "react-redux"
-// import * as actions from "../store/actions/auth"
-
-// const { Header, Content, Footer } = Layout
-
-// class CustomLayout extends React.Component {
-//   render() {
-//     return (
-//       <Layout className='layout'>
-//         <Header>
-//           <div className='logo' />
-//           <Menu
-//             theme='dark'
-//             mode='horizontal'
-//             defaultSelectedKeys={["2"]}
-//             style={{ lineHeight: "64px" }}>
-//             {this.props.isAuthenticated ? (
-//               <Menu.Item key='2' onClick={this.props.logout}>
-//                 Logout
-//               </Menu.Item>
-//             ) : (
-//               <Menu.Item key='2'>
-//                 <Link to='/login'>Login</Link>
-//               </Menu.Item>
-//             )}
-
-//             <Menu.Item key='1'>
-//               <Link to='/'>Posts</Link>
-//             </Menu.Item>
-//           </Menu>
-//         </Header>
-//         <Content style={{ padding: "0 50px" }}>
-//           <Breadcrumb style={{ margin: "16px 0" }}>
-//             <Breadcrumb.Item>
-//               <Link to='/'>Home</Link>
-//             </Breadcrumb.Item>
-//             <Breadcrumb.Item>
-//               <Link to='/'>List</Link>
-//             </Breadcrumb.Item>
-//           </Breadcrumb>
-//           <div style={{ background: "#fff", padding: 24, minHeight: 280 }}>
-//             {this.props.children}
-//           </div>
-//         </Content>
-//         <Footer style={{ textAlign: "center" }}>
-//           Ant Design ©2016 Created by Ant UED
-//         </Footer>
-//       </Layout>
-//     )
-//   }
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     logout: () => dispatch(actions.logout()),
-//   }
-// }
-
-// export default withRouter(connect(null, mapDispatchToProps)(CustomLayout))
+export default withRouter(connect(mapStateToProps, { logout })(CustomLayout))
