@@ -1,4 +1,4 @@
-import { GET_MESSAGES, CREATE_MESSAGE } from "../actions/Article/actionTypes"
+import { CREATE_MESSAGE } from "../../actions/Article/actionTypes"
 const initialState = {}
 
 export default function (state = initialState, action) {

@@ -1,5 +1,4 @@
-import { CREATE_MESSAGE } from "./Article/actionTypes"
-import { GET_ERRORS } from "./Article/actionTypes"
+import { CREATE_MESSAGE, GET_ERRORS } from "../Article/actionTypes"
 export const createMessage = (msg) => {
   return {
     type: CREATE_MESSAGE,

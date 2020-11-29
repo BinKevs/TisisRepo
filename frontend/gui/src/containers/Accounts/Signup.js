@@ -3,7 +3,7 @@ import { Link, Redirect } from "react-router-dom"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { register } from "../../store/actions/Accounts/auth"
-import { createMessage } from "../../store/actions/messages"
+import { createMessage } from "../../store/actions/Notification/messages"
 class RegistrationForm extends Component {
   state = {
     username: "",
@@ -33,7 +33,7 @@ class RegistrationForm extends Component {
 
   render() {
     if (this.props.isAuthenticated) {
-      return <Redirect to='/' />
+      return <Redirect to='/articles' />
     }
     const { username, email, password, password2 } = this.state
     return (

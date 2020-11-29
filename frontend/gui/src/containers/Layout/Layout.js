@@ -1,5 +1,5 @@
 import React from "react"
-import { Link, withRouter, NavLink } from "react-router-dom"
+import { withRouter, NavLink } from "react-router-dom"
 import { connect } from "react-redux"
 import { logout } from "../../store/actions/Accounts/auth"
 import Alerts from "../../components/Alerts"
@@ -7,7 +7,10 @@ import PropTypes from "prop-types"
 class CustomLayout extends React.Component {
   static propTypes = {
     AuthReducer: PropTypes.object.isRequired,
-    // logout: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
+  }
+  componentDidMount() {
+    console.log(this.props.children)
   }
 
   render() {
@@ -15,9 +18,13 @@ class CustomLayout extends React.Component {
     return (
       <>
         <Alerts />
-        <span className='navbar-text mr-3'>
-          {user ? `Welcome ${user.username}` : ""}
-        </span>
+        {user ? (
+          <span className='navbar-text mr-3 container'>
+            Welcome {user.username}
+          </span>
+        ) : (
+          ""
+        )}
         <nav className='navbar navbar-expand-sm navbar-dark bg-primary '>
           <button
             className='navbar-toggler collapsed'

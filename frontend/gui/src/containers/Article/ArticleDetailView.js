@@ -1,11 +1,8 @@
 import React, { Component } from "react"
-import { Card, Button } from "antd"
-import axios from "axios"
 import CustomForm from "../../components/Form"
-
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
-import { getArticle } from "../../store/actions/Article/articles"
+import { getArticle, deleteArticle } from "../../store/actions/Article/articles"
 
 class ArticleDetail extends Component {
   static propTypes = {
@@ -14,31 +11,41 @@ class ArticleDetail extends Component {
   }
   componentDidMount() {
     const articleID = this.props.match.params.articleID
-    // const get_url = "http://127.0.0.1:8000/api/" + articleID + "/"
-    // axios({ method: "get", url: get_url })
-    //   .then((res) => {
-    //     this.setState({
-    //       article: res.data,
-    //     })
-    //   })
-    //   .catch((error) => console.log(error))
     this.props.getArticle(articleID)
   }
   componentDidUpdate() {
     console.log("State update")
   }
 
-  handleDelete = (event) => {
-    // const articleID = this.props.match.params.articleID
-    // const get_url = "http://127.0.0.1:8000/api/" + articleID + "/"
-    // axios({ method: "delete", url: get_url })
+  onHandles = () => {
+    this.props.history.push("/articles")
   }
   render() {
     return (
-      <div>
-        <Card title={this.props.article.title}>
-          <p>{this.props.article.content}</p>
-        </Card>
+      <>
+        <div className='card'>
+          <img
+            className='card-img-top'
+            src='https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png'
+            alt='Card cap'
+          />
+          <div className='card-body'>
+            <h5 className='card-title'>{this.props.article.title}</h5>
+            <p className='card-text'>{this.props.article.content}</p>
+            <form onSubmit={this.onHandles}>
+              <button
+                type='submit'
+                className='btn btn-danger'
+                onClick={this.props.deleteArticle.bind(
+                  this,
+                  this.props.article.id,
+                )}>
+                {" "}
+                Delete
+              </button>
+            </form>
+          </div>
+        </div>
         <CustomForm
           requestType='PUT'
           articleID={this.props.match.params.articleID}
@@ -46,16 +53,13 @@ class ArticleDetail extends Component {
           title={this.props.article.title}
           content={this.props.article.content}
         />
-        <form onSubmit={this.handleDelete}>
-          <Button type='danger' htmlType='submit'>
-            Delete
-          </Button>
-        </form>
-      </div>
+      </>
     )
   }
 }
 const mapToStateToProps = (state) => ({
   article: state.articles.article,
 })
-export default connect(mapToStateToProps, { getArticle })(ArticleDetail)
+export default connect(mapToStateToProps, { getArticle, deleteArticle })(
+  ArticleDetail,
+)

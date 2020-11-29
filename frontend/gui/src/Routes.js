@@ -1,9 +1,9 @@
 import React from "react"
-import { Route, HashRouter as Router, Switch, Redirect } from "react-router-dom"
+import { Route, Switch } from "react-router-dom"
 import ArticleList from "./containers/Article/ArticleListView"
 import ArticleDetail from "./containers/Article/ArticleDetailView"
-import Login from "./containers/Authentication/Login"
-import RegistrationForm from "./containers/Authentication/Signup"
+import Login from "./containers/Accounts/Login"
+import RegistrationForm from "./containers/Accounts/Signup"
 import PrivateRoute from "./components/common/PrivateRoute"
 const BaseRouter = () => (
   <div>

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { tokenConfig } from "../../actions/Accounts/auth"
-import { createMessage, returnErrors } from "../messages"
+import { createMessage, returnErrors } from "../Notification/messages"
 import {
   GET_ARTICLES_LIST,
   GET_ARTICLE,

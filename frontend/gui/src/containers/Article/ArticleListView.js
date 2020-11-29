@@ -39,7 +39,7 @@ class ArticleList extends Component {
                     </h5>
                     <p className='card-text'>{article.content}</p>
                     <button
-                      type='button'
+                      type='submit'
                       className='btn btn-danger'
                       onClick={this.props.deleteArticle.bind(this, article.id)}>
                       Delete
@@ -58,7 +58,7 @@ class ArticleList extends Component {
 }
 const mapToStateToProps = (state) => ({
   articles: state.articles.articles,
-  token: state.reducer.token,
+  token: state.AuthReducer.token,
 })
 export default connect(mapToStateToProps, { getArticlesList, deleteArticle })(
   ArticleList,

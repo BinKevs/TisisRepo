@@ -1,5 +1,5 @@
 import axios from "axios"
-import { returnErrors } from "../messages"
+import { returnErrors } from "../Notification/messages"
 import {
   USER_LOADED,
   USER_LOADING,
@@ -69,7 +69,7 @@ export const register = ({ username, password, email }) => (dispatch) => {
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status))
       dispatch({
-        type: LOGIN_FAIL,
+        type: REGISTER_FAIL,
       })
     })
 }
