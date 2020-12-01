@@ -60,9 +60,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'articles',
+    'products',
+    'suppliers',
     'rest_framework',
     'knox',
     'accounts',
+    # 'djmoney',
+    # 'moneyfield',
+    'phonenumber_field'
 ]
 
 MIDDLEWARE = [
@@ -167,3 +172,4 @@ CORS_ORIGIN_ALLOW_ALL = True
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
 # ACCOUNT_AUTHENTICATION_METHOD = 'username'
 # ACCOUNT_EMAIL_REQUIRED = False
+PHONENUMBER_DB_FORMAT = 'E164'

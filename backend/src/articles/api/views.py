@@ -32,13 +32,14 @@ from .serializers import ArticleSerializer
 
 class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
-    # queryset = Article.objects.all()
+
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-
-    def get_queryset(self):
-        return self.request.user.articles.all()
+    queryset = Article.objects.all()
+    # def get_queryset(self):
+    #     return
+    #     self.request.user.articles.all()
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

@@ -24,7 +24,6 @@ class App extends Component {
         <AlertProvider template={AlertTemplate} {...options}>
           <Provider store={store}>
             <Router>
-              <Redirect to={"/articles"} />
               <CustomLayout {...this.props}>
                 <BaseRouter />
               </CustomLayout>

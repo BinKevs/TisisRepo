@@ -9,9 +9,11 @@ import {
   UPDATE_ARTICLE,
 } from "./actionTypes"
 
+const url = "http://127.0.0.1:8000/api/articles/"
+
 export const getArticlesList = () => (dispatch, getState) => {
   axios
-    .get("http://127.0.0.1:8000/api/", tokenConfig(getState))
+    .get(url, tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: GET_ARTICLES_LIST,
@@ -24,7 +26,7 @@ export const getArticlesList = () => (dispatch, getState) => {
 }
 export const getArticle = (articleID) => (dispatch, getState) => {
   axios
-    .get("http://127.0.0.1:8000/api/" + articleID + "/", tokenConfig(getState))
+    .get(url + articleID + "/", tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: GET_ARTICLE,
@@ -35,10 +37,7 @@ export const getArticle = (articleID) => (dispatch, getState) => {
 }
 export const deleteArticle = (articleID) => (dispatch, getState) => {
   axios
-    .delete(
-      "http://127.0.0.1:8000/api/" + articleID + "/",
-      tokenConfig(getState),
-    )
+    .delete(url + articleID + "/", tokenConfig(getState))
     .then((res) => {
       dispatch(createMessage({ message: "Article Deleted" }))
       dispatch({
@@ -50,7 +49,7 @@ export const deleteArticle = (articleID) => (dispatch, getState) => {
 }
 export const addArticle = (data) => (dispatch, getState) => {
   axios
-    .post("http://127.0.0.1:8000/api/", data, tokenConfig(getState))
+    .post(url, data, tokenConfig(getState))
     .then((res) => {
       dispatch(createMessage({ message: "Article Added" }))
       dispatch({
@@ -64,11 +63,7 @@ export const addArticle = (data) => (dispatch, getState) => {
 }
 export const updateArticle = (articleID, data) => (dispatch, getState) => {
   axios
-    .put(
-      "http://127.0.0.1:8000/api/" + articleID + "/",
-      data,
-      tokenConfig(getState),
-    )
+    .put(url + articleID + "/", data, tokenConfig(getState))
     .then((res) => {
       dispatch(createMessage({ message: "Article Updated" }))
       dispatch({

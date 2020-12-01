@@ -1,4 +1,4 @@
-import { CREATE_MESSAGE, GET_ERRORS } from "../Article/actionTypes"
+import { CREATE_MESSAGE, GET_ERRORS } from "../Notification/actionTypes"
 export const createMessage = (msg) => {
   return {
     type: CREATE_MESSAGE,

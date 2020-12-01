@@ -32,12 +32,14 @@ class ArticleList extends Component {
                     alt='Card cap'
                   />
                   <div className='card-body'>
-                    <h5 className='card-title'>
+                    <h3 className='card-title'>
                       <Link to={"/articles/" + article.id + "/"}>
                         {article.title}
                       </Link>
-                    </h5>
-                    <p className='card-text'>{article.content}</p>
+                    </h3>
+                    <h5 className='card-title'>100</h5>
+                    <p className='card-text'>{article.owner.username}</p>
+                    {/* <p className='card-text'>{article.content}</p> */}
                     <button
                       type='submit'
                       className='btn btn-danger'
