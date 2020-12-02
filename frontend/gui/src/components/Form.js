@@ -33,12 +33,14 @@ class CustomForm extends React.Component {
           title: "",
           content: "",
         })
+        break
       case "PUT":
         this.props.updateArticle(this.props.articleID, postObj)
         this.setState({
           title: "",
           content: "",
         })
+        break
       default:
         return this.state
     }

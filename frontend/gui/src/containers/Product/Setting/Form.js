@@ -2,11 +2,11 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { addProduct } from "../../../store/actions/Product/products"
-
+import { getSupplierList } from "../../../store/actions/Supplier/suppliers"
 export class Form extends Component {
   state = {
     name: "",
-    supplier: {},
+    supplier: 0,
     description: "",
     price: 0,
     quantity_stock: 0,
@@ -14,6 +14,7 @@ export class Form extends Component {
 
   static propTypes = {
     addProduct: PropTypes.func.isRequired,
+    getSupplierList: PropTypes.func.isRequired,
   }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value })
@@ -23,15 +24,18 @@ export class Form extends Component {
     const { name, supplier, description, price, quantity_stock } = this.state
     const product = { name, supplier, description, price, quantity_stock }
     this.props.addProduct(product)
+    console.log(this.state)
     this.setState({
       name: "",
-      supplier: {},
+      supplier: 0,
       description: "",
       price: 0,
       quantity_stock: 0,
     })
   }
-
+  componentDidMount() {
+    this.props.getSupplierList()
+  }
   render() {
     const { name, description, price, quantity_stock } = this.state
     return (
@@ -50,18 +54,20 @@ export class Form extends Component {
           </div>
           <div className='form-group'>
             <label>Select Supplier</label>
+
             <select
-              className='form-control'
+              className='form-control selectpicker'
               id='exampleFormControlSelect1'
               name='supplier'
               onChange={this.onChange}>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
+              {this.props.suppliers.map((supplier) => (
+                <option key={supplier.id} value={supplier.id}>
+                  {supplier.name}
+                </option>
+              ))}
             </select>
           </div>
+
           <div className='form-group'>
             <label>Description</label>
             <textarea
@@ -108,5 +114,7 @@ export class Form extends Component {
     )
   }
 }
-
-export default connect(null, { addProduct })(Form)
+const mapStateToProps = (state) => ({
+  suppliers: state.suppliers.suppliers,
+})
+export default connect(mapStateToProps, { addProduct, getSupplierList })(Form)

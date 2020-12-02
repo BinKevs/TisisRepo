@@ -6,6 +6,7 @@ from suppliers.serializers import SupplierSerializer
 
 class ProductSerializer(serializers.ModelSerializer):
     supplier = SupplierSerializer(read_only=True)
+    # supplier = SupplierSerializer(write_only=True)
 
     class Meta:
         model = Product

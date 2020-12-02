@@ -5,6 +5,7 @@ import ArticleDetail from "./containers/Article/ArticleDetailView"
 import ProductList from "./containers/Product/ProductListView"
 import ProductDetail from "./containers/Product/ProductDetailView"
 import ProductSetting from "./containers/Product/Setting/ProductSetting"
+import SupplierSetting from "./containers/Supplier/Setting/SupplierSetting"
 import Login from "./containers/Accounts/Login"
 import RegistrationForm from "./containers/Accounts/Signup"
 import PrivateRoute from "./components/common/PrivateRoute"
@@ -18,7 +19,8 @@ const BaseRouter = () => (
         component={ArticleDetail}
       />
       <Route exact path='/products' component={ProductList} />
-      <Route exact path='/setting/' component={ProductSetting} />
+      <Route exact path='/setting' component={ProductSetting} />
+      <Route exact path='/supplier' component={SupplierSetting} />
       <Route exact path='/products/:productID/' component={ProductDetail} />
       <Route exact path='/login/' component={Login} />
       <Route exact path='/signup/' component={RegistrationForm} />
