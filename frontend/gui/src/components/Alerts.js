@@ -33,7 +33,7 @@ export class Alerts extends Component {
     }
   }
   render() {
-    return <span></span>
+    return <></>
   }
 }
 const mapStateToProps = (state) => ({

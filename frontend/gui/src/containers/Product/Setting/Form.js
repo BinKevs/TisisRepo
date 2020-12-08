@@ -21,13 +21,12 @@ export class Form extends Component {
 
   onSubmit = (e) => {
     e.preventDefault()
-    const { name, supplier, description, price, quantity_stock } = this.state
-    const product = { name, supplier, description, price, quantity_stock }
+    const { name, description, price, quantity_stock } = this.state
+    const product = { name, description, price, quantity_stock }
     this.props.addProduct(product)
     console.log(this.state)
     this.setState({
       name: "",
-      supplier: 0,
       description: "",
       price: 0,
       quantity_stock: 0,
@@ -51,21 +50,6 @@ export class Form extends Component {
               onChange={this.onChange}
               value={name}
             />
-          </div>
-          <div className='form-group'>
-            <label>Select Supplier</label>
-
-            <select
-              className='form-control selectpicker'
-              id='exampleFormControlSelect1'
-              name='supplier'
-              onChange={this.onChange}>
-              {this.props.suppliers.map((supplier) => (
-                <option key={supplier.id} value={supplier.id}>
-                  {supplier.name}
-                </option>
-              ))}
-            </select>
           </div>
 
           <div className='form-group'>
@@ -97,10 +81,9 @@ export class Form extends Component {
               <input
                 className='form-control'
                 type='number'
-                id='example-number-input'
                 name='quantity_stock'
                 onChange={this.onChange}
-                value={quantity_stock}
+                value={1}
               />
             </div>
           </div>
@@ -114,7 +97,5 @@ export class Form extends Component {
     )
   }
 }
-const mapStateToProps = (state) => ({
-  suppliers: state.suppliers.suppliers,
-})
-export default connect(mapStateToProps, { addProduct, getSupplierList })(Form)
+
+export default connect(null, { addProduct, getSupplierList })(Form)

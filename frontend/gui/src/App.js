@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import "./App.css"
 import { loadUser } from "./store/actions/Accounts/auth"
 import CustomLayout from "./containers/Layout/Layout"
 import { Provider } from "react-redux"

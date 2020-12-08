@@ -5,6 +5,7 @@ import suppliers from "./Supplier/suppliers"
 import errors from "./Notification/Errors"
 import messages from "./Notification/messages"
 import AuthReducer from "./Accounts/auth"
+import { cartReducer } from "./Cart/cartReducers"
 export default combineReducers({
   articles,
   products,
@@ -12,4 +13,5 @@ export default combineReducers({
   errors,
   messages,
   AuthReducer,
+  cartReducer,
 })

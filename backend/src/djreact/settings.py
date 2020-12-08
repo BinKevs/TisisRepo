@@ -59,12 +59,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'articles',
     'products',
     'suppliers',
+    'inventories',
+    'transactions',
+    'transaction_items',
+    'accounts',
+
+
     'rest_framework',
     'knox',
-    'accounts',
     # 'djmoney',
     # 'moneyfield',
     'phonenumber_field'

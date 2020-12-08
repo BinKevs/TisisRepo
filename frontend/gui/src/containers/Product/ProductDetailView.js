@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import CustomForm from "../../components/Form"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { getProduct, deleteProduct } from "../../store/actions/Product/products"
@@ -12,9 +11,6 @@ class ProductDetail extends Component {
   componentDidMount() {
     const productID = this.props.match.params.productID
     this.props.getProduct(productID)
-  }
-  componentDidUpdate() {
-    console.log("State update")
   }
 
   onHandles = () => {
@@ -33,7 +29,6 @@ class ProductDetail extends Component {
             <h2 className='card-title'>{this.props.product.name}</h2>
             <h5 className='card-title'>{this.props.product.price}</h5>
             <p className='card-text'>{this.props.product.description}</p>
-            <p className='card-text'>{this.props.product.quantity_stock}</p>
             <form onSubmit={this.onHandles}>
               <button
                 type='submit'
@@ -48,13 +43,6 @@ class ProductDetail extends Component {
             </form>
           </div>
         </div>
-        <CustomForm
-          requestType='PUT'
-          productID={this.props.match.params.productID}
-          btnText='Update'
-          title={this.props.product.title}
-          content={this.props.product.content}
-        />
       </>
     )
   }

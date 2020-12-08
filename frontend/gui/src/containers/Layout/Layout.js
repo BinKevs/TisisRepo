@@ -1,23 +1,35 @@
-import React from "react"
+import React, { useState } from "react"
 import { withRouter, NavLink } from "react-router-dom"
 import { connect } from "react-redux"
 import { logout } from "../../store/actions/Accounts/auth"
 import Alerts from "../../components/Alerts"
 import PropTypes from "prop-types"
+import Navbar from "./NavBar/Navbar"
+
 class CustomLayout extends React.Component {
+  state = {
+    sidebarStatus: false,
+  }
   static propTypes = {
     AuthReducer: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
   }
-  componentDidMount() {
-    console.log(this.props.children)
-  }
 
+  handler = () => {
+    this.setState((prevState) => ({
+      sidebarStatus: !prevState.sidebarStatus,
+    }))
+  }
   render() {
     const { user } = this.props.AuthReducer
     return (
       <>
         <Alerts />
+        <Navbar
+          handler={this.handler}
+          sidebarStatus={this.state.sidebarStatus}
+        />
+        {/*
         {user ? (
           <span className='navbar-text mr-3 container'>
             Welcome {user.username}
@@ -25,7 +37,9 @@ class CustomLayout extends React.Component {
         ) : (
           ""
         )}
-        <nav className='navbar navbar-expand-sm navbar-dark bg-primary '>
+       <div
+          className='navbar navbar-expand-sm navbar-dark sticky-top bg-dark '
+          id='sidebar-wrapper'>
           <button
             className='navbar-toggler collapsed'
             type='button'
@@ -57,7 +71,7 @@ class CustomLayout extends React.Component {
                   </NavLink>
                 </li>
               )}
-              <li className='nav-item'>
+              <li>
                 <NavLink className='nav-link' to={"/articles"}>
                   Posts
                 </NavLink>
@@ -69,9 +83,28 @@ class CustomLayout extends React.Component {
               </li>
             </ul>
           </div>
-        </nav>
-
-        <div className='container pt-5'>{this.props.children}</div>
+          <ul className='navbar-nav'>
+            <li className='nav-item'>
+              <NavLink className='nav-link' to={"/products/setting"}>
+                <img src='https://img.icons8.com/windows/30/ffffff/gear.png' />
+              </NavLink>
+            </li>
+            <li
+              className='nav-item nav-link'
+              data-toggle='modal'
+              data-target='#staticBackdrop'>
+              Cart
+            </li>
+          </ul>
+        </div> */}
+        <div
+          className={
+            this.state.sidebarStatus
+              ? "container container-active"
+              : "container"
+          }>
+          {this.props.children}
+        </div>
       </>
     )
   }

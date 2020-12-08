@@ -22,13 +22,13 @@ export class ProductSetting extends Component {
     return (
       <Fragment>
         <h2>Products</h2>
-        <table className='table table-striped'>
+        <table
+          className='table table-striped align-middl'
+          style={{ textAlign: "center" }}>
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
-              <th>Supplier</th>
-              <th>Description</th>
               <th>Price</th>
               <th>Quantity stock</th>
               <th />
@@ -37,16 +37,14 @@ export class ProductSetting extends Component {
           <tbody>
             {this.props.products.map((product) => (
               <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.supplier.name}</td>
-                <td>{product.description}</td>
-                <td>{product.price}</td>
-                <td>{product.quantity_stock}</td>
-                <td>
+                <td className='align-middle'>{product.id}</td>
+                <td className='align-middle'>{product.name}</td>
+                <td className='align-middle'>{product.price}</td>
+                <td className='align-middle'>{product.quantity_stock}</td>
+                <td className='align-middle'>
                   <button
                     onClick={this.props.deleteProduct.bind(this, product.id)}
-                    className='btn btn-danger btn-sm'>
+                    className='btn btn-danger btn-xs'>
                     {" "}
                     Delete
                   </button>

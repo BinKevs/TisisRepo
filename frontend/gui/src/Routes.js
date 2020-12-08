@@ -19,7 +19,7 @@ const BaseRouter = () => (
         component={ArticleDetail}
       />
       <Route exact path='/products' component={ProductList} />
-      <Route exact path='/setting' component={ProductSetting} />
+      <Route exact path='/products/setting' component={ProductSetting} />
       <Route exact path='/supplier' component={SupplierSetting} />
       <Route exact path='/products/:productID/' component={ProductDetail} />
       <Route exact path='/login/' component={Login} />
