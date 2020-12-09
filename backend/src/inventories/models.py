@@ -10,6 +10,3 @@ class Inventory(models.Model):
     product = models.ForeignKey(
         Product, related_name="product_inventory_set", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
-
-    def __str__(self):
-        return self.id

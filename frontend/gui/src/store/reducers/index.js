@@ -1,6 +1,7 @@
 import { combineReducers } from "redux"
 import articles from "./Article/articles"
 import products from "./Product/products"
+import inventories from "./Inventory/inventories"
 import suppliers from "./Supplier/suppliers"
 import errors from "./Notification/Errors"
 import messages from "./Notification/messages"
@@ -14,4 +15,5 @@ export default combineReducers({
   messages,
   AuthReducer,
   cartReducer,
+  inventories,
 })

@@ -26,7 +26,7 @@ export const SidebarData = [
   },
   {
     title: "Inventory",
-    path: "/products/setting",
+    path: "/inventories/setting",
     icon: <IoIcons.IoIosPaper />,
     cName: "nav-text",
   },
