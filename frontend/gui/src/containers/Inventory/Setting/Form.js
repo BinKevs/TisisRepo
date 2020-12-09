@@ -1,8 +1,10 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
-import { addProduct } from "../../../store/actions/Product/products"
+import { addProduct } from "../../../store/actions/Inventory/inventories"
 import { getSupplierList } from "../../../store/actions/Supplier/suppliers"
+import { getProductList } from "../../../store/actions/Product/products"
+
 export class Form extends Component {
   state = {
     name: "",
@@ -22,8 +24,8 @@ export class Form extends Component {
   onSubmit = (e) => {
     e.preventDefault()
     const { name, description, price } = this.state
-    const product = { name, description, price }
-    this.props.addProduct(product)
+    const inventory = { name, description, price }
+    this.props.addProduct(inventory)
     console.log(this.state)
     this.setState({
       name: "",
@@ -33,12 +35,13 @@ export class Form extends Component {
   }
   componentDidMount() {
     this.props.getSupplierList()
+    this.props.getProductList()
   }
   render() {
     const { name, description, price } = this.state
     return (
       <div className='card card-body mt-4 mb-4'>
-        <h2>Product</h2>
+        <h2>Inventory</h2>
         <form onSubmit={this.onSubmit}>
           <div className='form-group'>
             <label>Name</label>
@@ -72,6 +75,26 @@ export class Form extends Component {
               value={price}
             />
           </div>
+          <div class='form-group'>
+            <label>Select product</label>
+            {this.props.products.map((product) => (
+              <select className='form-control' id='exampleFormControlSelect1'>
+                <option value={product.id} key={product.id}>
+                  {product.name}
+                </option>
+              </select>
+            ))}
+          </div>
+          <div class='form-group'>
+            <label>Select supplier</label>
+            {this.props.suppliers.map((supplier) => (
+              <select className='form-control' id='exampleFormControlSelect1'>
+                <option value={supplier.id} key={supplier.id}>
+                  {supplier.name}
+                </option>
+              </select>
+            ))}
+          </div>
           <div className='form-group'>
             <button type='submit' className='btn btn-primary'>
               Submit
@@ -82,5 +105,13 @@ export class Form extends Component {
     )
   }
 }
+const mapStateToProps = (state) => ({
+  suppliers: state.suppliers.suppliers,
+  products: state.products.products,
+})
 
-export default connect(null, { addProduct, getSupplierList })(Form)
+export default connect(mapStateToProps, {
+  addProduct,
+  getSupplierList,
+  getProductList,
+})(Form)

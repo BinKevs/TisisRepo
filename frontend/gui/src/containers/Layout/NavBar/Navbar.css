@@ -1,30 +1,52 @@
 .navbar {
-  background-color: #060b26;
-  height: 55px;
+  height: 50px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-
 .menu-bars {
-  margin-left: 2rem;
-  font-size: 2rem;
+  width: 100%;
+  font-size: 1.8rem;
   background: none;
+  z-index: 2;
+  position: fixed;
+  top: 0;
+}
+.logoMinified {
+  display: flex;
+  font-size: 1rem;
+}
+.menu-account-picture {
+  margin: auto;
+  font-size: 7rem;
+  background: none;
+}
+.wrapper {
+  margin-top: 50px;
+}
+.wrapper-li {
+  margin-top: 50px;
 }
 
 .nav-menu {
-  background-color: #060b26;
   width: 250px;
-  height: 100vh;
+  height: 100%;
   display: flex;
   justify-content: center;
   position: fixed;
+  z-index: 1;
   top: 0;
+  bottom: 0;
   left: -100%;
   transition: 850ms;
 }
 .container-active {
-  padding-left: 200px;
+  margin-top: 100px;
+  padding-left: 250px;
+  transition: 350ms;
+}
+.container-non-active {
+  margin-top: 100px;
   transition: 350ms;
 }
 .nav-menu.active {
@@ -38,13 +60,13 @@
   align-items: center;
   padding: 8px 0px 8px 16px;
   list-style: none;
-  height: 60px;
+  height: 45px;
 }
 
 .nav-text a {
   text-decoration: none;
   color: #f5f5f5;
-  font-size: 18px;
+  font-size: 15px;
   width: 95%;
   height: 100%;
   display: flex;
@@ -52,9 +74,15 @@
   padding: 0 16px;
   border-radius: 4px;
 }
+.wrapper-li div {
+  font-size: 28px;
+}
+.nav-menu-items .nav-text:hover {
+  border-left: 5px solid #1a83ff;
+}
 
 .nav-menu-items .nav-text:hover {
-  background-color: #1a83ff;
+  border-left: 5px solid #1a83ff;
 }
 
 .nav-menu-items {
@@ -62,7 +90,6 @@
 }
 
 .navbar-toggle {
-  background-color: #060b26;
   width: 100%;
   height: 80px;
   display: flex;

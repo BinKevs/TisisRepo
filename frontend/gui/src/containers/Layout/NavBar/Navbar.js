@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import * as FaIcons from "react-icons/fa"
 import * as AiIcons from "react-icons/ai"
+import * as BiIcons from "react-icons/bi"
+
 import { SidebarData } from "./SidebarData"
 import "./Navbar.css"
 import { IconContext } from "react-icons"
@@ -10,31 +12,44 @@ class Navbar extends React.Component {
     return (
       <>
         <IconContext.Provider value={{ color: "#fff" }}>
-          <div className='navbar'>
-            <Link to='#' className='menu-bars'>
-              <FaIcons.FaBars onClick={this.props.handler} />
-            </Link>
-          </div>
+          <Link to='#' className='menu-bars'>
+            <div className='navbar bg-dark' onClick={this.props.handler}>
+              <div className='logoMinified'>
+                {this.props.sidebarStatus ? <BiIcons.BiLeftArrow /> : ""}
+              </div>
+              <FaIcons.FaBars />
+              <div className='logoMinified'>
+                {this.props.sidebarStatus ? "" : <BiIcons.BiRightArrow />}
+              </div>
+            </div>
+          </Link>
+
           <nav
             className={
-              this.props.sidebarStatus ? "nav-menu active" : "nav-menu"
+              this.props.sidebarStatus
+                ? "nav-menu active bg-dark"
+                : "nav-menu bg-dark"
             }>
-            <ul className='nav-menu-items'>
-              <li className='navbar-toggle'>
-                <Link to='#' className='menu-bars'>
-                  <AiIcons.AiOutlineClose onClick={this.props.handler} />
-                </Link>
-              </li>
-              {SidebarData.map((item, index) => {
-                return (
-                  <li key={index} className={item.cName}>
-                    <Link to={item.path}>
-                      {item.icon}
-                      <span>{item.title}</span>
-                    </Link>
-                  </li>
-                )
-              })}
+            <ul className='nav-menu-items '>
+              <div className='wrapper'>
+                <li className='navbar-toggle'>
+                  <Link to='#' className='menu-account-picture'>
+                    <BiIcons.BiUserCircle />
+                  </Link>
+                </li>
+              </div>
+              <div className='wrapper-li'>
+                {SidebarData.map((item, index) => {
+                  return (
+                    <li key={index} className={item.cName}>
+                      <Link to={item.path}>
+                        <div>{item.icon}</div>
+                        <span className='c'>{item.title}</span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </div>
             </ul>
           </nav>
         </IconContext.Provider>

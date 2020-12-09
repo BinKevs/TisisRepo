@@ -10,17 +10,12 @@ import {
 } from "./actionTypes"
 const url = "http://127.0.0.1:8000/api/products/"
 export const getProductList = () => (dispatch, getState) => {
-  axios
-    .get(url, tokenConfig(getState))
-    .then((res) => {
-      dispatch({
-        type: GET_PRODUCT_LIST,
-        payload: res.data,
-      })
+  axios.get(url, tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: GET_PRODUCT_LIST,
+      payload: res.data,
     })
-    .catch((err) =>
-      dispatch(returnErrors(err.response.data, err.response.status)),
-    )
+  })
 }
 export const getProduct = (ProductID) => (dispatch, getState) => {
   axios

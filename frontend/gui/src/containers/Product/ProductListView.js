@@ -36,10 +36,10 @@ class ProductList extends Component {
         <div className='row'>
           {this.props.products.map((product) => (
             <div className='col-md-6 col-lg-3 mb-4' key={product.id}>
-              <div className='card'>
+              <div className='card ' style={{ width: "18rem" }}>
                 <img
-                  className='card-img-top'
-                  src='https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png'
+                  className='card-img-top img-fluid'
+                  src='http://via.placeholder.com/150x120'
                   alt='Card cap'
                 />
                 <div className='card-body'>

@@ -100,10 +100,10 @@ class CustomLayout extends React.Component {
         <div
           className={
             this.state.sidebarStatus
-              ? "container container-active"
-              : "container"
+              ? "container-active"
+              : "container-non-active"
           }>
-          {this.props.children}
+          <div className='container mt-5 '>{this.props.children}</div>
         </div>
       </>
     )
