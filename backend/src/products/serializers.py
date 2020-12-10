@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from products.models import Product
+from inventories.models import Product
 from suppliers.serializers import SupplierSerializer
 # Lead Serializer
 

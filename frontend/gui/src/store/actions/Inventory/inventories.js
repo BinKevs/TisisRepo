@@ -8,14 +8,16 @@ import {
   ADD_INVENTORY,
   UPDATE_INVENTORY,
 } from "./actionTypes"
-const url = "http://127.0.0.1:8000/api/inventories?ordering=-created_at"
+const url = "http://127.0.0.1:8000/api/inventories"
 export const getInventoryList = () => (dispatch, getState) => {
-  axios.get(url, tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: GET_INVENTORY_LIST,
-      payload: res.data,
+  axios
+    .get(url + "?ordering=-created_at", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_INVENTORY_LIST,
+        payload: res.data,
+      })
     })
-  })
 }
 export const getInventory = (InventoryID) => (dispatch, getState) => {
   axios

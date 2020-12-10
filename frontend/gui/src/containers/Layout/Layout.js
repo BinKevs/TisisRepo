@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { withRouter, NavLink } from "react-router-dom"
+import React from "react"
+import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import { logout } from "../../store/actions/Accounts/auth"
 import Alerts from "../../components/Alerts"
@@ -21,7 +21,6 @@ class CustomLayout extends React.Component {
     }))
   }
   render() {
-    const { user } = this.props.AuthReducer
     return (
       <>
         <Alerts />

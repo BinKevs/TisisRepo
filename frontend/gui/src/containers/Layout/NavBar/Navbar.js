@@ -1,7 +1,6 @@
-import React, { useState } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 import * as FaIcons from "react-icons/fa"
-import * as AiIcons from "react-icons/ai"
 import * as BiIcons from "react-icons/bi"
 
 import { SidebarData } from "./SidebarData"

@@ -6,7 +6,7 @@ import {
   getProductList,
   deleteProduct,
 } from "../../../store/actions/Product/products"
-
+import Chart from "../../Charts/chart"
 export class ProductSetting extends Component {
   static propTypes = {
     products: PropTypes.array.isRequired,
@@ -22,6 +22,7 @@ export class ProductSetting extends Component {
     return (
       <Fragment>
         <div className='container'>
+          <Chart />
           <h2>Products</h2>
           <table
             className='table table-striped align-middl'
@@ -31,7 +32,8 @@ export class ProductSetting extends Component {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Price</th>
-                <th />
+                <th>Stock</th>
+                <th>Description</th>
               </tr>
             </thead>
             <tbody>
@@ -40,6 +42,9 @@ export class ProductSetting extends Component {
                   <td className='align-middle'>{product.id}</td>
                   <td className='align-middle'>{product.name}</td>
                   <td className='align-middle'>{product.price}</td>
+                  <td className='align-middle'>{product.stock}</td>
+                  <td className='align-middle'>{product.description}</td>
+
                   <td className='align-middle'>
                     <button
                       onClick={this.props.deleteProduct.bind(this, product.id)}

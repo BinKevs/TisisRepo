@@ -7,7 +7,7 @@ import { getProductList } from "../../../store/actions/Product/products"
 
 export class Form extends Component {
   state = {
-    stock: 0,
+    new_stock: 0,
     product_id: 0,
     supplier_id: 0,
   }
@@ -20,11 +20,11 @@ export class Form extends Component {
 
   onSubmit = (event) => {
     event.preventDefault()
-    const { stock, product_id, supplier_id } = this.state
-    const inventory = { stock, product_id, supplier_id }
+    const { new_stock, product_id, supplier_id } = this.state
+    const inventory = { new_stock, product_id, supplier_id }
     this.props.addInventory(inventory)
     this.setState({
-      stock: 0,
+      new_stock: 0,
     })
   }
 
@@ -33,20 +33,20 @@ export class Form extends Component {
     this.props.getProductList()
   }
   render() {
-    const { stock } = this.state
+    const { new_stock } = this.state
     return (
       <div className='card card-body mt-4 mb-4'>
         <h2>Inventory</h2>
         <form onSubmit={this.onSubmit}>
           <div className='form-group'>
-            <label>Stock</label>
+            <label>Stock quantity</label>
             <input
               className='form-control'
               type='number'
               id='example-number-input'
-              name='stock'
+              name='new_stock'
               onChange={this.onChange}
-              value={stock}
+              value={new_stock}
             />
           </div>
           <div className='form-group'>

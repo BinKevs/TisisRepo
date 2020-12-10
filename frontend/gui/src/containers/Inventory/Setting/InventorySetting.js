@@ -17,7 +17,9 @@ export class InventorySetting extends Component {
   componentDidMount() {
     this.props.getInventoryList()
   }
-
+  componentDidUpdate(prevProps, prevState) {
+    console.log("Im updated")
+  }
   render() {
     return (
       <Fragment>
@@ -30,7 +32,7 @@ export class InventorySetting extends Component {
               <tr>
                 <th>ID</th>
                 <th>Product</th>
-                <th>Stock</th>
+                <th>Added stock</th>
                 <th>Supplier</th>
                 <th>Date</th>
                 <th></th>
@@ -41,7 +43,7 @@ export class InventorySetting extends Component {
                 <tr key={inventory.id}>
                   <td className='align-middle'>{inventory.id}</td>
                   <td className='align-middle'>{inventory.product.name}</td>
-                  <td className='align-middle'>{inventory.stock}</td>
+                  <td className='align-middle'>{inventory.new_stock}</td>
                   <td className='align-middle'>{inventory.supplier.name}</td>
                   <td className='align-middle'>{inventory.created_at}</td>
                   <td className='align-middle'>

@@ -53,7 +53,7 @@ class ProductList extends Component {
                     </Link>
                   </h2>
                   <h5 className='card-title'>{product.price}</h5>
-                  <p className='card-text'>{product.description}</p>
+                  <h6 className='card-text'>{product.stock}</h6>
                   <form
                     onSubmit={this.onSubmit(
                       product.id,
