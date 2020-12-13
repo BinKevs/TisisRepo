@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom"
 import ArticleList from "./containers/Article/ArticleListView"
 import ArticleDetail from "./containers/Article/ArticleDetailView"
 import ProductList from "./containers/Product/ProductListView"
+import ReportsContainer from "./containers/Reports/ReportsContainer"
 import ProductDetail from "./containers/Product/ProductDetailView"
 import ProductSetting from "./containers/Product/Setting/ProductSetting"
 import InventorySetting from "./containers/Inventory/Setting/InventorySetting"
@@ -20,6 +21,7 @@ const BaseRouter = () => (
         component={ArticleDetail}
       />
       <Route exact path='/products' component={ProductList} />
+      <Route exact path='/reports' component={ReportsContainer} />
       <Route exact path='/products/setting' component={ProductSetting} />
       <Route exact path='/inventories/setting' component={InventorySetting} />
       <Route exact path='/supplier' component={SupplierSetting} />

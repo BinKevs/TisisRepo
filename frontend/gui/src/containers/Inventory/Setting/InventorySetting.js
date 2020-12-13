@@ -18,7 +18,7 @@ export class InventorySetting extends Component {
     this.props.getInventoryList()
   }
   componentDidUpdate(prevProps, prevState) {
-    console.log("Im updated")
+    this.props.getInventoryList()
   }
   render() {
     return (

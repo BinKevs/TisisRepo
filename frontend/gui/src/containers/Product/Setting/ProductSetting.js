@@ -6,7 +6,6 @@ import {
   getProductList,
   deleteProduct,
 } from "../../../store/actions/Product/products"
-import Chart from "../../Charts/chart"
 export class ProductSetting extends Component {
   static propTypes = {
     products: PropTypes.array.isRequired,
@@ -22,7 +21,6 @@ export class ProductSetting extends Component {
     return (
       <Fragment>
         <div className='container'>
-          <Chart />
           <h2>Products</h2>
           <table
             className='table table-striped align-middl'
@@ -57,7 +55,7 @@ export class ProductSetting extends Component {
               ))}
             </tbody>
           </table>
-          <Form />
+          <Form chartData={this.props.products} />
         </div>
       </Fragment>
     )

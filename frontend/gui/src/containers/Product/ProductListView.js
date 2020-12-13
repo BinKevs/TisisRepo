@@ -15,10 +15,10 @@ class ProductList extends Component {
     deleteProduct: PropTypes.func.isRequired,
   }
 
-  onSubmit(id, name, price) {
+  onSubmit(product_id, product_name, price) {
     return (event) => {
       event.preventDefault()
-      const product = { id, name, price }
+      const product = { product_id, product_name, price }
       this.props.addToCart(product)
     }
   }
@@ -31,6 +31,14 @@ class ProductList extends Component {
     return (
       <div>
         <div>
+          <ul className='navbar-nav'>
+            <li
+              className='nav-item nav-link'
+              data-toggle='modal'
+              data-target='#staticBackdrop'>
+              Cart
+            </li>
+          </ul>
           <Cart />
         </div>
         <div className='row'>
@@ -58,7 +66,7 @@ class ProductList extends Component {
                     onSubmit={this.onSubmit(
                       product.id,
                       product.name,
-                      product.description,
+                      product.price,
                     )}>
                     <button type='submit' className='btn btn-primary'>
                       Add to cart

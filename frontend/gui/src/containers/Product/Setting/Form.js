@@ -34,6 +34,7 @@ export class Form extends Component {
   componentDidMount() {
     this.props.getSupplierList()
   }
+
   render() {
     const { name, description, price } = this.state
     return (

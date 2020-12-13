@@ -1,31 +1,28 @@
 import React, { Component } from "react"
-import { Bar, Line, Pie } from "react-chartjs-2"
+import { Bar, Line, Pie, Doughnut } from "react-chartjs-2"
 import { connect } from "react-redux"
-import {
-  getProductList,
-  deleteProduct,
-} from "../../store/actions/Product/products"
 let coloR = []
-class Chart extends Component {
-  componentDidMount() {
-    this.props.getProductList()
-  }
-
+class ChartProd extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      chartData: {
-        labels: props.products.map((product) => product.name),
-        datasets: [
-          {
-            label: "Population",
-            data: props.products.map((product) => product.stock),
-            backgroundColor: coloR,
-          },
-        ],
-      },
+      labels: this.props.chartData.map((x) => "Product : " + x.name),
+      data: this.props.chartData.map((x) => x.stock),
     }
   }
+  componentDidMount() {
+    this.setState({
+      labels: this.props.chartData.map((x) => "Product : " + x.name),
+      data: this.props.chartData.map((x) => x.stock),
+    })
+  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   this.setState({
+  //     labels: this.props.chartData.map((x) => "Product : " + x.name),
+  //     data: this.props.chartData.map((x) => x.stock),
+  //   })
+  // }
+
   static defaultProps = {
     displayTitle: true,
     displayLegend: true,
@@ -39,20 +36,19 @@ class Chart extends Component {
       var b = Math.floor(Math.random() * 255)
       return "rgba(" + r + "," + g + "," + b + "," + 0.6 + ")"
     }
-    for (let i = 0; i < this.state.chartData.labels.length; i++) {
+    for (let i = 0; i < this.state.data.length; i++) {
       coloR.push(dynamicColors())
     }
     return (
       <div className='container'>
         <div className='chart'>
-          <Bar
-            data={this.state.chartData}
+          <Pie
             //   width={100}
             //   height={50}
             options={{
               title: {
                 display: this.props.displayTitle,
-                text: "Largest Cities In ",
+                text: this.props.label,
                 fontSize: 25,
               },
               legend: {
@@ -60,14 +56,20 @@ class Chart extends Component {
                 position: this.props.legendPosition,
               },
             }}
+            data={{
+              labels: this.state.labels,
+              datasets: [
+                {
+                  data: this.state.data,
+                  backgroundColor: coloR,
+                },
+              ],
+            }}
           />
         </div>
       </div>
     )
   }
 }
-const mapStateToProps = (state) => ({
-  products: state.products.products,
-})
 
-export default connect(mapStateToProps, { getProductList })(Chart)
+export default ChartProd

@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { addTransaction } from "../../store/actions/Transaction/transactions"
 import { connect } from "react-redux"
 import {
   removeFromCart,
@@ -9,6 +10,17 @@ export class Cart extends Component {
     return (event) => {
       this.props.changeCartValue("type", id, event.target.value)
     }
+  }
+
+  OnClick = (event) => {
+    let quantity = 0
+    event.preventDefault()
+    this.props.cartItems.map((item) => (quantity += item.quantity))
+    const items = this.props.cartItems
+    console.log(items)
+    const data = { items, quantity }
+
+    this.props.addTransaction(data)
   }
   render() {
     const { cartItems } = this.props
@@ -50,7 +62,7 @@ export class Cart extends Component {
                   </thead>
                   <tbody>
                     {cartItems.map((item) => (
-                      <tr key={item.id}>
+                      <tr key={item.product_id}>
                         <td className='align-middle'>
                           <img
                             className='img-responsive'
@@ -60,14 +72,17 @@ export class Cart extends Component {
                             height='80'
                           />
                         </td>
-                        <td className='align-middle'>{item.name}</td>
+                        <td className='align-middle'>{item.product_name}</td>
                         <td className='align-middle'>{item.price}</td>
                         <td className='align-middle'>
                           <button
                             type='button'
                             className='btn btn-light btn-sm d-inline'
                             onClick={() => {
-                              this.props.changeCartValue("plus", item.id)
+                              this.props.changeCartValue(
+                                "plus",
+                                item.product_id,
+                              )
                             }}>
                             +
                           </button>
@@ -76,13 +91,16 @@ export class Cart extends Component {
                             type='text'
                             style={{ width: "45px", textAlign: "center" }}
                             value={item.quantity}
-                            onChange={this.onChange(item.id)}
+                            onChange={this.onChange(item.product_id)}
                           />
                           <button
                             type='button'
                             className='btn btn-light btn-sm d-inline'
                             onClick={() => {
-                              this.props.changeCartValue("minus", item.id)
+                              this.props.changeCartValue(
+                                "minus",
+                                item.product_id,
+                              )
                             }}>
                             -
                           </button>
@@ -104,11 +122,9 @@ export class Cart extends Component {
                 <button
                   type='button'
                   className='btn btn-secondary'
-                  data-dismiss='modal'>
-                  Close
-                </button>
-                <button type='button' className='btn btn-primary'>
-                  Understood
+                  data-dismiss='modal'
+                  onClick={this.OnClick}>
+                  Check-Out
                 </button>
               </div>
             </div>
@@ -119,9 +135,18 @@ export class Cart extends Component {
   }
 }
 
-export default connect(
-  (state) => ({
-    cartItems: state.cartReducer.cartItems,
-  }),
-  { removeFromCart, changeCartValue },
-)(Cart)
+// export default connect(
+//   (state) => ({
+//     cartItems: state.cartReducer.cartItems,
+//   }),
+//   { removeFromCart, changeCartValue },
+// )(Cart)
+
+const mapToStateToProps = (state) => ({
+  cartItems: state.cartReducer.cartItems,
+})
+export default connect(mapToStateToProps, {
+  removeFromCart,
+  changeCartValue,
+  addTransaction,
+})(Cart)

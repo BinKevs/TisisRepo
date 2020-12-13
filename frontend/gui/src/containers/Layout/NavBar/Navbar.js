@@ -40,7 +40,11 @@ class Navbar extends React.Component {
               <div className='wrapper-li'>
                 {SidebarData.map((item, index) => {
                   return (
-                    <li key={index} className={item.cName}>
+                    <li
+                      key={index}
+                      className={item.cName}
+                      data-toggle={item.toggle}
+                      data-target={item.dataTarget}>
                       <Link to={item.path}>
                         <div>{item.icon}</div>
                         <span className='c'>{item.title}</span>

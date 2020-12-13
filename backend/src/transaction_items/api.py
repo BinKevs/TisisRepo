@@ -3,6 +3,8 @@ from rest_framework import viewsets, permissions
 from .serializers import Transaction_itemSerializer
 from transactions.models import Transaction
 from products.models import Product
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -12,11 +14,22 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction_item.objects.all()
     serializer_class = Transaction_itemSerializer
 
-    def perform_create(self, serializer):
-        serializer.save(transaction=Transaction.objects.get(
-            pk=self.request.data.get('transaction')))
-        serializer.save(product=Product.objects.get(
-            pk=self.request.data.get('product')))
-    # # def get_queryset(self):
+    # def perform_create(self, serializer):
+    #     serializer.save(transaction=Transaction.objects.get(
+    #         pk=self.request.data.get('transaction')))
+    #     serializer.save(product=Product.objects.get(
+    #         pk=self.request.data.get('product')))
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.get(
+            "items") if 'items' in request.data else request.data
+        many = isinstance(data, list)
+        print(data, many)
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    # def get_queryset(self):
     # #     return
     # #     self.request.user.articles.all()

@@ -5,7 +5,7 @@ from products.serializers import ProductSerializer
 # Lead Serializer
 
 
-class InventorySerializer(serializers.ModelSerializer):
+class Transaction_itemSerializer(serializers.ModelSerializer):
     transaction = TransactionSerializer(read_only=True)
     product = ProductSerializer(read_only=True)
 
