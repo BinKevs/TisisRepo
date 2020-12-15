@@ -15,10 +15,10 @@ class ProductList extends Component {
     deleteProduct: PropTypes.func.isRequired,
   }
 
-  onSubmit(product_id, product_name, price) {
+  onSubmit(prod_id, product_name, price) {
     return (event) => {
       event.preventDefault()
-      const product = { product_id, product_name, price }
+      const product = { prod_id, product_name, price }
       this.props.addToCart(product)
     }
   }

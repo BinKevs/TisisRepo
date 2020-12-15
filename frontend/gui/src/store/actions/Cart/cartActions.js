@@ -3,7 +3,7 @@ export const addToCart = (product) => (dispatch, getState) => {
   const cartItems = getState().cartReducer.cartItems.slice()
   let alreadyExists = false
   cartItems.forEach((x) => {
-    if (x.product_id === product.product_id) {
+    if (x.prod_id === product.prod_id) {
       alreadyExists = true
       x.quantity++
     }
@@ -17,16 +17,15 @@ export const addToCart = (product) => (dispatch, getState) => {
   })
   localStorage.setItem("cartItem", JSON.stringify(cartItems))
 }
-export const changeCartValue = (
-  changeType,
-  product_id,
-  product_current_value,
-) => (dispatch, getState) => {
+export const changeCartValue = (changeType, prod_id, product_current_value) => (
+  dispatch,
+  getState,
+) => {
   const cartItems = getState().cartReducer.cartItems.slice()
   let alreadyExists = false
 
   cartItems.forEach((x) => {
-    if (x.product_id === product_id) {
+    if (x.prod_id === prod_id) {
       alreadyExists = true
       if (changeType === "plus") x.quantity++
       else if (changeType === "minus") x.quantity--

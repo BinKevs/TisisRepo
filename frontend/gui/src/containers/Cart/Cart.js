@@ -62,7 +62,7 @@ export class Cart extends Component {
                   </thead>
                   <tbody>
                     {cartItems.map((item) => (
-                      <tr key={item.product_id}>
+                      <tr key={item.prod_id}>
                         <td className='align-middle'>
                           <img
                             className='img-responsive'
@@ -79,10 +79,7 @@ export class Cart extends Component {
                             type='button'
                             className='btn btn-light btn-sm d-inline'
                             onClick={() => {
-                              this.props.changeCartValue(
-                                "plus",
-                                item.product_id,
-                              )
+                              this.props.changeCartValue("plus", item.prod_id)
                             }}>
                             +
                           </button>
@@ -91,16 +88,13 @@ export class Cart extends Component {
                             type='text'
                             style={{ width: "45px", textAlign: "center" }}
                             value={item.quantity}
-                            onChange={this.onChange(item.product_id)}
+                            onChange={this.onChange(item.prod_id)}
                           />
                           <button
                             type='button'
                             className='btn btn-light btn-sm d-inline'
                             onClick={() => {
-                              this.props.changeCartValue(
-                                "minus",
-                                item.product_id,
-                              )
+                              this.props.changeCartValue("minus", item.prod_id)
                             }}>
                             -
                           </button>

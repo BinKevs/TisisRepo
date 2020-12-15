@@ -17,9 +17,9 @@ export class InventorySetting extends Component {
   componentDidMount() {
     this.props.getInventoryList()
   }
-  componentDidUpdate(prevProps, prevState) {
-    this.props.getInventoryList()
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   this.props.getInventoryList()
+  // }
   render() {
     return (
       <Fragment>

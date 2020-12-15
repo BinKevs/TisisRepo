@@ -8,8 +8,8 @@ import { getProductList } from "../../../store/actions/Product/products"
 export class Form extends Component {
   state = {
     new_stock: 0,
-    product_id: 0,
-    supplier_id: 0,
+    product: 0,
+    supplier: 0,
   }
 
   static propTypes = {
@@ -20,8 +20,8 @@ export class Form extends Component {
 
   onSubmit = (event) => {
     event.preventDefault()
-    const { new_stock, product_id, supplier_id } = this.state
-    const inventory = { new_stock, product_id, supplier_id }
+    const { new_stock, product, supplier } = this.state
+    const inventory = { new_stock, product, supplier }
     this.props.addInventory(inventory)
     this.setState({
       new_stock: 0,
@@ -54,7 +54,7 @@ export class Form extends Component {
 
             <select
               className='form-control'
-              name='product_id'
+              name='product'
               id='exampleFormControlSelect1'
               onChange={this.onChange}>
               {this.props.products.map((product) => (
@@ -69,7 +69,7 @@ export class Form extends Component {
 
             <select
               className='form-control'
-              name='supplier_id'
+              name='supplier'
               id='exampleFormControlSelect1'
               onChange={this.onChange}>
               {this.props.suppliers.map((supplier) => (
