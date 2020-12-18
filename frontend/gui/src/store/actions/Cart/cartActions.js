@@ -3,7 +3,7 @@ export const addToCart = (product) => (dispatch, getState) => {
   const cartItems = getState().cartReducer.cartItems.slice()
   let alreadyExists = false
   cartItems.forEach((x) => {
-    if (x.prod_id === product.prod_id) {
+    if (x.product_id === product.product_id) {
       alreadyExists = true
       x.quantity++
     }
@@ -17,15 +17,16 @@ export const addToCart = (product) => (dispatch, getState) => {
   })
   localStorage.setItem("cartItem", JSON.stringify(cartItems))
 }
-export const changeCartValue = (changeType, prod_id, product_current_value) => (
-  dispatch,
-  getState,
-) => {
+export const changeCartValue = (
+  changeType,
+  product_id,
+  product_current_value,
+) => (dispatch, getState) => {
   const cartItems = getState().cartReducer.cartItems.slice()
   let alreadyExists = false
 
   cartItems.forEach((x) => {
-    if (x.prod_id === prod_id) {
+    if (x.product_id === product_id) {
       alreadyExists = true
       if (changeType === "plus") x.quantity++
       else if (changeType === "minus") x.quantity--
@@ -43,7 +44,7 @@ export const changeCartValue = (changeType, prod_id, product_current_value) => (
 export const removeFromCart = (product) => (dispatch, getState) => {
   const cartItems = getState()
     .cartReducer.cartItems.slice()
-    .filter((x) => x.id !== product.id)
+    .filter((x) => x.product_id !== product.product_id)
   dispatch({ type: REMOVE_FROM_CART, payload: { cartItems } })
   localStorage.setItem("cartItem", JSON.stringify(cartItems))
 }

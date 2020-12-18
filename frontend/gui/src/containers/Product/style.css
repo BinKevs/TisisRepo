@@ -1,0 +1,8 @@
+/* .custom_container {
+  background-color: #f3f5f5;
+} */
+
+.card_cust {
+  box-shadow: -15px 15px 10px rgba(0, 0, 0, 0.3);
+  margin: 20px 10px;
+}

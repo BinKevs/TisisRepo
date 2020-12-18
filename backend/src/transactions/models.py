@@ -8,4 +8,4 @@ class Transaction(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        return self.id
+        return str(self.id)

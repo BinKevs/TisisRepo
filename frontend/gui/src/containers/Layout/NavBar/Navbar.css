@@ -41,12 +41,11 @@
   transition: 850ms;
 }
 .container-active {
-  margin-top: 100px;
-  padding-left: 250px;
+  margin-top: 50px;
   transition: 350ms;
 }
 .container-non-active {
-  margin-top: 100px;
+  margin-top: 50px;
   transition: 350ms;
 }
 .nav-menu.active {

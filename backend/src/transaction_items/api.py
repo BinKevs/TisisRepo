@@ -28,7 +28,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         # print(data)
         arrOfKeys = []
         for key in data:
-            arrOfKeys.append(key['prod_id'])
+            arrOfKeys.append(key['product_id'])
         for key in range(0, len(data)):
             data[key]['product'] = arrOfKeys[key]
         # print(data, many)

@@ -4,7 +4,9 @@ import ArticleList from "./containers/Article/ArticleListView"
 import ArticleDetail from "./containers/Article/ArticleDetailView"
 import ProductList from "./containers/Product/ProductListView"
 import ReportsContainer from "./containers/Reports/ReportsContainer"
+import Dankmemes from "./containers/Reports/Dankmemes"
 import ProductDetail from "./containers/Product/ProductDetailView"
+import Checkout from "./containers/CheckoutForm/CheckoutForm"
 import ProductSetting from "./containers/Product/Setting/ProductSetting"
 import InventorySetting from "./containers/Inventory/Setting/InventorySetting"
 import SupplierSetting from "./containers/Supplier/Setting/SupplierSetting"
@@ -22,6 +24,7 @@ const BaseRouter = () => (
       />
       <Route exact path='/products' component={ProductList} />
       <Route exact path='/reports' component={ReportsContainer} />
+      <Route exact path='/checkout' component={Checkout} />
       <Route exact path='/products/setting' component={ProductSetting} />
       <Route exact path='/inventories/setting' component={InventorySetting} />
       <Route exact path='/supplier' component={SupplierSetting} />

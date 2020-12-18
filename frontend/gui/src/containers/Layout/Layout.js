@@ -102,7 +102,7 @@ class CustomLayout extends React.Component {
               ? "container-active"
               : "container-non-active"
           }>
-          <div className='container mt-5 '>{this.props.children}</div>
+          <div className='overflow-hidden'>{this.props.children}</div>
         </div>
       </>
     )

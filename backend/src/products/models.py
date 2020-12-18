@@ -15,25 +15,21 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-# supplier = models.ForeignKey(
-#         Supplier, related_name="products", on_delete=models.CASCADE, null=True)
+    # supplier = models.ForeignKey(
+    #         Supplier, related_name="products", on_delete=models.CASCADE, null=True)
 
-    # @receiver(post_save, sender='inventories.Inventory')
-    # def update_product_inventory_on_save(sender, instance, **kwargs):
-    #     print(instance)
-    #     if instance.id:
-    #         product = Product.objects.get(id=instance.product.id)
-    #         print(product)
-    #         old_stock = product.stock
-    #         instance.stock_added -= old_stock
-    #     instance.product.stock += instance.new_stock
-    #     instance.product.save()
+    @receiver(post_save, sender='inventories.Inventory')
+    def update_product_inventory_on_save(sender, instance, raw, **kwargs):
+        print(instance)
+        print(raw)
+        if instance.id:
+            product = Product.objects.get(id=instance.product.id)
+        instance.product.stock += instance.new_stock
+        instance.product.save()
 
-    # # @receiver(post_save, sender='transaction_items.Transaction_item')
-    # # def update_product_transaction_on_save(sender, instance, **kwargs):
-    # #     if instance.id:
-    # #         product = Product.objects.get(id=instance.prod_id)
-    # #         old_stock = product.stock
-    # #         instance.quantity -= old_stock
-    # #     instance.product.stock -= instance.quantity
-    # #     instance.product.save()
+    @receiver(post_save, sender='transaction_items.Transaction_item')
+    def update_product_transaction_on_save(sender, instance, **kwargs):
+        if instance.id:
+            product = Product.objects.get(id=instance.product_id)
+        instance.product.stock -= instance.quantity
+        instance.product.save()

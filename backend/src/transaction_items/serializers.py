@@ -3,21 +3,24 @@ from transaction_items.models import Transaction_item
 from transactions.serializers import TransactionSerializer
 from products.serializers import ProductSerializer
 from products.models import Product
+from transactions.models import Transaction
 
 
 class Transaction_itemSerializer(serializers.ModelSerializer):
-    transaction = TransactionSerializer(read_only=True)
+    # transaction = serializers.PrimaryKeyRelatedField(
+    #     queryset=Transaction.objects.all())
     # product = ProductSerializer(read_only=True)
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
-    product = serializers.SerializerMethodField()
+    product_info = serializers.SerializerMethodField()
+    transaction_date = serializers.SerializerMethodField()
 
     class Meta:
         model = Transaction_item
-        fields = '__all__'
+        fields = "__all__"
 
     @staticmethod
-    def get_product(obj):
+    def get_product_info(obj):
         product = Product.objects.get(pk=obj.product.id)
         return {
             "id": product.id,
@@ -25,4 +28,12 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             "description": product.description,
             "stock": product.stock,
             "price": product.price,
+        }
+
+    @staticmethod
+    def get_transaction_date(obj):
+        transaction = Transaction.objects.get(pk=obj.transaction.id)
+        return {
+            "id": transaction.id,
+            "created_at": transaction.created_at
         }

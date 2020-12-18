@@ -1,7 +1,10 @@
 import React, { Component } from "react"
 import { Bar, Line, Pie, Doughnut } from "react-chartjs-2"
 import { connect } from "react-redux"
+import axios from "axios"
 let coloR = []
+let prodname = []
+let prodstock = []
 class ChartInv extends Component {
   constructor(props) {
     super(props)
@@ -9,9 +12,9 @@ class ChartInv extends Component {
       labels: this.props.chartData.map(
         (x) =>
           "Supplier : " +
-          x.supplier.name +
+          x.supplier_info.name +
           "  |  Product : " +
-          x.product.name +
+          x.product_info.name +
           "  |  Date : " +
           x.created_at,
       ),
@@ -23,29 +26,31 @@ class ChartInv extends Component {
       labels: this.props.chartData.map(
         (x) =>
           "Supplier : " +
-          x.supplier.name +
+          x.supplier_info.name +
           "  |  Product : " +
-          x.product.name +
+          x.product_info.name +
           "  |  Date : " +
           x.created_at,
       ),
       data: this.props.chartData.map((x) => x.new_stock),
     })
   }
-  // componentDidUpdate(prevProps, prevState) {
-  //   this.setState({
-  //     labels: this.props.chartData.map(
-  //       (x) =>
-  //         "Supplier : " +
-  //         x.supplier.name +
-  //         "  |  Product : " +
-  //         x.product.name +
-  //         "  |  Date : " +
-  //         x.created_at,
-  //     ),
-  //     data: this.props.chartData.map((x) => x.new_stock),
-  //   })
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.chartData !== prevProps.chartData) {
+      this.setState({
+        labels: this.props.chartData.map(
+          (x) =>
+            // "Supplier : " +
+            // x.supplier.name +
+            // "  |  Product : " +
+            // x.product.name +
+            // "  |  Date : " +
+            x.created_at,
+        ),
+        data: this.props.chartData.map((x) => x.new_stock),
+      })
+    }
+  }
 
   static defaultProps = {
     displayTitle: true,
@@ -66,7 +71,7 @@ class ChartInv extends Component {
     return (
       <div className='container'>
         <div className='chart'>
-          <Doughnut
+          <Line
             //   width={100}
             //   height={50}
             options={{
@@ -78,6 +83,23 @@ class ChartInv extends Component {
               legend: {
                 display: this.props.displayLegend,
                 position: this.props.legendPosition,
+              },
+              scales: {
+                xAxes: [
+                  {
+                    // type: "time",
+                    // time: {
+                    //   unit: "week",
+                    // },
+                  },
+                ],
+                yAxes: [
+                  {
+                    ticks: {
+                      min: 0,
+                    },
+                  },
+                ],
               },
             }}
             data={{

@@ -17,9 +17,11 @@ export class InventorySetting extends Component {
   componentDidMount() {
     this.props.getInventoryList()
   }
-  // componentDidUpdate(prevProps, prevState) {
-  //   this.props.getInventoryList()
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.inventories !== prevProps.inventories) {
+      this.props.getInventoryList()
+    }
+  }
   render() {
     return (
       <Fragment>
@@ -42,9 +44,13 @@ export class InventorySetting extends Component {
               {this.props.inventories.map((inventory) => (
                 <tr key={inventory.id}>
                   <td className='align-middle'>{inventory.id}</td>
-                  <td className='align-middle'>{inventory.product.name}</td>
+                  <td className='align-middle'>
+                    {inventory.product_info.name}
+                  </td>
                   <td className='align-middle'>{inventory.new_stock}</td>
-                  <td className='align-middle'>{inventory.supplier.name}</td>
+                  <td className='align-middle'>
+                    {inventory.supplier_info.name}
+                  </td>
                   <td className='align-middle'>{inventory.created_at}</td>
                   <td className='align-middle'>
                     <button

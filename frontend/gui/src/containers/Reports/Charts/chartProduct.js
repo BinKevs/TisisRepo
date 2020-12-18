@@ -16,12 +16,14 @@ class ChartProd extends Component {
       data: this.props.chartData.map((x) => x.stock),
     })
   }
-  // componentDidUpdate(prevProps, prevState) {
-  //   this.setState({
-  //     labels: this.props.chartData.map((x) => "Product : " + x.name),
-  //     data: this.props.chartData.map((x) => x.stock),
-  //   })
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.chartData !== prevProps.chartData) {
+      this.setState({
+        labels: this.props.chartData.map((x) => "Product : " + x.name),
+        data: this.props.chartData.map((x) => x.stock),
+      })
+    }
+  }
 
   static defaultProps = {
     displayTitle: true,
@@ -42,7 +44,7 @@ class ChartProd extends Component {
     return (
       <div className='container'>
         <div className='chart'>
-          <Pie
+          <Bar
             //   width={100}
             //   height={50}
             options={{
@@ -54,6 +56,19 @@ class ChartProd extends Component {
               legend: {
                 display: this.props.displayLegend,
                 position: this.props.legendPosition,
+              },
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true,
+                      autoSkip: true,
+                    },
+                    gridLines: {
+                      display: false,
+                    },
+                  },
+                ],
               },
             }}
             data={{

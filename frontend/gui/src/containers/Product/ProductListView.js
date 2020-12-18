@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import Cart from "../Cart/Cart"
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import {
@@ -8,6 +8,8 @@ import {
   deleteProduct,
 } from "../../store/actions/Product/products"
 import { addToCart } from "../../store/actions/Cart/cartActions"
+import * as FaIcons from "react-icons/fa"
+import "./style.css"
 class ProductList extends Component {
   static propTypes = {
     products: PropTypes.array.isRequired,
@@ -15,10 +17,10 @@ class ProductList extends Component {
     deleteProduct: PropTypes.func.isRequired,
   }
 
-  onSubmit(prod_id, product_name, price) {
+  onSubmit(product_id, product_name, price) {
     return (event) => {
       event.preventDefault()
-      const product = { prod_id, product_name, price }
+      const product = { product_id, product_name, price }
       this.props.addToCart(product)
     }
   }
@@ -29,53 +31,63 @@ class ProductList extends Component {
 
   render() {
     return (
-      <div>
+      <div className='custom_container'>
         <div>
-          <ul className='navbar-nav'>
+          {/* <ul className='navbar-nav'>
             <li
               className='nav-item nav-link'
               data-toggle='modal'
               data-target='#staticBackdrop'>
               Cart
             </li>
-          </ul>
-          <Cart />
+          </ul> */}
         </div>
-        <div className='row'>
-          {this.props.products.map((product) => (
-            <div className='col-md-6 col-lg-3 mb-4' key={product.id}>
-              <div className='card ' style={{ width: "18rem" }}>
-                <img
-                  className='card-img-top img-fluid'
-                  src='http://via.placeholder.com/150x120'
-                  alt='Card cap'
-                />
-                <div className='card-body'>
-                  <h2
-                    className='card-title'
-                    name='name'
-                    onChange={this.onChange}
-                    value={product.name}>
-                    <Link to={"/products/" + product.id + "/"}>
-                      {product.name}
-                    </Link>
-                  </h2>
-                  <h5 className='card-title'>{product.price}</h5>
-                  <h6 className='card-text'>{product.stock}</h6>
-                  <form
-                    onSubmit={this.onSubmit(
-                      product.id,
-                      product.name,
-                      product.price,
-                    )}>
-                    <button type='submit' className='btn btn-primary'>
-                      Add to cart
-                    </button>
-                  </form>
+        <div className='row pt-5'>
+          <div className='col-lg-8'>
+            <div className='row'>
+              {this.props.products.map((product) => (
+                <div className='col-md-6 col-lg-2 mx-3' key={product.id}>
+                  <div
+                    className='card card_cust'
+                    style={{ width: "12rem", height: "22rem" }}>
+                    <img
+                      className='card-img-top img-fluid'
+                      src='https://st4.depositphotos.com/17828278/24401/v/600/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg'
+                      alt='Card cap'
+                    />
+                    <div className='card-body'>
+                      <p
+                        className='card-title'
+                        name='name'
+                        onChange={this.onChange}
+                        value={product.name}>
+                        <Link to={"/products/" + product.id + "/"}>
+                          {product.name}
+                        </Link>
+                      </p>
+                      <p className='card-title'>{product.price}</p>
+                    </div>
+                    <form
+                      onSubmit={this.onSubmit(
+                        product.id,
+                        product.name,
+                        product.price,
+                      )}
+                      className='m-3'>
+                      <button
+                        type='submit'
+                        className='btn btn-block btn-primary'>
+                        <FaIcons.FaCartPlus />
+                      </button>
+                    </form>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+          <div className='col-lg-4'>
+            <Cart />
+          </div>
         </div>
       </div>
     )
