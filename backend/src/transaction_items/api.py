@@ -25,7 +25,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         data = request.data.get(
             "items") if 'items' in request.data else request.data
         many = isinstance(data, list)
-        # print(data)
+        print(data)
         arrOfKeys = []
         for key in data:
             arrOfKeys.append(key['product_id'])

@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'suppliers',
     'inventories',
     'transactions',
-    'transaction_items',
+    'transaction_items.apps.TransactionItemsConfig',
     'accounts',
 
 

@@ -7,8 +7,8 @@ from transactions.models import Transaction
 
 
 class Transaction_itemSerializer(serializers.ModelSerializer):
-    # transaction = serializers.PrimaryKeyRelatedField(
-    #     queryset=Transaction.objects.all())
+    transaction = serializers.PrimaryKeyRelatedField(
+        queryset=Transaction.objects.all())
     # product = ProductSerializer(read_only=True)
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
@@ -19,7 +19,7 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
         model = Transaction_item
         fields = "__all__"
 
-    @staticmethod
+    @ staticmethod
     def get_product_info(obj):
         product = Product.objects.get(pk=obj.product.id)
         return {
@@ -32,8 +32,14 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_transaction_date(obj):
-        transaction = Transaction.objects.get(pk=obj.transaction.id)
-        return {
-            "id": transaction.id,
-            "created_at": transaction.created_at
-        }
+        try:
+            transaction = Transaction.objects.get(pk=obj.transaction.id)
+            return {
+                "id": transaction.id,
+                "created_at": transaction.created_at
+            }
+        except:
+            return {
+                "id": None,
+                "created_at": None
+            }

@@ -17,7 +17,9 @@ export class Form extends Component {
     getSupplierList: PropTypes.func.isRequired,
   }
 
-  onChange = (e) => this.setState({ [e.target.name]: e.target.value })
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
+  }
 
   onSubmit = (e) => {
     e.preventDefault()

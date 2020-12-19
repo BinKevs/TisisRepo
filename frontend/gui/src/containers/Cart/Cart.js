@@ -187,7 +187,7 @@ export class Checkout extends Component {
                 <div className='overflow-auto' style={{ height: "25rem" }}>
                   {cartItems.map((item) => (
                     <li
-                      key={item.prod_id}
+                      key={item.product_id}
                       className='list-group-item d-flex align-items-stretch'>
                       <div className='d-flex align-items-center'>
                         <button

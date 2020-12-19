@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { addTransaction } from "../../store/actions/Transaction/transactions"
+import { addTransactionItems } from "../../store/actions/Transaction/transactions"
 import { connect } from "react-redux"
 import {
   removeFromCart,
@@ -8,196 +9,233 @@ import {
 import * as AiIcons from "react-icons/ai"
 
 export class Cart extends Component {
-  //   state = {
-  //     totalAmount: 0,
-  //     tempAmount: 0,
-  //     tax: 0,
-  //   }
-  //   onChange(id) {
-  //     return (event) => {
-  //       this.props.changeCartValue("type", id, event.target.value)
-  //       this.setState({ [this.state.quantity]: event.target.value })
-  //     }
-  //   }
-  //   HandleDecimalPlaces = (Variable) => {
-  //     return Math.round((Variable + Number.EPSILON) * 100) / 100
-  //   }
+  state = {
+    totalAmount: 0,
+    tempAmount: 0,
+    tax: 0,
+    amount_tendered: 0,
+    change: 0,
+    transanction_id: 0,
+  }
+  onChange() {
+    return (event) => {
+      this.setState({ [event.target.name]: event.target.value })
+    }
+  }
+  HandleDecimalPlaces = (Variable) => {
+    return Math.round((Variable + Number.EPSILON) * 100) / 100
+  }
 
-  //   numberWithCommas(x) {
-  //     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-  //   }
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+  }
 
-  //   OnClick = (event) => {
-  //     let quantity = 0
-  //     event.preventDefault()
-  //     this.props.cartItems.map((item) => (quantity += item.quantity))
-  //     const items = this.props.cartItems
-  //     console.log(items)
-  //     const data = { items, quantity }
+  handleClick = (event) => {
+    event.preventDefault()
+    this.setState({
+      change: this.state.amount_tendered - this.state.totalAmount,
+    })
+    let quantity = 0
+    this.props.cartItems.map((item) => (quantity += item.quantity))
+    const { totalAmount, amount_tendered, change } = this.state
+    const items = this.props.cartItems
+    const data = { totalAmount, amount_tendered, change, quantity }
 
-  //     this.props.addTransaction(data)
-  //   }
+    this.props.addTransaction(data)
+    this.setState({
+      transanction_id: this.props.get_transaction.id,
+    })
+  }
 
-  //   // componentDidUpdate(prevProps, prevState) {
-  //   //   let VariableTotalAmount = 0
-  //   //   this.props.cartItems.map((item) => (VariableTotalAmount += item.price * item.quantity))
-  //   // }
-  //   componentDidMount() {
-  //     let VariableTotalAmount = 0
-  //     this.props.cartItems.map(
-  //       (item) => (VariableTotalAmount += item.price * item.quantity),
-  //     )
-  //     this.setState({
-  //       totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
-  //       tempAmount: this.HandleDecimalPlaces(
-  //         (VariableTotalAmount -= VariableTotalAmount * 0.12),
-  //       ),
-  //       tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
-  //     })
-  //   }
+  handleTestClick = () => {
+    console.log(this.state.transanction_id)
+  }
+  componentDidMount() {
+    // this.setState({
+    //   transanction_id: this.props.get_transaction.id,
+    // })
+    let VariableTotalAmount = 0
+    this.props.cartItems.map(
+      (item) => (VariableTotalAmount += item.price * item.quantity),
+    )
+    this.setState({
+      totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
+      tempAmount: this.HandleDecimalPlaces(
+        (VariableTotalAmount -= VariableTotalAmount * 0.12),
+      ),
+      tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
+    })
+  }
 
-  //   componentDidUpdate(prevProps) {
-  //     if (this.props.cartItems !== prevProps.cartItems) {
-  //       let VariableTotalAmount = 0
-  //       this.props.cartItems.map(
-  //         (item) => (VariableTotalAmount += item.price * item.quantity),
-  //       )
-  //       this.setState({
-  //         totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
-  //         tempAmount: this.HandleDecimalPlaces(
-  //           (VariableTotalAmount -= VariableTotalAmount * 0.12),
-  //         ),
-  //         tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
-  //       })
-  //     }
-  //     return true
-  //   }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.cartItems !== prevProps.cartItems) {
+      let VariableTotalAmount = 0
+      this.props.cartItems.map(
+        (item) => (VariableTotalAmount += item.price * item.quantity),
+      )
+      this.setState({
+        totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
+        tempAmount: this.HandleDecimalPlaces(
+          (VariableTotalAmount -= VariableTotalAmount * 0.12),
+        ),
+        tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
+      })
+    }
+    if (this.props.get_transaction !== prevProps.get_transaction) {
+      const items = this.props.cartItems
+      const transaction = this.state.transanction_id
+      console.log(items, transaction)
+      // this.props.addTransactionItems(items, transaction)
+      // console.log(this.state.transanction_id)
+    }
+  }
   render() {
     const { cartItems } = this.props
     return (
       <>
+        <div
+          className='modal fade'
+          id='exampleModalCenter'
+          tabIndex='-1'
+          role='dialog'
+          aria-labelledby='exampleModalCenterTitle'
+          aria-hidden='true'>
+          <div
+            className='modal-dialog modal-dialog-centered modal-lg'
+            role='document'>
+            <div className='modal-content'>
+              <div className='modal-header'>
+                <button
+                  type='button'
+                  className='close'
+                  data-dismiss='modal'
+                  aria-label='Close'>
+                  <span aria-hidden='true'>&times;</span>
+                </button>
+              </div>
+              <div className='modal-body d-flex justify-content-between'>
+                <h2 className='pl-5' id='exampleModalLongTitle'>
+                  Amount To Pay
+                </h2>
+                <h2 className='pr-5' id='exampleModalLongTitle'>
+                  <strong>
+                    ${this.numberWithCommas(this.state.totalAmount)}
+                  </strong>
+                </h2>
+              </div>
+              <div className='modal-body'>
+                <h2 className='pl-5' id='exampleModalLongTitle'>
+                  Amount given by Customer
+                </h2>
+                <div className='row mt-5'>
+                  <div className='input-group col-lg-3'>
+                    <div className='input-group-prepend'>
+                      <div className='input-group-text'>$</div>
+                    </div>
+                    <input
+                      type='text'
+                      className='form-control'
+                      value={this.state.amount_tendered}
+                      name='amount_tendered'
+                      onChange={this.onChange()}
+                      style={{ height: "3rem" }}
+                      aria-label='Amount (to the nearest dollar)'
+                    />
+                  </div>
+                  <div className='col-lg-3'>
+                    <button
+                      type='button'
+                      className='btn btn-secondary btn-lg btn-block'>
+                      <strong>
+                        ${this.numberWithCommas(this.state.totalAmount)}
+                      </strong>
+                    </button>
+                  </div>
+                  <div className='col-lg-3'>
+                    <button
+                      type='button'
+                      onClick={this.handleTestClick}
+                      className='btn btn-secondary btn-lg btn-block'>
+                      500
+                    </button>
+                  </div>
+                  <div className='col-lg-3'>
+                    <button
+                      type='button'
+                      onClick={this.handleClick}
+                      className='btn btn-secondary btn-lg btn-block'>
+                      1000
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className='modal-footer pb-5'></div>
+            </div>
+          </div>
+        </div>
+
         <div className='row'>
           <div className='col-lg-4'>
             <div className='container'>
-              <div className='card card_cust mb-3 text-center'>
+              <div className='card card_cust mb-3'>
                 <div className='card-body'>
                   <div className='card-title'>
-                    <h2>Cart</h2>
+                    <h4>Sale Summary</h4>
                   </div>
 
                   <ul className='list-group list-group-flush'>
-                    <div className='overflow-auto' style={{ height: "25rem" }}>
-                      {/* {cartItems.map((item) => ( */}
-                      <li
-                        // key={item.prod_id}
-                        className='list-group-item d-flex align-items-stretch'>
-                        <div className='d-flex align-items-center'>
-                          <button
-                            type='button'
-                            className='btn btn-light btn-sm d-inline'
-                            //   onClick={() => {
-                            //     this.props.changeCartValue("plus", item.product_id)
-                            //   }}
-                          >
-                            +
-                          </button>
-
-                          <input
-                            className='form-control d-inline'
-                            type='text'
-                            style={{
-                              width: "45px",
-                              fontSize: "10px",
-                              textAlign: "center",
-                            }}
-                            //   value={item.quantity}
-                            //   onChange={this.onChange(item.product_id)}
-                          />
-
-                          <button
-                            type='button'
-                            className='btn btn-light btn-sm d-inline'
-                            //   onClick={() => {
-                            //     this.props.changeCartValue("minus", item.product_id)
-                            //   }}
-                          >
-                            -
-                          </button>
-                        </div>
-                        <span
-                          className='d-flex align-items-center'
-                          style={{ width: "9rem" }}>
-                          {/* {item.product_name} */}
-                        </span>
-                        <span className='d-flex align-items-center'>
-                          {/* ${item.price} */}
-                        </span>
-                        <span
-                          className='d-flex align-items-center '
-                          style={{ width: "4rem", height: "4rem" }}>
-                          <button
-                            type='button'
-                            className='btn btn-block btn-outline-danger btn-xs'
-                            // onClick={() => this.props.removeFromCart(item)}
-                          >
-                            <AiIcons.AiOutlineDelete />
-                          </button>
-                        </span>
-                      </li>
-                      {/* ))} */}
+                    <div className='overflow-auto' style={{ height: "32rem" }}>
+                      {cartItems.map((item) => (
+                        <li
+                          key={item.product_id}
+                          className='list-group-item d-flex align-items-stretch border-0'>
+                          <span className='d-flex align-items-center'>
+                            {item.quantity}
+                          </span>
+                          <span
+                            className='d-flex align-items-center'
+                            style={{ width: "9rem" }}>
+                            {item.product_name}
+                          </span>
+                          <span
+                            className='d-flex align-items-center mr-3'
+                            style={{ width: "5rem" }}>
+                            ${item.price}
+                          </span>
+                          <span className='d-flex align-items-center'>
+                            ${item.price * item.quantity}
+                          </span>
+                        </li>
+                      ))}
                     </div>
                   </ul>
 
                   <ul className='list-group list-group-flush'>
                     <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0'>
                       Subtotal
-                      {/* <span>${this.numberWithCommas(this.state.tempAmount)}</span> */}
+                      <span>
+                        ${this.numberWithCommas(this.state.tempAmount)}
+                      </span>
+                    </li>
+                    <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
+                      <div>Tax</div>
+                      <span>${this.numberWithCommas(this.state.tax)}</span>
                     </li>
                     <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
                       <div>
-                        <strong>Tax</strong>
+                        <h3>
+                          <strong>Total</strong>
+                        </h3>
                       </div>
                       <span>
-                        {/* <strong>${this.numberWithCommas(this.state.tax)}</strong> */}
+                        <h3>
+                          <strong>
+                            ${this.numberWithCommas(this.state.totalAmount)}
+                          </strong>
+                        </h3>
                       </span>
                     </li>
                   </ul>
-                  <button
-                    type='button'
-                    onClick={this.OnClick}
-                    className='btn d-flex justify-content-between btn-primary btn-block waves-effect waves-light px-5 py-3'>
-                    <div>Pay</div>
-                    {/* <span>${this.numberWithCommas(this.state.totalAmount)}</span> */}
-                  </button>
-                </div>
-              </div>
-
-              <div className='card mb-3 card_cust'>
-                <div className='card-body'>
-                  <a
-                    className='dark-grey-text d-flex justify-content-between'
-                    data-toggle='collapse'
-                    href='#collapseExample1'
-                    aria-expanded='false'
-                    aria-controls='collapseExample1'>
-                    Add a discount code (optional)
-                    <span>
-                      <i className='fas fa-chevron-down pt-1'></i>
-                    </span>
-                  </a>
-
-                  <div className='collapse' id='collapseExample1'>
-                    <div className='mt-3'>
-                      <div className='md-form md-outline mb-0'>
-                        <input
-                          type='text'
-                          id='discount-code1'
-                          className='form-control font-weight-light'
-                          placeholder='Enter discount code'
-                        />
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -211,7 +249,13 @@ export class Cart extends Component {
                 <div className='col-lg-9'>
                   <div className='card text-center'>
                     <div className='card-body'>
-                      <p className='card-text display-4'>15050</p>
+                      <p className='card-text display-4'>
+                        <span>
+                          <strong>
+                            ${this.numberWithCommas(this.state.totalAmount)}
+                          </strong>
+                        </span>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -220,21 +264,23 @@ export class Cart extends Component {
                 <div className='col-lg-4'>
                   <button
                     type='button'
-                    class='btn btn-primary btn-lg btn-block'>
+                    data-toggle='modal'
+                    data-target='#exampleModalCenter'
+                    className='btn btn-primary btn-lg btn-block'>
                     Cash
                   </button>
                 </div>
                 <div className='col-lg-4'>
                   <button
                     type='button'
-                    class='btn btn-primary btn-lg btn-block'>
+                    className='btn btn-primary btn-lg btn-block'>
                     Gcash
                   </button>
                 </div>
                 <div className='col-lg-4'>
                   <button
                     type='button'
-                    class='btn btn-primary btn-lg btn-block'>
+                    className='btn btn-primary btn-lg btn-block'>
                     Gift Card
                   </button>
                 </div>
@@ -246,20 +292,14 @@ export class Cart extends Component {
     )
   }
 }
-{
-}
-// export default connect(
-//   (state) => ({
-//     cartItems: state.cartReducer.cartItems,
-//   }),
-//   { removeFromCart, changeCartValue },
-// )(Cart)
 
 const mapToStateToProps = (state) => ({
+  get_transaction: state.transactions.get_transaction,
   cartItems: state.cartReducer.cartItems,
 })
 export default connect(mapToStateToProps, {
   removeFromCart,
   changeCartValue,
   addTransaction,
+  addTransactionItems,
 })(Cart)
