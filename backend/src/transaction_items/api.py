@@ -22,6 +22,17 @@ class TransactionViewSet(viewsets.ModelViewSet):
     #         pk=self.request.data.get('product')))
 
     def create(self, request, *args, **kwargs):
+        totalAmount = request.data['totalAmount']
+        amount_tendered = request.data['amount_tendered']
+        change = request.data['change']
+        quantity = request.data['quantity']
+        print(totalAmount, amount_tendered, change, quantity)
+        Transaction.save_transaction(
+            totalAmount=totalAmount,
+            amount_tendered=amount_tendered,
+            change=change,
+            quantity=quantity
+        )
         data = request.data.get(
             "items") if 'items' in request.data else request.data
         many = isinstance(data, list)
@@ -31,7 +42,10 @@ class TransactionViewSet(viewsets.ModelViewSet):
             arrOfKeys.append(key['product_id'])
         for key in range(0, len(data)):
             data[key]['product'] = arrOfKeys[key]
-        # print(data, many)
+            data[key]['transaction'] = Transaction.objects.all().order_by('id').reverse()[
+                0].id
+
+        print(data, many)
         serializer = self.get_serializer(data=data, many=many)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

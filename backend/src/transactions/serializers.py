@@ -4,6 +4,8 @@ from transactions.models import Transaction
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField()
+
     class Meta:
         model = Transaction
         fields = '__all__'

@@ -39,21 +39,25 @@ export class Cart extends Component {
     this.props.cartItems.map((item) => (quantity += item.quantity))
     const { totalAmount, amount_tendered, change } = this.state
     const items = this.props.cartItems
-    const data = { totalAmount, amount_tendered, change, quantity }
-
-    this.props.addTransaction(data)
-    this.setState({
-      transanction_id: this.props.get_transaction.id,
-    })
+    const data = { totalAmount, amount_tendered, change, quantity, items }
+    console.log(data)
+    // this.props.addTransaction(data)
+    // this.setState({
+    //   transanction_id: this.props.get_transaction.id,
+    // })
+    // console.log(this.state.transanction_id)
+    // const transaction = this.state.transanction_id
+    // console.log("Component Updated transaction is : " + transaction)
+    this.props.addTransactionItems(data)
   }
 
   handleTestClick = () => {
     console.log(this.state.transanction_id)
   }
   componentDidMount() {
-    // this.setState({
-    //   transanction_id: this.props.get_transaction.id,
-    // })
+    this.setState({
+      transanction_id: this.props.get_transaction.id,
+    })
     let VariableTotalAmount = 0
     this.props.cartItems.map(
       (item) => (VariableTotalAmount += item.price * item.quantity),
@@ -82,10 +86,6 @@ export class Cart extends Component {
       })
     }
     if (this.props.get_transaction !== prevProps.get_transaction) {
-      const items = this.props.cartItems
-      const transaction = this.state.transanction_id
-      console.log(items, transaction)
-      // this.props.addTransactionItems(items, transaction)
       // console.log(this.state.transanction_id)
     }
   }

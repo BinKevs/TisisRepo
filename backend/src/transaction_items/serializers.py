@@ -13,7 +13,7 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
     product_info = serializers.SerializerMethodField()
-    transaction_date = serializers.SerializerMethodField()
+    # transaction_date = serializers.SerializerMethodField()
 
     class Meta:
         model = Transaction_item

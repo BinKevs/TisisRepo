@@ -6,7 +6,4 @@
 
 # @receiver(post_save, sender=Transaction)
 # def add_transaction_id_on_save(sender, instance, created, **kwargs):
-#     if created:
-#         ts = Transaction_item.objects.get()
-#         ts.id = instance.id
-#         ts.save()
+#     print(instance.request.data.get('amount_tendered'))
