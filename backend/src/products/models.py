@@ -5,10 +5,15 @@ from suppliers.models import Supplier
 # from moneyfield import MoneyField
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from categories.models import Category
 
 
 class Product(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    category = models.ForeignKey(
+        Category, related_name="category_product", on_delete=models.CASCADE, null=True)
+    supplier = models.ForeignKey(
+        Supplier, related_name="supplier_product", on_delete=models.CASCADE, null=True)
     description = models.CharField(max_length=500, blank=True)
     stock = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=6, decimal_places=2)

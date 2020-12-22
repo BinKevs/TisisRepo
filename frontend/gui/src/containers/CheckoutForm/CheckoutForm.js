@@ -32,32 +32,19 @@ export class Cart extends Component {
 
   handleClick = (event) => {
     event.preventDefault()
+    let quantity = 0
     this.setState({
       change: this.state.amount_tendered - this.state.totalAmount,
     })
-    let quantity = 0
+
     this.props.cartItems.map((item) => (quantity += item.quantity))
     const { totalAmount, amount_tendered, change } = this.state
     const items = this.props.cartItems
     const data = { totalAmount, amount_tendered, change, quantity, items }
-    console.log(data)
-    // this.props.addTransaction(data)
-    // this.setState({
-    //   transanction_id: this.props.get_transaction.id,
-    // })
-    // console.log(this.state.transanction_id)
-    // const transaction = this.state.transanction_id
-    // console.log("Component Updated transaction is : " + transaction)
     this.props.addTransactionItems(data)
   }
 
-  handleTestClick = () => {
-    console.log(this.state.transanction_id)
-  }
   componentDidMount() {
-    this.setState({
-      transanction_id: this.props.get_transaction.id,
-    })
     let VariableTotalAmount = 0
     this.props.cartItems.map(
       (item) => (VariableTotalAmount += item.price * item.quantity),
@@ -71,24 +58,21 @@ export class Cart extends Component {
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.cartItems !== prevProps.cartItems) {
-      let VariableTotalAmount = 0
-      this.props.cartItems.map(
-        (item) => (VariableTotalAmount += item.price * item.quantity),
-      )
-      this.setState({
-        totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
-        tempAmount: this.HandleDecimalPlaces(
-          (VariableTotalAmount -= VariableTotalAmount * 0.12),
-        ),
-        tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
-      })
-    }
-    if (this.props.get_transaction !== prevProps.get_transaction) {
-      // console.log(this.state.transanction_id)
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.cartItems !== prevProps.cartItems) {
+  //     let VariableTotalAmount = 0
+  //     this.props.cartItems.map(
+  //       (item) => (VariableTotalAmount += item.price * item.quantity),
+  //     )
+  //     this.setState({
+  //       totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
+  //       tempAmount: this.HandleDecimalPlaces(
+  //         (VariableTotalAmount -= VariableTotalAmount * 0.12),
+  //       ),
+  //       tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
+  //     })
+  //   }
+  // }
   render() {
     const { cartItems } = this.props
     return (
@@ -154,9 +138,8 @@ export class Cart extends Component {
                   <div className='col-lg-3'>
                     <button
                       type='button'
-                      onClick={this.handleTestClick}
                       className='btn btn-secondary btn-lg btn-block'>
-                      500
+                      {this.state.change}
                     </button>
                   </div>
                   <div className='col-lg-3'>

@@ -62,6 +62,7 @@ INSTALLED_APPS = [
 
     'articles',
     'products',
+    'categories',
     'suppliers',
     'inventories',
     'transactions',
@@ -114,7 +115,7 @@ WSGI_APPLICATION = 'djreact.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'articlesapplication',
+        'NAME': 'dj_react_sale_and_inventory',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',

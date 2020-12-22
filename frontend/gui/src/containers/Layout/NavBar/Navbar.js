@@ -2,10 +2,13 @@ import React from "react"
 import { Link } from "react-router-dom"
 import * as FaIcons from "react-icons/fa"
 import * as BiIcons from "react-icons/bi"
-
+import { logout } from "../../../store/actions/Accounts/auth"
+import { withRouter } from "react-router-dom"
+import { connect } from "react-redux"
 import { SidebarData } from "./SidebarData"
 import "./Navbar.css"
 import { IconContext } from "react-icons"
+import * as FiIcons from "react-icons/fi"
 class Navbar extends React.Component {
   render() {
     return (
@@ -40,11 +43,7 @@ class Navbar extends React.Component {
               <div className='wrapper-li'>
                 {SidebarData.map((item, index) => {
                   return (
-                    <li
-                      key={index}
-                      className={item.cName}
-                      data-toggle={item.toggle}
-                      data-target={item.dataTarget}>
+                    <li key={index} className={item.cName}>
                       <Link to={item.path}>
                         <div>{item.icon}</div>
                         <span className='c'>{item.title}</span>
@@ -52,6 +51,43 @@ class Navbar extends React.Component {
                     </li>
                   )
                 })}
+                {this.props.AuthReducer.isAuthenticated ? (
+                  <li className='nav-text' onClick={this.props.logout}>
+                    <Link to='/login'>
+                      <div>
+                        <FiIcons.FiLogOut />
+                      </div>
+                      <span className='c'>Logout</span>
+                    </Link>
+                  </li>
+                ) : (
+                  <div>
+                    <li
+                      className='nav-text dropdown-toggle '
+                      type='button'
+                      id='dropdownMenuButton'>
+                      <Link to='/login'>
+                        <div>
+                          <FiIcons.FiLogIn />
+                        </div>
+                        <span className='c'>Login</span>
+                      </Link>
+                    </li>
+                    <div
+                      class='dropdown-menu'
+                      aria-labelledby='dropdownMenuButton'>
+                      <a class='dropdown-item' href='#'>
+                        Action
+                      </a>
+                      <a class='dropdown-item' href='#'>
+                        Another action
+                      </a>
+                      <a class='dropdown-item' href='#'>
+                        Something else here
+                      </a>
+                    </div>
+                  </div>
+                )}
               </div>
             </ul>
           </nav>
@@ -61,4 +97,9 @@ class Navbar extends React.Component {
   }
 }
 
-export default Navbar
+const mapStateToProps = (state) => {
+  return {
+    AuthReducer: state.AuthReducer,
+  }
+}
+export default withRouter(connect(mapStateToProps, { logout })(Navbar))

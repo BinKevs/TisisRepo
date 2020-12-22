@@ -30,6 +30,8 @@ export class ProductSetting extends Component {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Price</th>
+                <th>Category</th>
+                <th>Supplier</th>
                 <th>Stock</th>
                 <th>Description</th>
               </tr>
@@ -40,6 +42,8 @@ export class ProductSetting extends Component {
                   <td className='align-middle'>{product.id}</td>
                   <td className='align-middle'>{product.name}</td>
                   <td className='align-middle'>{product.price}</td>
+                  <td className='align-middle'>{product.category_info.name}</td>
+                  <td className='align-middle'>{product.supplier_info.name}</td>
                   <td className='align-middle'>{product.stock}</td>
                   <td className='align-middle'>{product.description}</td>
 

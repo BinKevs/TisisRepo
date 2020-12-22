@@ -3,6 +3,7 @@ import { tokenConfig } from "../../actions/Accounts/auth"
 import { createMessage, returnErrors } from "../Notification/messages"
 import {
   GET_TRANSACTION_LIST,
+  GET_TRANSACTION_ITEM_LIST,
   GET_TRANSACTION,
   DELETE_TRANSACTION,
   ADD_TRANSACTION,
@@ -17,6 +18,17 @@ export const getTransactionList = () => (dispatch, getState) => {
       payload: res.data,
     })
   })
+}
+
+export const getTransactionItemList = () => (dispatch, getState) => {
+  axios
+    .get("http://127.0.0.1:8000/api/transactions_items/", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_TRANSACTION_ITEM_LIST,
+        payload: res.data,
+      })
+    })
 }
 export const getTransaction = (TransactionID) => (dispatch, getState) => {
   axios

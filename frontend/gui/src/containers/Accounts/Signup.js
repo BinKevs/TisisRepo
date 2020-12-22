@@ -33,7 +33,7 @@ class RegistrationForm extends Component {
 
   render() {
     if (this.props.isAuthenticated) {
-      return <Redirect to='/articles' />
+      return <Redirect to='/home' />
     }
     const { username, email, password, password2 } = this.state
     return (

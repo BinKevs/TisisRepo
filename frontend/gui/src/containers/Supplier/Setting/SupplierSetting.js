@@ -21,37 +21,42 @@ export class SupplierSetting extends Component {
   render() {
     return (
       <Fragment>
-        <h2>Suppliers</h2>
-        <table className='table table-striped'>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Address</th>
-              <th>Phone Number</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.suppliers.map((supplier) => (
-              <tr key={supplier.id}>
-                <td>{supplier.id}</td>
-                <td>{supplier.name}</td>
-                <td>{supplier.address}</td>
-                <td>{supplier.phone_number}</td>
-                <td>
-                  <button
-                    onClick={this.props.deleteSupplier.bind(this, supplier.id)}
-                    className='btn btn-danger btn-sm'>
-                    {" "}
-                    Delete
-                  </button>
-                </td>
+        <div className='container'>
+          <h2>Suppliers</h2>
+          <table className='table table-striped'>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th />
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <Form />
+            </thead>
+            <tbody>
+              {this.props.suppliers.map((supplier) => (
+                <tr key={supplier.id}>
+                  <td>{supplier.id}</td>
+                  <td>{supplier.name}</td>
+                  <td>{supplier.address}</td>
+                  <td>{supplier.phone_number}</td>
+                  <td>
+                    <button
+                      onClick={this.props.deleteSupplier.bind(
+                        this,
+                        supplier.id,
+                      )}
+                      className='btn btn-danger btn-sm'>
+                      {" "}
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Form />
+        </div>
       </Fragment>
     )
   }

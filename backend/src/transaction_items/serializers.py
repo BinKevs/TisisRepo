@@ -13,7 +13,7 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
     product_info = serializers.SerializerMethodField()
-    # transaction_date = serializers.SerializerMethodField()
+    transaction_date = serializers.SerializerMethodField()
 
     class Meta:
         model = Transaction_item
@@ -36,7 +36,7 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             transaction = Transaction.objects.get(pk=obj.transaction.id)
             return {
                 "id": transaction.id,
-                "created_at": transaction.created_at
+                "created_at": transaction.created_at.strftime('%b %d %Y %H:%M:%S')
             }
         except:
             return {

@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Bar, Line, Pie, Doughnut } from "react-chartjs-2"
+import { Bar, Line, Pie, Doughnut, HorizontalBar } from "react-chartjs-2"
 import { connect } from "react-redux"
 let coloR = []
 class ChartProd extends Component {
@@ -44,7 +44,7 @@ class ChartProd extends Component {
     return (
       <div className='container'>
         <div className='chart'>
-          <Bar
+          <HorizontalBar
             //   width={100}
             //   height={50}
             options={{

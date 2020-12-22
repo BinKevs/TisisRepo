@@ -16,11 +16,20 @@ export class ReportsContainer extends Component {
     return (
       <Fragment>
         <div className='container'>
-          <ChartInv
-            chartData={this.props.inventories}
-            label='Added in Inventory'
-          />
-          <ChartProd chartData={this.props.products} label='Number of stocks' />
+          <div className='row'>
+            <div className='col-lg-6'>
+              <ChartInv
+                chartData={this.props.inventories}
+                label='Added in Inventory'
+              />
+            </div>
+            <div className='col-lg-6'>
+              <ChartProd
+                chartData={this.props.products}
+                label='Number of stocks'
+              />
+            </div>
+          </div>
         </div>
       </Fragment>
     )

@@ -5,7 +5,7 @@ import { logout } from "../../store/actions/Accounts/auth"
 import Alerts from "../../components/Alerts"
 import PropTypes from "prop-types"
 import Navbar from "./NavBar/Navbar"
-
+import { loadUser } from "../../store/actions/Accounts/auth"
 class CustomLayout extends React.Component {
   state = {
     sidebarStatus: false,
@@ -14,7 +14,20 @@ class CustomLayout extends React.Component {
     AuthReducer: PropTypes.object.isRequired,
     logout: PropTypes.func.isRequired,
   }
+  // componentDidMount() {
+  //   // this.props.loadUser()
+  //   console.log(this.props.AuthReducer)
+  // }
 
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.AuthReducer != prevProps.AuthReducer) {
+  //     this.props.loadUser()
+  //   }
+  // }
+
+  handlerTest = () => {
+    console.log(this.props.AuthReducer)
+  }
   handler = () => {
     this.setState((prevState) => ({
       sidebarStatus: !prevState.sidebarStatus,
@@ -28,14 +41,9 @@ class CustomLayout extends React.Component {
           handler={this.handler}
           sidebarStatus={this.state.sidebarStatus}
         />
+
         {/*
-        {user ? (
-          <span className='navbar-text mr-3 container'>
-            Welcome {user.username}
-          </span>
-        ) : (
-          ""
-        )}
+        
        <div
           className='navbar navbar-expand-sm navbar-dark sticky-top bg-dark '
           id='sidebar-wrapper'>
@@ -104,6 +112,21 @@ class CustomLayout extends React.Component {
           }>
           <div className='overflow-hidden'>{this.props.children}</div>
         </div>
+        {/* {this.props.AuthReducer.user.is_superuser === null ? (
+          <span className='navbar-text mr-3 container'>
+            Welcome {this.props.AuthReducer.user.username}
+          </span>
+        ) : (
+          "qweqwe"
+        )} 
+
+        <button
+          type='submit'
+          className='btn btn-primary'
+          onClick={this.handlerTest}>
+          Submit
+        </button>
+        */}
       </>
     )
   }
@@ -113,4 +136,6 @@ const mapStateToProps = (state) => {
     AuthReducer: state.AuthReducer,
   }
 }
-export default withRouter(connect(mapStateToProps, { logout })(CustomLayout))
+export default withRouter(
+  connect(mapStateToProps, { logout, loadUser })(CustomLayout),
+)

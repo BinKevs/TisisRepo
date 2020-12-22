@@ -27,22 +27,6 @@ export class Checkout extends Component {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
   }
 
-  // OnClick = (event) => {
-  //   // let quantity = 0
-  //   // event.preventDefault()
-  //   // this.props.cartItems.map((item) => (quantity += item.quantity))
-  //   // const items = this.props.cartItems
-  //   // console.log(items)
-  //   // const data = { items, quantity }
-
-  //   // this.props.addTransaction(data)
-
-  // }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   let VariableTotalAmount = 0
-  //   this.props.cartItems.map((item) => (VariableTotalAmount += item.price * item.quantity))
-  // }
   componentDidMount() {
     let VariableTotalAmount = 0
     this.props.cartItems.map(

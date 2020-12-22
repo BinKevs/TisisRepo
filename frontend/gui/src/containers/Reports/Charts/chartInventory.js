@@ -106,6 +106,7 @@ class ChartInv extends Component {
               labels: this.state.labels,
               datasets: [
                 {
+                  fill: false,
                   data: this.state.data,
                   backgroundColor: coloR,
                 },

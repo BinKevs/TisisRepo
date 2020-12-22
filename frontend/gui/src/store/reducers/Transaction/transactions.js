@@ -5,12 +5,13 @@ import {
   ADD_TRANSACTION,
   UPDATE_TRANSACTION,
   ADD_TRANSACTION_ITEMS,
+  GET_TRANSACTION_ITEM_LIST,
 } from "../../actions/Transaction/actionTypes"
 const initialState = {
   transactions: [],
   transaction: {},
   transaction_items: [],
-  get_transaction: {},
+  transaction_item_list: [],
 }
 
 export default function (state = initialState, action) {
@@ -19,6 +20,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         transactions: action.payload,
+      }
+    case GET_TRANSACTION_ITEM_LIST:
+      return {
+        ...state,
+        transaction_item_list: action.payload,
       }
     case GET_TRANSACTION:
       return {
@@ -36,7 +42,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         transactions: [...state.transactions, action.payload],
-        get_transaction: action.payload,
       }
     case ADD_TRANSACTION_ITEMS:
       return {
