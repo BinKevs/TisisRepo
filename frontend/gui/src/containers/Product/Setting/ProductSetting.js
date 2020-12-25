@@ -59,7 +59,7 @@ export class ProductSetting extends Component {
               ))}
             </tbody>
           </table>
-          <Form chartData={this.props.products} />
+          <Form />
         </div>
       </Fragment>
     )

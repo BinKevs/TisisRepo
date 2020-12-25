@@ -17,10 +17,10 @@ export class InventorySetting extends Component {
   componentDidMount() {
     this.props.getInventoryList()
   }
-  componentDidUpdate(prevProps, prevState) {
-    // if (this.props.inventories !== prevProps.inventories) {
-    //   this.props.getInventoryList()
-    // }
+  componentWillUpdate(prevProps, prevState) {
+    if (this.props.inventories !== prevProps.inventories) {
+      // this.props.getInventoryList()
+    }
   }
   render() {
     return (

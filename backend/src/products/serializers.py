@@ -10,7 +10,7 @@ class ProductSerializer(serializers.ModelSerializer):
         queryset=Supplier.objects.all())
     supplier_info = serializers.SerializerMethodField()
     category = serializers.PrimaryKeyRelatedField(
-        queryset=Supplier.objects.all())
+        queryset=Category.objects.all())
     category_info = serializers.SerializerMethodField()
 
     class Meta:

@@ -13,6 +13,8 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   user: null,
+  is_superuser: false,
+  logout: false,
 }
 
 const AuthReducer = (state = initialState, action) => {
@@ -56,6 +58,7 @@ const AuthReducer = (state = initialState, action) => {
         user: null,
         isAuthenticated: false,
         isLoading: false,
+        logout: true,
       }
     default:
       return {

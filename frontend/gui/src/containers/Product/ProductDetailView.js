@@ -7,6 +7,7 @@ class ProductDetail extends Component {
   static propTypes = {
     product: PropTypes.object.isRequired,
     getProduct: PropTypes.func.isRequired,
+    deleteProduct: PropTypes.func.isRequired,
   }
   componentDidMount() {
     const productID = this.props.match.params.productID
@@ -17,6 +18,7 @@ class ProductDetail extends Component {
     this.props.history.push("/products")
   }
   render() {
+    const { product } = this.props
     return (
       <>
         <div className='card'>
@@ -26,17 +28,14 @@ class ProductDetail extends Component {
             alt='Card cap'
           />
           <div className='card-body'>
-            <h2 className='card-title'>{this.props.product.name}</h2>
-            <h5 className='card-title'>{this.props.product.price}</h5>
-            <p className='card-text'>{this.props.product.description}</p>
+            <h2 className='card-title'>{product.name}</h2>
+            <h5 className='card-title'>{product.price}</h5>
+            <p className='card-text'>{product.description}</p>
             <form onSubmit={this.onHandles}>
               <button
                 type='submit'
                 className='btn btn-danger'
-                onClick={this.props.deleteProduct.bind(
-                  this,
-                  this.props.product.id,
-                )}>
+                onClick={deleteProduct.bind(this, product.id)}>
                 {" "}
                 Delete
               </button>

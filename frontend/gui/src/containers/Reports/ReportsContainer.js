@@ -1,12 +1,18 @@
 import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
+import { Bar, Line, Pie, Doughnut } from "react-chartjs-2"
+import PropTypes from "prop-types"
 import { getProductList } from "../../store/actions/Product/products"
 import { getInventoryList } from "../../store/actions/Inventory/inventories.js"
 import ChartInv from "./Charts/chartInventory"
 import ChartProd from "./Charts/chartProduct"
-
-import { Bar, Line, Pie, Doughnut } from "react-chartjs-2"
 export class ReportsContainer extends Component {
+  static propTypes = {
+    products: PropTypes.array.isRequired,
+    inventories: PropTypes.array.isRequired,
+    getProductList: PropTypes.func.isRequired,
+    getInventoryList: PropTypes.func.isRequired,
+  }
   componentDidMount() {
     this.props.getProductList()
     this.props.getInventoryList()

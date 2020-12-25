@@ -15,3 +15,14 @@ class Inventory(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    @staticmethod
+    def save_inventory(new_stock, supplier, product):
+        inventory = Inventory(
+            new_stock=new_stock,
+            supplier=supplier,
+            product=product,
+        )
+
+        inventory.save()
+        return inventory

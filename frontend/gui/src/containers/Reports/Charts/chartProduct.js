@@ -1,20 +1,19 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { Bar, Line, Pie, Doughnut, HorizontalBar } from "react-chartjs-2"
-import { connect } from "react-redux"
+
 let coloR = []
 class ChartProd extends Component {
+  static propTypes = {
+    chartData: PropTypes.array.isRequired,
+    label: PropTypes.string.isRequired,
+  }
   constructor(props) {
     super(props)
     this.state = {
       labels: this.props.chartData.map((x) => "Product : " + x.name),
       data: this.props.chartData.map((x) => x.stock),
     }
-  }
-  componentDidMount() {
-    this.setState({
-      labels: this.props.chartData.map((x) => "Product : " + x.name),
-      data: this.props.chartData.map((x) => x.stock),
-    })
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.props.chartData !== prevProps.chartData) {
@@ -23,12 +22,6 @@ class ChartProd extends Component {
         data: this.props.chartData.map((x) => x.stock),
       })
     }
-  }
-
-  static defaultProps = {
-    displayTitle: true,
-    displayLegend: true,
-    legendPosition: "bottom",
   }
 
   render() {
@@ -47,38 +40,56 @@ class ChartProd extends Component {
           <HorizontalBar
             //   width={100}
             //   height={50}
+            data={{
+              labels: this.state.labels,
+              datasets: [
+                {
+                  label: "product",
+                  data: this.state.data,
+                  backgroundColor: coloR,
+                },
+              ],
+            }}
             options={{
               title: {
-                display: this.props.displayTitle,
+                display: true,
                 text: this.props.label,
                 fontSize: 25,
               },
               legend: {
-                display: this.props.displayLegend,
-                position: this.props.legendPosition,
+                display: true,
+                position: "bottom",
               },
               scales: {
-                yAxes: [
+                xAxes: [
                   {
                     ticks: {
-                      beginAtZero: true,
-                      autoSkip: true,
+                      min: 0, // Edit the value according to what you need
                     },
+                  },
+                ],
+                yAxes: [
+                  {
+                    stacked: true,
                     gridLines: {
                       display: false,
                     },
                   },
                 ],
               },
-            }}
-            data={{
-              labels: this.state.labels,
-              datasets: [
-                {
-                  data: this.state.data,
-                  backgroundColor: coloR,
-                },
-              ],
+              // scales: {
+              //   responsive: true,
+              //   yAxes: [
+              //     {
+              //       ticks: {
+              //         beginAtZero: true,
+              //       },
+              //       gridLines: {
+              //         display: false,
+              //       },
+              //     },
+              //   ],
+              // },
             }}
           />
         </div>

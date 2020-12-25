@@ -21,11 +21,7 @@ export default function (state = initialState, action) {
         ...state,
         transactions: action.payload,
       }
-    case GET_TRANSACTION_ITEM_LIST:
-      return {
-        ...state,
-        transaction_item_list: action.payload,
-      }
+
     case GET_TRANSACTION:
       return {
         ...state,
@@ -43,15 +39,21 @@ export default function (state = initialState, action) {
         ...state,
         transactions: [...state.transactions, action.payload],
       }
-    case ADD_TRANSACTION_ITEMS:
-      return {
-        ...state,
-        transaction_items: [...state.transaction_items, action.payload],
-      }
+
     case UPDATE_TRANSACTION:
       return {
         ...state,
         transaction: action.payload,
+      }
+    case GET_TRANSACTION_ITEM_LIST:
+      return {
+        ...state,
+        transaction_item_list: action.payload,
+      }
+    case ADD_TRANSACTION_ITEMS:
+      return {
+        ...state,
+        transaction_items: [...state.transaction_items, action.payload],
       }
     default:
       return state

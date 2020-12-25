@@ -1,10 +1,11 @@
 import React, { Component } from "react"
 import "./App.css"
-import { loadUser } from "./store/actions/Accounts/auth"
-import CustomLayout from "./containers/Layout/Layout"
 import { Provider } from "react-redux"
 import { BrowserRouter as Router } from "react-router-dom"
 import { Provider as AlertProvider } from "react-alert"
+// import { loadUser } from "./store/actions/Accounts/auth"
+
+import CustomLayout from "./containers/Layout/Layout"
 import AlertTemplate from "react-alert-template-basic"
 import BaseRouter from "./Routes"
 import store from "./store/store"
@@ -14,9 +15,9 @@ const options = {
   timeout: 3000,
 }
 class App extends Component {
-  componentDidMount() {
-    store.dispatch(loadUser())
-  }
+  // componentDidMount() {
+  //   store.dispatch(loadUser())
+  // }
 
   render() {
     return (
@@ -24,7 +25,7 @@ class App extends Component {
         <AlertProvider template={AlertTemplate} {...options}>
           <Provider store={store}>
             <Router>
-              <CustomLayout {...this.props}>
+              <CustomLayout>
                 <BaseRouter />
               </CustomLayout>
             </Router>

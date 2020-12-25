@@ -1,61 +1,27 @@
 import React, { Component } from "react"
+import PropTypes from "prop-types"
 import { Bar, Line, Pie, Doughnut } from "react-chartjs-2"
-import { connect } from "react-redux"
-import axios from "axios"
 let coloR = []
-let prodname = []
-let prodstock = []
 class ChartInv extends Component {
+  static propTypes = {
+    chartData: PropTypes.array.isRequired,
+    label: PropTypes.string.isRequired,
+  }
   constructor(props) {
     super(props)
     this.state = {
-      labels: this.props.chartData.map(
-        (x) =>
-          "Supplier : " +
-          x.supplier_info.name +
-          "  |  Product : " +
-          x.product_info.name +
-          "  |  Date : " +
-          x.created_at,
-      ),
+      labels: this.props.chartData.map((x) => x.created_at),
       data: this.props.chartData.map((x) => x.new_stock),
-    }
-  }
-  componentDidMount() {
-    this.setState({
-      labels: this.props.chartData.map(
-        (x) =>
-          "Supplier : " +
-          x.supplier_info.name +
-          "  |  Product : " +
-          x.product_info.name +
-          "  |  Date : " +
-          x.created_at,
-      ),
-      data: this.props.chartData.map((x) => x.new_stock),
-    })
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.chartData !== prevProps.chartData) {
-      this.setState({
-        labels: this.props.chartData.map(
-          (x) =>
-            // "Supplier : " +
-            // x.supplier.name +
-            // "  |  Product : " +
-            // x.product.name +
-            // "  |  Date : " +
-            x.created_at,
-        ),
-        data: this.props.chartData.map((x) => x.new_stock),
-      })
     }
   }
 
-  static defaultProps = {
-    displayTitle: true,
-    displayLegend: true,
-    legendPosition: "bottom",
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.chartData !== prevProps.chartData) {
+      this.setState({
+        labels: this.props.chartData.map((x) => x.created_at),
+        data: this.props.chartData.map((x) => x.new_stock),
+      })
+    }
   }
 
   render() {
@@ -74,15 +40,26 @@ class ChartInv extends Component {
           <Line
             //   width={100}
             //   height={50}
+            data={{
+              labels: this.state.labels,
+              datasets: [
+                {
+                  label: "Inventory",
+                  fill: false,
+                  data: this.state.data,
+                  backgroundColor: coloR,
+                },
+              ],
+            }}
             options={{
               title: {
-                display: this.props.displayTitle,
+                display: true,
                 text: this.props.label,
                 fontSize: 25,
               },
               legend: {
-                display: this.props.displayLegend,
-                position: this.props.legendPosition,
+                display: true,
+                position: "bottom",
               },
               scales: {
                 xAxes: [
@@ -101,16 +78,6 @@ class ChartInv extends Component {
                   },
                 ],
               },
-            }}
-            data={{
-              labels: this.state.labels,
-              datasets: [
-                {
-                  fill: false,
-                  data: this.state.data,
-                  backgroundColor: coloR,
-                },
-              ],
             }}
           />
         </div>

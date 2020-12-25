@@ -1,6 +1,5 @@
 import React, { Component } from "react"
-import Cart from "../Cart/Cart"
-import { Link, Redirect } from "react-router-dom"
+import { Link } from "react-router-dom"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import {
@@ -8,6 +7,7 @@ import {
   deleteProduct,
 } from "../../store/actions/Product/products"
 import { addToCart } from "../../store/actions/Cart/cartActions"
+import Cart from "../Cart/Cart"
 import * as FaIcons from "react-icons/fa"
 import "./style.css"
 class ProductList extends Component {
@@ -15,6 +15,7 @@ class ProductList extends Component {
     products: PropTypes.array.isRequired,
     getProductList: PropTypes.func.isRequired,
     deleteProduct: PropTypes.func.isRequired,
+    addToCart: PropTypes.func.isRequired,
   }
 
   onSubmit(product_id, product_name, price) {
@@ -32,21 +33,14 @@ class ProductList extends Component {
   render() {
     return (
       <div className='custom_container'>
-        <div>
-          {/* <ul className='navbar-nav'>
-            <li
-              className='nav-item nav-link'
-              data-toggle='modal'
-              data-target='#staticBackdrop'>
-              Cart
-            </li>
-          </ul> */}
-        </div>
+        <div></div>
         <div className='row pt-5'>
           <div className='col-lg-8'>
             <div className='row'>
               {this.props.products.map((product) => (
-                <div className='col-md-6 col-lg-2 mx-3' key={product.id}>
+                <div
+                  className='col-xs-2 col-sm-4 col-md-3 col-lg-2 mx-3'
+                  key={product.id}>
                   <div
                     className='card card_cust'
                     style={{ width: "12rem", height: "22rem" }}>

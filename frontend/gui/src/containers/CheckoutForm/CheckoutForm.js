@@ -1,17 +1,25 @@
 import React, { Component } from "react"
-import { addTransaction } from "../../store/actions/Transaction/transactions"
-import { addTransactionItems } from "../../store/actions/Transaction/transactions"
+import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import {
   removeFromCart,
   changeCartValue,
 } from "../../store/actions/Cart/cartActions"
-import * as AiIcons from "react-icons/ai"
+import { addTransaction } from "../../store/actions/Transaction/transactions"
 
-export class Cart extends Component {
+import { addTransactionItems } from "../../store/actions/Transaction/transactions"
+import CheckOutPaymentModal from "./CheckOutPaymentModal"
+class CheckOutForm extends Component {
+  static propTypes = {
+    removeFromCart: PropTypes.func.isRequired,
+    changeCartValue: PropTypes.func.isRequired,
+    addTransaction: PropTypes.func.isRequired,
+    addTransactionItems: PropTypes.func.isRequired,
+    cartItems: PropTypes.array.isRequired,
+  }
   state = {
     totalAmount: 0,
-    tempAmount: 0,
+    Subtotal: 0,
     tax: 0,
     amount_tendered: 0,
     change: 0,
@@ -33,9 +41,6 @@ export class Cart extends Component {
   handleClick = (event) => {
     event.preventDefault()
     let quantity = 0
-    this.setState({
-      change: this.state.amount_tendered - this.state.totalAmount,
-    })
 
     this.props.cartItems.map((item) => (quantity += item.quantity))
     const { totalAmount, amount_tendered, change } = this.state
@@ -51,112 +56,32 @@ export class Cart extends Component {
     )
     this.setState({
       totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
-      tempAmount: this.HandleDecimalPlaces(
+      Subtotal: this.HandleDecimalPlaces(
         (VariableTotalAmount -= VariableTotalAmount * 0.12),
       ),
       tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
     })
   }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.amount_tendered !== prevState.amount_tendered) {
+      this.setState({
+        change: this.state.amount_tendered - this.state.totalAmount,
+      })
+      console.log(this.state)
+    }
+  }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.cartItems !== prevProps.cartItems) {
-  //     let VariableTotalAmount = 0
-  //     this.props.cartItems.map(
-  //       (item) => (VariableTotalAmount += item.price * item.quantity),
-  //     )
-  //     this.setState({
-  //       totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
-  //       tempAmount: this.HandleDecimalPlaces(
-  //         (VariableTotalAmount -= VariableTotalAmount * 0.12),
-  //       ),
-  //       tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
-  //     })
-  //   }
-  // }
   render() {
     const { cartItems } = this.props
+    const { Subtotal, tax, totalAmount } = this.state
     return (
       <>
-        <div
-          className='modal fade'
-          id='exampleModalCenter'
-          tabIndex='-1'
-          role='dialog'
-          aria-labelledby='exampleModalCenterTitle'
-          aria-hidden='true'>
-          <div
-            className='modal-dialog modal-dialog-centered modal-lg'
-            role='document'>
-            <div className='modal-content'>
-              <div className='modal-header'>
-                <button
-                  type='button'
-                  className='close'
-                  data-dismiss='modal'
-                  aria-label='Close'>
-                  <span aria-hidden='true'>&times;</span>
-                </button>
-              </div>
-              <div className='modal-body d-flex justify-content-between'>
-                <h2 className='pl-5' id='exampleModalLongTitle'>
-                  Amount To Pay
-                </h2>
-                <h2 className='pr-5' id='exampleModalLongTitle'>
-                  <strong>
-                    ${this.numberWithCommas(this.state.totalAmount)}
-                  </strong>
-                </h2>
-              </div>
-              <div className='modal-body'>
-                <h2 className='pl-5' id='exampleModalLongTitle'>
-                  Amount given by Customer
-                </h2>
-                <div className='row mt-5'>
-                  <div className='input-group col-lg-3'>
-                    <div className='input-group-prepend'>
-                      <div className='input-group-text'>$</div>
-                    </div>
-                    <input
-                      type='text'
-                      className='form-control'
-                      value={this.state.amount_tendered}
-                      name='amount_tendered'
-                      onChange={this.onChange()}
-                      style={{ height: "3rem" }}
-                      aria-label='Amount (to the nearest dollar)'
-                    />
-                  </div>
-                  <div className='col-lg-3'>
-                    <button
-                      type='button'
-                      className='btn btn-secondary btn-lg btn-block'>
-                      <strong>
-                        ${this.numberWithCommas(this.state.totalAmount)}
-                      </strong>
-                    </button>
-                  </div>
-                  <div className='col-lg-3'>
-                    <button
-                      type='button'
-                      className='btn btn-secondary btn-lg btn-block'>
-                      {this.state.change}
-                    </button>
-                  </div>
-                  <div className='col-lg-3'>
-                    <button
-                      type='button'
-                      onClick={this.handleClick}
-                      className='btn btn-secondary btn-lg btn-block'>
-                      1000
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className='modal-footer pb-5'></div>
-            </div>
-          </div>
-        </div>
-
+        <CheckOutPaymentModal
+          state={this.state}
+          numberWithCommas={this.numberWithCommas}
+          handleClick={this.handleClick}
+          onChange={() => this.onChange()}
+        />
         <div className='row'>
           <div className='col-lg-4'>
             <div className='container'>
@@ -196,13 +121,11 @@ export class Cart extends Component {
                   <ul className='list-group list-group-flush'>
                     <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0'>
                       Subtotal
-                      <span>
-                        ${this.numberWithCommas(this.state.tempAmount)}
-                      </span>
+                      <span>${this.numberWithCommas(Subtotal)}</span>
                     </li>
                     <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
                       <div>Tax</div>
-                      <span>${this.numberWithCommas(this.state.tax)}</span>
+                      <span>${this.numberWithCommas(tax)}</span>
                     </li>
                     <li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
                       <div>
@@ -212,9 +135,7 @@ export class Cart extends Component {
                       </div>
                       <span>
                         <h3>
-                          <strong>
-                            ${this.numberWithCommas(this.state.totalAmount)}
-                          </strong>
+                          <strong>${this.numberWithCommas(totalAmount)}</strong>
                         </h3>
                       </span>
                     </li>
@@ -234,9 +155,7 @@ export class Cart extends Component {
                     <div className='card-body'>
                       <p className='card-text display-4'>
                         <span>
-                          <strong>
-                            ${this.numberWithCommas(this.state.totalAmount)}
-                          </strong>
+                          <strong>${this.numberWithCommas(totalAmount)}</strong>
                         </span>
                       </p>
                     </div>
@@ -244,7 +163,7 @@ export class Cart extends Component {
                 </div>
               </div>
               <div className='row mt-5'>
-                <div className='col-lg-4'>
+                <div className='col-md-6 col-lg-4 '>
                   <button
                     type='button'
                     data-toggle='modal'
@@ -253,7 +172,7 @@ export class Cart extends Component {
                     Cash
                   </button>
                 </div>
-                <div className='col-lg-4'>
+                <div className='col-md-6 col-lg-4'>
                   <button
                     type='button'
                     className='btn btn-primary btn-lg btn-block'>
@@ -277,7 +196,6 @@ export class Cart extends Component {
 }
 
 const mapToStateToProps = (state) => ({
-  get_transaction: state.transactions.get_transaction,
   cartItems: state.cartReducer.cartItems,
 })
 export default connect(mapToStateToProps, {
@@ -285,4 +203,4 @@ export default connect(mapToStateToProps, {
   changeCartValue,
   addTransaction,
   addTransactionItems,
-})(Cart)
+})(CheckOutForm)

@@ -5,10 +5,11 @@ import ArticleDetail from "./containers/Article/ArticleDetailView"
 import ProductList from "./containers/Product/ProductListView"
 import ReportsContainer from "./containers/Reports/ReportsContainer"
 import ProductDetail from "./containers/Product/ProductDetailView"
-import Checkout from "./containers/CheckoutForm/CheckoutForm"
+import CheckOutForm from "./containers/CheckoutForm/CheckoutForm"
 import ProductSetting from "./containers/Product/Setting/ProductSetting"
 import TransactionSetting from "./containers/Transaction/Setting/TransactionSetting"
 import TransanctionItemsSetting from "./containers/Transaction/Setting/Transaction_Items_Setting"
+import CategoriesSetting from "./containers/Product/CategoriesSetting/CategoriesSetting"
 
 import InventorySetting from "./containers/Inventory/Setting/InventorySetting"
 import SupplierSetting from "./containers/Supplier/Setting/SupplierSetting"
@@ -26,8 +27,9 @@ const BaseRouter = () => (
       />
       <Route exact path='/products' component={ProductList} />
       <Route exact path='/reports' component={ReportsContainer} />
-      <Route exact path='/checkout' component={Checkout} />
+      <Route exact path='/checkout' component={CheckOutForm} />
       <Route exact path='/products/setting' component={ProductSetting} />
+      <Route exact path='/categories-setting' component={CategoriesSetting} />
       <Route exact path='/transactions' component={TransactionSetting} />
       <Route
         exact

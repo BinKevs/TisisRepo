@@ -13,6 +13,7 @@ class RegistrationForm extends Component {
   }
   static propTypes = {
     register: PropTypes.func.isRequired,
+    createMessage: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool,
   }
   onSubmit = (e) => {
@@ -95,21 +96,6 @@ class RegistrationForm extends Component {
     )
   }
 }
-
-// const mapStateToProps = (state) => {
-//   return {
-//     loading: state.loading,
-//     error: state.error,
-//   }
-// }
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     onAuth: (username, email, password1, password2) =>
-//       dispatch(actions.authSignup(username, email, password1, password2)),
-//   }
-// }mapStateToProps, mapDispatchToProps
-// export default connect()(RegistrationForm)
 
 const mapStateToProps = (state) => {
   return {

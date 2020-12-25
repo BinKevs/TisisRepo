@@ -1,29 +1,76 @@
 import React from "react"
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
-import { logout } from "../../store/actions/Accounts/auth"
-import Alerts from "../../components/Alerts"
 import PropTypes from "prop-types"
-import Navbar from "./NavBar/Navbar"
 import { loadUser } from "../../store/actions/Accounts/auth"
+import Alerts from "../../components/Alerts"
+import Navbar from "./NavBar/Navbar"
+let is_super = false
 class CustomLayout extends React.Component {
-  state = {
-    sidebarStatus: false,
+  constructor(props) {
+    super(props)
+    this.state = {
+      sidebarStatus: false,
+      is_superuser: false,
+    }
   }
+
   static propTypes = {
     AuthReducer: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired,
+  }
+  componentWillMount() {
+    this.props.loadUser()
+    try {
+      this.setState({
+        is_superuser: this.props.AuthReducer.user.is_superuser,
+      })
+    } catch (error) {
+      this.setState({
+        is_superuser: false,
+      })
+    }
+
+    // console.log( this.props.AuthReducer.user.is_superuser);
   }
   // componentDidMount() {
-  //   // this.props.loadUser()
-  //   console.log(this.props.AuthReducer)
+  //   console.log(typeof this.props.AuthReducer.user.is_superuser)
+  //   if (
+  //     typeof this.props.AuthReducer.user.is_superuser === "null" ||
+  //     typeof this.props.AuthReducer.user.is_superuser === "undefined"
+  //   ) {
+  //     this.setState({
+  //       is_superuser: false,
+  //     })
+  //   } else {
+  //     this.setState({
+  //       is_superuser: this.props.AuthReducer.user.is_superuser,
+  //     })
+  //   }
+  //   console.log(this.state)
+  // }
+  // componentDidMount() {
+  //   console.log(this.state)
+  //   console.log(this.props.AuthReducer.user)
   // }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.AuthReducer != prevProps.AuthReducer) {
-  //     this.props.loadUser()
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.AuthReducer !== prevProps.AuthReducer) {
+      try {
+        this.setState({
+          is_superuser: this.props.AuthReducer.user.is_superuser,
+        })
+      } catch (error) {
+        this.setState({
+          is_superuser: false,
+        })
+      }
+    }
+    if (this.props.AuthReducer.logout !== prevProps.AuthReducer.logout) {
+      this.setState({
+        is_superuser: false,
+      })
+    }
+  }
 
   handlerTest = () => {
     console.log(this.props.AuthReducer)
@@ -34,99 +81,30 @@ class CustomLayout extends React.Component {
     }))
   }
   render() {
+    const { sidebarStatus } = this.state
     return (
       <>
         <Alerts />
-        <Navbar
-          handler={this.handler}
-          sidebarStatus={this.state.sidebarStatus}
-        />
-
-        {/*
-        
-       <div
-          className='navbar navbar-expand-sm navbar-dark sticky-top bg-dark '
-          id='sidebar-wrapper'>
-          <button
-            className='navbar-toggler collapsed'
-            type='button'
-            data-toggle='collapse'
-            data-target='#navbarsExample10'
-            aria-controls='navbarsExample10'
-            aria-expanded='false'
-            aria-label='Toggle navigation'>
-            <span className='navbar-toggler-icon'></span>
-          </button>
-
-          <div
-            className='navbar-collapse justify-content-sm-center collapse'
-            id='navbarsExample10'>
-            <ul className='navbar-nav'>
-              {this.props.AuthReducer.isAuthenticated ? (
-                <li className='nav-item active'>
-                  <NavLink
-                    className='nav-link'
-                    onClick={this.props.logout}
-                    to='/login'>
-                    Logout <span className='sr-only'>(current)</span>
-                  </NavLink>
-                </li>
-              ) : (
-                <li className='nav-item active'>
-                  <NavLink className='nav-link' to='/login'>
-                    Login <span className='sr-only'>(current)</span>
-                  </NavLink>
-                </li>
-              )}
-              <li>
-                <NavLink className='nav-link' to={"/articles"}>
-                  Posts
-                </NavLink>
-              </li>
-              <li className='nav-item'>
-                <NavLink className='nav-link' to={"/products"}>
-                  Products
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-          <ul className='navbar-nav'>
-            <li className='nav-item'>
-              <NavLink className='nav-link' to={"/products/setting"}>
-                <img src='https://img.icons8.com/windows/30/ffffff/gear.png' />
-              </NavLink>
-            </li>
-            <li
-              className='nav-item nav-link'
-              data-toggle='modal'
-              data-target='#staticBackdrop'>
-              Cart
-            </li>
-          </ul>
-        </div> */}
+        <Navbar handler={this.handler} sidebarStatus={sidebarStatus} />
         <div
           className={
-            this.state.sidebarStatus
-              ? "container-active"
-              : "container-non-active"
+            sidebarStatus ? "container-active" : "container-non-active"
           }>
           <div className='overflow-hidden'>{this.props.children}</div>
         </div>
-        {/* {this.props.AuthReducer.user.is_superuser === null ? (
+        {this.state.is_superuser ? (
           <span className='navbar-text mr-3 container'>
             Welcome {this.props.AuthReducer.user.username}
           </span>
         ) : (
-          "qweqwe"
-        )} 
-
+          "Not Super"
+        )}
         <button
           type='submit'
           className='btn btn-primary'
           onClick={this.handlerTest}>
           Submit
         </button>
-        */}
       </>
     )
   }
@@ -136,6 +114,4 @@ const mapStateToProps = (state) => {
     AuthReducer: state.AuthReducer,
   }
 }
-export default withRouter(
-  connect(mapStateToProps, { logout, loadUser })(CustomLayout),
-)
+export default withRouter(connect(mapStateToProps, { loadUser })(CustomLayout))

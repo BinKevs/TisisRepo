@@ -7,6 +7,9 @@ import {
   DELETE_PRODUCT,
   ADD_PRODUCT,
   UPDATE_PRODUCT,
+  GET_CATEGORY_LIST,
+  ADD_CATEGORY,
+  DELETE_CATEGORY,
 } from "./actionTypes"
 const url = "http://127.0.0.1:8000/api/products/"
 export const getProductList = () => (dispatch, getState) => {
@@ -62,6 +65,45 @@ export const updateProduct = (ProductID, data) => (dispatch, getState) => {
       dispatch({
         type: UPDATE_PRODUCT,
         payload: res.data,
+      })
+    })
+    .catch((err) => console.log(err))
+}
+export const getCategoryList = () => (dispatch, getState) => {
+  axios
+    .get("http://127.0.0.1:8000/api/categories/", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_CATEGORY_LIST,
+        payload: res.data,
+      })
+    })
+}
+export const addCategory = (data) => (dispatch, getState) => {
+  axios
+    .post("http://127.0.0.1:8000/api/categories/", data, tokenConfig(getState))
+    .then((res) => {
+      dispatch(createMessage({ message: "Category Added" }))
+      dispatch({
+        type: ADD_CATEGORY,
+        payload: res.data,
+      })
+    })
+    .catch((err) =>
+      dispatch(returnErrors(err.response.data, err.response.status)),
+    )
+}
+export const deleteCategory = (CategoryID) => (dispatch, getState) => {
+  axios
+    .delete(
+      "http://127.0.0.1:8000/api/categories/" + CategoryID + "/",
+      tokenConfig(getState),
+    )
+    .then((res) => {
+      dispatch(createMessage({ message: "Product Deleted" }))
+      dispatch({
+        type: DELETE_CATEGORY,
+        payload: CategoryID,
       })
     })
     .catch((err) => console.log(err))

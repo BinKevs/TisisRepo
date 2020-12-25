@@ -4,14 +4,13 @@ import PropTypes from "prop-types"
 import { addSupplier } from "../../../store/actions/Supplier/suppliers"
 
 export class Form extends Component {
+  static propTypes = {
+    addSupplier: PropTypes.func.isRequired,
+  }
   state = {
     name: "",
     address: "",
     phone_number: "",
-  }
-
-  static propTypes = {
-    addSupplier: PropTypes.func.isRequired,
   }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value })

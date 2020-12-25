@@ -3,12 +3,12 @@ import { tokenConfig } from "../../actions/Accounts/auth"
 import { createMessage, returnErrors } from "../Notification/messages"
 import {
   GET_TRANSACTION_LIST,
-  GET_TRANSACTION_ITEM_LIST,
   GET_TRANSACTION,
   DELETE_TRANSACTION,
   ADD_TRANSACTION,
-  ADD_TRANSACTION_ITEMS,
   UPDATE_TRANSACTION,
+  ADD_TRANSACTION_ITEMS,
+  GET_TRANSACTION_ITEM_LIST,
 } from "./actionTypes"
 const url = "http://127.0.0.1:8000/api/transactions/"
 export const getTransactionList = () => (dispatch, getState) => {
@@ -20,16 +20,6 @@ export const getTransactionList = () => (dispatch, getState) => {
   })
 }
 
-export const getTransactionItemList = () => (dispatch, getState) => {
-  axios
-    .get("http://127.0.0.1:8000/api/transactions_items/", tokenConfig(getState))
-    .then((res) => {
-      dispatch({
-        type: GET_TRANSACTION_ITEM_LIST,
-        payload: res.data,
-      })
-    })
-}
 export const getTransaction = (TransactionID) => (dispatch, getState) => {
   axios
     .get(url + TransactionID + "/", tokenConfig(getState))
@@ -53,24 +43,7 @@ export const deleteTransaction = (TransactionID) => (dispatch, getState) => {
     })
     .catch((err) => console.log(err))
 }
-export const addTransactionItems = (data) => (dispatch, getState) => {
-  axios
-    .post(
-      "http://127.0.0.1:8000/api/transactions_items/",
-      data,
-      tokenConfig(getState),
-    )
-    .then((res) => {
-      dispatch(createMessage({ message: "Transaction Added" }))
-      dispatch({
-        type: ADD_TRANSACTION_ITEMS,
-        payload: res.data,
-      })
-    })
-    .catch((err) =>
-      dispatch(returnErrors(err.response.data, err.response.status)),
-    )
-}
+
 export const addTransaction = (data) => (dispatch, getState) => {
   axios
     .post(
@@ -103,4 +76,34 @@ export const updateTransaction = (TransactionID, data) => (
       })
     })
     .catch((err) => console.log(err))
+}
+
+export const getTransactionItemList = () => (dispatch, getState) => {
+  axios
+    .get("http://127.0.0.1:8000/api/transactions/items/", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_TRANSACTION_ITEM_LIST,
+        payload: res.data,
+      })
+    })
+}
+
+export const addTransactionItems = (data) => (dispatch, getState) => {
+  axios
+    .post(
+      "http://127.0.0.1:8000/api/transactions/items/",
+      data,
+      tokenConfig(getState),
+    )
+    .then((res) => {
+      dispatch(createMessage({ message: "Transaction Added" }))
+      dispatch({
+        type: ADD_TRANSACTION_ITEMS,
+        payload: res.data,
+      })
+    })
+    .catch((err) =>
+      dispatch(returnErrors(err.response.data, err.response.status)),
+    )
 }

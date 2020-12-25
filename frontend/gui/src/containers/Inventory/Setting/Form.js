@@ -13,7 +13,11 @@ export class Form extends Component {
   }
 
   static propTypes = {
+    addInventory: PropTypes.func.isRequired,
     getSupplierList: PropTypes.func.isRequired,
+    getProductList: PropTypes.func.isRequired,
+    suppliers: PropTypes.array.isRequired,
+    products: PropTypes.array.isRequired,
   }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value })
@@ -33,11 +37,13 @@ export class Form extends Component {
     this.props.getProductList()
   }
   render() {
+    const { products, suppliers } = this.props
     const { new_stock } = this.state
+    const { onChange, onSubmit } = this
     return (
       <div className='card card-body mt-4 mb-4'>
         <h2>Inventory</h2>
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={onSubmit}>
           <div className='form-group'>
             <label>Stock quantity</label>
             <input
@@ -45,7 +51,7 @@ export class Form extends Component {
               type='number'
               id='example-number-input'
               name='new_stock'
-              onChange={this.onChange}
+              onChange={onChange}
               value={new_stock}
             />
           </div>
@@ -56,8 +62,8 @@ export class Form extends Component {
               className='form-control'
               name='product'
               id='exampleFormControlSelect1'
-              onChange={this.onChange}>
-              {this.props.products.map((product) => (
+              onChange={onChange}>
+              {products.map((product) => (
                 <option value={product.id} key={product.id}>
                   {product.name}
                 </option>
@@ -71,8 +77,8 @@ export class Form extends Component {
               className='form-control'
               name='supplier'
               id='exampleFormControlSelect1'
-              onChange={this.onChange}>
-              {this.props.suppliers.map((supplier) => (
+              onChange={onChange}>
+              {suppliers.map((supplier) => (
                 <option value={supplier.id} key={supplier.id}>
                   {supplier.name}
                 </option>
