@@ -29,7 +29,7 @@
 }
 
 .nav-menu {
-  width: 250px;
+  width: 200px;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -40,14 +40,7 @@
   left: -100%;
   transition: 850ms;
 }
-.container-active {
-  margin-top: 50px;
-  transition: 350ms;
-}
-.container-non-active {
-  margin-top: 50px;
-  transition: 350ms;
-}
+
 .nav-menu.active {
   left: 0;
   transition: 350ms;
@@ -98,4 +91,35 @@
 
 span {
   margin-left: 16px;
+}
+.container-active {
+  margin-top: 50px;
+  padding-left: 200px;
+  transition: 350ms;
+}
+.container-non-active {
+  margin-top: 50px;
+  padding-left: 0px;
+  transition: 350ms;
+}
+.borderCust {
+  border-style: solid;
+  border-width: 5px;
+}
+.borderCustGen {
+  border-style: solid;
+  border-width: 5px;
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.borderCustUpperBody {
+  border-bottom: none;
+}
+.borderCustUpperBody2 {
+  border-bottom: none;
+}
+.btnCust {
+  font-size: 1.8rem;
+  margin: auto;
+  padding: 0px;
 }

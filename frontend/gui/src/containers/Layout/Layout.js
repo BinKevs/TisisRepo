@@ -89,7 +89,8 @@ class CustomLayout extends React.Component {
         <div
           className={
             sidebarStatus ? "container-active" : "container-non-active"
-          }>
+          }
+          style={{ backgroundColor: "#f9f9f9" }}>
           <div className='overflow-hidden'>{this.props.children}</div>
         </div>
         {this.state.is_superuser ? (

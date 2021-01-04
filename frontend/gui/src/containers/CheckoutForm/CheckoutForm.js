@@ -25,10 +25,8 @@ class CheckOutForm extends Component {
     change: 0,
     transanction_id: 0,
   }
-  onChange() {
-    return (event) => {
-      this.setState({ [event.target.name]: event.target.value })
-    }
+  onChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
   }
   HandleDecimalPlaces = (Variable) => {
     return Math.round((Variable + Number.EPSILON) * 100) / 100
@@ -47,6 +45,8 @@ class CheckOutForm extends Component {
     const items = this.props.cartItems
     const data = { totalAmount, amount_tendered, change, quantity, items }
     this.props.addTransactionItems(data)
+    localStorage.clear()
+    this.props.history.push("/products")
   }
 
   componentDidMount() {
@@ -75,15 +75,15 @@ class CheckOutForm extends Component {
     const { cartItems } = this.props
     const { Subtotal, tax, totalAmount } = this.state
     return (
-      <>
+      <div className='container'>
         <CheckOutPaymentModal
           state={this.state}
           numberWithCommas={this.numberWithCommas}
           handleClick={this.handleClick}
-          onChange={() => this.onChange()}
+          onChange={this.onChange}
         />
         <div className='row'>
-          <div className='col-lg-4'>
+          <div className='col-lg-5'>
             <div className='container'>
               <div className='card card_cust mb-3'>
                 <div className='card-body'>
@@ -144,9 +144,9 @@ class CheckOutForm extends Component {
               </div>
             </div>
           </div>
-          <div className='col-lg-8 '>
-            <div className='container'>
-              <div className='row mt-5'>
+          <div className='col-lg-7 '>
+            <div className='container card_cust p-5'>
+              <div className='row'>
                 <div className='col-lg-3'>
                   <h1 className='display-3 text-secondary'>Pay</h1>
                 </div>
@@ -168,21 +168,21 @@ class CheckOutForm extends Component {
                     type='button'
                     data-toggle='modal'
                     data-target='#exampleModalCenter'
-                    className='btn btn-primary btn-lg btn-block'>
+                    className='btn btn-primary btn-lg btn-block mb-3'>
                     Cash
                   </button>
                 </div>
                 <div className='col-md-6 col-lg-4'>
                   <button
                     type='button'
-                    className='btn btn-primary btn-lg btn-block'>
+                    className='btn btn-primary btn-lg btn-block mb-3'>
                     Gcash
                   </button>
                 </div>
                 <div className='col-lg-4'>
                   <button
                     type='button'
-                    className='btn btn-primary btn-lg btn-block'>
+                    className='btn btn-primary btn-lg btn-block '>
                     Gift Card
                   </button>
                 </div>
@@ -190,7 +190,7 @@ class CheckOutForm extends Component {
             </div>
           </div>
         </div>
-      </>
+      </div>
     )
   }
 }

@@ -1,13 +1,46 @@
 import React, { Component, Fragment } from "react"
 import { connect } from "react-redux"
+import { Link } from "react-router-dom"
 import PropTypes from "prop-types"
-import Form from "./Form"
+import FormAdd from "./FormAdd"
+import FormUpdate from "./FormUpdate-Test"
+
 import {
   getInventoryList,
   deleteInventory,
+  getInventory,
+  addInventory,
+  updateInventory,
 } from "../../../store/actions/Inventory/inventories"
+import { getSupplierList } from "../../../store/actions/Supplier/suppliers"
+import { getProductList } from "../../../store/actions/Product/products"
+import * as AiIcons from "react-icons/ai"
+import * as GrIcons from "react-icons/gr"
+let isEditButtonClicked = false
 
 export class InventorySetting extends Component {
+  state = {
+    new_stock: 0,
+    product: 0,
+    supplier: 0,
+    search: "",
+  }
+  onChange = (e) => this.setState({ [e.target.name]: e.target.value })
+
+  onSubmit = (event) => {
+    event.preventDefault()
+    const { new_stock, product, supplier } = this.state
+    const inventory = { new_stock, product, supplier }
+    this.props.addInventory(inventory)
+    this.props.getInventoryList()
+
+    this.setState({
+      new_stock: 0,
+      product: 0,
+      supplier: 0,
+      inventoryID: 0,
+    })
+  }
   static propTypes = {
     inventories: PropTypes.array.isRequired,
     getInventoryList: PropTypes.func.isRequired,
@@ -16,58 +49,145 @@ export class InventorySetting extends Component {
 
   componentDidMount() {
     this.props.getInventoryList()
+    this.props.getSupplierList()
+    this.props.getProductList()
+    this.setState({
+      search: "",
+    })
   }
-  componentWillUpdate(prevProps, prevState) {
-    if (this.props.inventories !== prevProps.inventories) {
-      // this.props.getInventoryList()
+  componentDidUpdate(prevProps, prevState) {
+    if (isEditButtonClicked) {
+      const { new_stock, product, supplier, id } = this.props.inventory
+      this.setState({
+        new_stock,
+        product,
+        supplier,
+        inventoryID: id,
+      })
+      console.log(this.state)
+      isEditButtonClicked = false
+    }
+  }
+  onEditClick(InventoryID) {
+    return (event) => {
+      event.preventDefault()
+      this.props.getInventory(InventoryID)
+      isEditButtonClicked = true
+    }
+  }
+
+  onEditSubmit = (InventoryID) => {
+    return (event) => {
+      event.preventDefault()
+      const { new_stock, product, supplier } = this.state
+      const inventory = { new_stock, product, supplier }
+      this.props.updateInventory(InventoryID, inventory)
+      this.props.getInventoryList()
+      this.props.getInventoryList()
+      this.setState({
+        new_stock: 0,
+        product: 0,
+        supplier: 0,
+      })
     }
   }
   render() {
+    const lowercasedFilter = this.state.search.toLowerCase()
+    const filteredData = this.props.inventories.filter((item) => {
+      return Object.keys(item).some((key) =>
+        item[key].toString().toLowerCase().includes(lowercasedFilter),
+      )
+    })
     return (
       <Fragment>
         <div className='container'>
-          <h2>Inventories</h2>
-          <table
-            className='table table-striped align-middl'
-            style={{ textAlign: "center" }}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Product</th>
-                <th>Added stock</th>
-                <th>Supplier</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.inventories.map((inventory) => (
-                <tr key={inventory.id}>
-                  <td className='align-middle'>{inventory.id}</td>
-                  <td className='align-middle'>
-                    {inventory.product_info.name}
-                  </td>
-                  <td className='align-middle'>{inventory.new_stock}</td>
-                  <td className='align-middle'>
-                    {inventory.supplier_info.name}
-                  </td>
-                  <td className='align-middle'>{inventory.created_at}</td>
-                  <td className='align-middle'>
-                    <button
-                      onClick={this.props.deleteInventory.bind(
-                        this,
-                        inventory.id,
-                      )}
-                      className='btn btn-danger btn-xs'>
-                      {" "}
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Form />
+          <div className='card_cust p-5'>
+            <div className='d-flex justify-content-start mb-3'>
+              <h2>Inventories</h2>
+
+              <div
+                className='btn btn-success p-0 px-2 ml-3'
+                data-toggle='modal'
+                data-target='#InventoryModalFormAdd'
+                style={{ fontSize: "1.5em" }}>
+                <AiIcons.AiOutlinePlus />
+              </div>
+            </div>
+            <input
+              className='form-control'
+              type='text'
+              id='example-number-input'
+              name='search'
+              onChange={this.onChange}
+              value={this.state.search}
+            />
+            <div className='table-responsive'>
+              <table
+                className='table table-striped align-middl'
+                style={{ textAlign: "center" }}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Added stock</th>
+                    <th>Supplier</th>
+                    <th>Date</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredData.map((inventory) => (
+                    <tr key={inventory.id}>
+                      <td className='align-middle'>{inventory.id}</td>
+                      <td className='align-middle'>
+                        {inventory.product_info.name}
+                      </td>
+                      <td className='align-middle'>{inventory.new_stock}</td>
+                      <td className='align-middle'>
+                        {inventory.supplier_info.name}
+                      </td>
+                      <td className='align-middle'>{inventory.created_at}</td>
+                      {/* <td className='align-middle'>
+                        <button
+                          onClick={this.props.deleteInventory.bind(
+                            this,
+                            inventory.id,
+                          )}
+                          className='btn btn-danger btn-xs'>
+                          {" "}
+                          <AiIcons.AiOutlineDelete />
+                        </button>
+                      </td> */}
+
+                      <td className='align-middle'>
+                        <button
+                          onClick={this.onEditClick(inventory.id)}
+                          data-toggle='modal'
+                          data-target='#InventoryModalFormUpdate'
+                          className='btn btn-primary btn-xs'>
+                          <GrIcons.GrEdit />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <FormAdd
+              state={this.state}
+              onSubmit={this.onSubmit}
+              onChange={this.onChange}
+              products={this.props.products}
+              suppliers={this.props.suppliers}
+            />
+            <FormUpdate
+              state={this.state}
+              onEditSubmit={this.onEditSubmit}
+              onChange={this.onChange}
+              products={this.props.products}
+              suppliers={this.props.suppliers}
+            />
+          </div>
         </div>
       </Fragment>
     )
@@ -76,8 +196,17 @@ export class InventorySetting extends Component {
 
 const mapStateToProps = (state) => ({
   inventories: state.inventories.inventories,
+  inventory: state.inventories.inventory,
+  suppliers: state.suppliers.suppliers,
+  products: state.products.products,
 })
 
-export default connect(mapStateToProps, { getInventoryList, deleteInventory })(
-  InventorySetting,
-)
+export default connect(mapStateToProps, {
+  addInventory,
+  getSupplierList,
+  getProductList,
+  getInventoryList,
+  getInventory,
+  deleteInventory,
+  updateInventory,
+})(InventorySetting)

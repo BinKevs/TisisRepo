@@ -13,10 +13,6 @@ class ArticleDetail extends Component {
     const articleID = this.props.match.params.articleID
     this.props.getArticle(articleID)
   }
-  componentDidUpdate() {
-    console.log("State update")
-  }
-
   onHandles = () => {
     this.props.history.push("/articles")
   }

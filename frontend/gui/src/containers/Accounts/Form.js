@@ -53,17 +53,18 @@ export class Form extends Component {
               value={address}
             />
           </div>
-          <div className='form-group '>
+          <div className='form-group row'>
             <label>Telephone</label>
-
-            <input
-              className='form-control'
-              type='tel'
-              name='phone_number'
-              id='example-tel-input'
-              onChange={this.onChange}
-              value={phone_number}
-            />
+            <div className='col-10'>
+              <input
+                className='form-control'
+                type='tel'
+                name='phone_number'
+                id='example-tel-input'
+                onChange={this.onChange}
+                value={phone_number}
+              />
+            </div>
           </div>
           <div className='form-group'>
             <button type='submit' className='btn btn-primary'>

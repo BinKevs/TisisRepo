@@ -14,10 +14,10 @@ const CheckOutPaymentModal = (props) => {
         aria-labelledby='exampleModalCenterTitle'
         aria-hidden='true'>
         <div
-          className='modal-dialog modal-dialog-centered modal-lg'
+          className='modal-dialog modal-dialog-centered modal-lg '
           role='document'>
-          <div className='modal-content'>
-            <div className='modal-header'>
+          <div className='modal-content borderCust'>
+            <div className='modal-header borderCustUpperBody2 borderCustGen'>
               <button
                 type='button'
                 className='close'
@@ -26,7 +26,8 @@ const CheckOutPaymentModal = (props) => {
                 <span aria-hidden='true'>&times;</span>
               </button>
             </div>
-            <div className='modal-body d-flex justify-content-between'>
+
+            <div className='modal-body d-flex justify-content-between borderCustUpperBody borderCustGen'>
               <h2 className='pl-5' id='exampleModalLongTitle'>
                 Amount To Pay
               </h2>
@@ -34,7 +35,7 @@ const CheckOutPaymentModal = (props) => {
                 <strong>${numberWithCommas(totalAmount)}</strong>
               </h2>
             </div>
-            <div className='modal-body'>
+            <div className='modal-body borderCustGen'>
               <h2 className='pl-5' id='exampleModalLongTitle'>
                 Amount given by Customer
               </h2>
@@ -45,8 +46,8 @@ const CheckOutPaymentModal = (props) => {
                   </div>
                   <input
                     type='text'
-                    className='form-control'
-                    onChange={onChange()}
+                    className='form-control mb-3'
+                    onChange={onChange}
                     value={amount_tendered}
                     name='amount_tendered'
                     style={{ height: "3rem" }}
@@ -56,14 +57,14 @@ const CheckOutPaymentModal = (props) => {
                 <div className='col-lg-3'>
                   <button
                     type='button'
-                    className='btn btn-secondary btn-lg btn-block'>
+                    className='btn btn-secondary btn-lg btn-block mb-3'>
                     <strong>${numberWithCommas(totalAmount)}</strong>
                   </button>
                 </div>
                 <div className='col-lg-3'>
                   <button
                     type='button'
-                    className='btn btn-secondary btn-lg btn-block'>
+                    className='btn btn-secondary btn-lg btn-block mb-3'>
                     {change}
                   </button>
                 </div>
@@ -71,13 +72,13 @@ const CheckOutPaymentModal = (props) => {
                   <button
                     type='button'
                     onClick={handleClick}
-                    className='btn btn-secondary btn-lg btn-block'>
+                    data-dismiss='modal'
+                    className='btn btn-secondary btn-lg btn-block '>
                     1000
                   </button>
                 </div>
               </div>
             </div>
-            <div className='modal-footer pb-5'></div>
           </div>
         </div>
       </div>

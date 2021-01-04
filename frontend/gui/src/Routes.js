@@ -10,10 +10,11 @@ import ProductSetting from "./containers/Product/Setting/ProductSetting"
 import TransactionSetting from "./containers/Transaction/Setting/TransactionSetting"
 import TransanctionItemsSetting from "./containers/Transaction/Setting/Transaction_Items_Setting"
 import CategoriesSetting from "./containers/Product/CategoriesSetting/CategoriesSetting"
-
 import InventorySetting from "./containers/Inventory/Setting/InventorySetting"
 import SupplierSetting from "./containers/Supplier/Setting/SupplierSetting"
 import Login from "./containers/Accounts/Login"
+import AccountSetting from "./containers/Accounts/AccountSetting"
+
 import RegistrationForm from "./containers/Accounts/Signup"
 import PrivateRoute from "./components/common/PrivateRoute"
 const BaseRouter = () => (
@@ -25,6 +26,7 @@ const BaseRouter = () => (
         path='/articles/:articleID/'
         component={ArticleDetail}
       />
+
       <Route exact path='/products' component={ProductList} />
       <Route exact path='/reports' component={ReportsContainer} />
       <Route exact path='/checkout' component={CheckOutForm} />
@@ -36,9 +38,16 @@ const BaseRouter = () => (
         path='/transactions/items'
         component={TransanctionItemsSetting}
       />
+      <Route exact path='/accounts/setting' component={AccountSetting} />
+
       <Route exact path='/inventories/setting' component={InventorySetting} />
+
       <Route exact path='/supplier' component={SupplierSetting} />
-      <Route exact path='/products/:productID/' component={ProductDetail} />
+      <Route
+        exact
+        path='/products/setting/:productID/'
+        component={ProductDetail}
+      />
       <Route exact path='/login/' component={Login} />
       <Route exact path='/signup/' component={RegistrationForm} />
     </Switch>

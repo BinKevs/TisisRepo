@@ -38,7 +38,7 @@ export const SidebarData = [
   },
   {
     title: "Account Settings",
-    path: "/",
+    path: "/accounts/setting",
     icon: <VscIcons.VscAccount />,
     cName: "nav-text",
   },

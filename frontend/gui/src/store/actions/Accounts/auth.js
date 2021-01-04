@@ -9,6 +9,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  GET_ACCOUNT_LIST,
 } from "./types"
 
 export const loadUser = () => (dispatch, getState) => {
@@ -102,4 +103,14 @@ export const tokenConfig = (getState) => {
   }
 
   return config
+}
+
+const url = "http://127.0.0.1:8000/api/accounts/"
+export const getAccountList = () => (dispatch, getState) => {
+  axios.get(url, tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: GET_ACCOUNT_LIST,
+      payload: res.data,
+    })
+  })
 }

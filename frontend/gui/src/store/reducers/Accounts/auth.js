@@ -7,6 +7,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  GET_ACCOUNT_LIST,
 } from "../../actions/Accounts/types"
 const initialState = {
   token: localStorage.getItem("token"),
@@ -15,6 +16,8 @@ const initialState = {
   user: null,
   is_superuser: false,
   logout: false,
+  accounts: [],
+  account: {},
 }
 
 const AuthReducer = (state = initialState, action) => {
@@ -59,6 +62,11 @@ const AuthReducer = (state = initialState, action) => {
         isAuthenticated: false,
         isLoading: false,
         logout: true,
+      }
+    case GET_ACCOUNT_LIST:
+      return {
+        ...state,
+        accounts: action.payload,
       }
     default:
       return {

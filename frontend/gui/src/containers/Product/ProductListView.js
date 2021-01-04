@@ -34,7 +34,7 @@ class ProductList extends Component {
     return (
       <div className='custom_container'>
         <div></div>
-        <div className='row pt-5'>
+        <div className='row'>
           <div className='col-lg-8'>
             <div className='row'>
               {this.props.products.map((product) => (
@@ -55,7 +55,7 @@ class ProductList extends Component {
                         name='name'
                         onChange={this.onChange}
                         value={product.name}>
-                        <Link to={"/products/" + product.id + "/"}>
+                        <Link to={"/products/setting/" + product.id + "/"}>
                           {product.name}
                         </Link>
                       </p>
@@ -70,7 +70,7 @@ class ProductList extends Component {
                       className='m-3'>
                       <button
                         type='submit'
-                        className='btn btn-block btn-primary'>
+                        className='btn btn-block btn-primary btnCust'>
                         <FaIcons.FaCartPlus />
                       </button>
                     </form>
@@ -79,7 +79,7 @@ class ProductList extends Component {
               ))}
             </div>
           </div>
-          <div className='col-lg-4'>
+          <div className='col-lg-4 mt-5'>
             <Cart />
           </div>
         </div>

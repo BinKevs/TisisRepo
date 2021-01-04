@@ -70,18 +70,18 @@ export class Cart extends Component {
     return (
       <>
         <div className='container'>
-          <div className='card mb-3 text-center'>
+          <div className='card card_cust mb-3 text-center'>
             <div className='card-body'>
               <div className='card-title'>
                 <h2>Cart</h2>
               </div>
 
-              <ul className='list-group list-group-flush'>
+              <ul className='list-group list-group-flush '>
                 <div className='overflow-auto' style={{ height: "25rem" }}>
                   {cartItems.map((item) => (
                     <li
                       key={item.product_id}
-                      className='list-group-item d-flex align-items-stretch'>
+                      className='list-group-item d-flex align-items-stretch table-responsive'>
                       <div className='d-flex align-items-center'>
                         <button
                           type='button'

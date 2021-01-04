@@ -2,6 +2,16 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from django.contrib.auth.models import User
+from rest_framework import viewsets, permissions
+from .serializers import AccountSerializer
+# API
+
+
+class AccountViewSet(viewsets.ModelViewSet):
+
+    queryset = User.objects.all()
+    serializer_class = AccountSerializer
 
 # Register API
 

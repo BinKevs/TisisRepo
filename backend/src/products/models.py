@@ -14,8 +14,9 @@ class Product(models.Model):
         Category, related_name="category_product", on_delete=models.CASCADE, null=True)
     supplier = models.ForeignKey(
         Supplier, related_name="supplier_product", on_delete=models.CASCADE, null=True)
+    image = models.ImageField(null=True, blank=True)
     description = models.CharField(max_length=500, blank=True)
-    stock = models.IntegerField(default=0)
+    stock = models.IntegerField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
@@ -29,7 +30,7 @@ class Product(models.Model):
         print(raw)
         if instance.id:
             product = Product.objects.get(id=instance.product.id)
-        instance.product.stock += instance.new_stock
+        instance.product.stock += int(instance.new_stock)
         instance.product.save()
 
     @receiver(post_save, sender='transaction_items.Transaction_item')

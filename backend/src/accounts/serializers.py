@@ -2,6 +2,14 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+        extra_kwargs = {'password': {'write_only': True},
+                        'password': {'read_only': True}}
+
 # User Serializer
 
 
@@ -9,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'is_superuser')
+
 
 # Register Serializer
 
@@ -23,6 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             validated_data['username'], validated_data['email'], validated_data['password'])
         return user
+
 
 # Login Serializer
 
