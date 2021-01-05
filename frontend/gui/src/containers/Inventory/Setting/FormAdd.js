@@ -46,10 +46,11 @@ const FormAdd = (props) => {
                   <label>Select product</label>
 
                   <select
-                    className='form-control'
+                    class='form-control selectpicker'
                     name='product'
                     id='exampleFormControlSelect1'
-                    onChange={onChange}>
+                    onChange={onChange}
+                    data-live-search='true'>
                     <option>-------</option>
                     {products.map((product) => (
                       <option value={product.id} key={product.id}>

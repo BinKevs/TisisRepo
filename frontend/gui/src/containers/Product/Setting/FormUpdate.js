@@ -3,9 +3,9 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import * as AiIcons from "react-icons/ai"
 
-const FormAdd = (props) => {
+const FormUpdate = (props) => {
   const { suppliers, categories } = props
-  const { onChange, onAddSubmit } = props
+  const { onChange, onUpdateSubmit } = props
   const {
     name,
     description,
@@ -20,7 +20,7 @@ const FormAdd = (props) => {
     <>
       <div
         className='modal fade'
-        id='ProductModalFormAdd'
+        id='ProductModalFormUpdate'
         tabIndex='-1'
         role='dialog'
         aria-labelledby='exampleModalCenterTitle'
@@ -54,6 +54,7 @@ const FormAdd = (props) => {
 
               <div className='form-group'>
                 <label>Description</label>
+
                 <textarea
                   className='form-control'
                   type='text'
@@ -64,6 +65,14 @@ const FormAdd = (props) => {
               </div>
               <div className='form-group'>
                 <label>Image</label>
+                <br />
+                <img
+                  style={{ width: "10rem", height: "10rem" }}
+                  className='card-img-top img-fluid'
+                  src={image}
+                  alt='Card cap'
+                />
+                <br />
                 <input
                   type='file'
                   name='image'
@@ -76,6 +85,7 @@ const FormAdd = (props) => {
                   <label>Select Category</label>
                   <div
                     className='btn btn-success p-0 px-2 ml-3'
+                    data-dismiss='modal'
                     data-toggle='modal'
                     data-target='#CategoryModalForm'
                     style={{ fontSize: "1.5em" }}>
@@ -87,9 +97,12 @@ const FormAdd = (props) => {
                   name='category'
                   id='exampleFormControlSelect1'
                   onChange={onChange}>
-                  {categories.map((category) => (
-                    <option value={category.id} key={category.id}>
-                      {category.name}
+                  {categories.map((categoryItem) => (
+                    <option
+                      value={categoryItem.id}
+                      selected={categoryItem.id === category ? "selected" : ""}
+                      key={categoryItem.id}>
+                      {categoryItem.name}
                     </option>
                   ))}
                 </select>
@@ -102,9 +115,12 @@ const FormAdd = (props) => {
                   name='supplier'
                   id='exampleFormControlSelect1'
                   onChange={onChange}>
-                  {suppliers.map((supplier) => (
-                    <option value={supplier.id} key={supplier.id}>
-                      {supplier.name}
+                  {suppliers.map((supplierItem) => (
+                    <option
+                      value={supplierItem.id}
+                      selected={supplierItem.id === supplier ? "selected" : ""}
+                      key={supplierItem.id}>
+                      {supplierItem.name}
                     </option>
                   ))}
                 </select>
@@ -127,14 +143,14 @@ const FormAdd = (props) => {
                   type='number'
                   id='example-number-input'
                   name='stock'
-                  onChange={onChange}
                   value={stock}
+                  onChange={onChange}
                 />
               </div>
               <div className='form-group'>
                 <button
                   type='submit'
-                  onClick={onAddSubmit}
+                  onClick={onUpdateSubmit(productID)}
                   data-dismiss='modal'
                   className='btn btn-primary'>
                   Submit
@@ -147,11 +163,11 @@ const FormAdd = (props) => {
     </>
   )
 }
-FormAdd.propTypes = {
-  onAddSubmit: PropTypes.func.isRequired,
+FormUpdate.propTypes = {
+  onUpdateSubmit: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
   suppliers: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
 }
-export default connect(null, {})(FormAdd)
+export default connect(null, {})(FormUpdate)

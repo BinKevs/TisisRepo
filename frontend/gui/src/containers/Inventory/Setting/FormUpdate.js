@@ -5,7 +5,7 @@ import PropTypes from "prop-types"
 const FormUpdate = (props) => {
   const { products, suppliers } = props
   const { new_stock, product, supplier, inventoryID } = props.state
-  const { onChange, onEditSubmit } = props
+  const { onChange, onUpdateSubmit } = props
   return (
     <div>
       <div
@@ -30,7 +30,7 @@ const FormUpdate = (props) => {
             </div>
             <div className='card card-body mt-4 mb-4'>
               <h2>Inventory</h2>
-              <form onSubmit={onEditSubmit(inventoryID)}>
+              <form onSubmit={onUpdateSubmit(inventoryID)}>
                 <div className='form-group'>
                   <label>Stock quantity</label>
                   <input

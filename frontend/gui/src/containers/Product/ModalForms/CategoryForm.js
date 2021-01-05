@@ -9,7 +9,7 @@ const CategoryForm = (props) => {
       <div
         className='modal fade'
         id='CategoryModalForm'
-        tabIndex='-1'
+        tabIndex='1'
         role='dialog'
         aria-labelledby='exampleModalCenterTitle'
         aria-hidden='true'>
@@ -22,6 +22,8 @@ const CategoryForm = (props) => {
                 type='button'
                 className='close'
                 data-dismiss='modal'
+                data-toggle='modal'
+                data-target='#ProductModalFormUpdate'
                 aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
               </button>

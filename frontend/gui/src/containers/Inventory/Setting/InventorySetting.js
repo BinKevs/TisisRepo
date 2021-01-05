@@ -3,8 +3,7 @@ import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 import PropTypes from "prop-types"
 import FormAdd from "./FormAdd"
-import FormUpdate from "./FormUpdate-Test"
-
+import FormUpdate from "./FormUpdate"
 import {
   getInventoryList,
   deleteInventory,
@@ -19,15 +18,26 @@ import * as GrIcons from "react-icons/gr"
 let isEditButtonClicked = false
 
 export class InventorySetting extends Component {
+  static propTypes = {
+    inventories: PropTypes.array.isRequired,
+    inventory: PropTypes.object.isRequired,
+    getInventoryList: PropTypes.func.isRequired,
+    getSupplierList: PropTypes.func.isRequired,
+    getProductList: PropTypes.func.isRequired,
+    deleteInventory: PropTypes.func.isRequired,
+    updateInventory: PropTypes.func.isRequired,
+    addInventory: PropTypes.func.isRequired,
+  }
   state = {
     new_stock: 0,
     product: 0,
     supplier: 0,
     search: "",
+    inventoryID: 0,
   }
   onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
-  onSubmit = (event) => {
+  onAddSubmit = (event) => {
     event.preventDefault()
     const { new_stock, product, supplier } = this.state
     const inventory = { new_stock, product, supplier }
@@ -40,11 +50,6 @@ export class InventorySetting extends Component {
       supplier: 0,
       inventoryID: 0,
     })
-  }
-  static propTypes = {
-    inventories: PropTypes.array.isRequired,
-    getInventoryList: PropTypes.func.isRequired,
-    deleteInventory: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
@@ -67,8 +72,11 @@ export class InventorySetting extends Component {
       console.log(this.state)
       isEditButtonClicked = false
     }
+    if (this.props.inventory !== prevProps.inventory) {
+      this.props.getProductList()
+    }
   }
-  onEditClick(InventoryID) {
+  onEditButtonClick(InventoryID) {
     return (event) => {
       event.preventDefault()
       this.props.getInventory(InventoryID)
@@ -76,14 +84,13 @@ export class InventorySetting extends Component {
     }
   }
 
-  onEditSubmit = (InventoryID) => {
+  onUpdateSubmit = (InventoryID) => {
     return (event) => {
       event.preventDefault()
       const { new_stock, product, supplier } = this.state
       const inventory = { new_stock, product, supplier }
       this.props.updateInventory(InventoryID, inventory)
-      this.props.getInventoryList()
-      this.props.getInventoryList()
+
       this.setState({
         new_stock: 0,
         product: 0,
@@ -161,7 +168,7 @@ export class InventorySetting extends Component {
 
                       <td className='align-middle'>
                         <button
-                          onClick={this.onEditClick(inventory.id)}
+                          onClick={this.onEditButtonClick(inventory.id)}
                           data-toggle='modal'
                           data-target='#InventoryModalFormUpdate'
                           className='btn btn-primary btn-xs'>
@@ -175,14 +182,14 @@ export class InventorySetting extends Component {
             </div>
             <FormAdd
               state={this.state}
-              onSubmit={this.onSubmit}
+              onAddSubmit={this.onAddSubmit}
               onChange={this.onChange}
               products={this.props.products}
               suppliers={this.props.suppliers}
             />
             <FormUpdate
               state={this.state}
-              onEditSubmit={this.onEditSubmit}
+              onUpdateSubmit={this.onUpdateSubmit}
               onChange={this.onChange}
               products={this.props.products}
               suppliers={this.props.suppliers}
