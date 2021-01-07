@@ -93,19 +93,13 @@ class CustomLayout extends React.Component {
           style={{ backgroundColor: "#f9f9f9" }}>
           <div className='overflow-hidden'>{this.props.children}</div>
         </div>
-        {this.state.is_superuser ? (
+        {/* {this.state.is_superuser ? (
           <span className='navbar-text mr-3 container'>
             Welcome {this.props.AuthReducer.user.username}
           </span>
         ) : (
           "Not Super"
-        )}
-        <button
-          type='submit'
-          className='btn btn-primary'
-          onClick={this.handlerTest}>
-          Submit
-        </button>
+        )} */}
       </>
     )
   }

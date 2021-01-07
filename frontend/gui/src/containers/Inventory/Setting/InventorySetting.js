@@ -36,6 +36,13 @@ export class InventorySetting extends Component {
     inventoryID: 0,
   }
   onChange = (e) => this.setState({ [e.target.name]: e.target.value })
+  onChangeTest = (e) => {
+    const productID = e.target.value.split(" ")
+
+    this.setState({
+      [e.target.name]: productID[0],
+    })
+  }
 
   onAddSubmit = (event) => {
     event.preventDefault()
@@ -59,6 +66,7 @@ export class InventorySetting extends Component {
     this.setState({
       search: "",
     })
+    console.log(this.props.inventories)
   }
   componentDidUpdate(prevProps, prevState) {
     if (isEditButtonClicked) {
@@ -109,25 +117,27 @@ export class InventorySetting extends Component {
       <Fragment>
         <div className='container'>
           <div className='card_cust p-5'>
-            <div className='d-flex justify-content-start mb-3'>
-              <h2>Inventories</h2>
+            <div className='d-flex align-items-center mb-3 p-2 form-row'>
+              <h2 className='col-auto'>Inventories</h2>
 
-              <div
-                className='btn btn-success p-0 px-2 ml-3'
+              <button
+                className='btn btn-outline-secondary ml-4 col-auto'
                 data-toggle='modal'
                 data-target='#InventoryModalFormAdd'
                 style={{ fontSize: "1.5em" }}>
                 <AiIcons.AiOutlinePlus />
-              </div>
+              </button>
+
+              <input
+                className='form-control col-lg-3 ml-auto'
+                type='text'
+                id='example-number-input'
+                name='search'
+                onChange={this.onChange}
+                value={this.state.search}
+              />
             </div>
-            <input
-              className='form-control'
-              type='text'
-              id='example-number-input'
-              name='search'
-              onChange={this.onChange}
-              value={this.state.search}
-            />
+
             <div className='table-responsive'>
               <table
                 className='table table-striped align-middl'
@@ -171,7 +181,7 @@ export class InventorySetting extends Component {
                           onClick={this.onEditButtonClick(inventory.id)}
                           data-toggle='modal'
                           data-target='#InventoryModalFormUpdate'
-                          className='btn btn-primary btn-xs'>
+                          className='btn btn-outline-secondary btn-xs'>
                           <GrIcons.GrEdit />
                         </button>
                       </td>
@@ -184,6 +194,7 @@ export class InventorySetting extends Component {
               state={this.state}
               onAddSubmit={this.onAddSubmit}
               onChange={this.onChange}
+              onChangeTest={this.onChangeTest}
               products={this.props.products}
               suppliers={this.props.suppliers}
             />

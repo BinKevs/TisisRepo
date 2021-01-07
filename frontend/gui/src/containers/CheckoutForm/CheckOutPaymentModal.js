@@ -2,7 +2,12 @@ import React from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 const CheckOutPaymentModal = (props) => {
-  const { numberWithCommas, onChange, handleClick } = props
+  const {
+    numberWithCommas,
+    onChange,
+    handleClick,
+    handleSetAmountTendered,
+  } = props
   const { totalAmount, amount_tendered, change } = props.state
   return (
     <div>
@@ -39,24 +44,22 @@ const CheckOutPaymentModal = (props) => {
               <h2 className='pl-5' id='exampleModalLongTitle'>
                 Amount given by Customer
               </h2>
-              <div className='row mt-5'>
+              <div className='form-inline mt-5'>
                 <div className='input-group col-lg-3'>
-                  <div className='input-group-prepend'>
-                    <div className='input-group-text'>$</div>
-                  </div>
                   <input
                     type='text'
                     className='form-control mb-3'
                     onChange={onChange}
                     value={amount_tendered}
                     name='amount_tendered'
-                    style={{ height: "3rem" }}
+                    style={{ height: "4.5rem" }}
                     aria-label='Amount (to the nearest dollar)'
                   />
                 </div>
                 <div className='col-lg-3'>
                   <button
                     type='button'
+                    onClick={totalAmount}
                     className='btn btn-secondary btn-lg btn-block mb-3'>
                     <strong>${numberWithCommas(totalAmount)}</strong>
                   </button>
@@ -64,20 +67,35 @@ const CheckOutPaymentModal = (props) => {
                 <div className='col-lg-3'>
                   <button
                     type='button'
+                    onClick={handleSetAmountTendered(
+                      Math.ceil(totalAmount / 100) * 100,
+                    )}
                     className='btn btn-secondary btn-lg btn-block mb-3'>
-                    {change}
+                    <strong>
+                      ${numberWithCommas(Math.ceil(totalAmount / 100) * 100)}
+                    </strong>
                   </button>
                 </div>
                 <div className='col-lg-3'>
                   <button
                     type='button'
-                    onClick={handleClick}
-                    data-dismiss='modal'
+                    onClick={handleSetAmountTendered(
+                      Math.ceil(totalAmount / 1000) * 1000,
+                    )}
                     className='btn btn-secondary btn-lg btn-block '>
-                    1000
+                    <strong>
+                      ${numberWithCommas(Math.ceil(totalAmount / 1000) * 1000)}
+                    </strong>
                   </button>
                 </div>
               </div>
+              <button
+                type='button'
+                onClick={handleClick}
+                data-dismiss='modal'
+                className='btn btn-secondary btn-lg btn-block '>
+                <strong>Confirm Payment</strong>
+              </button>
             </div>
           </div>
         </div>

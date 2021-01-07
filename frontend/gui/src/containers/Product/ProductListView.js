@@ -50,6 +50,7 @@ class ProductList extends Component {
                       alt='Card cap'
                     />
                     <div className='card-body'>
+                      <p className='card-title'>{product.price}</p>
                       <p
                         className='card-title'
                         name='name'
@@ -59,7 +60,6 @@ class ProductList extends Component {
                           {product.name}
                         </Link>
                       </p>
-                      <p className='card-title'>{product.price}</p>
                     </div>
                     <form
                       onSubmit={this.onSubmit(

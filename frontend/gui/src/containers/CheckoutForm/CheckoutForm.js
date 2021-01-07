@@ -48,7 +48,14 @@ class CheckOutForm extends Component {
     localStorage.clear()
     this.props.history.push("/products")
   }
-
+  handleSetAmountTendered = (AmountTendered) => {
+    return (event) => {
+      event.preventDefault()
+      this.setState({
+        amount_tendered: AmountTendered,
+      })
+    }
+  }
   componentDidMount() {
     let VariableTotalAmount = 0
     this.props.cartItems.map(
@@ -75,16 +82,17 @@ class CheckOutForm extends Component {
     const { cartItems } = this.props
     const { Subtotal, tax, totalAmount } = this.state
     return (
-      <div className='container'>
+      <div>
         <CheckOutPaymentModal
           state={this.state}
           numberWithCommas={this.numberWithCommas}
           handleClick={this.handleClick}
           onChange={this.onChange}
+          handleSetAmountTendered={this.handleSetAmountTendered}
         />
         <div className='row'>
           <div className='col-lg-5'>
-            <div className='container'>
+            <div>
               <div className='card card_cust mb-3'>
                 <div className='card-body'>
                   <div className='card-title'>
@@ -145,7 +153,7 @@ class CheckOutForm extends Component {
             </div>
           </div>
           <div className='col-lg-7 '>
-            <div className='container card_cust p-5'>
+            <div className='card_cust p-5'>
               <div className='row'>
                 <div className='col-lg-3'>
                   <h1 className='display-3 text-secondary'>Pay</h1>

@@ -5,7 +5,7 @@ import PropTypes from "prop-types"
 const FormAdd = (props) => {
   const { products, suppliers } = props
   const { new_stock } = props.state
-  const { onChange, onSubmit } = props
+  const { onChange, onAddSubmit, onChangeTest } = props
   return (
     <div>
       <div
@@ -30,7 +30,7 @@ const FormAdd = (props) => {
             </div>
             <div className='card card-body mt-4 mb-4'>
               <h2>Inventory</h2>
-              <form onSubmit={onSubmit}>
+              <form onSubmit={onAddSubmit}>
                 <div className='form-group'>
                   <label>Stock quantity</label>
                   <input
@@ -44,20 +44,21 @@ const FormAdd = (props) => {
                 </div>
                 <div className='form-group'>
                   <label>Select product</label>
-
-                  <select
-                    class='form-control selectpicker'
+                  <input
+                    className='form-control custom-select custom-select-lg'
+                    onChange={onChangeTest}
                     name='product'
-                    id='exampleFormControlSelect1'
-                    onChange={onChange}
-                    data-live-search='true'>
-                    <option>-------</option>
+                    list='brow'
+                  />
+                  <datalist id='brow'>
                     {products.map((product) => (
-                      <option value={product.id} key={product.id}>
+                      <option
+                        value={product.id + " " + product.name}
+                        key={product.id}>
                         {product.name}
                       </option>
                     ))}
-                  </select>
+                  </datalist>
                 </div>
                 <div className='form-group'>
                   <label>Select supplier</label>

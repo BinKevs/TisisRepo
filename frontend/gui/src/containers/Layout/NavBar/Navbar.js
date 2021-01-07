@@ -21,13 +21,40 @@ class Navbar extends React.Component {
       <>
         <IconContext.Provider value={{ color: "#fff" }}>
           <Link to='#' className='menu-bars'>
-            <div className='navbar bg-dark' onClick={this.props.handler}>
-              <div className='logoMinified'>
-                {sidebarStatus ? <BiIcons.BiLeftArrow /> : ""}
+            <div
+              className='d-flex justify-content-between bg-dark pl-4'
+              style={{ height: "50px", fontSize: "1.5em" }}>
+              <div className='AddOn' onClick={this.props.handler}>
+                <div className=' logoMinified'>
+                  {sidebarStatus ? <BiIcons.BiLeftArrow /> : ""}
+                </div>
+                <FaIcons.FaBars />
+                <div className='logoMinified'>
+                  {sidebarStatus ? "" : <BiIcons.BiRightArrow />}
+                </div>
               </div>
-              <FaIcons.FaBars />
-              <div className='logoMinified'>
-                {sidebarStatus ? "" : <BiIcons.BiRightArrow />}
+              <div>
+                {this.props.AuthReducer.isAuthenticated ? (
+                  <li className='nav-text' onClick={this.props.logout}>
+                    <Link to='/login'>
+                      <span>Logout</span>
+                      <div>
+                        <FiIcons.FiLogOut />
+                      </div>
+                    </Link>
+                  </li>
+                ) : (
+                  <div>
+                    <li className='nav-text'>
+                      <Link to='/login'>
+                        <span>Login</span>
+                        <div>
+                          <FiIcons.FiLogIn />
+                        </div>
+                      </Link>
+                    </li>
+                  </div>
+                )}
               </div>
             </div>
           </Link>
@@ -50,35 +77,11 @@ class Navbar extends React.Component {
                     <li key={index} className={item.cName}>
                       <Link to={item.path}>
                         <div>{item.icon}</div>
-                        <span className='c'>{item.title}</span>
+                        <span>{item.title}</span>
                       </Link>
                     </li>
                   )
                 })}
-                {this.props.AuthReducer.isAuthenticated ? (
-                  <li className='nav-text' onClick={this.props.logout}>
-                    <Link to='/login'>
-                      <div>
-                        <FiIcons.FiLogOut />
-                      </div>
-                      <span className='c'>Logout</span>
-                    </Link>
-                  </li>
-                ) : (
-                  <div>
-                    <li
-                      className='nav-text dropdown-toggle '
-                      type='button'
-                      id='dropdownMenuButton'>
-                      <Link to='/login'>
-                        <div>
-                          <FiIcons.FiLogIn />
-                        </div>
-                        <span className='c'>Login</span>
-                      </Link>
-                    </li>
-                  </div>
-                )}
               </div>
             </ul>
           </nav>
