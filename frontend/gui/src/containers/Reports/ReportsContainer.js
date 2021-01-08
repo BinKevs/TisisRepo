@@ -22,13 +22,13 @@ export class ReportsContainer extends Component {
     return (
       <Fragment>
         <div className='container row'>
-          <div className='col m-auto'>
+          <div className='col-5 m-auto'>
             <ChartInv
               chartData={this.props.inventories}
               label='Added in Inventory'
             />
           </div>
-          <div className='col m-auto'>
+          <div className='col-5 m-auto'>
             <ChartProd
               chartData={this.props.products}
               label='Number of stocks'

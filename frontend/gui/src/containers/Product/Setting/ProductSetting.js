@@ -16,6 +16,8 @@ import { getSupplierList } from "../../../store/actions/Supplier/suppliers"
 import { getCategoryList } from "../../../store/actions/Product/products"
 import * as AiIcons from "react-icons/ai"
 import * as GrIcons from "react-icons/gr"
+import * as BsIcons from "react-icons/bs"
+let products = []
 let isEditButtonClicked = false
 let isImageChanged = false
 export class ProductSetting extends Component {
@@ -38,6 +40,7 @@ export class ProductSetting extends Component {
     stock: 0,
     image: null,
     productID: 0,
+    search: "",
   }
   componentDidMount() {
     this.props.getProductList()
@@ -50,6 +53,7 @@ export class ProductSetting extends Component {
       isImageChanged = true
     } else {
       this.setState({ [event.target.name]: event.target.value })
+      console.log(this.state.search)
     }
   }
 
@@ -169,18 +173,52 @@ export class ProductSetting extends Component {
     })
   }
   render() {
+    products = []
+    this.props.products.map((product) =>
+      products.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        category: product.category_info.name,
+        supplier: product.supplier_info.name,
+        stock: product.stock,
+        description: product.description,
+      }),
+    )
+    const lowercasedFilter = this.state.search.toLowerCase()
+    const filteredData = products.filter((item) => {
+      return Object.keys(item).some((key) =>
+        item[key].toString().toLowerCase().includes(lowercasedFilter),
+      )
+    })
+    console.log(filteredData)
     return (
       <Fragment>
         <div className='container'>
           <div className='card_cust p-5'>
-            <div className='d-flex justify-content-start mb-3'>
+            <div className='d-flex align-items-center mb-3'>
               <h2>Products</h2>
-              <div
-                className='btn btn-success p-0 px-2 ml-3'
+              <button
+                className='btn btn-outline-secondary ml-4 col-auto'
                 data-toggle='modal'
                 data-target='#ProductModalFormAdd'
                 style={{ fontSize: "1.5em" }}>
                 <AiIcons.AiOutlinePlus />
+              </button>
+              <div className='col-lg-3 ml-auto form-inline'>
+                <div style={{ fontSize: "1.5em" }}>
+                  <BsIcons.BsSearch />
+                </div>
+
+                <input
+                  className='form-control ml-3'
+                  type='text'
+                  id='example-number-input'
+                  name='search'
+                  placeholder='Search'
+                  onChange={this.onChange}
+                  value={this.state.search}
+                />
               </div>
             </div>
             <div className='table-responsive'>
@@ -199,17 +237,13 @@ export class ProductSetting extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.products.map((product) => (
+                  {filteredData.map((product) => (
                     <tr key={product.id}>
                       <td className='align-middle'>{product.id}</td>
                       <td className='align-middle'>{product.name}</td>
                       <td className='align-middle'>{product.price}</td>
-                      <td className='align-middle'>
-                        {product.category_info.name}
-                      </td>
-                      <td className='align-middle'>
-                        {product.supplier_info.name}
-                      </td>
+                      <td className='align-middle'>{product.category}</td>
+                      <td className='align-middle'>{product.supplier.name}</td>
                       <td className='align-middle'>{product.stock}</td>
                       <td className='align-middle'>{product.description}</td>
 
@@ -229,7 +263,7 @@ export class ProductSetting extends Component {
                           onClick={this.onEditButtonClick(product.id)}
                           data-toggle='modal'
                           data-target='#ProductModalFormUpdate'
-                          className='btn btn-primary btn-xs'>
+                          className='btn btn-outline-secondary btn-xs'>
                           <GrIcons.GrEdit />
                         </button>
                       </td>

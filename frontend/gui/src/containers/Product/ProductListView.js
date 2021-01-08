@@ -9,7 +9,9 @@ import {
 import { addToCart } from "../../store/actions/Cart/cartActions"
 import Cart from "../Cart/Cart"
 import * as FaIcons from "react-icons/fa"
+import * as BsIcons from "react-icons/bs"
 import "./style.css"
+let products = []
 class ProductList extends Component {
   static propTypes = {
     products: PropTypes.array.isRequired,
@@ -17,7 +19,10 @@ class ProductList extends Component {
     deleteProduct: PropTypes.func.isRequired,
     addToCart: PropTypes.func.isRequired,
   }
-
+  state = {
+    search: "",
+  }
+  onChange = (e) => this.setState({ [e.target.name]: e.target.value })
   onSubmit(product_id, product_name, price) {
     return (event) => {
       event.preventDefault()
@@ -31,13 +36,48 @@ class ProductList extends Component {
   onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
   render() {
+    products = []
+    this.props.products.map((product) =>
+      products.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        category: product.category_info.name,
+        supplier: product.supplier_info.name,
+        stock: product.stock,
+        description: product.description,
+      }),
+    )
+    const lowercasedFilter = this.state.search.toLowerCase()
+    const filteredData = products.filter((item) => {
+      return Object.keys(item).some((key) =>
+        item[key].toString().toLowerCase().includes(lowercasedFilter),
+      )
+    })
     return (
-      <div className='custom_container'>
-        <div></div>
+      <>
         <div className='row'>
+          <div className='col-xl-8 d-flex align-items-center my-2 p-2 form-row'>
+            <div className='col-xl-4 ml-auto form-inline'>
+              <div style={{ fontSize: "1.5em" }}>
+                <BsIcons.BsSearch />
+              </div>
+
+              <input
+                className='form-control ml-3'
+                type='text'
+                id='example-number-input'
+                name='search'
+                placeholder='Search'
+                onChange={this.onChange}
+                value={this.state.search}
+              />
+            </div>
+          </div>
+
           <div className='col-lg-8'>
             <div className='row'>
-              {this.props.products.map((product) => (
+              {filteredData.map((product) => (
                 <div
                   className='col-xs-2 col-sm-4 col-md-3 col-lg-2 mx-3'
                   key={product.id}>
@@ -83,7 +123,7 @@ class ProductList extends Component {
             <Cart />
           </div>
         </div>
-      </div>
+      </>
     )
   }
 }

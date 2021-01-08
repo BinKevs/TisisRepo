@@ -14,9 +14,11 @@ import {
 import { getSupplierList } from "../../../store/actions/Supplier/suppliers"
 import { getProductList } from "../../../store/actions/Product/products"
 import * as AiIcons from "react-icons/ai"
+import * as BsIcons from "react-icons/bs"
 import * as GrIcons from "react-icons/gr"
-let isEditButtonClicked = false
 
+let isEditButtonClicked = false
+let inventories = []
 export class InventorySetting extends Component {
   static propTypes = {
     inventories: PropTypes.array.isRequired,
@@ -67,7 +69,10 @@ export class InventorySetting extends Component {
       search: "",
     })
     console.log(this.props.inventories)
+
+    console.log(Date().toLocaleString())
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (isEditButtonClicked) {
       const { new_stock, product, supplier, id } = this.props.inventory
@@ -91,7 +96,21 @@ export class InventorySetting extends Component {
       isEditButtonClicked = true
     }
   }
-
+  onEz = (event) => {
+    // var topValues = .sort((a, b) => b - a).slice(0, 5)
+    // console.log(topValues)
+    const myData = []
+      .concat(this.props.inventories)
+      .sort((a, b) => b.new_stock - a.new_stock)
+      .slice(0, 5)
+      .map((item) => (
+        <div key={item.id}>
+          {item.id} {item.new_stock}
+        </div>
+      ))
+    console.log(myData)
+    // console.log(inventories)
+  }
   onUpdateSubmit = (InventoryID) => {
     return (event) => {
       event.preventDefault()
@@ -107,8 +126,18 @@ export class InventorySetting extends Component {
     }
   }
   render() {
+    inventories = []
+    this.props.inventories.map((inventory) =>
+      inventories.push({
+        id: inventory.id,
+        supplier: inventory.supplier_info.name,
+        product: inventory.product_info.name,
+        new_stock: inventory.new_stock,
+        created_at: inventory.created_at,
+      }),
+    )
     const lowercasedFilter = this.state.search.toLowerCase()
-    const filteredData = this.props.inventories.filter((item) => {
+    const filteredData = inventories.filter((item) => {
       return Object.keys(item).some((key) =>
         item[key].toString().toLowerCase().includes(lowercasedFilter),
       )
@@ -123,24 +152,31 @@ export class InventorySetting extends Component {
               <button
                 className='btn btn-outline-secondary ml-4 col-auto'
                 data-toggle='modal'
+                // onClick={this.onEz}
                 data-target='#InventoryModalFormAdd'
                 style={{ fontSize: "1.5em" }}>
                 <AiIcons.AiOutlinePlus />
               </button>
+              <div className='col-lg-3 ml-auto form-inline'>
+                <div style={{ fontSize: "1.5em" }}>
+                  <BsIcons.BsSearch />
+                </div>
 
-              <input
-                className='form-control col-lg-3 ml-auto'
-                type='text'
-                id='example-number-input'
-                name='search'
-                onChange={this.onChange}
-                value={this.state.search}
-              />
+                <input
+                  className='form-control ml-3'
+                  type='text'
+                  id='example-number-input'
+                  name='search'
+                  placeholder='Search'
+                  onChange={this.onChange}
+                  value={this.state.search}
+                />
+              </div>
             </div>
 
             <div className='table-responsive'>
               <table
-                className='table table-striped align-middl'
+                className='table table-striped align-middle'
                 style={{ textAlign: "center" }}>
                 <thead>
                   <tr>
@@ -156,13 +192,9 @@ export class InventorySetting extends Component {
                   {filteredData.map((inventory) => (
                     <tr key={inventory.id}>
                       <td className='align-middle'>{inventory.id}</td>
-                      <td className='align-middle'>
-                        {inventory.product_info.name}
-                      </td>
+                      <td className='align-middle'>{inventory.product}</td>
                       <td className='align-middle'>{inventory.new_stock}</td>
-                      <td className='align-middle'>
-                        {inventory.supplier_info.name}
-                      </td>
+                      <td className='align-middle'>{inventory.supplier}</td>
                       <td className='align-middle'>{inventory.created_at}</td>
                       {/* <td className='align-middle'>
                         <button

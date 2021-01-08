@@ -5,17 +5,13 @@ import * as IoIcons from "react-icons/io"
 import * as VscIcons from "react-icons/vsc"
 import * as FiIcons from "react-icons/fi"
 import * as RiIcons from "react-icons/ri"
+import * as GrIcons from "react-icons/gr"
+
 export const SidebarData = [
   {
-    title: "Home",
-    path: "/",
-    icon: <AiIcons.AiFillHome />,
-    cName: "nav-text",
-  },
-  {
-    title: "Reports",
-    path: "/reports",
-    icon: <IoIcons.IoIosPaper />,
+    title: "Dashboard",
+    path: "/dashboard",
+    icon: <AiIcons.AiOutlineDashboard />,
     cName: "nav-text",
   },
   {
@@ -24,6 +20,13 @@ export const SidebarData = [
     icon: <FaIcons.FaCartPlus />,
     cName: "nav-text",
   },
+  {
+    title: "Reports",
+    path: "/reports",
+    icon: <IoIcons.IoIosPaper />,
+    cName: "nav-text",
+  },
+
   {
     title: "Product Setting",
     path: "/products/setting",
@@ -47,6 +50,18 @@ export const SidebarData = [
     title: "Supplier",
     path: "/supplier",
     icon: <FiIcons.FiTruck />,
+    cName: "nav-text",
+  },
+  {
+    title: "Transaction History",
+    path: "/transactions",
+    icon: <AiIcons.AiOutlineTransaction />,
+    cName: "nav-text",
+  },
+  {
+    title: "Transaction item",
+    path: "/transactions/items",
+    icon: <FaIcons.FaSitemap />,
     cName: "nav-text",
   },
 ]

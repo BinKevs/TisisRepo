@@ -28,6 +28,7 @@
 }
 .wrapper {
   margin-top: 50px;
+  padding-bottom: 75px;
 }
 .wrapper-li {
   margin-top: 50px;
@@ -77,11 +78,6 @@
 .nav-menu-items .nav-text:hover {
   border-left: 5px solid #1a83ff;
 }
-
-.nav-menu-items .nav-text:hover {
-  border-left: 5px solid #1a83ff;
-}
-
 .nav-menu-items {
   width: 100%;
 }

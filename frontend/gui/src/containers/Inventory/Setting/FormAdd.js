@@ -19,7 +19,8 @@ const FormAdd = (props) => {
           className='modal-dialog modal-dialog-centered modal-lg '
           role='document'>
           <div className='modal-content borderCust'>
-            <div className='modal-header borderCustUpperBody2 borderCustGen'>
+            <div className='modal-header borderCustUpperBody2 '>
+              <h2 class='modal-title'>Add Inventory</h2>
               <button
                 type='button'
                 className='close'
@@ -28,60 +29,58 @@ const FormAdd = (props) => {
                 <span aria-hidden='true'>&times;</span>
               </button>
             </div>
-            <div className='card card-body mt-4 mb-4'>
-              <h2>Inventory</h2>
-              <form onSubmit={onAddSubmit}>
-                <div className='form-group'>
-                  <label>Stock quantity</label>
-                  <input
-                    className='form-control'
-                    type='number'
-                    id='example-number-input'
-                    name='new_stock'
-                    onChange={onChange}
-                    value={new_stock}
-                  />
-                </div>
-                <div className='form-group'>
-                  <label>Select product</label>
-                  <input
-                    className='form-control custom-select custom-select-lg'
-                    onChange={onChangeTest}
-                    name='product'
-                    list='brow'
-                  />
-                  <datalist id='brow'>
-                    {products.map((product) => (
-                      <option
-                        value={product.id + " " + product.name}
-                        key={product.id}>
-                        {product.name}
-                      </option>
-                    ))}
-                  </datalist>
-                </div>
-                <div className='form-group'>
-                  <label>Select supplier</label>
+            <div className='card card-body modal-body'>
+              <div className='form-group'>
+                <label>Stock quantity</label>
+                <input
+                  className='form-control'
+                  type='number'
+                  id='example-number-input'
+                  name='new_stock'
+                  onChange={onChange}
+                  value={new_stock}
+                />
+              </div>
+              <div className='form-group'>
+                <label>Select product</label>
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  onChange={onChangeTest}
+                  name='product'
+                  list='brow'
+                />
+                <datalist id='brow'>
+                  {products.map((product) => (
+                    <option
+                      value={product.id + " " + product.name}
+                      key={product.id}>
+                      {product.name}
+                    </option>
+                  ))}
+                </datalist>
+              </div>
+              <div className='form-group'>
+                <label>Select supplier</label>
 
-                  <select
-                    className='form-control'
-                    name='supplier'
-                    id='exampleFormControlSelect1'
-                    onChange={onChange}>
-                    <option>-------</option>
-                    {suppliers.map((supplier) => (
-                      <option value={supplier.id} key={supplier.id}>
-                        {supplier.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className='form-group'>
-                  <button type='submit' className='btn btn-primary'>
-                    Submit
-                  </button>
-                </div>
-              </form>
+                <select
+                  className='form-control'
+                  name='supplier'
+                  id='exampleFormControlSelect1'
+                  onChange={onChange}>
+                  <option>-------</option>
+                  {suppliers.map((supplier) => (
+                    <option value={supplier.id} key={supplier.id}>
+                      {supplier.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className='form-group container'>
+              <button onClick={onAddSubmit} className='btn btn-primary'>
+                Add Inventory
+              </button>
             </div>
           </div>
         </div>

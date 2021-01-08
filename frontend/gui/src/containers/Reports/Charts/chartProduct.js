@@ -35,64 +35,62 @@ class ChartProd extends Component {
       coloR.push(dynamicColors())
     }
     return (
-      <div className='container'>
-        <div className='chart'>
-          <HorizontalBar
-            //   width={100}
-            //   height={50}
-            data={{
-              labels: this.state.labels,
-              datasets: [
+      <div className='chart'>
+        <HorizontalBar
+          //   width={100}
+          //   height={50}
+          data={{
+            labels: this.state.labels,
+            datasets: [
+              {
+                label: "product",
+                data: this.state.data,
+                backgroundColor: coloR,
+              },
+            ],
+          }}
+          options={{
+            title: {
+              display: true,
+              text: this.props.label,
+              fontSize: 25,
+            },
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+            scales: {
+              xAxes: [
                 {
-                  label: "product",
-                  data: this.state.data,
-                  backgroundColor: coloR,
+                  ticks: {
+                    min: 0, // Edit the value according to what you need
+                  },
                 },
               ],
-            }}
-            options={{
-              title: {
-                display: true,
-                text: this.props.label,
-                fontSize: 25,
-              },
-              legend: {
-                display: true,
-                position: "bottom",
-              },
-              scales: {
-                xAxes: [
-                  {
-                    ticks: {
-                      min: 0, // Edit the value according to what you need
-                    },
+              yAxes: [
+                {
+                  stacked: true,
+                  gridLines: {
+                    display: false,
                   },
-                ],
-                yAxes: [
-                  {
-                    stacked: true,
-                    gridLines: {
-                      display: false,
-                    },
-                  },
-                ],
-              },
-              // scales: {
-              //   responsive: true,
-              //   yAxes: [
-              //     {
-              //       ticks: {
-              //         beginAtZero: true,
-              //       },
-              //       gridLines: {
-              //         display: false,
-              //       },
-              //     },
-              //   ],
-              // },
-            }}
-          />
-        </div>
+                },
+              ],
+            },
+            // scales: {
+            //   responsive: true,
+            //   yAxes: [
+            //     {
+            //       ticks: {
+            //         beginAtZero: true,
+            //       },
+            //       gridLines: {
+            //         display: false,
+            //       },
+            //     },
+            //   ],
+            // },
+          }}
+        />
       </div>
     )
   }

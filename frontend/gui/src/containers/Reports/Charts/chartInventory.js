@@ -35,52 +35,50 @@ class ChartInv extends Component {
       coloR.push(dynamicColors())
     }
     return (
-      <div className='container'>
-        <div className='chart'>
-          <Line
-            //   width={100}
-            //   height={50}
-            data={{
-              labels: this.state.labels,
-              datasets: [
+      <div className='chart'>
+        <Line
+          //   width={100}
+          //   height={50}
+          data={{
+            labels: this.state.labels,
+            datasets: [
+              {
+                label: "Inventory",
+                fill: false,
+                data: this.state.data,
+                backgroundColor: coloR,
+              },
+            ],
+          }}
+          options={{
+            title: {
+              display: true,
+              text: this.props.label,
+              fontSize: 25,
+            },
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+            scales: {
+              xAxes: [
                 {
-                  label: "Inventory",
-                  fill: false,
-                  data: this.state.data,
-                  backgroundColor: coloR,
+                  // type: "time",
+                  // time: {
+                  //   unit: "week",
+                  // },
                 },
               ],
-            }}
-            options={{
-              title: {
-                display: true,
-                text: this.props.label,
-                fontSize: 25,
-              },
-              legend: {
-                display: true,
-                position: "bottom",
-              },
-              scales: {
-                xAxes: [
-                  {
-                    // type: "time",
-                    // time: {
-                    //   unit: "week",
-                    // },
+              yAxes: [
+                {
+                  ticks: {
+                    min: 0,
                   },
-                ],
-                yAxes: [
-                  {
-                    ticks: {
-                      min: 0,
-                    },
-                  },
-                ],
-              },
-            }}
-          />
-        </div>
+                },
+              ],
+            },
+          }}
+        />
       </div>
     )
   }

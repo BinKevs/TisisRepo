@@ -12,13 +12,16 @@ import {
 } from "../../../store/actions/Supplier/suppliers"
 import * as AiIcons from "react-icons/ai"
 import * as GrIcons from "react-icons/gr"
+import * as BsIcons from "react-icons/bs"
 let isEditButtonClicked = false
+
 export class SupplierSetting extends Component {
   state = {
     name: "",
     address: "",
     phone_number: "",
     supplierID: 0,
+    search: "",
   }
   static propTypes = {
     suppliers: PropTypes.array.isRequired,
@@ -82,18 +85,39 @@ export class SupplierSetting extends Component {
     }
   }
   render() {
+    const lowercasedFilter = this.state.search.toLowerCase()
+    const filteredData = this.props.suppliers.filter((item) => {
+      return Object.keys(item).some((key) =>
+        item[key].toString().toLowerCase().includes(lowercasedFilter),
+      )
+    })
     return (
       <Fragment>
         <div className='container'>
           <div className='card_cust p-5'>
-            <div className='d-flex justify-content-start mb-3'>
+            <div className='d-flex align-items-center mb-3'>
               <h2>Supplier</h2>
-              <div
-                className='btn btn-success p-0 px-2 ml-3'
+              <button
+                className='btn btn-outline-secondary ml-4 col-auto'
                 data-toggle='modal'
                 data-target='#SupplierModalFormAdd'
                 style={{ fontSize: "1.5em" }}>
                 <AiIcons.AiOutlinePlus />
+              </button>
+              <div className='col-lg-3 ml-auto form-inline'>
+                <div style={{ fontSize: "1.5em" }}>
+                  <BsIcons.BsSearch />
+                </div>
+
+                <input
+                  className='form-control ml-3'
+                  type='text'
+                  id='example-number-input'
+                  name='search'
+                  placeholder='Search'
+                  onChange={this.onChange}
+                  value={this.state.search}
+                />
               </div>
             </div>
             <table className='table table-striped'>
@@ -107,13 +131,13 @@ export class SupplierSetting extends Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.suppliers.map((supplier) => (
+                {filteredData.map((supplier) => (
                   <tr key={supplier.id}>
                     <td>{supplier.id}</td>
                     <td>{supplier.name}</td>
                     <td>{supplier.address}</td>
                     <td>{supplier.phone_number}</td>
-                    <td>
+                    {/* <td>
                       <button
                         onClick={this.props.deleteSupplier.bind(
                           this,
@@ -123,14 +147,14 @@ export class SupplierSetting extends Component {
                         {" "}
                         Delete
                       </button>
-                    </td>
+                    </td> */}
                     <div className='form-group '>
                       <td className='align-middle'>
                         <button
                           onClick={this.onEditButtonClick(supplier.id)}
                           data-toggle='modal'
                           data-target='#SupplierModalFormUpdate'
-                          className='btn btn-primary btn-xs'>
+                          className='btn btn-outline-secondary btn-xs'>
                           <GrIcons.GrEdit />
                         </button>
                       </td>

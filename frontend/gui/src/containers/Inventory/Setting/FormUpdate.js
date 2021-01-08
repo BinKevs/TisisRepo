@@ -19,7 +19,8 @@ const FormUpdate = (props) => {
           className='modal-dialog modal-dialog-centered modal-lg '
           role='document'>
           <div className='modal-content borderCust'>
-            <div className='modal-header borderCustUpperBody2 borderCustGen'>
+            <div className='modal-header borderCustUpperBody2'>
+              <h2 class='modal-title'>Inventory Update</h2>
               <button
                 type='button'
                 className='close'
@@ -28,65 +29,63 @@ const FormUpdate = (props) => {
                 <span aria-hidden='true'>&times;</span>
               </button>
             </div>
-            <div className='card card-body mt-4 mb-4'>
-              <h2>Inventory</h2>
-              <form onSubmit={onUpdateSubmit(inventoryID)}>
-                <div className='form-group'>
-                  <label>Stock quantity</label>
-                  <input
-                    className='form-control'
-                    type='number'
-                    id='example-number-input'
-                    name='new_stock'
-                    onChange={onChange}
-                    value={new_stock}
-                  />
-                </div>
-                <div className='form-group'>
-                  <label>Select product</label>
+            <div className='card card-body modal-body'>
+              <div className='form-group'>
+                <label>Stock quantity</label>
+                <input
+                  className='form-control'
+                  type='number'
+                  id='example-number-input'
+                  name='new_stock'
+                  onChange={onChange}
+                  value={new_stock}
+                />
+              </div>
+              <div className='form-group'>
+                <label>Select product</label>
 
-                  <select
-                    className='form-control'
-                    name='product'
-                    id='exampleFormControlSelect1'
-                    onChange={onChange}>
-                    {products.map((productItem) => (
-                      <option
-                        selected={productItem.id === product ? "selected" : ""}
-                        value={productItem.id}
-                        key={productItem.id}>
-                        {productItem.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className='form-group'>
-                  <label>Select supplier</label>
+                <select
+                  className='form-control'
+                  name='product'
+                  id='exampleFormControlSelect1'
+                  onChange={onChange}>
+                  {products.map((productItem) => (
+                    <option
+                      selected={productItem.id === product ? "selected" : ""}
+                      value={productItem.id}
+                      key={productItem.id}>
+                      {productItem.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className='form-group'>
+                <label>Select supplier</label>
 
-                  <select
-                    className='form-control'
-                    name='supplier'
-                    id='exampleFormControlSelect1'
-                    onChange={onChange}>
-                    {suppliers.map((supplierItem) => (
-                      <option
-                        defaultValue={supplier}
-                        selected={
-                          supplierItem.id === supplier ? "selected" : ""
-                        }
-                        value={supplierItem.id}
-                        key={supplierItem.id}>
-                        {supplierItem.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className='form-group'>
-                  <button type='submit' className='btn btn-primary'>
-                    Submit
-                  </button>
-                </div>
-              </form>
+                <select
+                  className='form-control'
+                  name='supplier'
+                  id='exampleFormControlSelect1'
+                  onChange={onChange}>
+                  {suppliers.map((supplierItem) => (
+                    <option
+                      defaultValue={supplier}
+                      selected={supplierItem.id === supplier ? "selected" : ""}
+                      value={supplierItem.id}
+                      key={supplierItem.id}>
+                      {supplierItem.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className='form-group container'>
+              <button
+                type='submit'
+                onClick={onUpdateSubmit(inventoryID)}
+                className='btn btn-primary'>
+                Update Inventory
+              </button>
             </div>
           </div>
         </div>

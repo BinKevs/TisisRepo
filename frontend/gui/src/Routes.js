@@ -14,6 +14,7 @@ import InventorySetting from "./containers/Inventory/Setting/InventorySetting"
 import SupplierSetting from "./containers/Supplier/Setting/SupplierSetting"
 import Login from "./containers/Accounts/Login"
 import AccountSetting from "./containers/Accounts/AccountSetting"
+import Dashboard from "./containers/Dashboard/Dashboard"
 
 import RegistrationForm from "./containers/Accounts/Signup"
 import PrivateRoute from "./components/common/PrivateRoute"
@@ -26,7 +27,7 @@ const BaseRouter = () => (
         path='/articles/:articleID/'
         component={ArticleDetail}
       />
-
+      <Route exact path='/dashboard' component={Dashboard} />
       <Route exact path='/products' component={ProductList} />
       <Route exact path='/reports' component={ReportsContainer} />
       <Route exact path='/checkout' component={CheckOutForm} />

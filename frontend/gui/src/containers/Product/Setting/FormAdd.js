@@ -29,7 +29,8 @@ const FormAdd = (props) => {
           className='modal-dialog modal-dialog-centered modal-lg '
           role='document'>
           <div className='modal-content borderCust'>
-            <div className='modal-header borderCustUpperBody2 borderCustGen'>
+            <div className='modal-header borderCustUpperBody2'>
+              <h2 class='modal-title'>Product Add</h2>
               <button
                 type='button'
                 className='close'
@@ -38,9 +39,7 @@ const FormAdd = (props) => {
                 <span aria-hidden='true'>&times;</span>
               </button>
             </div>
-            <div className='card card-body mt-4 mb-4 p-5'>
-              <h2>Product</h2>
-
+            <div className='card card-body modal-body p-5'>
               <div className='form-group'>
                 <label>Name</label>
                 <input
@@ -131,15 +130,15 @@ const FormAdd = (props) => {
                   value={stock}
                 />
               </div>
-              <div className='form-group'>
-                <button
-                  type='submit'
-                  onClick={onAddSubmit}
-                  data-dismiss='modal'
-                  className='btn btn-primary'>
-                  Submit
-                </button>
-              </div>
+            </div>
+            <div className='form-group container'>
+              <button
+                type='submit'
+                onClick={onAddSubmit}
+                data-dismiss='modal'
+                className='btn btn-primary'>
+                Product Add
+              </button>
             </div>
           </div>
         </div>
