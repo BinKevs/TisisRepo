@@ -3,10 +3,12 @@ import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { getProductList } from "../../store/actions/Product/products"
 import { getTransactionList } from "../../store/actions/Transaction/transactions"
+import { getTransactionItemList } from "../../store/actions/Transaction/transactions.js"
 import { Line } from "react-chartjs-2"
 let coloR = []
 let transactionsFiltered = []
-let dateSliced = []
+let transactionItemsFiltered = []
+var result = []
 export class Dashboard extends Component {
   static propTypes = {
     accounts: PropTypes.array.isRequired,
@@ -23,8 +25,31 @@ export class Dashboard extends Component {
   componentDidMount() {
     this.props.getProductList()
     this.props.getTransactionList()
+    this.props.getTransactionItemList()
   }
+  onEz = (event) => {
+    transactionItemsFiltered = []
+    result = []
+    this.props.transaction_items.map((filteredTransactionItemObject) =>
+      transactionItemsFiltered.push({
+        id: filteredTransactionItemObject.id,
+        productName: filteredTransactionItemObject.product_info.name,
+        quantity: filteredTransactionItemObject.quantity,
+      }),
+    )
 
+    transactionItemsFiltered.forEach(function (obj) {
+      var productNameX = obj.productName
+      if (!this[productNameX]) result.push((this[productNameX] = obj))
+      else this[productNameX].quantity += obj.quantity
+    }, Object.create(null))
+    console.log(result)
+    console.log(transactionItemsFiltered)
+  }
+  onEz2 = (event) => {
+    console.log(transactionItemsFiltered)
+    console.log(result)
+  }
   render() {
     const DateNow = Date().toLocaleString().split(" ")
     transactionsFiltered = []
@@ -34,14 +59,11 @@ export class Dashboard extends Component {
           transaction.created_at.includes(DateNow[1]) &&
           transaction.created_at.includes(DateNow[3]),
       )
-      .map((filteredTransaction) =>
+      .map((filteredTransactionObject) =>
         transactionsFiltered.push({
-          id: filteredTransaction.id,
-          totalAmount: filteredTransaction.totalAmount,
-          date:
-            filteredTransaction.created_at.split(" ")[0] +
-            " " +
-            filteredTransaction.created_at.split(" ")[1],
+          id: filteredTransactionObject.id,
+          totalAmount: filteredTransactionObject.totalAmount,
+          date: filteredTransactionObject.created_at.split(" "),
         }),
       )
 
@@ -58,6 +80,18 @@ export class Dashboard extends Component {
     return (
       <Fragment>
         <div className='container'>
+          <button
+            className='btn btn-outline-secondary'
+            onClick={this.onEz}
+            style={{ fontSize: "1.5em" }}>
+            xxxxxxx
+          </button>
+          <button
+            className='btn btn-outline-secondary'
+            onClick={this.onEz2}
+            style={{ fontSize: "1.5em" }}>
+            yyyyyyyy
+          </button>
           <div className='row'>
             <div className='col-xl-8'>
               <div className='card_cust p-5'>
@@ -191,8 +225,11 @@ export class Dashboard extends Component {
 const mapStateToProps = (state) => ({
   products: state.products.products,
   transactions: state.transactions.transactions,
+  transaction_items: state.transactions.transaction_item_list,
 })
 
-export default connect(mapStateToProps, { getProductList, getTransactionList })(
-  Dashboard,
-)
+export default connect(mapStateToProps, {
+  getProductList,
+  getTransactionList,
+  getTransactionItemList,
+})(Dashboard)
