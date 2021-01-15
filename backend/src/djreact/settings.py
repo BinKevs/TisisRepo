@@ -74,7 +74,9 @@ INSTALLED_APPS = [
     'knox',
     # 'djmoney',
     # 'moneyfield',
-    'phonenumber_field'
+    'phonenumber_field',
+    'django_resized'
+
 ]
 
 MIDDLEWARE = [

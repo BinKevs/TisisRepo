@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, CHANGE_QUANTITY } from "./types"
+import { ADD_TO_CART, REMOVE_FROM_CART, CHANGE_QUANTITY,CLEAR_CART } from "./types"
 export const addToCart = (product) => (dispatch, getState) => {
   const cartItems = getState().cartReducer.cartItems.slice()
   let alreadyExists = false
@@ -47,4 +47,8 @@ export const removeFromCart = (product) => (dispatch, getState) => {
     .filter((x) => x.product_id !== product.product_id)
   dispatch({ type: REMOVE_FROM_CART, payload: { cartItems } })
   localStorage.setItem("cartItem", JSON.stringify(cartItems))
+}
+export const clearCart = () => (dispatch) => {
+  localStorage.clear()
+  dispatch({ type: CLEAR_CART })
 }

@@ -22,8 +22,6 @@ const CategoryForm = (props) => {
                 type='button'
                 className='close'
                 data-dismiss='modal'
-                data-toggle='modal'
-                data-target='#ProductModalFormUpdate'
                 aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
               </button>

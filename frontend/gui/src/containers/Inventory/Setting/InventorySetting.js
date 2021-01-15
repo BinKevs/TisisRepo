@@ -19,6 +19,8 @@ import * as GrIcons from "react-icons/gr"
 
 let isEditButtonClicked = false
 let inventories = []
+let productEditValue = ""
+let supplierEditValue = ""
 export class InventorySetting extends Component {
   static propTypes = {
     inventories: PropTypes.array.isRequired,
@@ -37,13 +39,15 @@ export class InventorySetting extends Component {
     search: "",
     inventoryID: 0,
   }
-  onChange = (e) => this.setState({ [e.target.name]: e.target.value })
-  onChangeTest = (e) => {
-    const productID = e.target.value.split(" ")
-
-    this.setState({
-      [e.target.name]: productID[0],
-    })
+  onChange = (e) => {
+    if (e.target.name === "product" || e.target.name === "supplier") {
+      const ID = e.target.value.split(" ")
+      this.setState({
+        [e.target.name]: ID[0],
+      })
+    } else {
+      this.setState({ [e.target.name]: e.target.value })
+    }
   }
 
   onAddSubmit = (event) => {
@@ -75,13 +79,22 @@ export class InventorySetting extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (isEditButtonClicked) {
-      const { new_stock, product, supplier, id } = this.props.inventory
+      const {
+        new_stock,
+        product,
+        supplier,
+        id,
+        product_info,
+        supplier_info,
+      } = this.props.inventory
       this.setState({
         new_stock,
         product,
         supplier,
         inventoryID: id,
       })
+      productEditValue = id + " - " + product_info.name
+      supplierEditValue = id + " - " + supplier_info.name
       console.log(this.state)
       isEditButtonClicked = false
     }
@@ -232,6 +245,8 @@ export class InventorySetting extends Component {
             />
             <FormUpdate
               state={this.state}
+              productEditValue={productEditValue}
+              supplierEditValue={supplierEditValue}
               onUpdateSubmit={this.onUpdateSubmit}
               onChange={this.onChange}
               products={this.props.products}

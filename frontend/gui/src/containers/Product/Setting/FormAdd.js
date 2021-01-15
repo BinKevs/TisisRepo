@@ -70,43 +70,50 @@ const FormAdd = (props) => {
                   className='form-control-file'
                 />
               </div>
+
               <div className='form-group'>
                 <div className='d-flex justify-content-start mb-3'>
                   <label>Select Category</label>
+
                   <div
-                    className='btn btn-success p-0 px-2 ml-3'
+                    className='btn btn-secondary p-0 px-2 mx-3'
                     data-toggle='modal'
                     data-target='#CategoryModalForm'
                     style={{ fontSize: "1.5em" }}>
                     <AiIcons.AiOutlinePlus />
                   </div>
                 </div>
-                <select
-                  className='form-control'
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  onChange={onChange}
+                  placeholder='-------'
                   name='category'
-                  id='exampleFormControlSelect1'
-                  onChange={onChange}>
+                  list='category-list'
+                />
+                <datalist id='category-list'>
                   {categories.map((category) => (
-                    <option value={category.id} key={category.id}>
-                      {category.name}
-                    </option>
+                    <option
+                      value={category.id + " - " + category.name}
+                      key={category.id}></option>
                   ))}
-                </select>
+                </datalist>
               </div>
               <div className='form-group'>
-                <label>Select Supplier</label>
-
-                <select
-                  className='form-control'
+                <label>Select supplier</label>
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  onChange={onChange}
+                  placeholder='-------'
                   name='supplier'
-                  id='exampleFormControlSelect1'
-                  onChange={onChange}>
+                  list='supplier-list'
+                />
+                <datalist id='supplier-list'>
                   {suppliers.map((supplier) => (
-                    <option value={supplier.id} key={supplier.id}>
-                      {supplier.name}
-                    </option>
+                    <option
+                      value={supplier.id + " - " + supplier.name}
+                      key={supplier.id}></option>
                   ))}
-                </select>
+                </datalist>
               </div>
               <div className='form-group'>
                 <label>Price</label>

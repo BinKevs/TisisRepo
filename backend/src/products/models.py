@@ -6,7 +6,7 @@ from suppliers.models import Supplier
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from categories.models import Category
-
+from django_resized import ResizedImageField
 
 class Product(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -14,7 +14,7 @@ class Product(models.Model):
         Category, related_name="category_product", on_delete=models.CASCADE, null=True)
     supplier = models.ForeignKey(
         Supplier, related_name="supplier_product", on_delete=models.CASCADE, null=True)
-    image = models.ImageField(null=True, blank=True)
+    image = ResizedImageField(size=[600,410],crop=['middle', 'center'], default='No-Image-Available.jpeg',null=True, blank=True)
     description = models.CharField(max_length=500, blank=True)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=6, decimal_places=2)

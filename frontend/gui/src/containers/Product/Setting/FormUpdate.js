@@ -82,47 +82,48 @@ const FormUpdate = (props) => {
               <div className='form-group'>
                 <div className='d-flex justify-content-start mb-3'>
                   <label>Select Category</label>
+
                   <div
-                    className='btn btn-success p-0 px-2 ml-3'
-                    data-dismiss='modal'
+                    className='btn btn-secondary p-0 px-2 mx-3'
                     data-toggle='modal'
                     data-target='#CategoryModalForm'
                     style={{ fontSize: "1.5em" }}>
                     <AiIcons.AiOutlinePlus />
                   </div>
                 </div>
-                <select
-                  className='form-control'
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  onChange={onChange}
+                  placeholder='-------'
                   name='category'
-                  id='exampleFormControlSelect1'
-                  onChange={onChange}>
-                  {categories.map((categoryItem) => (
+                  list='category-list'
+                  value={props.categoryEditValue}
+                />
+                <datalist id='category-list'>
+                  {categories.map((category) => (
                     <option
-                      value={categoryItem.id}
-                      selected={categoryItem.id === category ? "selected" : ""}
-                      key={categoryItem.id}>
-                      {categoryItem.name}
-                    </option>
+                      value={category.id + " - " + category.name}
+                      key={category.id}></option>
                   ))}
-                </select>
+                </datalist>
               </div>
               <div className='form-group'>
-                <label>Select Supplier</label>
-
-                <select
-                  className='form-control'
+                <label>Select supplier</label>
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  value={props.supplierEditValue}
+                  onChange={onChange}
+                  placeholder='-------'
                   name='supplier'
-                  id='exampleFormControlSelect1'
-                  onChange={onChange}>
+                  list='list'
+                />
+                <datalist id='list'>
                   {suppliers.map((supplierItem) => (
                     <option
-                      value={supplierItem.id}
-                      selected={supplierItem.id === supplier ? "selected" : ""}
-                      key={supplierItem.id}>
-                      {supplierItem.name}
-                    </option>
+                      value={supplierItem.id + " - " + supplierItem.name}
+                      key={supplierItem.id}></option>
                   ))}
-                </select>
+                </datalist>
               </div>
               <div className='form-group'>
                 <label>Price</label>

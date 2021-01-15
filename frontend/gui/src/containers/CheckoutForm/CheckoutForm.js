@@ -6,9 +6,10 @@ import {
   changeCartValue,
 } from "../../store/actions/Cart/cartActions"
 import { addTransaction } from "../../store/actions/Transaction/transactions"
-
+import {clearCart} from "../../store/actions/Cart/cartActions"
 import { addTransactionItems } from "../../store/actions/Transaction/transactions"
 import CheckOutPaymentModal from "./CheckOutPaymentModal"
+import TransactionFinish from "./TransactionFinish"
 class CheckOutForm extends Component {
   static propTypes = {
     removeFromCart: PropTypes.func.isRequired,
@@ -39,13 +40,12 @@ class CheckOutForm extends Component {
   handleClick = (event) => {
     event.preventDefault()
     let quantity = 0
-
     this.props.cartItems.map((item) => (quantity += item.quantity))
     const { totalAmount, amount_tendered, change } = this.state
     const items = this.props.cartItems
     const data = { totalAmount, amount_tendered, change, quantity, items }
     this.props.addTransactionItems(data)
-    localStorage.clear()
+    this.props.clearCart()
     this.props.history.push("/products")
   }
   handleSetAmountTendered = (AmountTendered) => {
@@ -86,10 +86,16 @@ class CheckOutForm extends Component {
         <CheckOutPaymentModal
           state={this.state}
           numberWithCommas={this.numberWithCommas}
-          handleClick={this.handleClick}
+          
           onChange={this.onChange}
           handleSetAmountTendered={this.handleSetAmountTendered}
         />
+        <TransactionFinish
+          state={this.state}
+          handleClick={this.handleClick}
+          numberWithCommas={this.numberWithCommas}
+        />
+
         <div className='row'>
           <div className='col-lg-5'>
             <div>
@@ -175,7 +181,7 @@ class CheckOutForm extends Component {
                   <button
                     type='button'
                     data-toggle='modal'
-                    data-target='#exampleModalCenter'
+                    data-target='#CheckoutPaymentMOdal'
                     className='btn btn-primary btn-lg btn-block mb-3'>
                     Cash
                   </button>
@@ -211,4 +217,5 @@ export default connect(mapToStateToProps, {
   changeCartValue,
   addTransaction,
   addTransactionItems,
+  clearCart
 })(CheckOutForm)

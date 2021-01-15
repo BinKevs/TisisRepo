@@ -2,6 +2,7 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   CHANGE_QUANTITY,
+  CLEAR_CART
 } from "../../actions/Cart/types.js"
 export const cartReducer = (
   state = { cartItems: JSON.parse(localStorage.getItem("cartItem") || "[]") },
@@ -12,6 +13,8 @@ export const cartReducer = (
     case CHANGE_QUANTITY:
     case REMOVE_FROM_CART:
       return { cartItems: action.payload.cartItems }
+    case CLEAR_CART :
+      return { cartItems: [] }
     default:
       return state
   }

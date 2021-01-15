@@ -43,6 +43,24 @@ const FormUpdate = (props) => {
               </div>
               <div className='form-group'>
                 <label>Select product</label>
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  value={props.productEditValue}
+                  onChange={onChange}
+                  placeholder='-------'
+                  name='product'
+                  list='list'
+                />
+                <datalist id='list'>
+                  {products.map((productItem) => (
+                    <option
+                      value={productItem.id + " - " + productItem.name}
+                      key={productItem.id}></option>
+                  ))}
+                </datalist>
+              </div>
+              {/* <div className='form-group'>
+                <label>Select product</label>
 
                 <select
                   className='form-control'
@@ -58,8 +76,8 @@ const FormUpdate = (props) => {
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className='form-group'>
+              </div> */}
+              {/* <div className='form-group'>
                 <label>Select supplier</label>
 
                 <select
@@ -77,6 +95,24 @@ const FormUpdate = (props) => {
                     </option>
                   ))}
                 </select>
+              </div> */}
+              <div className='form-group'>
+                <label>Select supplier</label>
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  value={props.supplierEditValue}
+                  onChange={onChange}
+                  placeholder='-------'
+                  name='supplier'
+                  list='list'
+                />
+                <datalist id='list'>
+                  {suppliers.map((supplierItem) => (
+                    <option
+                      value={supplierItem.id + " - " + supplierItem.name}
+                      key={supplierItem.id}></option>
+                  ))}
+                </datalist>
               </div>
             </div>
             <div className='form-group container'>

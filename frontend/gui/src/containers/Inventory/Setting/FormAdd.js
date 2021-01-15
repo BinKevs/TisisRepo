@@ -5,7 +5,7 @@ import PropTypes from "prop-types"
 const FormAdd = (props) => {
   const { products, suppliers } = props
   const { new_stock } = props.state
-  const { onChange, onAddSubmit, onChangeTest } = props
+  const { onChange, onAddSubmit } = props
   return (
     <div>
       <div
@@ -45,35 +45,35 @@ const FormAdd = (props) => {
                 <label>Select product</label>
                 <input
                   className='form-control custom-select custom-select-lg'
-                  onChange={onChangeTest}
+                  onChange={onChange}
+                  placeholder='-------'
                   name='product'
-                  list='brow'
+                  list='list'
                 />
-                <datalist id='brow'>
+                <datalist id='list'>
                   {products.map((product) => (
                     <option
-                      value={product.id + " " + product.name}
-                      key={product.id}>
-                      {product.name}
-                    </option>
+                      value={product.id + " - " + product.name}
+                      key={product.id}></option>
                   ))}
                 </datalist>
               </div>
               <div className='form-group'>
                 <label>Select supplier</label>
-
-                <select
-                  className='form-control'
+                <input
+                  className='form-control custom-select custom-select-lg'
+                  onChange={onChange}
+                  placeholder='-------'
                   name='supplier'
-                  id='exampleFormControlSelect1'
-                  onChange={onChange}>
-                  <option>-------</option>
+                  list='supplier-list'
+                />
+                <datalist id='supplier-list'>
                   {suppliers.map((supplier) => (
-                    <option value={supplier.id} key={supplier.id}>
-                      {supplier.name}
-                    </option>
+                    <option
+                      value={supplier.id + " - " + supplier.name}
+                      key={supplier.id}></option>
                   ))}
-                </select>
+                </datalist>
               </div>
             </div>
 

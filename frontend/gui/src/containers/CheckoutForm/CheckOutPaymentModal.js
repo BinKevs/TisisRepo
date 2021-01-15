@@ -13,7 +13,7 @@ const CheckOutPaymentModal = (props) => {
     <div>
       <div
         className='modal fade'
-        id='exampleModalCenter'
+        id='CheckoutPaymentMOdal'
         tabIndex='-1'
         role='dialog'
         aria-labelledby='exampleModalCenterTitle'
@@ -91,8 +91,9 @@ const CheckOutPaymentModal = (props) => {
               </div>
               <button
                 type='button'
-                onClick={handleClick}
                 data-dismiss='modal'
+                data-toggle='modal'
+                data-target='#TransactionFinishModal'
                 className='btn btn-secondary btn-lg btn-block '>
                 <strong>Confirm Payment</strong>
               </button>

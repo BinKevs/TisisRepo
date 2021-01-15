@@ -1,0 +1,8 @@
+{
+    "editor.formatOnSave": true,
+    "prettier.jsxSingleQuote": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.useTabs": true,
+    "emmet.showSuggestionsAsSnippets": true,
+    "emmet.triggerExpansionOnTab": true
+}
