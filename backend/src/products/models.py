@@ -17,7 +17,7 @@ class Product(models.Model):
     image = ResizedImageField(size=[600,410],crop=['middle', 'center'], default='No-Image-Available.jpeg',null=True, blank=True)
     description = models.CharField(max_length=500, blank=True)
     stock = models.IntegerField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=20, decimal_places=2)
 
     def __str__(self):
         return self.name

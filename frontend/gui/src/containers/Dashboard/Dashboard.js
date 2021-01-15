@@ -1,31 +1,34 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { IconContext } from 'react-icons';
 import PropTypes from 'prop-types';
 import { getProductList } from '../../store/actions/Product/products';
 import { getTransactionList } from '../../store/actions/Transaction/transactions';
 import { getTransactionItemList } from '../../store/actions/Transaction/transactions.js';
-import { Line } from 'react-chartjs-2';
+
 import * as FaIcons from 'react-icons/fa';
 import * as MdIcons from 'react-icons/md';
 import * as CgIcons from 'react-icons/cg';
 import * as BiIcons from 'react-icons/bi';
 
-import { IconContext } from 'react-icons';
-let coloR = [];
-let transactionsFiltered = [];
 let transactionItemsFiltered = [];
 var transactionItemsFilteredResult = [];
+let transactionsFilteredDateSeparated = [];
 let monthlySalesTransaction = 0;
 let dailySalesTransaction = 0;
 let totalSalesTransaction = 0;
 let ReorderProduct = 0;
 let ZeroProduct = 0;
 let ProductCount = 0;
-let transactionsFilteredDateSeparated = [];
+
 export class Dashboard extends Component {
 	static propTypes = {
-		accounts: PropTypes.array.isRequired,
-		getAccountList: PropTypes.func.isRequired,
+		products: PropTypes.array.isRequired,
+		transactions: PropTypes.array.isRequired,
+		transaction_items: PropTypes.array.isRequired,
+		getProductList: PropTypes.func.isRequired,
+		getTransactionList: PropTypes.func.isRequired,
+		getTransactionItemList: PropTypes.func.isRequired,
 	};
 	numberWithCommas(x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
@@ -78,6 +81,7 @@ export class Dashboard extends Component {
 		ZeroProduct = 0;
 		ProductCount = 0;
 		const DateNow = Date().toLocaleString().split(' ');
+		//Fetch montly sales
 		this.props.transactions
 			.filter(
 				(transaction) =>
@@ -90,6 +94,7 @@ export class Dashboard extends Component {
 						filteredTransactionObject.totalAmount
 					))
 			);
+		//Fetch daily sales
 		this.props.transactions.map((filteredTransactionObject) =>
 			transactionsFilteredDateSeparated.push({
 				id: filteredTransactionObject.id,
@@ -113,21 +118,24 @@ export class Dashboard extends Component {
 						filteredTransactionObject.totalAmount
 					))
 			);
+		//Fetch total sales
 		this.props.transactions.map(
 			(filteredTransactionObject) =>
 				(totalSalesTransaction += parseInt(
 					filteredTransactionObject.totalAmount
 				))
 		);
-
+		//Fetch reorder product
 		this.props.products
 			.filter((prod) => parseInt(prod.stock) < 10)
 			.map((product) => (ReorderProduct += 1));
+		//Fetch zero product
 		this.props.products
 			.filter((prod) => parseInt(prod.stock) < 1)
 			.map((product) => (ZeroProduct += 1));
+		//Fetch all product
 		this.props.products.map((product) => (ProductCount += 1));
-
+		//Fetch Combine product quantity sales
 		transactionItemsFiltered = [];
 		transactionItemsFilteredResult = [];
 
@@ -145,16 +153,6 @@ export class Dashboard extends Component {
 				transactionItemsFilteredResult.push((this[productNameX] = obj));
 			else this[productNameX].quantity += obj.quantity;
 		}, Object.create(null));
-
-		var dynamicColors = function () {
-			var r = Math.floor(Math.random() * 255);
-			var g = Math.floor(Math.random() * 255);
-			var b = Math.floor(Math.random() * 255);
-			return 'rgba(' + r + ',' + g + ',' + b + ',' + 0.6 + ')';
-		};
-		for (let i = 0; i < transactionsFiltered.length; i++) {
-			coloR.push(dynamicColors());
-		}
 
 		return (
 			<Fragment>

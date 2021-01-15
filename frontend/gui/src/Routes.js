@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import ArticleList from './containers/Article/ArticleListView';
-import ArticleDetail from './containers/Article/ArticleDetailView';
+// import ArticleList from './Junk/Article/ArticleListView';
+// import ArticleDetail from './Junk/Article/ArticleDetailView';
 import ProductList from './containers/Product/ProductListView';
 import ReportsContainer from './containers/Reports/ReportsContainer';
 import ProductDetail from './containers/Product/ProductDetailView';
@@ -21,12 +21,12 @@ import PrivateRoute from './components/common/PrivateRoute';
 const BaseRouter = () => (
 	<div>
 		<Switch>
-			<PrivateRoute exact path='/articles' component={ArticleList} />
+			{/* <PrivateRoute exact path='/articles' component={ArticleList} />
 			<PrivateRoute
 				exact
 				path='/articles/:articleID/'
 				component={ArticleDetail}
-			/>
+			/> */}
 			<Route exact path='/dashboard' component={Dashboard} />
 			<Route exact path='/products' component={ProductList} />
 			<Route exact path='/reports' component={ReportsContainer} />

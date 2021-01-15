@@ -105,7 +105,11 @@ class ProductList extends Component {
 						</div>
 					</div>
 
-					<div className='col-xl-8 tab-content ' id='myTabContent'>
+					<div
+						className='col-xl-8 tab-content overflow-auto'
+						style={{ height: '55rem' }}
+						id='myTabContent'
+					>
 						<div className='row tab-pane active' id='catalog' role='tabpanel'>
 							{filteredData.map((product) => (
 								<div
