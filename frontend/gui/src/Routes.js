@@ -27,24 +27,32 @@ const BaseRouter = () => (
 				path='/articles/:articleID/'
 				component={ArticleDetail}
 			/> */}
-			<Route exact path='/dashboard' component={Dashboard} />
-			<Route exact path='/products' component={ProductList} />
-			<Route exact path='/reports' component={ReportsContainer} />
-			<Route exact path='/checkout' component={CheckOutForm} />
-			<Route exact path='/products/setting' component={ProductSetting} />
-			<Route exact path='/categories-setting' component={CategoriesSetting} />
-			<Route exact path='/transactions' component={TransactionSetting} />
-			<Route
+			<PrivateRoute exact path='/dashboard' component={Dashboard} />
+			<PrivateRoute exact path='/products' component={ProductList} />
+			<PrivateRoute exact path='/reports' component={ReportsContainer} />
+			<PrivateRoute exact path='/checkout' component={CheckOutForm} />
+			<PrivateRoute exact path='/products/setting' component={ProductSetting} />
+			<PrivateRoute
+				exact
+				path='/categories-setting'
+				component={CategoriesSetting}
+			/>
+			<PrivateRoute exact path='/transactions' component={TransactionSetting} />
+			<PrivateRoute
 				exact
 				path='/transactions/items'
 				component={TransanctionItemsSetting}
 			/>
-			<Route exact path='/accounts/setting' component={AccountSetting} />
+			<PrivateRoute exact path='/accounts/setting' component={AccountSetting} />
 
-			<Route exact path='/inventories/setting' component={InventorySetting} />
+			<PrivateRoute
+				exact
+				path='/inventories/setting'
+				component={InventorySetting}
+			/>
 
-			<Route exact path='/supplier' component={SupplierSetting} />
-			<Route
+			<PrivateRoute exact path='/supplier' component={SupplierSetting} />
+			<PrivateRoute
 				exact
 				path='/products/setting/:productID/'
 				component={ProductDetail}

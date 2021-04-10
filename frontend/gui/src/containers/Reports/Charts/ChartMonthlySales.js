@@ -20,6 +20,7 @@ class ChartMonthlySales extends Component {
 	// }
 	render() {
 		const DateNow = Date().toLocaleString().split(' ');
+		//destructure to filter the month and year
 		transactionsFiltered = [];
 		this.props.chartData
 			.filter(
@@ -27,6 +28,7 @@ class ChartMonthlySales extends Component {
 					transaction.created_at.includes(DateNow[1]) &&
 					transaction.created_at.includes(DateNow[3])
 			)
+
 			.map((filteredTransactionObject) =>
 				transactionsFiltered.push({
 					id: filteredTransactionObject.id,
@@ -45,7 +47,7 @@ class ChartMonthlySales extends Component {
 							labels: transactionsFiltered.map((x) => x.date),
 							datasets: [
 								{
-									label: 'Inventory',
+									label: "Januany's sale",
 									fill: false,
 									data: transactionsFiltered.map((x) => x.totalAmount),
 									backgroundColor: '#5bc0de',

@@ -6,7 +6,7 @@ import { loadUser } from '../../store/actions/Accounts/auth';
 import Alerts from '../../components/Alerts';
 import Navbar from './NavBar/Navbar';
 
-let is_super = false;
+// let is_super = false;
 class CustomLayout extends React.Component {
 	constructor(props) {
 		super(props);
@@ -32,6 +32,9 @@ class CustomLayout extends React.Component {
 		}
 
 		// console.log( this.props.AuthReducer.user.is_superuser);
+	}
+	componentDidMount() {
+		console.log(this.props);
 	}
 	// componentDidMount() {
 	//   console.log(typeof this.props.AuthReducer.user.is_superuser)

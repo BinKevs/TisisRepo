@@ -1,4 +1,4 @@
-#!c:\users\buenaseda\desktop\tisis project\backend\src\py1\scripts\python.exe
+#!C:\Users\Buenaseda\Desktop\Tisis Project\backend\src\py1\Scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

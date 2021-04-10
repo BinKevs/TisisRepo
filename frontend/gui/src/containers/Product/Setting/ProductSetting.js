@@ -20,8 +20,8 @@ import * as BsIcons from 'react-icons/bs';
 let products = [];
 let isEditButtonClicked = false;
 let isImageChanged = false;
-let categoryEditValue = '';
-let supplierEditValue = '';
+// let categoryEditValue = '';
+// let supplierEditValue = '';
 export class ProductSetting extends Component {
 	static propTypes = {
 		products: PropTypes.array.isRequired,
@@ -35,6 +35,7 @@ export class ProductSetting extends Component {
 	};
 	state = {
 		name: '',
+		CategoryName: '',
 		supplier: 0,
 		description: '',
 		price: 0,
@@ -49,32 +50,43 @@ export class ProductSetting extends Component {
 		this.props.getSupplierList();
 		this.props.getCategoryList();
 	}
+
+	// when the image field changes it will save the image and also change the state of
+	// isImageChanged to true for the update Form component to know that we didnt change the image
+	// because we sent all data whenever we make a post or update so when the isImageChanged's status is false we will not include the field
 	onChange = (e) => {
 		if (e.target.name === 'image') {
 			this.setState({ [e.target.name]: e.target.files[0] });
 			isImageChanged = true;
-		} else if (e.target.name === 'category' || e.target.name === 'supplier') {
-			const ID = e.target.value.split(' ');
-			this.setState({
-				[e.target.name]: ID[0],
-			});
-		} else {
+		}
+		//  else if (e.target.name === 'supplier' || e.target.name === 'category') {
+		// 	const ID = e.target.value.split(' ');
+		// 	this.setState({
+		// 		[e.target.name]: ID[0],
+		// 	});
+		// }
+		else {
 			this.setState({ [e.target.name]: e.target.value });
-			console.log(this.state.search);
 		}
 	};
-
+	// Submitting the name in the add category action
 	onSubmitCategory = (event) => {
 		event.preventDefault();
-		const { name } = this.state;
+		let name = this.state.CategoryName;
 		const category = { name };
+
 		this.props.addCategory(category);
 		this.setState({
 			name: '',
 		});
 	};
+	// when the isEditButtonClicked status is change this.props.product
+	// *the product that will be edited* is being fetch because we trigger it in the bottom
+	// then we will set it to the state and being passed on the formupdate component
 	componentDidUpdate(prevProps, prevState) {
 		if (isEditButtonClicked) {
+			// categoryEditValue = '';
+			// supplierEditValue = '';
 			const {
 				id,
 				name,
@@ -97,17 +109,18 @@ export class ProductSetting extends Component {
 				image,
 				productID: id,
 			});
-			categoryEditValue = id + ' - ' + category_info.name;
-			supplierEditValue = id + ' - ' + supplier_info.name;
+			// categoryEditValue = id + ' - ' + category_info.name;
+			// supplierEditValue = id + ' - ' + supplier_info.name;
 			isEditButtonClicked = false;
 		}
 		if (this.props.product !== prevProps.product) {
 			this.props.getProductList();
 		}
 	}
+	//this will sent the updated product in the this.props.updateProduct to the action and will reset the state
 	onUpdateSubmit = (productID) => {
 		return (e) => {
-			e.preventDefault();
+			// e.preventDefault();
 			const {
 				name,
 				description,
@@ -140,9 +153,12 @@ export class ProductSetting extends Component {
 				image: null,
 				productID: 0,
 			});
+			// categoryEditValue = '';
+			// supplierEditValue = '';
 			isImageChanged = false;
 		};
 	};
+	// when edit button click this will fetch the product that will be edited and change the isEditButtonClicked status to true
 	onEditButtonClick(ProductID) {
 		return (event) => {
 			event.preventDefault();
@@ -150,6 +166,7 @@ export class ProductSetting extends Component {
 			isEditButtonClicked = true;
 		};
 	}
+	// sending the product that will be added to this.props.addProduct in the actions also reset the state
 	onAddSubmit = (e) => {
 		e.preventDefault();
 		console.log(this.state);
@@ -182,8 +199,12 @@ export class ProductSetting extends Component {
 			new_stock: 0,
 			image: null,
 		});
+		// categoryEditValue = '';
+		// supplierEditValue = '';
+		isImageChanged = false;
 	};
 	render() {
+		// destructure the products that came from the reducer so it will be easier to filter and show
 		products = [];
 		this.props.products.map((product) =>
 			products.push({
@@ -196,13 +217,13 @@ export class ProductSetting extends Component {
 				description: product.description,
 			})
 		);
+		// This will filter the data from inventories array filtered at the top
 		const lowercasedFilter = this.state.search.toLowerCase();
 		const filteredData = products.filter((item) => {
 			return Object.keys(item).some((key) =>
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
-		console.log(filteredData);
 		return (
 			<Fragment>
 				<div className='container'>
@@ -240,13 +261,13 @@ export class ProductSetting extends Component {
 							>
 								<thead>
 									<tr>
-										<th>ID</th>
-										<th>Name</th>
-										<th>Price</th>
-										<th>Category</th>
-										<th>Supplier</th>
-										<th>Stock</th>
-										<th>Description</th>
+										<th className='text-center'>ID</th>
+										<th className='text-center'>Name</th>
+										<th className='text-center'>Price</th>
+										<th className='text-center'>Category</th>
+										<th className='text-center'>Supplier</th>
+										<th className='text-center'>Stock</th>
+										<th className='text-center'>Description</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -287,6 +308,7 @@ export class ProductSetting extends Component {
 							</table>
 						</div>
 					</div>
+
 					<FormAdd
 						state={this.state}
 						onChange={this.onChange}
@@ -298,13 +320,13 @@ export class ProductSetting extends Component {
 						state={this.state}
 						onChange={this.onChange}
 						suppliers={this.props.suppliers}
-						categoryEditValue={categoryEditValue}
-						supplierEditValue={supplierEditValue}
+						// categoryEditValue={categoryEditValue}
+						// supplierEditValue={supplierEditValue}
 						categories={this.props.categories}
 						onUpdateSubmit={this.onUpdateSubmit}
 					/>
 					<CategoryForm
-						state={this.state.name}
+						state={this.state.CategoryName}
 						onSubmitCategory={this.onSubmitCategory}
 						onChange={this.onChange}
 					/>

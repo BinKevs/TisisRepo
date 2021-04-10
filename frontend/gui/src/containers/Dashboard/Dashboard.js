@@ -41,6 +41,9 @@ export class Dashboard extends Component {
 	// 		data: {},
 	// 	};
 	// }
+
+	// getting the props from product reducer, transaction list reducer, transaction item list reducer
+
 	componentDidMount() {
 		this.props.getProductList();
 		this.props.getTransactionList();
@@ -252,9 +255,9 @@ export class Dashboard extends Component {
 									<table className='table table-striped'>
 										<thead>
 											<tr>
-												<th>ID</th>
-												<th>Name</th>
-												<th>Stock</th>
+												<th className='text-center'>ID</th>
+												<th className='text-center'>Name</th>
+												<th className='text-center'>Stock</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -262,9 +265,9 @@ export class Dashboard extends Component {
 												.filter((prod) => prod.stock < 10)
 												.map((product) => (
 													<tr key={product.id}>
-														<td>{product.id}</td>
-														<td>{product.name}</td>
-														<td>{product.stock}</td>
+														<td className='text-center'>{product.id}</td>
+														<td className='text-center'>{product.name}</td>
+														<td className='text-center'>{product.stock}</td>
 													</tr>
 												))}
 										</tbody>
@@ -277,9 +280,9 @@ export class Dashboard extends Component {
 									<table className='table table-striped'>
 										<thead>
 											<tr>
-												<th>ID</th>
-												<th>Name</th>
-												<th>Quantity Sold</th>
+												<th className='text-center'>ID</th>
+												<th className='text-center'>Name</th>
+												<th className='text-center'>Quantity Sold</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -288,9 +291,9 @@ export class Dashboard extends Component {
 												.slice(0, 4)
 												.map((item) => (
 													<tr key={item.id}>
-														<td>{item.id}</td>
-														<td>{item.productName}</td>
-														<td>{item.quantity}</td>
+														<td className='text-center'>{item.id}</td>
+														<td className='text-center'>{item.productName}</td>
+														<td className='text-center'>{item.quantity}</td>
 													</tr>
 												))}
 										</tbody>

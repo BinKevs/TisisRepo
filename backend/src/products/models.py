@@ -15,7 +15,7 @@ class Product(models.Model):
     supplier = models.ForeignKey(
         Supplier, related_name="supplier_product", on_delete=models.CASCADE, null=True)
     image = ResizedImageField(size=[600,410],crop=['middle', 'center'], default='No-Image-Available.jpeg',null=True, blank=True)
-    description = models.CharField(max_length=500, blank=True)
+    description = models.TextField(blank=True)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=2)
 

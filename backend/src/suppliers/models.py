@@ -8,7 +8,7 @@ from categories.models import Category
 class Supplier(models.Model):
     name = models.CharField(max_length=100, unique=True)
     address = models.CharField(max_length=300, unique=True)
-    phone_number = PhoneNumberField(null=False, blank=False, unique=True)
+    phone_number = models.CharField(max_length=100,null=False, blank=False, unique=True)
 
     def __str__(self):
         return self.name

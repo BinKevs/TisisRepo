@@ -21,7 +21,8 @@ class ChartDailySales extends Component {
 	//  ["Fri", "Jan", "15", "2021", "18:36:53", "GMT+0800", "(Philippine", "Standard", "Time)"]
 	// }Jan 14 2021 02:24:42
 	render() {
-		const DateNow = Date().toLocaleString().split(' ');
+		// spliting the month day year and time in transaction in order to fetch the daily record
+
 		transactionsFiltered = [];
 		transactionsFilteredDateSeparated = [];
 		this.props.chartData.map((filteredTransactionObject) =>
@@ -34,7 +35,8 @@ class ChartDailySales extends Component {
 				time: filteredTransactionObject.created_at.split(' ')[3],
 			})
 		);
-
+		// filtering today's daily sales and rendering it to the dictionary that will be rendered by the chart
+		const DateNow = Date().toLocaleString().split(' ');
 		transactionsFilteredDateSeparated
 			.filter(
 				(transaction) =>

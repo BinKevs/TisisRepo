@@ -14,7 +14,7 @@ class Login extends Component {
 		isAuthenticated: PropTypes.bool,
 	};
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
-
+	// Submit the state value to the store actions-accounts-auth-Login
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.props.login(this.state.username, this.state.password);
@@ -67,6 +67,7 @@ class Login extends Component {
 		);
 	}
 }
+//get the isAuthenticated value from store-reducer-accounts-auth
 const mapStateToProps = (state) => {
 	return {
 		isAuthenticated: state.AuthReducer.isAuthenticated,

@@ -22,22 +22,24 @@ export class AccountSetting extends Component {
 						<table className='table table-striped'>
 							<thead>
 								<tr>
-									<th>ID</th>
-									<th>First Name</th>
-									<th>Last Name</th>
-									<th>Email</th>
-									<th>SuperUserStatus</th>
+									<th className='text-center'>ID</th>
+									<th className='text-center'>First Name</th>
+									<th className='text-center'>Last Name</th>
+									<th className='text-center'>Email</th>
+									<th className='text-center'>SuperUserStatus</th>
 									<th />
 								</tr>
 							</thead>
 							<tbody>
 								{this.props.accounts.map((account) => (
 									<tr key={account.id}>
-										<td>{account.id}</td>
-										<td>{account.first_name}</td>
-										<td>{account.last_name}</td>
-										<td>{account.email}</td>
-										<td>{account.is_superuser ? 'True' : 'False'}</td>
+										<td className='text-center'>{account.id}</td>
+										<td className='text-center'>{account.first_name}</td>
+										<td className='text-center'>{account.last_name}</td>
+										<td className='text-center'>{account.email}</td>
+										<td className='text-center'>
+											{account.is_superuser ? 'True' : 'False'}
+										</td>
 										{/* <td>
                     <button
                       onClick={this.props.deleteAccount.bind(this, account.id)}

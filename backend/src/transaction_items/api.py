@@ -26,7 +26,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         amount_tendered = request.data['amount_tendered']
         change = request.data['change']
         quantity = request.data['quantity']
-        print(totalAmount, amount_tendered, change, quantity)
+        # print(totalAmount, amount_tendered, change, quantity)
         Transaction.save_transaction(
             totalAmount=totalAmount,
             amount_tendered=amount_tendered,

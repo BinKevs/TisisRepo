@@ -26,11 +26,11 @@ class Navbar extends React.Component {
 							style={{ height: '50px', fontSize: '1.5em' }}
 						>
 							<div className='AddOn' onClick={this.props.handler}>
-								<div className=' logoMinified'>
+								<div className=' logoMinified' style={{ fontSize: '0.7em' }}>
 									{sidebarStatus ? <BiIcons.BiLeftArrow /> : ''}
 								</div>
 								<FaIcons.FaBars />
-								<div className='logoMinified'>
+								<div className='logoMinified' style={{ fontSize: '0.7em' }}>
 									{sidebarStatus ? '' : <BiIcons.BiRightArrow />}
 								</div>
 							</div>

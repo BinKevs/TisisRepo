@@ -73,6 +73,8 @@ class ProductList extends Component {
 									href='#catalog'
 									role='tab'
 								>
+									<GrIcons.GrCatalog />
+									{'     '}
 									Catalog
 								</a>
 							</li>
@@ -84,6 +86,8 @@ class ProductList extends Component {
 									href='#table'
 									role='tab'
 								>
+									<GrIcons.GrTable />
+									{'     '}
 									Table
 								</a>
 							</li>
@@ -164,12 +168,13 @@ class ProductList extends Component {
 								>
 									<thead>
 										<tr>
-											<th>ID</th>
-											<th>Name</th>
-											<th>Price</th>
-											<th>Category</th>
-											<th>Stock</th>
-											<th>Description</th>
+											<th className='text-center'>ID</th>
+											<th className='text-center'>Name</th>
+											<th className='text-center'>Price</th>
+											<th className='text-center'>Category</th>
+											<th className='text-center'>Supplier</th>
+											<th className='text-center'>Stock</th>
+											<th className='text-center'>Description</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -179,6 +184,7 @@ class ProductList extends Component {
 												<td className='align-middle'>{product.name}</td>
 												<td className='align-middle'>{product.price}</td>
 												<td className='align-middle'>{product.category}</td>
+												<td className='align-middle'>{product.supplier}</td>
 												<td className='align-middle'>{product.stock}</td>
 												<td className='align-middle'>{product.description}</td>
 												<td className='align-middle'>

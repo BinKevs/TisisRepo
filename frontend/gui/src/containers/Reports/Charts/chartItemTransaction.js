@@ -20,6 +20,7 @@ class ChartItemTrans extends Component {
 		if (this.props.chartData !== prevProps.chartData) {
 			transactionItemsFiltered = [];
 			TotalItemsSoldPerItem = [];
+			//Destructuring for the ease of sorting which is which is sold
 			this.props.chartData.map((filteredTransactionItemObject) =>
 				transactionItemsFiltered.push({
 					id: filteredTransactionItemObject.id,
@@ -27,7 +28,7 @@ class ChartItemTrans extends Component {
 					quantity: filteredTransactionItemObject.quantity,
 				})
 			);
-
+			//Compiling every transaction made per item
 			transactionItemsFiltered.forEach(function (obj) {
 				var productNameX = obj.productName;
 				if (!this[productNameX])

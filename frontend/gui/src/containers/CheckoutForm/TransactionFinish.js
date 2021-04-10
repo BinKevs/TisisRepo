@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as BsIcons from 'react-icons/bs';
+import { HandleDecimalPlaces, numberWithCommas } from '../../Helpers/functions';
+
 const TransactionFinish = (props) => {
-	const { numberWithCommas, handleClick } = props;
+	const { handleClick } = props;
 	const { change } = props.state;
 	return (
 		<div>
@@ -19,7 +22,7 @@ const TransactionFinish = (props) => {
 				>
 					<div className='modal-content borderCust'>
 						<div className='modal-header borderCustUpperBody2 '>
-							<h2 class='modal-title'>Change</h2>
+							<h2 class='modal-title '>Transaction Successfully Completed</h2>
 							<button
 								type='button'
 								className='close'
@@ -30,8 +33,11 @@ const TransactionFinish = (props) => {
 								<span aria-hidden='true'>&times;</span>
 							</button>
 						</div>
-						<div className='card card-body modal-body p-5'>
-							<h1 class='container'>${numberWithCommas(change)}</h1>
+						<div className='card card-body modal-body p-auto text-center'>
+							<div style={{ fontSize: '8em' }}>
+								<BsIcons.BsCheckCircle />
+							</div>
+							<h1>Change : ₱{numberWithCommas(HandleDecimalPlaces(change))}</h1>
 						</div>
 					</div>
 				</div>

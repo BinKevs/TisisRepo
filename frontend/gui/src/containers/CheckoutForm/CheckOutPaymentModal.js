@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { numberWithCommas } from '../../Helpers/functions';
 const CheckOutPaymentModal = (props) => {
-	const {
-		numberWithCommas,
-		onChange,
-		handleClick,
-		handleSetAmountTendered,
-	} = props;
-	const { totalAmount, amount_tendered, change } = props.state;
+	const { onChange, handleSetAmountTendered } = props;
+	const { totalAmount, amount_tendered } = props.state;
 	return (
 		<div>
 			<div
@@ -39,7 +35,7 @@ const CheckOutPaymentModal = (props) => {
 								Amount To Pay
 							</h2>
 							<h2 className='pr-5' id='exampleModalLongTitle'>
-								<strong>${numberWithCommas(totalAmount)}</strong>
+								<strong>₱{numberWithCommas(totalAmount)}</strong>
 							</h2>
 						</div>
 						<div className='modal-body borderCustGen'>
@@ -50,21 +46,21 @@ const CheckOutPaymentModal = (props) => {
 								<div className='input-group col-lg-3'>
 									<input
 										type='text'
-										className='form-control mb-3'
+										className='form-control mb-3 text-center'
 										onChange={onChange}
 										value={amount_tendered}
 										name='amount_tendered'
-										style={{ height: '4.5rem' }}
+										style={{ height: '4.5rem', fontSize: '2em' }}
 										aria-label='Amount (to the nearest dollar)'
 									/>
 								</div>
 								<div className='col-lg-3'>
 									<button
 										type='button'
-										onClick={totalAmount}
+										onClick={handleSetAmountTendered(totalAmount)}
 										className='btn btn-secondary btn-lg btn-block mb-3'
 									>
-										<strong>${numberWithCommas(totalAmount)}</strong>
+										<strong>₱{numberWithCommas(totalAmount)}</strong>
 									</button>
 								</div>
 								<div className='col-lg-3'>
@@ -76,7 +72,7 @@ const CheckOutPaymentModal = (props) => {
 										className='btn btn-secondary btn-lg btn-block mb-3'
 									>
 										<strong>
-											${numberWithCommas(Math.ceil(totalAmount / 100) * 100)}
+											₱{numberWithCommas(Math.ceil(totalAmount / 100) * 100)}
 										</strong>
 									</button>
 								</div>
@@ -89,7 +85,7 @@ const CheckOutPaymentModal = (props) => {
 										className='btn btn-secondary btn-lg btn-block '
 									>
 										<strong>
-											${numberWithCommas(Math.ceil(totalAmount / 1000) * 1000)}
+											₱{numberWithCommas(Math.ceil(totalAmount / 1000) * 1000)}
 										</strong>
 									</button>
 								</div>
