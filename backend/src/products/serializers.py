@@ -12,9 +12,7 @@ class ProductSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all())
     category_info = serializers.SerializerMethodField()
-    # image = serializers.ImageField(
-    #     required=False, max_length=None, allow_empty_file=True)
-
+  
     class Meta:
         model = Product
         fields = '__all__'

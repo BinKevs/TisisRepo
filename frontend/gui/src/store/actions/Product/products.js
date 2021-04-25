@@ -70,6 +70,9 @@ export const updateProduct = (ProductID, data) => (dispatch, getState) => {
 		})
 		.catch((err) => console.log(err));
 };
+
+// Category part
+
 export const getCategoryList = () => (dispatch, getState) => {
 	axios
 		.get(URL_IMPORT + '/api/categories/', tokenConfig(getState))

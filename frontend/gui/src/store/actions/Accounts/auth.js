@@ -30,7 +30,6 @@ export const loadUser = () => (dispatch, getState) => {
 			});
 		});
 };
-
 export const login = (username, password) => (dispatch) => {
 	const config = {
 		headers: {
@@ -106,6 +105,7 @@ export const tokenConfig = (getState) => {
 	return config;
 };
 
+// Account setting fetching account list
 export const getAccountList = () => (dispatch, getState) => {
 	axios
 		.get(URL_IMPORT + '/api/accounts/', tokenConfig(getState))

@@ -4,11 +4,11 @@ import * as BsIcons from 'react-icons/bs';
 import { HandleDecimalPlaces, numberWithCommas } from '../../Helpers/functions';
 
 const TransactionFinish = (props) => {
-	const { handleClick } = props;
 	const { change } = props.state;
+	const { handleClickFinish } = props;
 	return (
 		<div>
-			<div
+			{/* <div
 				className='modal fade'
 				id='TransactionFinishModal'
 				tabIndex='-1'
@@ -26,7 +26,6 @@ const TransactionFinish = (props) => {
 							<button
 								type='button'
 								className='close'
-								onClick={handleClick}
 								data-dismiss='modal'
 								aria-label='Close'
 							>
@@ -38,6 +37,45 @@ const TransactionFinish = (props) => {
 								<BsIcons.BsCheckCircle />
 							</div>
 							<h1>Change : ₱{numberWithCommas(HandleDecimalPlaces(change))}</h1>
+						</div>
+					</div>
+				</div>
+			</div> */}
+
+			<div
+				className='modal fade'
+				data-bs-backdrop='static'
+				data-bs-keyboard='false'
+				id='TransactionFinishModal'
+				tabindex='-1'
+			>
+				<div className='modal-dialog'>
+					<div className='modal-content'>
+						<div className='modal-header'>
+							<button
+								type='button'
+								className='btn-close'
+								data-bs-dismiss='modal'
+								aria-label='Close'
+								onClick={handleClickFinish}
+							></button>
+						</div>
+						<div className='modal-body text-center'>
+							<h2>Transaction Successfully Completed</h2>
+							<h1>Change : ₱{numberWithCommas(HandleDecimalPlaces(change))}</h1>
+							<div style={{ fontSize: '8em' }}>
+								<BsIcons.BsCheckCircle />
+							</div>
+						</div>
+						<div className='modal-footer'>
+							<button
+								type='button'
+								className='btn btn-secondary'
+								data-bs-dismiss='modal'
+								onClick={handleClickFinish}
+							>
+								Close
+							</button>
 						</div>
 					</div>
 				</div>

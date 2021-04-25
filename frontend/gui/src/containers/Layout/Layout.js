@@ -6,7 +6,6 @@ import { loadUser } from '../../store/actions/Accounts/auth';
 import Alerts from '../../components/Alerts';
 import Navbar from './NavBar/Navbar';
 
-// let is_super = false;
 class CustomLayout extends React.Component {
 	constructor(props) {
 		super(props);
@@ -30,32 +29,10 @@ class CustomLayout extends React.Component {
 				is_superuser: false,
 			});
 		}
-
-		// console.log( this.props.AuthReducer.user.is_superuser);
 	}
 	componentDidMount() {
 		console.log(this.props);
 	}
-	// componentDidMount() {
-	//   console.log(typeof this.props.AuthReducer.user.is_superuser)
-	//   if (
-	//     typeof this.props.AuthReducer.user.is_superuser === "null" ||
-	//     typeof this.props.AuthReducer.user.is_superuser === "undefined"
-	//   ) {
-	//     this.setState({
-	//       is_superuser: false,
-	//     })
-	//   } else {
-	//     this.setState({
-	//       is_superuser: this.props.AuthReducer.user.is_superuser,
-	//     })
-	//   }
-	//   console.log(this.state)
-	// }
-	// componentDidMount() {
-	//   console.log(this.state)
-	//   console.log(this.props.AuthReducer.user)
-	// }
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.props.AuthReducer !== prevProps.AuthReducer) {
@@ -90,21 +67,7 @@ class CustomLayout extends React.Component {
 			<>
 				<Alerts />
 				<Navbar handler={this.handler} sidebarStatus={sidebarStatus} />
-				<div
-					className={
-						sidebarStatus ? 'container-active' : 'container-non-active'
-					}
-					style={{ backgroundColor: '#f9f9f9' }}
-				>
-					<div className='overflow-hidden'>{this.props.children}</div>
-				</div>
-				{/* {this.state.is_superuser ? (
-          <span className='navbar-text mr-3 container'>
-            Welcome {this.props.AuthReducer.user.username}
-          </span>
-        ) : (
-          "Not Super"
-        )} */}
+				<>{this.props.children}</>
 			</>
 		);
 	}

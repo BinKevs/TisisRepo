@@ -28,8 +28,6 @@ class ChartProd extends Component {
 		return (
 			<div className='chart'>
 				<HorizontalBar
-					//   width={100}
-					//   height={50}
 					data={{
 						labels: this.state.labels,
 						datasets: [
@@ -67,19 +65,6 @@ class ChartProd extends Component {
 								},
 							],
 						},
-						// scales: {
-						//   responsive: true,
-						//   yAxes: [
-						//     {
-						//       ticks: {
-						//         beginAtZero: true,
-						//       },
-						//       gridLines: {
-						//         display: false,
-						//       },
-						//     },
-						//   ],
-						// },
 					}}
 				/>
 			</div>

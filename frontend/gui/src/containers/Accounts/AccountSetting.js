@@ -40,14 +40,6 @@ export class AccountSetting extends Component {
 										<td className='text-center'>
 											{account.is_superuser ? 'True' : 'False'}
 										</td>
-										{/* <td>
-                    <button
-                      onClick={this.props.deleteAccount.bind(this, account.id)}
-                      className='btn btn-danger btn-sm'>
-                      {" "}
-                      Delete
-                    </button>
-                  </td> */}
 									</tr>
 								))}
 							</tbody>

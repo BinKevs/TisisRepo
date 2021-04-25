@@ -22,8 +22,9 @@ class CheckOutForm extends Component {
 		Subtotal: 0,
 		tax: 0,
 		amount_tendered: 0,
-		change: 0,
+		change: -1,
 		transanction_id: 0,
+		TotalQuantity: 0,
 	};
 	onChange = (e) => {
 		this.setState({ [e.target.name]: e.target.value });
@@ -36,7 +37,14 @@ class CheckOutForm extends Component {
 		const { totalAmount, amount_tendered, change } = this.state;
 		const items = this.props.cartItems;
 		const data = { totalAmount, amount_tendered, change, quantity, items };
+		console.log(data);
 		this.props.addTransactionItems(data);
+		// this.props.clearCart();
+		// this.props.history.push('/products');
+	};
+	//Clearing the cart and push to go to /products
+	handleClickFinish = (event) => {
+		event.preventDefault();
 		this.props.clearCart();
 		this.props.history.push('/products');
 	};
@@ -52,14 +60,19 @@ class CheckOutForm extends Component {
 	// This will load the cart items to be rendered and also to compute for the total amount, sub total and the tax;
 	componentDidMount() {
 		let VariableTotalAmount = 0;
+		let TotalQuantity = 0;
 		this.props.cartItems.map(
-			(item) => (VariableTotalAmount += item.price * item.quantity)
+			(item) => (
+				(VariableTotalAmount += item.price * item.quantity),
+				(TotalQuantity += item.quantity)
+			)
 		);
 		this.setState({
 			totalAmount: HandleDecimalPlaces(VariableTotalAmount),
 			Subtotal: HandleDecimalPlaces(
 				(VariableTotalAmount -= VariableTotalAmount * 0.12)
 			),
+			TotalQuantity,
 			tax: HandleDecimalPlaces(VariableTotalAmount * 0.12),
 		});
 	}
@@ -68,7 +81,9 @@ class CheckOutForm extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		if (this.state.amount_tendered !== prevState.amount_tendered) {
 			this.setState({
-				change: this.state.amount_tendered - this.state.totalAmount,
+				change: HandleDecimalPlaces(
+					this.state.amount_tendered - this.state.totalAmount
+				),
 			});
 			console.log(this.state);
 		}
@@ -76,135 +91,100 @@ class CheckOutForm extends Component {
 
 	render() {
 		const { cartItems } = this.props;
-		const { Subtotal, tax, totalAmount } = this.state;
+		const { Subtotal, tax, totalAmount, TotalQuantity } = this.state;
 		return (
 			<div>
-				{/* Passing the state, onChange, and handleSetAmountTendered to CheckoutPaymentMOdal */}
+				{/* Passing the state, onChange, handleSetAmountTendered and handleClick to CheckoutPaymentMOdal  */}
 				<CheckOutPaymentModal
 					state={this.state}
 					onChange={this.onChange}
 					handleSetAmountTendered={this.handleSetAmountTendered}
+					handleClick={this.handleClick}
 				/>
-				{/* Passing the state and handleClick to TransactionFinish */}
-				<TransactionFinish state={this.state} handleClick={this.handleClick} />
+				{/* Passing the state to TransactionFinish */}
+				<TransactionFinish
+					state={this.state}
+					handleClickFinish={this.handleClickFinish}
+				/>
 
 				<div className='row'>
 					<div className='col-lg-5'>
-						<div>
-							<div className='card card_cust mb-3'>
-								<div className='card-body'>
-									<div className='card-title'>
-										<h4>Sale Summary</h4>
-									</div>
-									<ul className='list-group list-group-flush'>
-										<div>
-											<li className='list-group-item d-flex align-items-stretch '>
-												<div className='text-center'>Quantity</div>
-												<span className='text-center' style={{ width: '9rem' }}>
-													Name
-												</span>
-												<span className='text-center'>Price</span>
-												<span className='text-center'>Total Price</span>
-											</li>
+						<div className='card-body card_cust'>
+							<div className='card-title'>
+								<h2>Sale Summary</h2>
+							</div>
+							<div className='row align-items-center pb-2 text-center h5'>
+								<div className='col'>Quantity</div>
+								<div className='col'>Name</div>
+								<div className='col'>Price</div>
+								<div className='col'>Total Price</div>
+							</div>
+							<div>
+								<div className='overflow-auto' style={{ height: '55vh' }}>
+									{cartItems.map((item) => (
+										<div className='d-flex justify-content-between align-items-center text-center'>
+											<p className='col h6'>{item.quantity}</p>
+											<p className='col h6'>{item.product_name}</p>
+											<p className='col h6'>₱{item.price}</p>
+											<p className='col h6'>₱{item.price * item.quantity}</p>
 										</div>
-									</ul>
-									<ul className='list-group list-group-flush'>
-										<div className='overflow-auto' style={{ height: '32rem' }}>
-											{cartItems.map((item) => (
-												<li
-													key={item.product_id}
-													className='list-group-item d-flex align-items-stretch border-0'
-												>
-													<span className='d-flex align-items-center'>
-														{item.quantity}
-													</span>
-													<span
-														className='d-flex align-items-center'
-														style={{ width: '9rem' }}
-													>
-														{item.product_name}
-													</span>
-													<span
-														className='d-flex align-items-center mr-3'
-														style={{ width: '5rem' }}
-													>
-														₱{item.price}
-													</span>
-													<span className='d-flex align-items-center'>
-														₱{item.price * item.quantity}
-													</span>
-												</li>
-											))}
-										</div>
-									</ul>
+									))}
+								</div>
 
-									<ul className='list-group list-group-flush'>
-										<li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0'>
-											Subtotal
-											<span>₱{numberWithCommas(Subtotal)}</span>
-										</li>
-										<li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
-											<div>Tax</div>
-											<span>₱{numberWithCommas(tax)}</span>
-										</li>
-										<li className='list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3'>
-											<div>
-												<h3>
-													<strong>Total</strong>
-												</h3>
-											</div>
-											<span>
-												<h3>
-													<strong>₱{numberWithCommas(totalAmount)}</strong>
-												</h3>
-											</span>
-										</li>
-									</ul>
+								<div className='h5'>
+									<div className='d-flex justify-content-between align-items-center py-2'>
+										<span> Subtotal </span>
+										<span>₱{numberWithCommas(Subtotal)}</span>
+									</div>
+									<div className='d-flex justify-content-between align-items-center'>
+										<span> Tax </span>
+										<span>₱{numberWithCommas(tax)}</span>
+									</div>
+									<div className='d-flex justify-content-between align-items-center '>
+										<span> Total Number of items </span>
+										<span>{numberWithCommas(TotalQuantity)}</span>
+									</div>
+									<div className='d-flex justify-content-between align-items-center h2'>
+										<span> Total </span>
+										<span>
+											₱<strong>{numberWithCommas(totalAmount)}</strong>
+										</span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div className='col-lg-7 '>
-						<div className='card_cust p-5'>
-							<div className='row'>
-								<div className='col-lg-3'>
-									<h1 className='display-3 text-secondary'>Pay</h1>
-								</div>
-								<div className='col-lg-9'>
-									<div className='card text-center'>
-										<div className='card-body'>
-											<p className='card-text display-4'>
-												<span>
-													<strong>₱{numberWithCommas(totalAmount)}</strong>
-												</span>
-											</p>
-										</div>
-									</div>
-								</div>
+					<div className='col-lg-7 p-4'>
+						<div className='card_cust p-4'>
+							<div className='d-flex justify-content-between align-items-center'>
+								<h1 className='display-4'>Pay</h1>
+								<h1 className='display-4'>
+									<strong>₱{numberWithCommas(totalAmount)}</strong>
+								</h1>
 							</div>
-							<div className='row mt-5'>
-								<div className='col-md-6 col-lg-4 '>
+							<div className='row mt-3'>
+								<div className='col-xl-4 col-md-4  col-12'>
 									<button
 										type='button'
-										data-toggle='modal'
-										data-target='#CheckoutPaymentMOdal'
-										className='btn btn-primary btn-lg btn-block mb-3'
+										data-bs-toggle='modal'
+										data-bs-target='#CheckoutPaymentModal'
+										className='btn btn-primary btn-lg mb-3 col-12'
 									>
 										Cash
 									</button>
 								</div>
-								<div className='col-md-6 col-lg-4'>
+								<div className='col-xl-4 col-md-4 col-12'>
 									<button
 										type='button'
-										className='btn btn-primary btn-lg btn-block mb-3'
+										className='btn btn-primary btn-lg mb-3 col-12'
 									>
 										Gcash
 									</button>
 								</div>
-								<div className='col-lg-4'>
+								<div className='col-xl-4 col-md-4 col-12'>
 									<button
 										type='button'
-										className='btn btn-primary btn-lg btn-block '
+										className='btn btn-primary btn-lg col-12'
 									>
 										Gift Card
 									</button>

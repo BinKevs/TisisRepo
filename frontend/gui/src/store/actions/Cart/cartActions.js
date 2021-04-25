@@ -4,6 +4,8 @@ import {
 	CHANGE_QUANTITY,
 	CLEAR_CART,
 } from './types';
+
+// This will receive the product that will be store in the cart/local storage when an id exist in local storage it will just add the quantity
 export const addToCart = (product) => (dispatch, getState) => {
 	const cartItems = getState().cartReducer.cartItems.slice();
 	let alreadyExists = false;

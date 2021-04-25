@@ -21,9 +21,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-    # supplier = models.ForeignKey(
-    #         Supplier, related_name="products", on_delete=models.CASCADE, null=True)
-
+   
     @receiver(post_save, sender='inventories.Inventory')
     def update_product_inventory_on_save(sender, instance, raw, **kwargs):
         print(instance)

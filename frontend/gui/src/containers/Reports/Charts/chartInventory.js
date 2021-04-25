@@ -27,8 +27,6 @@ class ChartInv extends Component {
 		return (
 			<div className='chart'>
 				<Line
-					//   width={100}
-					//   height={50}
 					data={{
 						labels: this.state.labels,
 						datasets: [
@@ -51,14 +49,7 @@ class ChartInv extends Component {
 							position: 'bottom',
 						},
 						scales: {
-							xAxes: [
-								{
-									// type: "time",
-									// time: {
-									//   unit: "week",
-									// },
-								},
-							],
+							xAxes: [{}],
 							yAxes: [
 								{
 									ticks: {

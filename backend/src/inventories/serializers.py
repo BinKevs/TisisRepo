@@ -10,8 +10,7 @@ class InventorySerializer(serializers.ModelSerializer):
     supplier = serializers.PrimaryKeyRelatedField(
         queryset=Supplier.objects.all())
     supplier_info = serializers.SerializerMethodField()
-    # supplier = SupplierSerializer(read_only=True)
-    # product = ProductSerializer(read_only=True)
+    
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
     product_info = serializers.SerializerMethodField()

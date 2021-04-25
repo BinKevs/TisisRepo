@@ -5,15 +5,8 @@ from .serializers import CategorySerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    # permission_classes = [
-    #     permissions.IsAuthenticated,
-    # ]
+    
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-    # def perform_create(self, serializer):
-    #     serializer.save(supplier=Supplier.objects.get(
-    #         pk=self.request.data.get('supplier')))
-    # # def get_queryset(self):
-    # #     return
-    # #     self.request.user.articles.all()
+

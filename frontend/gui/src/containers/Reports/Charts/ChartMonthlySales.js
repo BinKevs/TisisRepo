@@ -4,20 +4,6 @@ import { Bar, Line, Pie, Doughnut } from 'react-chartjs-2';
 let coloR = [];
 let transactionsFiltered = [];
 class ChartMonthlySales extends Component {
-	// static propTypes = {
-	// 	chartData: PropTypes.array.isRequired,
-	// 	label: PropTypes.string.isRequired,
-	// };
-	// constructor(props) {
-	// 	super(props);
-	// 	this.state = {
-	// 		labels: [],
-	// 		data: [],
-	// 	};
-	// }
-	// componentDidMount() {
-	// 	this.props.getTransactionList();
-	// }
 	render() {
 		const DateNow = Date().toLocaleString().split(' ');
 		//destructure to filter the month and year
@@ -41,8 +27,6 @@ class ChartMonthlySales extends Component {
 				<h2>Monthly Sales Statistics</h2>
 				<div className='chart'>
 					<Line
-						//   width={100}
-						//   height={50}
 						data={{
 							labels: transactionsFiltered.map((x) => x.date),
 							datasets: [
@@ -65,14 +49,7 @@ class ChartMonthlySales extends Component {
 								position: 'bottom',
 							},
 							scales: {
-								xAxes: [
-									{
-										// type: "time",
-										// time: {
-										//   unit: "week",
-										// },
-									},
-								],
+								xAxes: [{}],
 								yAxes: [
 									{
 										ticks: {

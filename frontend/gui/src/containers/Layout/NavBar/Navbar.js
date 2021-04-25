@@ -4,12 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../../store/actions/Accounts/auth';
-import { SidebarData } from './SidebarData';
-import './Navbar.css';
-import { IconContext } from 'react-icons';
-import * as FiIcons from 'react-icons/fi';
-import * as FaIcons from 'react-icons/fa';
-import * as BiIcons from 'react-icons/bi';
+
 class Navbar extends React.Component {
 	static propTypes = {
 		logout: PropTypes.func.isRequired,
@@ -19,75 +14,88 @@ class Navbar extends React.Component {
 		const { sidebarStatus } = this.props;
 		return (
 			<>
-				<IconContext.Provider value={{ color: '#fff' }}>
-					<Link to='#' className='menu-bars'>
-						<div
-							className='d-flex justify-content-between bg-dark pl-4'
-							style={{ height: '50px', fontSize: '1.5em' }}
-						>
-							<div className='AddOn' onClick={this.props.handler}>
-								<div className=' logoMinified' style={{ fontSize: '0.7em' }}>
-									{sidebarStatus ? <BiIcons.BiLeftArrow /> : ''}
-								</div>
-								<FaIcons.FaBars />
-								<div className='logoMinified' style={{ fontSize: '0.7em' }}>
-									{sidebarStatus ? '' : <BiIcons.BiRightArrow />}
-								</div>
-							</div>
-							<div>
-								{this.props.AuthReducer.isAuthenticated ? (
-									<li className='nav-text' onClick={this.props.logout}>
+				<nav id='sidebar'>
+					<div id='dismiss'>
+						<i className='fas fa-arrow-left fa-1x'></i>
+					</div>
+					<div className='sidebar-header'>
+						<h3>ABC Motor Parts</h3>
+						<strong>Online Sale's and Inventory</strong>
+					</div>
+					<ul className='list-unstyled components'>
+						<li className='ps-3'>
+							<Link to='/dashboard' class='dismiss'>
+								<i className='fas fa-chart-line'></i> Dashboard
+							</Link>
+
+							<Link to='/products' class='dismiss'>
+								<i className='fas fa-cart-plus'></i> Products
+							</Link>
+
+							<Link to='/reports' class='dismiss'>
+								<i class='fas fa-file-alt'></i> Reports
+							</Link>
+
+							<Link to='/products/setting' class='dismiss'>
+								<i className='fas fa-sliders-h'></i> Product Setting
+							</Link>
+
+							<Link to='/inventories/setting' class='dismiss'>
+								<i className='fas fa-clipboard-list'></i> Inventory
+							</Link>
+
+							<Link to='/accounts/setting' class='dismiss'>
+								<i className='fas fa-user-cog'></i> Account Setting
+							</Link>
+
+							<Link to='/supplier' class='dismiss'>
+								<i className='fas fa-clipboard-list'></i> Supplier
+							</Link>
+
+							<Link to='/transactions' class='dismiss'>
+								<i className='fas fa-coins'></i> Transaction History
+							</Link>
+
+							<Link to='/transactions/items' class='dismiss'>
+								<i className='fas fa-sitemap'></i> Transaction Item's History
+							</Link>
+						</li>
+					</ul>
+				</nav>
+				<nav className='navbar navbar-expand-lg navbar-light bg-light mb-2 '>
+					<div className='container-fluid'>
+						<button type='button' id='sidebarCollapse' className='navbar-btn'>
+							<span></span>
+							<span></span>
+							<span></span>
+						</button>
+
+						<ul className='nav navbar-nav ms-auto'>
+							{this.props.AuthReducer.isAuthenticated ? (
+								<>
+									<li className='nav-item' onClick={this.props.logout}>
 										<Link to='/login'>
-											<span>Logout</span>
-											<div>
-												<FiIcons.FiLogOut />
-											</div>
+											<a className='nav-link'>Logout</a>
 										</Link>
 									</li>
-								) : (
-									<div>
-										<li className='nav-text'>
-											<Link to='/login'>
-												<span>Login</span>
-												<div>
-													<FiIcons.FiLogIn />
-												</div>
-											</Link>
-										</li>
-									</div>
-								)}
-							</div>
-						</div>
-					</Link>
-
-					<nav
-						className={
-							sidebarStatus ? 'nav-menu active bg-dark' : 'nav-menu bg-dark'
-						}
-					>
-						<ul className='nav-menu-items '>
-							<div className='wrapper'>
-								<li className='navbar-toggle'>
-									<Link to='#' className='menu-account-picture'>
-										<BiIcons.BiUserCircle />
-									</Link>
-								</li>
-							</div>
-							<div className='wrapper-li'>
-								{SidebarData.map((item, index) => {
-									return (
-										<li key={index} className={item.cName}>
-											<Link to={item.path}>
-												<div>{item.icon}</div>
-												<span>{item.title}</span>
-											</Link>
-										</li>
-									);
-								})}
-							</div>
+								</>
+							) : (
+								<>
+									<li className='nav-item'>
+										<Link to='/login' className='nav-link'>
+											Login
+										</Link>
+									</li>
+									<li className='nav-item'>
+										<Link to='/register' className='nav-link'>
+											Register
+										</Link>
+									</li>
+								</>
+							)}
 						</ul>
-					</nav>
-				</IconContext.Provider>
+					</div>
+				</nav>
 			</>
 		);
 	}

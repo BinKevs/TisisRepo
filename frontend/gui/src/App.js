@@ -3,7 +3,6 @@ import './App.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider as AlertProvider } from 'react-alert';
-// import { loadUser } from "./store/actions/Accounts/auth"
 
 import CustomLayout from './containers/Layout/Layout';
 import AlertTemplate from 'react-alert-template-basic';
@@ -15,10 +14,6 @@ const options = {
 	timeout: 3000,
 };
 class App extends Component {
-	// componentDidMount() {
-	//   store.dispatch(loadUser())
-	// }
-
 	render() {
 		return (
 			<div>
@@ -36,5 +31,4 @@ class App extends Component {
 	}
 }
 
-// mapStateToProps, mapDispatchToProps
 export default App;

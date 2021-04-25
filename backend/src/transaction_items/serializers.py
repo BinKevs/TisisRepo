@@ -4,12 +4,11 @@ from transactions.serializers import TransactionSerializer
 from products.serializers import ProductSerializer
 from products.models import Product
 from transactions.models import Transaction
-
-
+from datetime import datetime, timedelta
 class Transaction_itemSerializer(serializers.ModelSerializer):
     transaction = serializers.PrimaryKeyRelatedField(
         queryset=Transaction.objects.all())
-    # product = ProductSerializer(read_only=True)
+   
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
     product_info = serializers.SerializerMethodField()
@@ -32,11 +31,17 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_transaction_date(obj):
+        
         try:
             transaction = Transaction.objects.get(pk=obj.transaction.id)
+            
+            date = transaction.created_at
+            modified_date = date + timedelta(hours=8)
+           
             return {
+                
                 "id": transaction.id,
-                "created_at": transaction.created_at.strftime('%b %d %Y %H:%M:%S')
+                "created_at": datetime.strftime(modified_date,'%b %d %Y %H:%M:%S')
             }
         except:
             return {

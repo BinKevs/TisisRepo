@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from suppliers.models import Supplier
 
-# Lead Serializer
-
-
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = Supplier

@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import FormAdd from './FormAdd';
-import FormUpdate from './FormUpdate';
-import CategoryForm from '../ModalForms/CategoryForm';
+import ProductModalForm from './ProductModalForm';
+import CategoryModalForm from '../../Category/CategoryModalForm';
 import {
 	getProductList,
 	deleteProduct,
@@ -19,9 +18,9 @@ import * as GrIcons from 'react-icons/gr';
 import * as BsIcons from 'react-icons/bs';
 let products = [];
 let isEditButtonClicked = false;
+let EditButtonIsClicked = false;
 let isImageChanged = false;
-// let categoryEditValue = '';
-// let supplierEditValue = '';
+
 export class ProductSetting extends Component {
 	static propTypes = {
 		products: PropTypes.array.isRequired,
@@ -44,28 +43,25 @@ export class ProductSetting extends Component {
 		image: null,
 		productID: 0,
 		search: '',
+		urlFile: '',
 	};
 	componentDidMount() {
 		this.props.getProductList();
 		this.props.getSupplierList();
 		this.props.getCategoryList();
 	}
-
 	// when the image field changes it will save the image and also change the state of
 	// isImageChanged to true for the update Form component to know that we didnt change the image
 	// because we sent all data whenever we make a post or update so when the isImageChanged's status is false we will not include the field
 	onChange = (e) => {
 		if (e.target.name === 'image') {
-			this.setState({ [e.target.name]: e.target.files[0] });
+			this.setState({
+				[e.target.name]: e.target.files[0],
+				urlFile: URL.createObjectURL(e.target.files[0]),
+			});
+
 			isImageChanged = true;
-		}
-		//  else if (e.target.name === 'supplier' || e.target.name === 'category') {
-		// 	const ID = e.target.value.split(' ');
-		// 	this.setState({
-		// 		[e.target.name]: ID[0],
-		// 	});
-		// }
-		else {
+		} else {
 			this.setState({ [e.target.name]: e.target.value });
 		}
 	};
@@ -85,8 +81,7 @@ export class ProductSetting extends Component {
 	// then we will set it to the state and being passed on the formupdate component
 	componentDidUpdate(prevProps, prevState) {
 		if (isEditButtonClicked) {
-			// categoryEditValue = '';
-			// supplierEditValue = '';
+			EditButtonIsClicked = true;
 			const {
 				id,
 				name,
@@ -96,8 +91,6 @@ export class ProductSetting extends Component {
 				category,
 				stock,
 				image,
-				category_info,
-				supplier_info,
 			} = this.props.product;
 			this.setState({
 				name,
@@ -109,8 +102,7 @@ export class ProductSetting extends Component {
 				image,
 				productID: id,
 			});
-			// categoryEditValue = id + ' - ' + category_info.name;
-			// supplierEditValue = id + ' - ' + supplier_info.name;
+
 			isEditButtonClicked = false;
 		}
 		if (this.props.product !== prevProps.product) {
@@ -120,7 +112,7 @@ export class ProductSetting extends Component {
 	//this will sent the updated product in the this.props.updateProduct to the action and will reset the state
 	onUpdateSubmit = (productID) => {
 		return (e) => {
-			// e.preventDefault();
+			e.preventDefault();
 			const {
 				name,
 				description,
@@ -150,11 +142,11 @@ export class ProductSetting extends Component {
 				supplier: 0,
 				category: 0,
 				new_stock: 0,
+				stock: 0,
 				image: null,
 				productID: 0,
 			});
-			// categoryEditValue = '';
-			// supplierEditValue = '';
+			EditButtonIsClicked = false;
 			isImageChanged = false;
 		};
 	};
@@ -166,6 +158,25 @@ export class ProductSetting extends Component {
 			isEditButtonClicked = true;
 		};
 	}
+	// when edit button is close this will reset the state and EditButtonIsClicked, isImageChanged and isEditButtonClicked states
+
+	onEditCloseButton = (event) => {
+		event.preventDefault();
+		this.setState({
+			name: '',
+			description: '',
+			price: 0,
+			supplier: 0,
+			category: 0,
+			new_stock: 0,
+			stock: 0,
+			image: null,
+			productID: 0,
+		});
+		EditButtonIsClicked = false;
+		isEditButtonClicked = false;
+		isImageChanged = false;
+	};
 	// sending the product that will be added to this.props.addProduct in the actions also reset the state
 	onAddSubmit = (e) => {
 		e.preventDefault();
@@ -197,10 +208,9 @@ export class ProductSetting extends Component {
 			supplier: 0,
 			category: 0,
 			new_stock: 0,
+			stock: 0,
 			image: null,
 		});
-		// categoryEditValue = '';
-		// supplierEditValue = '';
 		isImageChanged = false;
 	};
 	render() {
@@ -231,27 +241,26 @@ export class ProductSetting extends Component {
 						<div className='d-flex align-items-center mb-3'>
 							<h2>Products</h2>
 							<button
-								className='btn btn-outline-secondary ml-4 col-auto'
-								data-toggle='modal'
-								data-target='#ProductModalFormAdd'
+								className='btn btn-outline-secondary ms-4 col-auto'
+								data-bs-toggle='modal'
+								data-bs-target='#ProductModalForm'
 								style={{ fontSize: '1.5em' }}
 							>
 								<AiIcons.AiOutlinePlus />
 							</button>
-							<div className='col-lg-3 ml-auto form-inline'>
-								<div style={{ fontSize: '1.5em' }}>
-									<BsIcons.BsSearch />
+							<div className='col-xl-3 d-flex justify-content-end align-items-center ms-auto'>
+								<i className='fas fa-search fa-lg'></i>
+								<div className='col-xl-8 col-12 ms-2'>
+									<input
+										className='form-control'
+										type='text'
+										id='example-number-input'
+										name='search'
+										placeholder='Search'
+										onChange={this.onChange}
+										value={this.state.search}
+									/>
 								</div>
-
-								<input
-									className='form-control ml-3'
-									type='text'
-									id='example-number-input'
-									name='search'
-									placeholder='Search'
-									onChange={this.onChange}
-									value={this.state.search}
-								/>
 							</div>
 						</div>
 						<div className='table-responsive'>
@@ -281,22 +290,11 @@ export class ProductSetting extends Component {
 											<td className='align-middle'>{product.stock}</td>
 											<td className='align-middle'>{product.description}</td>
 
-											{/* <td className='align-middle'>
-                        <button
-                          onClick={this.props.deleteProduct.bind(
-                            this,
-                            product.id,
-                          )}
-                          className='btn btn-danger btn-xs'>
-                          {" "}
-                          Delete
-                        </button>
-                      </td> */}
 											<td className='align-middle'>
 												<button
 													onClick={this.onEditButtonClick(product.id)}
-													data-toggle='modal'
-													data-target='#ProductModalFormUpdate'
+													data-bs-toggle='modal'
+													data-bs-target='#ProductModalForm'
 													className='btn btn-outline-secondary btn-xs'
 												>
 													<GrIcons.GrEdit />
@@ -309,23 +307,19 @@ export class ProductSetting extends Component {
 						</div>
 					</div>
 
-					<FormAdd
+					<ProductModalForm
 						state={this.state}
 						onChange={this.onChange}
 						suppliers={this.props.suppliers}
 						categories={this.props.categories}
 						onAddSubmit={this.onAddSubmit}
-					/>
-					<FormUpdate
-						state={this.state}
-						onChange={this.onChange}
-						suppliers={this.props.suppliers}
-						// categoryEditValue={categoryEditValue}
-						// supplierEditValue={supplierEditValue}
-						categories={this.props.categories}
 						onUpdateSubmit={this.onUpdateSubmit}
+						EditButtonIsClicked={EditButtonIsClicked}
+						isImageChanged={isImageChanged}
+						onEditCloseButton={this.onEditCloseButton}
 					/>
-					<CategoryForm
+
+					<CategoryModalForm
 						state={this.state.CategoryName}
 						onSubmitCategory={this.onSubmitCategory}
 						onChange={this.onChange}

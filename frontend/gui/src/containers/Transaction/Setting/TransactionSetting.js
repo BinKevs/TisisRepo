@@ -18,6 +18,7 @@ export class TransanctionSetting extends Component {
 	}
 
 	render() {
+		//returning the search filtered
 		const lowercasedFilter = this.state.search.toLowerCase();
 		const filteredData = this.props.transactions.filter((item) => {
 			return Object.keys(item).some((key) =>

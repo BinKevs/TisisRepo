@@ -6,12 +6,6 @@ from .serializers import SupplierSerializer
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
-    # permission_classes = [
-    #     permissions.IsAuthenticated,
-    # ]
+   
     serializer_class = SupplierSerializer
     queryset = Supplier.objects.all()
-
-    # def get_queryset(self):
-    #     return
-    #     self.request.user.articles.all()

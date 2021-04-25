@@ -2,6 +2,7 @@ import axios from 'axios';
 import { URL_IMPORT } from '../../../Helpers/constant';
 import { tokenConfig } from '../Accounts/auth';
 import { createMessage, returnErrors } from '../Notification/messages';
+
 import {
 	GET_TRANSACTION_LIST,
 	GET_TRANSACTION,
@@ -45,20 +46,6 @@ export const deleteTransaction = (TransactionID) => (dispatch, getState) => {
 		.catch((err) => console.log(err));
 };
 
-// export const addTransaction = (data) => (dispatch, getState) => {
-// 	axios
-// 		.post(URL_IMPORT + '/api/transactions/', data, tokenConfig(getState))
-// 		.then((res) => {
-// 			dispatch(createMessage({ message: 'Transaction Added' }));
-// 			dispatch({
-// 				type: ADD_TRANSACTION,
-// 				payload: res.data,
-// 			});
-// 		})
-// 		.catch((err) =>
-// 			dispatch(returnErrors(err.response.data, err.response.status))
-// 		);
-// };
 export const updateTransaction = (TransactionID, data) => (
 	dispatch,
 	getState
@@ -75,6 +62,7 @@ export const updateTransaction = (TransactionID, data) => (
 		.catch((err) => console.log(err));
 };
 
+// Transaction Items part
 export const getTransactionItemList = () => (dispatch, getState) => {
 	axios
 		.get(URL_IMPORT + '/api/transactions/items/', tokenConfig(getState))
@@ -86,17 +74,18 @@ export const getTransactionItemList = () => (dispatch, getState) => {
 		});
 };
 
+// Sending the transaction items together with the transaction information such as amount rendered, change, total amount and quantity
+
 export const addTransactionItems = (data) => (dispatch, getState) => {
 	axios
 		.post(URL_IMPORT + '/api/transactions/items/', data, tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Transaction Added' }));
 			dispatch({
 				type: ADD_TRANSACTION_ITEMS,
 				payload: res.data,
 			});
 		})
-		.catch((err) =>
-			dispatch(returnErrors(err.response.data, err.response.status))
-		);
+		.catch((err) => {
+			dispatch(returnErrors(err.response.data, err.response.status));
+		});
 };

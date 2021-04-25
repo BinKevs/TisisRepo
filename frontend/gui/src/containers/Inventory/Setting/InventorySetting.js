@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 // import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import FormAdd from './FormAdd';
-import FormUpdate from './FormUpdate';
+import InventoryModalForm from './InventoryModalForm';
+
 import {
 	getInventoryList,
 	deleteInventory,
@@ -17,10 +17,9 @@ import * as AiIcons from 'react-icons/ai';
 import * as BsIcons from 'react-icons/bs';
 import * as GrIcons from 'react-icons/gr';
 
+let EditButtonIsClicked = false;
 let isEditButtonClicked = false;
 let inventories = [];
-let productEditValue = '';
-let supplierEditValue = '';
 export class InventorySetting extends Component {
 	static propTypes = {
 		inventories: PropTypes.array.isRequired,
@@ -40,14 +39,7 @@ export class InventorySetting extends Component {
 		inventoryID: 0,
 	};
 	onChange = (e) => {
-		// if (e.target.name === 'product' || e.target.name === 'supplier') {
-		// 	const ID = e.target.value.split(' ');
-		// 	this.setState({
-		// 		[e.target.name]: ID[0],
-		// 	});
-		// } else {
 		this.setState({ [e.target.name]: e.target.value });
-		// }
 	};
 	// this will be passed to the form add component
 	// when this function called it will get the state values and pass it
@@ -58,7 +50,6 @@ export class InventorySetting extends Component {
 		const { new_stock, product, supplier } = this.state;
 		const inventory = { new_stock, product, supplier };
 		this.props.addInventory(inventory);
-		this.props.getInventoryList();
 
 		this.setState({
 			new_stock: 0,
@@ -68,6 +59,17 @@ export class InventorySetting extends Component {
 		});
 	};
 
+	onEditCloseButton = (event) => {
+		event.preventDefault();
+		this.setState({
+			new_stock: 0,
+			product: 0,
+			supplier: 0,
+			inventoryID: 0,
+		});
+		EditButtonIsClicked = false;
+		isEditButtonClicked = false;
+	};
 	componentDidMount() {
 		this.props.getInventoryList();
 		this.props.getSupplierList();
@@ -75,33 +77,22 @@ export class InventorySetting extends Component {
 		this.setState({
 			search: '',
 		});
-		console.log(this.props.inventories);
-
-		console.log(Date().toLocaleString());
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (isEditButtonClicked) {
-			const {
-				new_stock,
-				product,
-				supplier,
-				id,
-				// product_info,
-				// supplier_info,
-			} = this.props.inventory;
+			EditButtonIsClicked = true;
+			const { new_stock, product, supplier, id } = this.props.inventory;
 			this.setState({
 				new_stock,
 				product,
 				supplier,
 				inventoryID: id,
 			});
-			// productEditValue = id + ' - ' + product_info.name;
-			// supplierEditValue = id + ' - ' + supplier_info.name;
-			console.log(this.state);
+
 			isEditButtonClicked = false;
 		}
-		if (this.props.inventory !== prevProps.inventory) {
+		if (this.props.inventories !== prevProps.inventories) {
 			this.props.getInventoryList();
 		}
 	}
@@ -112,23 +103,6 @@ export class InventorySetting extends Component {
 			isEditButtonClicked = true;
 		};
 	}
-	//
-	// Testing function
-	// onTest = (event) => {
-	// 	var topValues = .sort((a, b) => b - a).slice(0, 5)
-	// 	console.log(topValues)
-	// 	const myData = []
-	// 		.concat(this.props.inventories)
-	// 		.sort((a, b) => b.new_stock - a.new_stock)
-	// 		.slice(0, 5)
-	// 		.map((item) => (
-	// 			<div key={item.id}>
-	// 				{item.id} {item.new_stock}
-	// 			</div>
-	// 		));
-	// 	console.log(myData);
-	// 	console.log(inventories)
-	// };
 
 	// When Updating this will sent the new stock, product and supplier together with id
 	// to the updateInventory in the action and reset the state.
@@ -137,12 +111,14 @@ export class InventorySetting extends Component {
 			event.preventDefault();
 			const { new_stock, product, supplier } = this.state;
 			const inventory = { new_stock, product, supplier };
+
 			this.props.updateInventory(InventoryID, inventory);
 
 			this.setState({
 				new_stock: 0,
 				product: 0,
 				supplier: 0,
+				inventoryID: 0,
 			});
 		};
 	};
@@ -169,32 +145,31 @@ export class InventorySetting extends Component {
 			<Fragment>
 				<div className='container'>
 					<div className='card_cust p-5'>
-						<div className='d-flex align-items-center mb-3 p-2 form-row'>
-							<h2 className='col-auto'>Inventories</h2>
+						<div className='d-flex align-items-center mb-3'>
+							<h2>Inventories</h2>
 
 							<button
-								className='btn btn-outline-secondary ml-4 col-auto'
-								data-toggle='modal'
-								// onClick={this.onEz}
-								data-target='#InventoryModalFormAdd'
+								className='btn btn-outline-secondary ms-4 col-auto'
+								data-bs-toggle='modal'
+								data-bs-target='#InventoryModalForm'
 								style={{ fontSize: '1.5em' }}
 							>
 								<AiIcons.AiOutlinePlus />
 							</button>
-							<div className='col-lg-3 ml-auto form-inline'>
-								<div style={{ fontSize: '1.5em' }}>
-									<BsIcons.BsSearch />
-								</div>
 
-								<input
-									className='form-control ml-3'
-									type='text'
-									id='example-number-input'
-									name='search'
-									placeholder='Search'
-									onChange={this.onChange}
-									value={this.state.search}
-								/>
+							<div className='col-xl-3 d-flex justify-content-end align-items-center ms-auto'>
+								<i className='fas fa-search fa-lg'></i>
+								<div className='col-xl-8 col-12 ms-2'>
+									<input
+										className='form-control'
+										type='text'
+										id='example-number-input'
+										name='search'
+										placeholder='Search'
+										onChange={this.onChange}
+										value={this.state.search}
+									/>
+								</div>
 							</div>
 						</div>
 
@@ -221,23 +196,12 @@ export class InventorySetting extends Component {
 											<td className='align-middle'>{inventory.new_stock}</td>
 											<td className='align-middle'>{inventory.supplier}</td>
 											<td className='align-middle'>{inventory.created_at}</td>
-											{/* <td className='align-middle'>
-                        <button
-                          onClick={this.props.deleteInventory.bind(
-                            this,
-                            inventory.id,
-                          )}
-                          className='btn btn-danger btn-xs'>
-                          {" "}
-                          <AiIcons.AiOutlineDelete />
-                        </button>
-                      </td> */}
 
 											<td className='align-middle'>
 												<button
 													onClick={this.onEditButtonClick(inventory.id)}
-													data-toggle='modal'
-													data-target='#InventoryModalFormUpdate'
+													data-bs-toggle='modal'
+													data-bs-target='#InventoryModalForm'
 													className='btn btn-outline-secondary btn-xs'
 												>
 													<GrIcons.GrEdit />
@@ -249,24 +213,15 @@ export class InventorySetting extends Component {
 							</table>
 						</div>
 						{/* passing the state, onaddSubmit,onchange,products,suppliers as props to form add component */}
-						<FormAdd
+						<InventoryModalForm
 							state={this.state}
+							onUpdateSubmit={this.onUpdateSubmit}
 							onAddSubmit={this.onAddSubmit}
 							onChange={this.onChange}
-							// onChangeTest={this.onChangeTest}
 							products={this.props.products}
 							suppliers={this.props.suppliers}
-						/>
-						{/* passing the state,
-						onUpdateSubmit,onChange,products,suppliers as props to form update component */}
-						<FormUpdate
-							state={this.state}
-							// productEditValue={productEditValue}
-							// supplierEditValue={supplierEditValue}
-							onUpdateSubmit={this.onUpdateSubmit}
-							onChange={this.onChange}
-							products={this.props.products}
-							suppliers={this.props.suppliers}
+							EditButtonIsClicked={EditButtonIsClicked}
+							onEditCloseButton={this.onEditCloseButton}
 						/>
 					</div>
 				</div>

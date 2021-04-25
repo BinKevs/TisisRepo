@@ -17,6 +17,7 @@ export class TransanctionItemsSetting extends Component {
 	}
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 	render() {
+		//destructuring the dictionary for searching/ fetching purposes
 		TransactionItems = [];
 		this.props.transaction_items.map((trans) =>
 			TransactionItems.push({
@@ -27,6 +28,7 @@ export class TransanctionItemsSetting extends Component {
 				quantity: trans.quantity,
 			})
 		);
+		//returning the filtered data from search
 		const lowercasedFilter = this.state.search.toLowerCase();
 		const filteredData = TransactionItems.filter((item) => {
 			return Object.keys(item).some((key) =>

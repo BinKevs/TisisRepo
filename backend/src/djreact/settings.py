@@ -31,28 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
-    # 'django.contrib.auth',
-    # 'django.contrib.contenttypes',
-    # 'django.contrib.sessions',
-    # 'django.contrib.messages',
-    # 'django.contrib.staticfiles',
-
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'corsheaders',
-    # 'rest_auth',
-    # 'rest_auth.registration',
-    # 'rest_framework',
-    # 'rest_framework.authtoken',
-    # 'django.contrib.sites',
-
-    # 'knox',
-    # 'articles',
-    # 'accounts',
-
-
+  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,8 +51,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'knox',
-    # 'djmoney',
-    # 'moneyfield',
+  
     'phonenumber_field',
     'django_resized'
 

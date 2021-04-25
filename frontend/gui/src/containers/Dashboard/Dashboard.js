@@ -33,14 +33,6 @@ export class Dashboard extends Component {
 	numberWithCommas(x) {
 		return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 	}
-	// constructor(props) {
-	// 	super(props);
-
-	// 	this.state = {
-	// 		labels: {},
-	// 		data: {},
-	// 	};
-	// }
 
 	// getting the props from product reducer, transaction list reducer, transaction item list reducer
 
@@ -50,30 +42,6 @@ export class Dashboard extends Component {
 		this.props.getTransactionItemList();
 	}
 
-	// onEz = (event) => {
-	// transactionItemsFiltered = [];
-	// result = [];
-
-	// this.props.transaction_items.map((filteredTransactionItemObject) =>
-	// 	transactionItemsFiltered.push({
-	// 		id: filteredTransactionItemObject.id,
-	// 		productName: filteredTransactionItemObject.product_info.name,
-	// 		quantity: filteredTransactionItemObject.quantity,
-	// 	})
-	// );
-
-	// transactionItemsFiltered.forEach(function (obj) {
-	// 	var productNameX = obj.productName;
-	// 	if (!this[productNameX]) result.push((this[productNameX] = obj));
-	// 	else this[productNameX].quantity += obj.quantity;
-	// }, Object.create(null));
-
-	// 	console.log(result.sort((a, b) => (a.quantity < b.quantity ? 1 : -1)));
-	// };
-	// onEz2 = (event) => {
-	// 	console.log(transactionItemsFiltered);
-	// 	console.log(result);
-	// };
 	render() {
 		transactionsFilteredDateSeparated = [];
 
@@ -161,25 +129,11 @@ export class Dashboard extends Component {
 			<Fragment>
 				<IconContext.Provider value={{ color: '#536878' }}>
 					<div className='container'>
-						{/* <button
-            className='btn btn-outline-secondary'
-            onClick={this.onEz}
-            style={{ fontSize: "1.5em" }}>
-            xxxxxxx
-          </button>
-           */}
-						{/* <button
-							className='btn btn-outline-secondary'
-							onClick={this.onEz}
-							style={{ fontSize: '1.5em' }}
-						>
-							yyyyyyyy
-						</button> */}
-						<div className='row text-primary'>
+						<div className='row mb-4 text-primary'>
 							<div className='col-xl-4 text-center '>
 								<div className='card_cust p-3'>
-									<div style={{ fontSize: '2em' }}>
-										<FaIcons.FaDollarSign />
+									<div className='text-dark' style={{ fontSize: '2em' }}>
+										<i class='fal fa-coin'></i>
 									</div>
 									<h2>₱{this.numberWithCommas(totalSalesTransaction)}</h2>
 									<hr />
@@ -207,7 +161,7 @@ export class Dashboard extends Component {
 								</div>
 							</div>
 						</div>
-						<div className='row text-primary'>
+						<div className='row mb-4 text-primary'>
 							<div className='col-xl-4 text-center'>
 								<div className='card_cust p-3'>
 									<div style={{ fontSize: '2em' }}>
@@ -246,7 +200,7 @@ export class Dashboard extends Component {
 								</div>
 							</div>
 						</div>
-						<div className='row'>
+						<div className='row mb-4 text-primary'>
 							<div className='col-xl-8'>
 								<div className='card_cust p-5'>
 									<h2 className='text-danger'>

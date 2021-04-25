@@ -73,7 +73,7 @@ export class Cart extends Component {
 		const { Subtotal, tax, totalAmount } = this.state;
 		return (
 			<>
-				<div className='card card_cust mb-3 text-center'>
+				{/* <div className='card card_cust mb-3 text-center'>
 					<div className='card-body'>
 						<div className='card-title'>
 							<h2>Cart</h2>
@@ -143,7 +143,7 @@ export class Cart extends Component {
 											className='d-flex align-items-center '
 											style={{ width: '4rem', height: '4rem' }}
 										>
-											{/* remove a item to the cart passing product item to be receive by removeFromCart in the cartActions */}
+											remove a item to the cart passing product item to be receive by removeFromCart in the cartActions
 											<button
 												type='button'
 												style={{ fontSize: '1.5em' }}
@@ -172,7 +172,7 @@ export class Cart extends Component {
 								</span>
 							</li>
 						</ul>
-						{/* Redirect to the checkout page */}
+						Redirect to the checkout page 
 						<Link to='/checkout'>
 							<button
 								type='button'
@@ -182,6 +182,93 @@ export class Cart extends Component {
 								<span>₱{this.numberWithCommas(totalAmount)}</span>
 							</button>
 						</Link>
+					</div>
+				</div>  */}
+				<div className='card-body'>
+					<div className='card-title'>
+						<h2>Cart</h2>
+					</div>
+					<div className='row align-items-center pb-2 h5'>
+						<div className='col'>Name</div>
+						<div className='col'>Quantity</div>
+						<div className='col'>Price</div>
+						<div className='col'>Delete</div>
+					</div>
+					<div>
+						<div className='overflow-auto' style={{ height: '45vh' }}>
+							{cartItems.map((item) => (
+								<div className='d-flex justify-content-center align-items-center'>
+									<p className='col h6'>{item.product_name}</p>
+									<div className='col-4 d-flex justify-content-center align-items-center'>
+										<button
+											type='button'
+											className='btn btn-light btn-sm d-inline'
+											onClick={() => {
+												changeCartValue('plus', item.product_id);
+											}}
+										>
+											+
+										</button>
+										<div className='col-xl-6 col-6'>
+											<input
+												className='form-control text-center'
+												type='text'
+												value={item.quantity}
+												onChange={this.onChange(item.product_id)}
+											/>
+										</div>
+										<button
+											type='button'
+											className='btn btn-light btn-sm d-inline'
+											onClick={() => {
+												changeCartValue('minus', item.product_id);
+											}}
+										>
+											-
+										</button>
+									</div>
+									<p className='col h6'>₱{item.price}</p>
+									<div className='col'>
+										<button
+											type='button'
+											className='btn btn-outline-danger'
+											onClick={() => removeFromCart(item)}
+										>
+											<i className='fa fa-trash' aria-hidden='true'></i>
+										</button>
+									</div>
+								</div>
+							))}
+						</div>
+						{totalAmount > 0 ? (
+							<>
+								<div className='h4'>
+									<div className='d-flex justify-content-between align-items-center py-2'>
+										<span> Subtotal </span>
+										<span>₱{this.numberWithCommas(Subtotal)}</span>
+									</div>
+									<div className='d-flex justify-content-between align-items-center'>
+										<span> Tax </span>
+										<span> ₱{this.numberWithCommas(tax)}</span>
+									</div>
+								</div>
+								<Link to='/checkout'>
+									<div className='row'>
+										<button
+											type='button'
+											className='btn btn-primary btn-lg col-12'
+										>
+											<span className='pe-3 h3'>Pay</span>
+											<span className='h3'>
+												₱<strong>{this.numberWithCommas(totalAmount)}</strong>
+											</span>
+										</button>
+									</div>
+								</Link>
+							</>
+						) : (
+							' '
+						)}
 					</div>
 				</div>
 			</>

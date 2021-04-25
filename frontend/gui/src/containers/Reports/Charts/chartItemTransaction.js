@@ -47,8 +47,6 @@ class ChartItemTrans extends Component {
 		return (
 			<div className='chart'>
 				<HorizontalBar
-					// width={100}
-					// height={50}
 					data={{
 						labels: this.state.labels,
 						datasets: [
@@ -71,14 +69,7 @@ class ChartItemTrans extends Component {
 							position: 'bottom',
 						},
 						scales: {
-							xAxes: [
-								{
-									// type: "time",
-									// time: {
-									//   unit: "week",
-									// },
-								},
-							],
+							xAxes: [{}],
 							yAxes: [
 								{
 									ticks: {

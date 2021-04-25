@@ -5,21 +5,6 @@ let coloR = [];
 let transactionsFiltered = [];
 let transactionsFilteredDateSeparated = [];
 class ChartDailySales extends Component {
-	// static propTypes = {
-	// 	chartData: PropTypes.array.isRequired,
-	// 	label: PropTypes.string.isRequired,
-	// };
-	// constructor(props) {
-	// 	super(props);
-	// 	this.state = {
-	// 		labels: [],
-	// 		data: [],
-	// 	};
-	// }
-	// componentDidMount() {
-	// 	this.props.getTransactionList();
-	//  ["Fri", "Jan", "15", "2021", "18:36:53", "GMT+0800", "(Philippine", "Standard", "Time)"]
-	// }Jan 14 2021 02:24:42
 	render() {
 		// spliting the month day year and time in transaction in order to fetch the daily record
 
@@ -60,53 +45,41 @@ class ChartDailySales extends Component {
 			);
 		console.log(transactionsFiltered);
 		return (
-			<div className='card_cust p-5'>
-				<h2>Daily Sales Statistics</h2>
-				<div className='chart'>
-					<Line
-						//   width={100}
-						//   height={50}
-						data={{
-							labels: transactionsFiltered.map((x) => x.date),
-							datasets: [
+			<div className='chart'>
+				<Line
+					data={{
+						labels: transactionsFiltered.map((x) => x.date),
+						datasets: [
+							{
+								label: 'Todays Sales',
+								fill: false,
+								data: transactionsFiltered.map((x) => x.totalAmount),
+								backgroundColor: '#5bc0de',
+							},
+						],
+					}}
+					options={{
+						title: {
+							display: true,
+							text: 'Daily Statistics',
+							fontSize: 25,
+						},
+						legend: {
+							display: true,
+							position: 'bottom',
+						},
+						scales: {
+							xAxes: [{}],
+							yAxes: [
 								{
-									label: 'Todays Sales',
-									fill: false,
-									data: transactionsFiltered.map((x) => x.totalAmount),
-									backgroundColor: '#5bc0de',
+									ticks: {
+										min: 0,
+									},
 								},
 							],
-						}}
-						options={{
-							title: {
-								display: true,
-								text: 'Daily Statistics',
-								fontSize: 25,
-							},
-							legend: {
-								display: true,
-								position: 'bottom',
-							},
-							scales: {
-								xAxes: [
-									{
-										// type: "time",
-										// time: {
-										//   unit: "week",
-										// },
-									},
-								],
-								yAxes: [
-									{
-										ticks: {
-											min: 0,
-										},
-									},
-								],
-							},
-						}}
-					/>
-				</div>
+						},
+					}}
+				/>
 			</div>
 		);
 	}

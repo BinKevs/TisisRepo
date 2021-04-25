@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import FormAdd from './FormAdd';
-import FormUpdate from './FormUpdate';
+import SupplierModalForm from './SupplierModalForm';
 import {
 	getSupplierList,
 	deleteSupplier,
@@ -14,7 +13,7 @@ import * as AiIcons from 'react-icons/ai';
 import * as GrIcons from 'react-icons/gr';
 import * as BsIcons from 'react-icons/bs';
 let isEditButtonClicked = false;
-
+let EditButtonIsClicked = false;
 export class SupplierSetting extends Component {
 	state = {
 		name: '',
@@ -40,6 +39,7 @@ export class SupplierSetting extends Component {
 	// then we will set it to the state and being passed on the formupdate component
 	componentDidUpdate(prevProps, prevState) {
 		if (isEditButtonClicked) {
+			EditButtonIsClicked = true;
 			const { id, name, address, phone_number } = this.props.supplier;
 			this.setState({
 				name,
@@ -64,6 +64,7 @@ export class SupplierSetting extends Component {
 			name: '',
 			address: '',
 			phone_number: '',
+			supplierID: 0,
 		});
 	};
 	//this will sent the updated product in the this.props.updateSupplier to the action and will reset the state
@@ -79,7 +80,9 @@ export class SupplierSetting extends Component {
 				name: '',
 				address: '',
 				phone_number: '',
+				supplierID: 0,
 			});
+			EditButtonIsClicked = false;
 		};
 	};
 	// when edit button click this will fetch the supplier that will be edited and change the isEditButtonClicked status to true
@@ -90,6 +93,17 @@ export class SupplierSetting extends Component {
 			isEditButtonClicked = true;
 		};
 	}
+	onEditCloseButton = (event) => {
+		event.preventDefault();
+		this.setState({
+			name: '',
+			address: '',
+			phone_number: '',
+			supplierID: 0,
+		});
+		EditButtonIsClicked = false;
+		isEditButtonClicked = false;
+	};
 	render() {
 		// This will filter the data from supplier
 		const lowercasedFilter = this.state.search.toLowerCase();
@@ -105,27 +119,27 @@ export class SupplierSetting extends Component {
 						<div className='d-flex align-items-center mb-3'>
 							<h2>Supplier</h2>
 							<button
-								className='btn btn-outline-secondary ml-4 col-auto'
-								data-toggle='modal'
-								data-target='#SupplierModalFormAdd'
+								className='btn btn-outline-secondary ms-4 col-auto'
+								data-bs-toggle='modal'
+								data-bs-target='#SupplierModalForm'
 								style={{ fontSize: '1.5em' }}
 							>
 								<AiIcons.AiOutlinePlus />
 							</button>
-							<div className='col-lg-3 ml-auto form-inline'>
-								<div style={{ fontSize: '1.5em' }}>
-									<BsIcons.BsSearch />
-								</div>
 
-								<input
-									className='form-control ml-3'
-									type='text'
-									id='example-number-input'
-									name='search'
-									placeholder='Search'
-									onChange={this.onChange}
-									value={this.state.search}
-								/>
+							<div className='col-xl-3 d-flex justify-content-end align-items-center ms-auto'>
+								<i className='fas fa-search fa-lg'></i>
+								<div className='col-xl-8 col-12 ms-2'>
+									<input
+										className='form-control'
+										type='text'
+										id='example-number-input'
+										name='search'
+										placeholder='Search'
+										onChange={this.onChange}
+										value={this.state.search}
+									/>
+								</div>
 							</div>
 						</div>
 						<table className='table table-striped'>
@@ -145,23 +159,12 @@ export class SupplierSetting extends Component {
 										<td className='text-center'>{supplier.name}</td>
 										<td className='text-center'>{supplier.address}</td>
 										<td className='text-center'>{supplier.phone_number}</td>
-										{/* <td>
-                      <button
-                        onClick={this.props.deleteSupplier.bind(
-                          this,
-                          supplier.id,
-                        )}
-                        className='btn btn-danger btn-sm'>
-                        {" "}
-                        Delete
-                      </button>
-                    </td> */}
 
 										<td className='align-middle'>
 											<button
 												onClick={this.onEditButtonClick(supplier.id)}
-												data-toggle='modal'
-												data-target='#SupplierModalFormUpdate'
+												data-bs-toggle='modal'
+												data-bs-target='#SupplierModalForm'
 												className='btn btn-outline-secondary btn-xs'
 											>
 												<GrIcons.GrEdit />
@@ -171,15 +174,13 @@ export class SupplierSetting extends Component {
 								))}
 							</tbody>
 						</table>
-						<FormAdd
+						<SupplierModalForm
 							state={this.state}
 							onChange={this.onChange}
 							onAddSubmit={this.onAddSubmit}
-						/>
-						<FormUpdate
-							state={this.state}
-							onChange={this.onChange}
 							onUpdateSubmit={this.onUpdateSubmit}
+							EditButtonIsClicked={EditButtonIsClicked}
+							onEditCloseButton={this.onEditCloseButton}
 						/>
 					</div>
 				</div>
