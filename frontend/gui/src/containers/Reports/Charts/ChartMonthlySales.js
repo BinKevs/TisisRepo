@@ -23,7 +23,7 @@ class ChartMonthlySales extends Component {
 				})
 			);
 		return (
-			<div className='card_cust p-5'>
+			<div>
 				<h2>Monthly Sales Statistics</h2>
 				<div className='chart'>
 					<Line

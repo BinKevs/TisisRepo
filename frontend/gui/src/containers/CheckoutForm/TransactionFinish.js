@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as BsIcons from 'react-icons/bs';
 import { HandleDecimalPlaces, numberWithCommas } from '../../Helpers/functions';
 
 const TransactionFinish = (props) => {
@@ -64,7 +63,7 @@ const TransactionFinish = (props) => {
 							<h2>Transaction Successfully Completed</h2>
 							<h1>Change : ₱{numberWithCommas(HandleDecimalPlaces(change))}</h1>
 							<div style={{ fontSize: '8em' }}>
-								<BsIcons.BsCheckCircle />
+								<i className='far fa-check-circle'></i>
 							</div>
 						</div>
 						<div className='modal-footer'>

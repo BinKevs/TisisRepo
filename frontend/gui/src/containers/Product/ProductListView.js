@@ -266,39 +266,49 @@ class ProductList extends Component {
 							aria-labelledby='home-tab'
 						>
 							<div className='row justify-content-center m-0 px-3'>
-								{filteredData.map((product) => (
-									<div
-										className='col-xl-3 col-md-3 col-sm-4 col-12 px-2 mt-3'
-										key={product.id}
-									>
-										<div className='card container-for-hover'>
-											<img
-												src={product.image}
-												className='card-img-top p-1'
-												alt='...'
-											/>
-											<div className='card-body pt-0 '>
-												<div className='card-title'>
-													{this.trimmedString(product.name)}
-												</div>
-												<p className='card-text'>
-													₱{this.numberWithCommas(product.price)}
-												</p>
-											</div>
-											<button
-												type='submit'
-												className='btn btn-primary btn-sm btn-block m-1'
-												onClick={this.onSubmit(
-													product.id,
-													product.name,
-													product.price
-												)}
-											>
-												<i className='fas fa-cart-plus fa-lg'></i>
-											</button>
-										</div>
+								{this.props.isLoading ? (
+									<div className='vh-100 vw-100'>
+										<span className='loader'>
+											<span className='loader-inner'></span>
+										</span>
 									</div>
-								))}
+								) : (
+									<>
+										{filteredData.map((product) => (
+											<div
+												className='col-xl-3 col-md-3 col-sm-4 col-12 px-2 mt-3'
+												key={product.id}
+											>
+												<div className='card container-for-hover'>
+													<img
+														src={product.image}
+														className='card-img-top p-1'
+														alt='...'
+													/>
+													<div className='card-body pt-0 '>
+														<div className='card-title'>
+															{this.trimmedString(product.name)}
+														</div>
+														<p className='card-text'>
+															₱{this.numberWithCommas(product.price)}
+														</p>
+													</div>
+													<button
+														type='submit'
+														className='btn btn-primary btn-sm btn-block m-1'
+														onClick={this.onSubmit(
+															product.id,
+															product.name,
+															product.price
+														)}
+													>
+														<i className='fas fa-cart-plus fa-lg'></i>
+													</button>
+												</div>
+											</div>
+										))}
+									</>
+								)}
 							</div>
 						</div>
 						<div
@@ -308,55 +318,62 @@ class ProductList extends Component {
 							aria-labelledby='profile-tab'
 						>
 							<div className='table-responsive p-5'>
-								<table
-									className='table table-striped align-middle'
-									style={{ textAlign: 'center' }}
-								>
-									<thead>
-										<tr>
-											<th className='text-center'>ID</th>
-											<th className='text-center'>Name</th>
-											<th className='text-center'>Price</th>
-											<th className='text-center'>Category</th>
-											<th className='text-center'>Supplier</th>
-											<th className='text-center'>Stock</th>
-											<th className='text-center'>Description</th>
-										</tr>
-									</thead>
-									<tbody>
-										{filteredData.map((product) => (
-											<tr key={product.id}>
-												<td className='align-middle'>{product.id}</td>
-												<td className='align-middle'>{product.name}</td>
-												<td className='align-middle'>{product.price}</td>
-												<td className='align-middle'>{product.category}</td>
-												<td className='align-middle'>{product.supplier}</td>
-												<td className='align-middle'>{product.stock}</td>
-												<td className='align-middle'>{product.description}</td>
-												<td className='align-middle'>
-													<button
-														onClick={this.onSubmit(
-															product.id,
-															product.name,
-															product.price
-														)}
-														className='btn btn-outline-secondary btn-xs'
-													>
-														<i className='fas fa-cart-plus fa-lg'></i>
-													</button>
-												</td>
+								{this.props.isLoading ? (
+									<div className='vh-100 vw-100'>
+										<span className='loader'>
+											<span className='loader-inner'></span>
+										</span>
+									</div>
+								) : (
+									<table
+										className='table table-striped align-middle'
+										style={{ textAlign: 'center' }}
+									>
+										<thead>
+											<tr>
+												<th className='text-center'>ID</th>
+												<th className='text-center'>Name</th>
+												<th className='text-center'>Price</th>
+												<th className='text-center'>Category</th>
+												<th className='text-center'>Supplier</th>
+												<th className='text-center'>Stock</th>
+												<th className='text-center'>Description</th>
 											</tr>
-										))}
-									</tbody>
-								</table>
+										</thead>
+										<tbody>
+											{filteredData.map((product) => (
+												<tr key={product.id}>
+													<td className='align-middle'>{product.id}</td>
+													<td className='align-middle'>{product.name}</td>
+													<td className='align-middle'>{product.price}</td>
+													<td className='align-middle'>{product.category}</td>
+													<td className='align-middle'>{product.supplier}</td>
+													<td className='align-middle'>{product.stock}</td>
+													<td className='align-middle'>
+														{product.description}
+													</td>
+													<td className='align-middle'>
+														<button
+															onClick={this.onSubmit(
+																product.id,
+																product.name,
+																product.price
+															)}
+															className='btn btn-outline-secondary btn-xs'
+														>
+															<i className='fas fa-cart-plus fa-lg'></i>
+														</button>
+													</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								)}
 							</div>
 						</div>
 					</div>
 					<div className='col-xl-5 p-0 p-3'>
-						<div
-							className='card text-center container-fluid pb-3'
-							style={{ height: '80vh' }}
-						>
+						<div className='card text-center container-fluid pb-3'>
 							<Cart />
 						</div>
 					</div>
@@ -367,7 +384,8 @@ class ProductList extends Component {
 }
 const mapToStateToProps = (state) => ({
 	products: state.products.products,
-	token: state.AuthReducer.token,
+	// token: state.AuthReducer.token,
+	isLoading: state.products.isLoading,
 });
 export default connect(mapToStateToProps, {
 	getProductList,

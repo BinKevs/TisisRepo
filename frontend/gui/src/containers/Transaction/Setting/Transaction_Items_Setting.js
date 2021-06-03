@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getTransactionItemList } from '../../../store/actions/Transaction/transactions.js';
-import * as BsIcons from 'react-icons/bs';
 let TransactionItems = [];
 export class TransanctionItemsSetting extends Component {
 	static propTypes = {
@@ -41,20 +40,19 @@ export class TransanctionItemsSetting extends Component {
 					<div className='card_cust p-5'>
 						<div className='d-flex align-items-center mb-3 p-2 form-row'>
 							<h2 className='col-auto'>Transaction Items History</h2>
-							<div className='col-lg-3 ml-auto form-inline'>
-								<div style={{ fontSize: '1.5em' }}>
-									<BsIcons.BsSearch />
+							<div className='col-xl-3 d-flex justify-content-end align-items-center ms-auto'>
+								<i className='fas fa-search fa-lg'></i>
+								<div className='col-xl-8 col-12 ms-2'>
+									<input
+										className='form-control'
+										type='text'
+										id='example-number-input'
+										name='search'
+										placeholder='Search'
+										onChange={this.onChange}
+										value={this.state.search}
+									/>
 								</div>
-
-								<input
-									className='form-control ml-3'
-									type='text'
-									id='example-number-input'
-									name='search'
-									placeholder='Search'
-									onChange={this.onChange}
-									value={this.state.search}
-								/>
 							</div>
 						</div>
 						<table

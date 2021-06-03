@@ -65,9 +65,7 @@ class Navbar extends React.Component {
 				<nav className='navbar navbar-expand-lg navbar-light bg-light mb-2 '>
 					<div className='container-fluid'>
 						<button type='button' id='sidebarCollapse' className='navbar-btn'>
-							<span></span>
-							<span></span>
-							<span></span>
+							<i class='fal fa-bars fa-2x'></i>
 						</button>
 
 						<ul className='nav navbar-nav ms-auto'>

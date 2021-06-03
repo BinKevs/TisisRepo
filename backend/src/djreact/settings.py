@@ -51,9 +51,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'knox',
-  
-    'phonenumber_field',
-    'django_resized'
+    'django_resized',
 
 ]
 
@@ -156,7 +154,9 @@ REST_FRAMEWORK = {
     # ]
 
     # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_PAGINATION_CLASSES': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 CORS_ORIGIN_ALLOW_ALL = True
 # SITE_ID = 1

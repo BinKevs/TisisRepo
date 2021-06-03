@@ -13,9 +13,6 @@ import {
 } from '../../../store/actions/Product/products';
 import { getSupplierList } from '../../../store/actions/Supplier/suppliers';
 import { getCategoryList } from '../../../store/actions/Product/products';
-import * as AiIcons from 'react-icons/ai';
-import * as GrIcons from 'react-icons/gr';
-import * as BsIcons from 'react-icons/bs';
 let products = [];
 let isEditButtonClicked = false;
 let EditButtonIsClicked = false;
@@ -240,14 +237,13 @@ export class ProductSetting extends Component {
 					<div className='card_cust p-5'>
 						<div className='d-flex align-items-center mb-3'>
 							<h2>Products</h2>
-							<button
-								className='btn btn-outline-secondary ms-4 col-auto'
+							<div
 								data-bs-toggle='modal'
 								data-bs-target='#ProductModalForm'
-								style={{ fontSize: '1.5em' }}
+								className='ms-4 col-auto'
 							>
-								<AiIcons.AiOutlinePlus />
-							</button>
+								<i className='far fa-plus-circle fa-3x btn-bg text-dark'></i>
+							</div>
 							<div className='col-xl-3 d-flex justify-content-end align-items-center ms-auto'>
 								<i className='fas fa-search fa-lg'></i>
 								<div className='col-xl-8 col-12 ms-2'>
@@ -297,7 +293,7 @@ export class ProductSetting extends Component {
 													data-bs-target='#ProductModalForm'
 													className='btn btn-outline-secondary btn-xs'
 												>
-													<GrIcons.GrEdit />
+													<i className='far fa-pencil-alt'></i>
 												</button>
 											</td>
 										</tr>

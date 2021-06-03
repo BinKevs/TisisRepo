@@ -13,9 +13,6 @@ import {
 } from '../../../store/actions/Inventory/inventories';
 import { getSupplierList } from '../../../store/actions/Supplier/suppliers';
 import { getProductList } from '../../../store/actions/Product/products';
-import * as AiIcons from 'react-icons/ai';
-import * as BsIcons from 'react-icons/bs';
-import * as GrIcons from 'react-icons/gr';
 
 let EditButtonIsClicked = false;
 let isEditButtonClicked = false;
@@ -148,14 +145,13 @@ export class InventorySetting extends Component {
 						<div className='d-flex align-items-center mb-3'>
 							<h2>Inventories</h2>
 
-							<button
-								className='btn btn-outline-secondary ms-4 col-auto'
+							<div
 								data-bs-toggle='modal'
 								data-bs-target='#InventoryModalForm'
-								style={{ fontSize: '1.5em' }}
+								className='ms-4 col-auto'
 							>
-								<AiIcons.AiOutlinePlus />
-							</button>
+								<i className='far fa-plus-circle fa-3x btn-bg text-dark'></i>
+							</div>
 
 							<div className='col-xl-3 d-flex justify-content-end align-items-center ms-auto'>
 								<i className='fas fa-search fa-lg'></i>
@@ -204,7 +200,7 @@ export class InventorySetting extends Component {
 													data-bs-target='#InventoryModalForm'
 													className='btn btn-outline-secondary btn-xs'
 												>
-													<GrIcons.GrEdit />
+													<i className='far fa-pencil-alt'></i>
 												</button>
 											</td>
 										</tr>

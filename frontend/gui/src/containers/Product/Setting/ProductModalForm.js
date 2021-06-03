@@ -1,7 +1,5 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as AiIcons from 'react-icons/ai';
 
 const ProductModalForm = (props) => {
 	const {
@@ -45,7 +43,7 @@ const ProductModalForm = (props) => {
 
 							<button
 								type='button'
-								className='btn-light btn-close'
+								className='btn-close'
 								onClick={!EditButtonIsClicked ? '' : onEditCloseButton}
 								data-bs-dismiss='modal'
 								aria-label='close'
@@ -108,7 +106,8 @@ const ProductModalForm = (props) => {
 							>
 								Add-New-Category
 							</button>
-							<div className='form-floating mb-3'>
+							<div className='mb-3'>
+								<label for='category'>Select Category</label>
 								<select
 									onChange={onChange}
 									name='category'
@@ -134,7 +133,6 @@ const ProductModalForm = (props) => {
 										</option>
 									))}
 								</select>
-								<label for='category'>Select Category</label>
 							</div>
 							<div className='mb-3'>
 								<label for='supplier'>Select Supplier</label>

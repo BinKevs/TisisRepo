@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadUser } from '../../store/actions/Accounts/auth';
-import Alerts from '../../components/Alerts';
+import Alerts from '../../components/common/Alerts';
 import Navbar from './NavBar/Navbar';
 
 class CustomLayout extends React.Component {

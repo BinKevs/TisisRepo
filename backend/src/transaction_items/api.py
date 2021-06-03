@@ -32,16 +32,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         transactionsSerializer = TransactionSerializer(data=request.data)
         if transactionsSerializer.is_valid():
             transactionsSerializer.save()
-            return Response(transactionsSerializer.data, status=status.HTTP_201_CREATED)
-        return Response(transactionsSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # serializer = BlogPostSerializer(blog_post, data=request.data)
-		# data = {}
-		# if serializer.is_valid():
-		# 	serializer.save()
-		# 	return Response(serializer.data, status=status.HTTP_201_CREATED)
-		# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        data = request.data.get(
+            data = request.data.get(
             "items") if 'items' in request.data else request.data
         many = isinstance(data, list)
         arrOfKeys = []
@@ -56,3 +47,12 @@ class TransactionViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(transactionsSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # serializer = BlogPostSerializer(blog_post, data=request.data)
+		# data = {}
+		# if serializer.is_valid():
+		# 	serializer.save()
+		# 	return Response(serializer.data, status=status.HTTP_201_CREATED)
+		# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        

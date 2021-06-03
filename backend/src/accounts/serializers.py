@@ -16,7 +16,7 @@ class AccountSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'is_superuser')
+        fields = ('id', 'username', 'email','is_active','is_superuser','date_joined')
 
 
 # Register Serializer

@@ -1,8 +1,5 @@
 from django.db import models
-# from djmoney.models.fields import MoneyField
 from suppliers.models import Supplier
-# from inventories.models import Inventory
-# from moneyfield import MoneyField
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from categories.models import Category

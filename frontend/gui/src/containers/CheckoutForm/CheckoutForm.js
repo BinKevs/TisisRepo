@@ -7,7 +7,9 @@ import {
 } from '../../store/actions/Cart/cartActions';
 import { clearCart } from '../../store/actions/Cart/cartActions';
 import { addTransactionItems } from '../../store/actions/Transaction/transactions';
-import CheckOutPaymentModal from './CheckOutPaymentModal';
+import CashPaymentModal from './CashPaymentModal';
+import PaypalPaymentModal from './PaypalPaymentModal';
+
 import TransactionFinish from './TransactionFinish';
 import { HandleDecimalPlaces, numberWithCommas } from '../../Helpers/functions';
 class CheckOutForm extends Component {
@@ -95,7 +97,7 @@ class CheckOutForm extends Component {
 		return (
 			<div>
 				{/* Passing the state, onChange, handleSetAmountTendered and handleClick to CheckoutPaymentMOdal  */}
-				<CheckOutPaymentModal
+				<CashPaymentModal
 					state={this.state}
 					onChange={this.onChange}
 					handleSetAmountTendered={this.handleSetAmountTendered}
@@ -106,7 +108,12 @@ class CheckOutForm extends Component {
 					state={this.state}
 					handleClickFinish={this.handleClickFinish}
 				/>
-
+				<PaypalPaymentModal
+					state={this.state}
+					onChange={this.onChange}
+					handleSetAmountTendered={this.handleSetAmountTendered}
+					handleClick={this.handleClick}
+				/>
 				<div className='row'>
 					<div className='col-lg-5'>
 						<div className='card-body card_cust'>
@@ -167,18 +174,21 @@ class CheckOutForm extends Component {
 									<button
 										type='button'
 										data-bs-toggle='modal'
-										data-bs-target='#CheckoutPaymentModal'
+										data-bs-target='#CashPaymentModal'
 										className='btn btn-primary btn-lg mb-3 col-12'
 									>
 										Cash
 									</button>
 								</div>
+
 								<div className='col-xl-4 col-md-4 col-12'>
 									<button
 										type='button'
+										data-bs-toggle='modal'
+										data-bs-target='#PaypalPaymentModal'
 										className='btn btn-primary btn-lg mb-3 col-12'
 									>
-										Gcash
+										Paypal
 									</button>
 								</div>
 								<div className='col-xl-4 col-md-4 col-12'>

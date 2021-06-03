@@ -6,7 +6,6 @@ import {
 	removeFromCart,
 	changeCartValue,
 } from '../../store/actions/Cart/cartActions';
-import * as AiIcons from 'react-icons/ai';
 
 export class Cart extends Component {
 	static propTypes = {
@@ -184,7 +183,7 @@ export class Cart extends Component {
 						</Link>
 					</div>
 				</div>  */}
-				<div className='card-body'>
+				<div className='card-body d-flex flex-column'>
 					<div className='card-title'>
 						<h2>Cart</h2>
 					</div>
@@ -195,7 +194,7 @@ export class Cart extends Component {
 						<div className='col'>Delete</div>
 					</div>
 					<div>
-						<div className='overflow-auto' style={{ height: '45vh' }}>
+						<div className='overflow-auto' style={{ height: '52vh' }}>
 							{cartItems.map((item) => (
 								<div className='d-flex justify-content-center align-items-center'>
 									<p className='col h6'>{item.product_name}</p>

@@ -1,16 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { IconContext } from 'react-icons';
 import PropTypes from 'prop-types';
 import { getProductList } from '../../store/actions/Product/products';
 import { getTransactionList } from '../../store/actions/Transaction/transactions';
 import { getTransactionItemList } from '../../store/actions/Transaction/transactions.js';
-
-import * as FaIcons from 'react-icons/fa';
-import * as MdIcons from 'react-icons/md';
-import * as CgIcons from 'react-icons/cg';
-import * as BiIcons from 'react-icons/bi';
-
 let transactionItemsFiltered = [];
 var transactionItemsFilteredResult = [];
 let transactionsFilteredDateSeparated = [];
@@ -126,81 +119,89 @@ export class Dashboard extends Component {
 		}, Object.create(null));
 
 		return (
-			<Fragment>
-				<IconContext.Provider value={{ color: '#536878' }}>
+			<>
+				<div>
 					<div className='container'>
-						<div className='row mb-4 text-primary'>
+						<div className='row mb-4 text-secondary'>
 							<div className='col-xl-4 text-center '>
 								<div className='card_cust p-3'>
-									<div className='text-dark' style={{ fontSize: '2em' }}>
+									<div style={{ fontSize: '2em' }}>
 										<i class='fal fa-coin'></i>
 									</div>
-									<h2>₱{this.numberWithCommas(totalSalesTransaction)}</h2>
+									<h2 className='text-dark'>
+										₱{this.numberWithCommas(totalSalesTransaction)}
+									</h2>
 									<hr />
-									<h4 className='text-secondary'>Total Sales</h4>
+									<h4>Total Sales</h4>
 								</div>
 							</div>
 							<div className='col-xl-4 text-center'>
 								<div className='card_cust p-3'>
 									<div style={{ fontSize: '2em' }}>
-										<CgIcons.CgViewMonth />
+										<i className='fad fa-calendar-alt'></i>
 									</div>
-									<h2>₱{this.numberWithCommas(monthlySalesTransaction)}</h2>
+									<h2 className='text-dark'>
+										₱{this.numberWithCommas(monthlySalesTransaction)}
+									</h2>
 									<hr />
-									<h4 className='text-secondary'>Monthly Sales (January)</h4>
+									<h4>Monthly Sales (January)</h4>
 								</div>
 							</div>
 							<div className='col-xl-4 text-center'>
 								<div className='card_cust p-3'>
 									<div style={{ fontSize: '2em' }}>
-										<MdIcons.MdToday />
+										<i className='fad fa-calendar-day'></i>
 									</div>
-									<h2>₱{this.numberWithCommas(dailySalesTransaction)}</h2>
+									<h2 className='text-dark'>
+										₱{this.numberWithCommas(dailySalesTransaction)}
+									</h2>
 									<hr />
-									<h4 className='text-secondary'>Daily Sales</h4>
+									<h4>Daily Sales</h4>
 								</div>
 							</div>
 						</div>
-						<div className='row mb-4 text-primary'>
+						<div className='row mb-4 text-secondary'>
 							<div className='col-xl-4 text-center'>
 								<div className='card_cust p-3'>
 									<div style={{ fontSize: '2em' }}>
-										<FaIcons.FaPlus />
+										<i className='fad fa-layer-plus'></i>
 									</div>
 
-									<h2>{this.numberWithCommas(ReorderProduct)}</h2>
+									<h2 className='text-dark'>
+										{this.numberWithCommas(ReorderProduct)}
+									</h2>
 									<hr />
-									<h4 className='text-secondary'>
-										Number of Products to be Reorder
-									</h4>
+									<h4>Number of Products to be Reorder</h4>
 								</div>
 							</div>
 							<div className='col-xl-4 text-center'>
 								<div className='card_cust p-3'>
 									<div style={{ fontSize: '2em' }}>
-										<MdIcons.MdExposureZero />
+										<i className='fad fa-dolly-flatbed-empty'></i>
 									</div>
 
-									<h2>{this.numberWithCommas(ZeroProduct)}</h2>
+									<h2 className='text-dark'>
+										{this.numberWithCommas(ZeroProduct)}
+									</h2>
 									<hr />
-									<h4 className='text-secondary'>
-										Number of Zero Stock Products
-									</h4>
+									<h4>Number of Zero Stock Products</h4>
 								</div>
 							</div>
 							<div className='col-xl-4 text-center'>
 								<div className='card_cust p-3'>
 									<div style={{ fontSize: '2em' }}>
-										<BiIcons.BiPackage />
+										<i className='fad fa-cubes'></i>
 									</div>
 
-									<h2>{this.numberWithCommas(ProductCount)}</h2>
+									<h2 className='text-dark'>
+										{this.numberWithCommas(ProductCount)}
+									</h2>
 									<hr />
-									<h4 className='text-secondary'>Products</h4>
+									<h4>Products</h4>
 								</div>
 							</div>
 						</div>
-						<div className='row mb-4 text-primary'>
+						<div className='row mb-4'>
 							<div className='col-xl-8'>
 								<div className='card_cust p-5'>
 									<h2 className='text-danger'>
@@ -230,7 +231,7 @@ export class Dashboard extends Component {
 							</div>
 							<div className='col-xl-4'>
 								<div className='card_cust p-5'>
-									<h2 className='text-primary'>Top Selling Product</h2>
+									<h2 className='text-dark'>Top Selling Product</h2>
 									<table className='table table-striped'>
 										<thead>
 											<tr>
@@ -256,8 +257,8 @@ export class Dashboard extends Component {
 							</div>
 						</div>
 					</div>
-				</IconContext.Provider>
-			</Fragment>
+				</div>
+			</>
 		);
 	}
 }

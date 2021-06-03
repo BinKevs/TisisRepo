@@ -32,22 +32,22 @@ export class ReportsContainer extends Component {
 			<Fragment>
 				<div className='container'>
 					<div className='row'>
-						<div className='col-12 p-5'>
+						<div className='col-12 p-5 card_cust m-5'>
 							<h2>Daily Sales Statistics</h2>
 							<ChartDailySales chartData={this.props.transactions} />
 						</div>
-						<div className='col-12 p-5'>
+						<div className='col-12 p-5 card_cust m-5'>
 							<ChartMonthlySales chartData={this.props.transactions} />
 						</div>
-						<div className='col-12 m-auto p-5'>
+						<div className='col-12 p-5 card_cust m-5'>
 							<h2>Inventory Statistics</h2>
 							<ChartInv chartData={this.props.inventories} />
 						</div>
-						<div className='col-12 m-auto p-5'>
+						<div className='col-12 p-5 card_cust m-5'>
 							<h2>Stocks Statistics</h2>
 							<ChartProd chartData={this.props.products} />
 						</div>
-						<div className='col-12 m-auto p-5'>
+						<div className='col-12 p-5 card_cust m-5'>
 							<h2>Sold Per Item Statistics</h2>
 							<ChartItemTrans chartData={this.props.transaction_items} />
 						</div>

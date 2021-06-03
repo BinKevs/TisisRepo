@@ -53,7 +53,8 @@ const InventoryModalForm = (props) => {
 									Stock quantity
 								</label>
 							</div>
-							<div className='form-floating mb-3'>
+							<div className=' mb-3'>
+								<label for='product'>Select product</label>
 								<select
 									className={
 										product === 0 ? 'form-select text-secondary' : 'form-select'
@@ -79,7 +80,6 @@ const InventoryModalForm = (props) => {
 										</option>
 									))}
 								</select>
-								<label for='product'>Select product</label>
 							</div>
 							<div className='mb-3'>
 								<label for='supplier' className='col-form-label'>
@@ -89,7 +89,11 @@ const InventoryModalForm = (props) => {
 								<select
 									onChange={onChange}
 									name='supplier'
-									className='form-select'
+									className={
+										supplier === 0
+											? 'form-select text-secondary'
+											: 'form-select'
+									}
 								>
 									{supplier === 0 ? (
 										<option selected>Open this to select category</option>
@@ -102,6 +106,7 @@ const InventoryModalForm = (props) => {
 										<option
 											selected={supplierItem.id === supplier ? 'selected' : ''}
 											value={supplierItem.id}
+											className='text-dark'
 											key={supplierItem.id}
 										>
 											{supplierItem.name}

@@ -11,9 +11,11 @@ import {
 	GET_CATEGORY_LIST,
 	ADD_CATEGORY,
 	DELETE_CATEGORY,
+	PRODUCT_LOADING,
 } from './actionTypes';
 const url = URL_IMPORT + '/api/products/';
 export const getProductList = () => (dispatch, getState) => {
+	dispatch({ type: PRODUCT_LOADING });
 	axios.get(url, tokenConfig(getState)).then((res) => {
 		dispatch({
 			type: GET_PRODUCT_LIST,
