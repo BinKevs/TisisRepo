@@ -3,7 +3,7 @@ import './App.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider as AlertProvider } from 'react-alert';
-
+import React from 'react';
 import CustomLayout from './containers/Layout/Layout';
 import AlertTemplate from 'react-alert-template-basic';
 import BaseRouter from './Routes';

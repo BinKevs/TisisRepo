@@ -1,9 +1,11 @@
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator
-
+from django.contrib.auth.models import User
 
 class Transaction(models.Model):
+    creator = models.ForeignKey(
+        User, related_name="creator_transaction", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=True)
     totalAmount = models.DecimalField(

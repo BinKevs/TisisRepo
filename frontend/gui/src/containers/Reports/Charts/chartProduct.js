@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Bar, Line, Pie, Doughnut, HorizontalBar } from 'react-chartjs-2';
+import { Bar, Line, Pie, Doughnut } from 'react-chartjs-2';
 
 let coloR = [];
 class ChartProd extends Component {
@@ -27,7 +27,7 @@ class ChartProd extends Component {
 	render() {
 		return (
 			<div className='chart'>
-				<HorizontalBar
+				<Pie
 					data={{
 						labels: this.state.labels,
 						datasets: [

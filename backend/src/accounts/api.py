@@ -11,7 +11,7 @@ from .serializers import AccountSerializer
 class AccountViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
-    serializer_class = AccountSerializer
+    serializer_class = UserSerializer
 
 # Register API
 
@@ -39,10 +39,19 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         _, token = AuthToken.objects.create(user)
+    
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": token
         })
+
+
+
+class LogoutAPI(generics.GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        request.user.AuthToken.objects.delete()
+        return Response(status=status.HTTP_200_OK)
+
 
 # Get User API
 

@@ -38,7 +38,7 @@ const ProductModalForm = (props) => {
 					<div className='modal-content'>
 						<div className='modal-header'>
 							<h5 className='modal-title'>
-								Product {!EditButtonIsClicked ? 'Add' : 'Update'}
+								{!EditButtonIsClicked ? 'Add' : 'Update'} Product
 							</h5>
 
 							<button

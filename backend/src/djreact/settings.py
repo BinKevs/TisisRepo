@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'transactions',
     'transaction_items.apps.TransactionItemsConfig',
     'accounts',
-
+    'attendance_log',
+    'activities_log',
 
     'rest_framework',
     'knox',
@@ -156,11 +157,15 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
     'DEFAULT_PAGINATION_CLASSES': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 15,
 }
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 # SITE_ID = 1
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
 # ACCOUNT_AUTHENTICATION_METHOD = 'username'
 # ACCOUNT_EMAIL_REQUIRED = False
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]

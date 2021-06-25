@@ -42,9 +42,10 @@ const BaseRouter = () => (
 				path='/products/setting/:productID/'
 				component={ProductDetail}
 			/>
-			{/* <Route exact path='/' component={Login} /> */}
+
 			<Route exact path='/login/' component={Login} />
 			<Route exact path='/register/' component={RegistrationForm} />
+			{/* <Route exact path='/' component={Login} /> */}
 		</Switch>
 	</div>
 );

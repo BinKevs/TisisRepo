@@ -8,16 +8,19 @@ from rest_framework import status
 from collections import defaultdict
 from django.core.exceptions import ValidationError
 from transactions.serializers import TransactionSerializer
+from activities_log.models import Log_Activity
+from rest_framework import filters
 class TransactionViewSet(viewsets.ModelViewSet):
     
     queryset = Transaction_item.objects.all()
     serializer_class = Transaction_itemSerializer
-
+    ordering_fields = ['id'] 
+    filter_backends = [filters.OrderingFilter]
     def create(self, request, *args, **kwargs):
-        totalAmount = request.data['totalAmount']
-        amount_tendered = request.data['amount_tendered']
-        change = request.data['change']
-        quantity = request.data['quantity']
+        # totalAmount = request.data['totalAmount']
+        # amount_tendered = request.data['amount_tendered']
+        # change = request.data['change']
+        # quantity = request.data['quantity']
         # print(change)
         # if change < 0 :
         #     return Response(data="Sorry, insufficient amount tendered", status=status.HTTP_400_BAD_REQUEST)
@@ -29,11 +32,22 @@ class TransactionViewSet(viewsets.ModelViewSet):
         #     change=change,
         #     quantity=quantity
         # )
-        transactionsSerializer = TransactionSerializer(data=request.data)
+        Log_Activity.save_log_activity(
+            account=request.user,
+            action_done = request.data['action_done'],
+        )
+        transaction_data = {}
+        transaction_data['creator'] = request.user.id
+        data = []
+        for key in request.data:
+            if(key != 'items'):
+                transaction_data[key] = request.data[key]
+        
+        transactionsSerializer = TransactionSerializer(data=transaction_data)
+        print(transaction_data)
         if transactionsSerializer.is_valid():
             transactionsSerializer.save()
-            data = request.data.get(
-            "items") if 'items' in request.data else request.data
+            data = request.data.get("items") if 'items' in request.data else request.data
         many = isinstance(data, list)
         arrOfKeys = []
         for key in data:

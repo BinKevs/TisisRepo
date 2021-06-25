@@ -99,7 +99,6 @@ class ProductList extends Component {
 							<div style={{ fontSize: '1.5em' }}>
 								<BsIcons.BsSearch />
 							</div>
-
 							<input
 								className='form-control ml-3'
 								type='text'
@@ -111,7 +110,6 @@ class ProductList extends Component {
 							/>
 						</div>
 					</div>
-
 					<div
 						className='col-xl-8 tab-content overflow-auto'
 						style={{ height: '55rem' }}

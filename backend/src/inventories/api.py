@@ -13,5 +13,4 @@ class InventoryViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['created_at'] 
     serializer_class = InventorySerializer
-    pagination_class = PageNumberPagination
-
+    # pagination_class = PageNumberPagination

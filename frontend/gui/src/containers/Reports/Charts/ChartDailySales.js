@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Bar, Line, Pie, Doughnut } from 'react-chartjs-2';
-let coloR = [];
 let transactionsFiltered = [];
 let transactionsFilteredDateSeparated = [];
 class ChartDailySales extends Component {
@@ -45,7 +44,7 @@ class ChartDailySales extends Component {
 			);
 		console.log(transactionsFiltered);
 		return (
-			<div className='chart'>
+			<div className="chart">
 				<Line
 					data={{
 						labels: transactionsFiltered.map((x) => x.date),

@@ -10,9 +10,12 @@ urlpatterns = [
     path('api/products/', include('products.urls')),
     path('api/categories/', include('categories.urls')),
     path('api/suppliers/', include('suppliers.urls')),
+    # path('api/suppliers/withPagination', include('suppliers.urlsWithPagination')),
     path('api/inventories', include('inventories.urls')),
     path('api/transactions/items/', include('transaction_items.urls')),
     path('api/transactions/', include('transactions.urls')),
+    path('api/attendance_log/', include('attendance_log.urls')),
+    path('api/activity_log/', include('activities_log.urls')),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

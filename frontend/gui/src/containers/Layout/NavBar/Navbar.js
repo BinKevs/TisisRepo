@@ -70,15 +70,15 @@ class Navbar extends React.Component {
 
 						<ul className='nav navbar-nav ms-auto'>
 							{this.props.AuthReducer.isAuthenticated ? (
-								<>
+								<div>
 									<li className='nav-item' onClick={this.props.logout}>
 										<Link to='/login'>
 											<a className='nav-link'>Logout</a>
 										</Link>
 									</li>
-								</>
+								</div>
 							) : (
-								<>
+								<div>
 									<li className='nav-item'>
 										<Link to='/login' className='nav-link'>
 											Login
@@ -89,7 +89,7 @@ class Navbar extends React.Component {
 											Register
 										</Link>
 									</li>
-								</>
+								</div>
 							)}
 						</ul>
 					</div>

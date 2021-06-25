@@ -9,16 +9,16 @@ class ChartInv extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			labels: this.props.chartData.map((x) => x.created_at),
-			data: this.props.chartData.map((x) => x.new_stock),
+			labels: props.chartData.map((x) => x.created_at),
+			data: props.chartData.map((x) => x.new_stock),
 		};
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.props.chartData !== prevProps.chartData) {
 			this.setState({
-				labels: this.props.chartData.map((x) => x.created_at),
-				data: this.props.chartData.map((x) => x.new_stock),
+				// labels: this.props.chartData.map((x) => x.created_at),
+				// data: this.props.chartData.map((x) => x.new_stock),
 			});
 		}
 	}
