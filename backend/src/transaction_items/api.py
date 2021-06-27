@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from transactions.serializers import TransactionSerializer
 from activities_log.models import Log_Activity
 from rest_framework import filters
+from django.utils import timezone
 class TransactionViewSet(viewsets.ModelViewSet):
     
     queryset = Transaction_item.objects.all()
@@ -42,9 +43,8 @@ class TransactionViewSet(viewsets.ModelViewSet):
         for key in request.data:
             if(key != 'items'):
                 transaction_data[key] = request.data[key]
-        
+       
         transactionsSerializer = TransactionSerializer(data=transaction_data)
-        print(transaction_data)
         if transactionsSerializer.is_valid():
             transactionsSerializer.save()
             data = request.data.get("items") if 'items' in request.data else request.data
@@ -61,7 +61,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        return Response(transactionsSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response(transactionsSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # serializer = BlogPostSerializer(blog_post, data=request.data)
 		# data = {}

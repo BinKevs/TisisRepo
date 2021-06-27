@@ -27,3 +27,4 @@ class TransactionSerializer(serializers.ModelSerializer):
                 "username": None,
                 "name": None,
             }
+    

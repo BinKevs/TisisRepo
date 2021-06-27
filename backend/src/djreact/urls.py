@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/categories/', include('categories.urls')),
     path('api/suppliers/', include('suppliers.urls')),
     # path('api/suppliers/withPagination', include('suppliers.urlsWithPagination')),
-    path('api/inventories', include('inventories.urls')),
+    path('api/inventories/', include('inventories.urls')),
     path('api/transactions/items/', include('transaction_items.urls')),
     path('api/transactions/', include('transactions.urls')),
     path('api/attendance_log/', include('attendance_log.urls')),
