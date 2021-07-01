@@ -42,7 +42,7 @@ class Attendance_Log(models.Model):
 
     @receiver(pre_delete, sender=AuthToken)
     def update_attendance_log(sender, instance, **kwargs):
-        log = Attendance_Log.objects.get(account=instance.user,logout_at = None)
+        log = Attendance_Log.objects.get(account=instance.user,logout_at=None)
         log.logout_at = datetime.datetime.now()
         log.save()
 

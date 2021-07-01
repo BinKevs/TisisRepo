@@ -47,10 +47,10 @@ class LoginAPI(generics.GenericAPIView):
 
 
 
-class LogoutAPI(generics.GenericAPIView):
-    def post(self, request, *args, **kwargs):
-        request.user.AuthToken.objects.delete()
-        return Response(status=status.HTTP_200_OK)
+# class LogoutAPI(generics.GenericAPIView):
+#     def post(self, request, *args, **kwargs):
+#         request.user.AuthToken.objects.delete()
+#         return Response(status=status.HTTP_200_OK)
 
 
 # Get User API

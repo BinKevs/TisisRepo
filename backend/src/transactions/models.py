@@ -14,7 +14,7 @@ class Transaction(models.Model):
     amount_tendered = models.DecimalField(max_digits=12, decimal_places=2)
     change = models.DecimalField(max_digits=12, decimal_places=2,validators=[MinValueValidator(0.00)])
     quantity = models.IntegerField()
-
+    mode_of_payment = models.CharField(max_length=255, null=True, default=None)
     def __str__(self):
         return str(self.id)
     def save(self,*args, **kwargs):
@@ -29,11 +29,12 @@ class Transaction(models.Model):
                self.transaction_id = prefix+'{0:04d}'.format(1)
        super(Transaction, self).save(*args, **kwargs)
     @staticmethod
-    def save_transaction(totalAmount, amount_tendered, change, quantity):
+    def save_transaction(totalAmount, amount_tendered, change, quantity,mode_of_payment):
         transaction = Transaction(
             totalAmount=totalAmount,
             amount_tendered=amount_tendered,
             change=change,
             quantity=quantity,
+            mode_of_payment= mode_of_payment,
         )
         transaction.save()
