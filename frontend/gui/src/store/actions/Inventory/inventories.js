@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { URL_IMPORT } from '../../../Helpers/constant';
-import { tokenConfig } from '../Accounts/auth';
-import { createMessage, returnErrors } from '../Notification/messages';
+import { tokenConfig } from '../account/auth';
 import {
 	GET_INVENTORY_LIST,
 	GET_INVENTORY,
@@ -9,7 +8,8 @@ import {
 	ADD_INVENTORY,
 	UPDATE_INVENTORY,
 } from './actionTypes';
-const url = URL_IMPORT + '/api/inventories';
+import { HandleSuccessMessages } from '../../../Helpers/functions';
+const url = URL_IMPORT + '/api/inventories/';
 export const getInventoryList = () => (dispatch, getState) => {
 	axios
 		.get(url + '?ordering=-created_at', tokenConfig(getState))
@@ -19,6 +19,14 @@ export const getInventoryList = () => (dispatch, getState) => {
 				payload: res.data,
 			});
 		});
+};
+export const getInventoryListNotOrderByDate = () => (dispatch, getState) => {
+	axios.get(url, tokenConfig(getState)).then((res) => {
+		dispatch({
+			type: GET_INVENTORY_LIST,
+			payload: res.data,
+		});
+	});
 };
 export const getInventory = (InventoryID) => (dispatch, getState) => {
 	axios
@@ -35,7 +43,7 @@ export const deleteInventory = (InventoryID) => (dispatch, getState) => {
 	axios
 		.delete(url + InventoryID + '/', tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Inventory Deleted' }));
+			console.log('Inventory Deleted');
 			dispatch({
 				type: DELETE_INVENTORY,
 				payload: InventoryID,
@@ -47,21 +55,20 @@ export const addInventory = (data) => (dispatch, getState) => {
 	axios
 		.post(url, data, tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Inventory Added' }));
+			console.log();
+			HandleSuccessMessages('Inventory Added', 'success');
 			dispatch({
 				type: ADD_INVENTORY,
 				payload: res.data,
 			});
 		})
-		.catch((err) =>
-			dispatch(returnErrors(err.response.data, err.response.status))
-		);
+		.catch((err) => console.log(err));
 };
 export const updateInventory = (InventoryID, data) => (dispatch, getState) => {
 	axios
 		.put(url + InventoryID + '/', data, tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Inventory Updated' }));
+			HandleSuccessMessages('Inventory Updated', 'success');
 			dispatch({
 				type: UPDATE_INVENTORY,
 				payload: res.data,

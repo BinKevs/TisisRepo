@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { URL_IMPORT } from '../../../Helpers/constant';
-import { tokenConfig } from '../Accounts/auth';
-import { createMessage, returnErrors } from '../Notification/messages';
+import { tokenConfig } from '../account/auth';
 import {
 	GET_PRODUCT_LIST,
 	GET_PRODUCT,
@@ -13,10 +12,12 @@ import {
 	DELETE_CATEGORY,
 	PRODUCT_LOADING,
 } from './actionTypes';
+import swal from 'sweetalert';
+import { HandleSuccessMessages } from '../../../Helpers/functions';
 const url = URL_IMPORT + '/api/products/';
 export const getProductList = () => (dispatch, getState) => {
 	dispatch({ type: PRODUCT_LOADING });
-	axios.get(url, tokenConfig(getState)).then((res) => {
+	axios.get(url + '?ordering=-id', tokenConfig(getState)).then((res) => {
 		dispatch({
 			type: GET_PRODUCT_LIST,
 			payload: res.data,
@@ -38,7 +39,7 @@ export const deleteProduct = (ProductID) => (dispatch, getState) => {
 	axios
 		.delete(url + ProductID + '/', tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Product Deleted' }));
+			console.log('Product Deleted');
 			dispatch({
 				type: DELETE_PRODUCT,
 				payload: ProductID,
@@ -50,27 +51,39 @@ export const addProduct = (data) => (dispatch, getState) => {
 	axios
 		.post(url, data, tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Product Added' }));
+			HandleSuccessMessages('Product Added', 'success');
 			dispatch({
 				type: ADD_PRODUCT,
 				payload: res.data,
 			});
 		})
-		.catch((err) =>
-			dispatch(returnErrors(err.response.data, err.response.status))
+		.catch(
+			(err) =>
+				swal({
+					title: 'Product Added Failed',
+					text: 'Error : ' + err,
+					icon: 'error',
+				})
+			// console.log(err)
 		);
 };
 export const updateProduct = (ProductID, data) => (dispatch, getState) => {
 	axios
 		.put(url + ProductID + '/', data, tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Product Updated' }));
+			HandleSuccessMessages('Product Updated', 'success');
 			dispatch({
 				type: UPDATE_PRODUCT,
 				payload: res.data,
 			});
 		})
-		.catch((err) => console.log(err));
+		.catch((err) =>
+			swal({
+				title: 'Product Update Failed',
+				text: 'Error : ' + err,
+				icon: 'error',
+			})
+		);
 };
 
 // Category part
@@ -89,15 +102,13 @@ export const addCategory = (data) => (dispatch, getState) => {
 	axios
 		.post(URL_IMPORT + '/api/categories/', data, tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Category Added' }));
+			HandleSuccessMessages('Category Added', 'success');
 			dispatch({
 				type: ADD_CATEGORY,
 				payload: res.data,
 			});
 		})
-		.catch((err) =>
-			dispatch(returnErrors(err.response.data, err.response.status))
-		);
+		.catch((err) => console.log(err));
 };
 export const deleteCategory = (CategoryID) => (dispatch, getState) => {
 	axios
@@ -106,7 +117,7 @@ export const deleteCategory = (CategoryID) => (dispatch, getState) => {
 			tokenConfig(getState)
 		)
 		.then((res) => {
-			dispatch(createMessage({ message: 'Product Deleted' }));
+			console.log('Category Deleted');
 			dispatch({
 				type: DELETE_CATEGORY,
 				payload: CategoryID,

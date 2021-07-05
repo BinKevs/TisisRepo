@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { URL_IMPORT } from '../../../Helpers/constant';
-import { tokenConfig } from '../Accounts/auth';
-import { createMessage, returnErrors } from '../Notification/messages';
-
+import { tokenConfig } from '../account/auth';
 import {
 	GET_TRANSACTION_LIST,
 	GET_TRANSACTION,
@@ -12,8 +10,19 @@ import {
 	ADD_TRANSACTION_ITEMS,
 	GET_TRANSACTION_ITEM_LIST,
 } from './actionTypes';
+import swal from 'sweetalert';
 const url = URL_IMPORT + '/api/transactions/';
 export const getTransactionList = () => (dispatch, getState) => {
+	axios
+		.get(url + '?ordering=-created_at', tokenConfig(getState))
+		.then((res) => {
+			dispatch({
+				type: GET_TRANSACTION_LIST,
+				payload: res.data,
+			});
+		});
+};
+export const getTransactionListNotOrderByDate = () => (dispatch, getState) => {
 	axios.get(url, tokenConfig(getState)).then((res) => {
 		dispatch({
 			type: GET_TRANSACTION_LIST,
@@ -37,7 +46,7 @@ export const deleteTransaction = (TransactionID) => (dispatch, getState) => {
 	axios
 		.delete(url + TransactionID + '/', tokenConfig(getState))
 		.then((res) => {
-			dispatch(createMessage({ message: 'Transaction Deleted' }));
+			console.log('Transaction Deleted');
 			dispatch({
 				type: DELETE_TRANSACTION,
 				payload: TransactionID,
@@ -46,26 +55,27 @@ export const deleteTransaction = (TransactionID) => (dispatch, getState) => {
 		.catch((err) => console.log(err));
 };
 
-export const updateTransaction = (TransactionID, data) => (
-	dispatch,
-	getState
-) => {
-	axios
-		.put(url + TransactionID + '/', data, tokenConfig(getState))
-		.then((res) => {
-			dispatch(createMessage({ message: 'Transaction Updated' }));
-			dispatch({
-				type: UPDATE_TRANSACTION,
-				payload: res.data,
-			});
-		})
-		.catch((err) => console.log(err));
-};
+export const updateTransaction =
+	(TransactionID, data) => (dispatch, getState) => {
+		axios
+			.put(url + TransactionID + '/', data, tokenConfig(getState))
+			.then((res) => {
+				console.log('Transaction Updated');
+				dispatch({
+					type: UPDATE_TRANSACTION,
+					payload: res.data,
+				});
+			})
+			.catch((err) => console.log(err));
+	};
 
 // Transaction Items part
 export const getTransactionItemList = () => (dispatch, getState) => {
 	axios
-		.get(URL_IMPORT + '/api/transactions/items/', tokenConfig(getState))
+		.get(
+			URL_IMPORT + '/api/transactions/items/?ordering=-id',
+			tokenConfig(getState)
+		)
 		.then((res) => {
 			dispatch({
 				type: GET_TRANSACTION_ITEM_LIST,
@@ -80,12 +90,15 @@ export const addTransactionItems = (data) => (dispatch, getState) => {
 	axios
 		.post(URL_IMPORT + '/api/transactions/items/', data, tokenConfig(getState))
 		.then((res) => {
+			swal({
+				title: 'Transaction Success',
+				text: 'Change : ' + data.change,
+				icon: 'success',
+			});
 			dispatch({
 				type: ADD_TRANSACTION_ITEMS,
 				payload: res.data,
 			});
 		})
-		.catch((err) => {
-			dispatch(returnErrors(err.response.data, err.response.status));
-		});
+		.catch((err) => console.log(err));
 };

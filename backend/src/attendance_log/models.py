@@ -34,16 +34,16 @@ class Attendance_Log(models.Model):
     #        login_at = datetime.datetime.now()
     #     )
     #     activity_log.save()
-    @receiver(post_save, sender=AuthToken)
-    def create_attendance_log(sender, instance, created, **kwargs):
+    # @receiver(post_save, sender=AuthToken)
+    # def create_attendance_log(sender, instance, created, **kwargs):
 	
-	    if created:
-		    Attendance_Log.objects.create(account=instance.user,login_at=datetime.datetime.now(),logout_at=None)
+	#     if created:
+	# 	    Attendance_Log.objects.create(account=instance.user,login_at=datetime.datetime.now(),logout_at=None)
 
-    @receiver(pre_delete, sender=AuthToken)
-    def update_attendance_log(sender, instance, **kwargs):
-        log = Attendance_Log.objects.get(account=instance.user,logout_at=None)
-        log.logout_at = datetime.datetime.now()
-        log.save()
+    # @receiver(pre_delete, sender=AuthToken)
+    # def update_attendance_log(sender, instance, **kwargs):
+    #     log = Attendance_Log.objects.get(account=instance.user,logout_at=None)
+    #     log.logout_at = datetime.datetime.now()
+    #     log.save()
 
  

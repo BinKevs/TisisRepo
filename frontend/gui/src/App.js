@@ -1,34 +1,38 @@
-import { Component } from 'react';
 import './App.css';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { Provider as AlertProvider } from 'react-alert';
-import React from 'react';
-import CustomLayout from './containers/Layout/Layout';
-import AlertTemplate from 'react-alert-template-basic';
-import BaseRouter from './Routes';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import MainLayout from './components/Layouts/MainLayout';
+import ReviewLayout from './components/Layouts/ReviewLayout';
+import MainBaseRouter from './Routers/MainRoutes';
+import ReviewBaseRouter from './Routers/ReviewRoute';
 import store from './store/store';
-
-const options = {
-	position: 'top center',
-	timeout: 3000,
-};
-class App extends Component {
-	render() {
-		return (
-			<div>
-				<AlertProvider template={AlertTemplate} {...options}>
-					<Provider store={store}>
-						<Router>
-							<CustomLayout>
-								<BaseRouter />
-							</CustomLayout>
-						</Router>
-					</Provider>
-				</AlertProvider>
-			</div>
-		);
-	}
+import Login from './components/Accounts/Login';
+import Registration from './components/Accounts/Registration';
+import { useEffect } from 'react';
+import { loadUser } from './store/actions/account/auth';
+function App() {
+	useEffect(() => {
+		store.dispatch(loadUser());
+	});
+	return (
+		<>
+			<Provider store={store}>
+				<BrowserRouter>
+					<Switch>
+						<Route exact path="/" component={Login} />
+						<Route exact path="/login" component={Login} />
+						<Route exact path="/register" component={Registration} />
+						<MainLayout>
+							<MainBaseRouter />
+						</MainLayout>
+						{/* <ReviewLayout>
+							<ReviewBaseRouter />
+						</ReviewLayout> */}
+					</Switch>
+				</BrowserRouter>
+			</Provider>
+		</>
+	);
 }
 
 export default App;

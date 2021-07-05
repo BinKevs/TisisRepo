@@ -4,7 +4,7 @@ import {
 	DELETE_INVENTORY,
 	ADD_INVENTORY,
 	UPDATE_INVENTORY,
-} from '../../actions/Inventory/actionTypes';
+} from '../../actions/inventory/actionTypes';
 const initialState = {
 	inventories: [],
 	inventory: {},
