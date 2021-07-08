@@ -6,7 +6,7 @@ from categories.models import Category
 from django_resized import ResizedImageField
 from django.utils import timezone
 class Product(models.Model):
-    product_id = models.CharField(max_length=255, null=True, default=None)
+    product_id = models.CharField(max_length=255, null=False, default="None")
     name = models.CharField(max_length=100, unique=True)
     category = models.ForeignKey(
         Category, related_name="category_product", on_delete=models.CASCADE, null=True)

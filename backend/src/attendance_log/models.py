@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 # Create your models here.
 class Attendance_Log(models.Model):
-    attendance_log_id = models.CharField(max_length=255, null=True, default=None)
+    attendance_log_id = models.CharField(max_length=255, null=False, default="None")
     account = models.ForeignKey(
         User, related_name="user_accouunt_attendance_log", on_delete=models.CASCADE, null=True)
     login_at = models.DateTimeField(null=True)
@@ -27,23 +27,23 @@ class Attendance_Log(models.Model):
        super(Attendance_Log, self).save(*args, **kwargs)
     def __str__(self):
         return str(self.id)
-    # @staticmethod
-    # def save_log(account):
-    #     activity_log = Activity_Log(
-    #        account = account,
-    #        login_at = datetime.datetime.now()
-    #     )
-    #     activity_log.save()
-    # @receiver(post_save, sender=AuthToken)
-    # def create_attendance_log(sender, instance, created, **kwargs):
+    @staticmethod
+    def save_log(account):
+        activity_log = Activity_Log(
+           account = account,
+           login_at = datetime.datetime.now()
+        )
+        activity_log.save()
+    @receiver(post_save, sender=AuthToken)
+    def create_attendance_log(sender, instance, created, **kwargs):
 	
-	#     if created:
-	# 	    Attendance_Log.objects.create(account=instance.user,login_at=datetime.datetime.now(),logout_at=None)
+	    if created:
+		    Attendance_Log.objects.create(account=instance.user,login_at=datetime.datetime.now(),logout_at=None)
 
-    # @receiver(pre_delete, sender=AuthToken)
-    # def update_attendance_log(sender, instance, **kwargs):
-    #     log = Attendance_Log.objects.get(account=instance.user,logout_at=None)
-    #     log.logout_at = datetime.datetime.now()
-    #     log.save()
+    @receiver(pre_delete, sender=AuthToken)
+    def update_attendance_log(sender, instance, **kwargs):
+        log = Attendance_Log.objects.get(account=instance.user,logout_at=None)
+        log.logout_at = datetime.datetime.now()
+        log.save()
 
  

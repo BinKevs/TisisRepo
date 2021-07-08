@@ -5,6 +5,8 @@ from products.serializers import ProductSerializer
 from products.models import Product
 from transactions.models import Transaction
 from datetime import datetime, timedelta
+from categories.models import Category
+
 # from django.utils import timezone
 class Transaction_itemSerializer(serializers.ModelSerializer):
     transaction = serializers.PrimaryKeyRelatedField(
@@ -13,6 +15,8 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
     product_info = serializers.SerializerMethodField()
+    category_info = serializers.SerializerMethodField()
+
     transaction_date = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,6 +32,14 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             "description": product.description,
             "stock": product.stock,
             "price": product.price,
+        }
+    @staticmethod
+    def get_category_info(obj):
+        product = Product.objects.get(pk=obj.product.id)
+        category = Category.objects.get(pk=product.category.id)
+        return {
+            "id": category.id,
+            "name": category.name,
         }
 
     @staticmethod

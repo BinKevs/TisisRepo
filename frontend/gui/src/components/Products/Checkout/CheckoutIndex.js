@@ -206,7 +206,7 @@ class CheckoutIndex extends React.Component {
 												₱{item.price}
 											</span>
 											<span class="text-center w-full font-semibold text-sm break-words">
-												${item.price * item.quantity}
+												₱{item.price * item.quantity}
 											</span>
 										</div>
 									))}

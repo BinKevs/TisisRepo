@@ -7,6 +7,10 @@ import SupplierSetting from '../components/Suppliers/SupplierSetting';
 import TransactionSetting from '../components/Transactions/TransactionSetting';
 import TransactionItemsSetting from '../components/Transactions/TransactionItemsSetting';
 import ReportIndex from '../components/Reports/ReportIndex';
+
+import ProductReport from '../components/Reports/ProductReport';
+import SalesReport from '../components/Reports/SalesReport';
+import InventoriesReport from '../components/Reports/InventoriesReport';
 import CheckoutIndex from '../components/Products/Checkout/CheckoutIndex';
 import ActivityLog from '../components/Accounts/ActivityLog';
 import AttendanceLog from '../components/Accounts/AttendanceLog';
@@ -33,7 +37,16 @@ const MainBaseRouter = () => (
 				path="/transactions/items"
 				component={TransactionItemsSetting}
 			/>
-			<PrivateRoute exact path="/reports" component={ReportIndex} />
+
+			{/* <PrivateRoute exact path="/reports" component={ReportIndex} /> */}
+			<PrivateRoute
+				exact
+				path="/reports/inventories"
+				component={InventoriesReport}
+			/>
+			<PrivateRoute exact path="/reports/products" component={ProductReport} />
+			<PrivateRoute exact path="/reports/sales" component={SalesReport} />
+
 			<PrivateRoute exact path="/checkout" component={CheckoutIndex} />
 			<PrivateRoute exact path="/activity_log" component={ActivityLog} />
 			<PrivateRoute exact path="/attendance_log" component={AttendanceLog} />

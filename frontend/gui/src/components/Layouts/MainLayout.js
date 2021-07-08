@@ -21,26 +21,26 @@ class MainLayout extends React.Component {
 	componentDidMount() {
 		this.props.loadUser();
 		window.addEventListener('scroll', this.handleScroll);
-		window.addEventListener('beforeunload', (ev) => {
-			ev.preventDefault();
-			swal('Write something here:', {
-				content: 'input',
-			}).then((value) => {
-				swal(`You typed: ${value}`);
-			});
-		});
+		// window.addEventListener('beforeunload', (ev) => {
+		// 	ev.preventDefault();
+		// 	swal('Write something here:', {
+		// 		content: 'input',
+		// 	}).then((value) => {
+		// 		swal(`You typed: ${value}`);
+		// 	});
+		// });
 	}
 
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
-		window.addEventListener('beforeunload', (ev) => {
-			ev.preventDefault();
-			swal('Write something here:', {
-				content: 'input',
-			}).then((value) => {
-				swal(`You typed: ${value}`);
-			});
-		});
+		// window.addEventListener('beforeunload', (ev) => {
+		// 	ev.preventDefault();
+		// 	swal('Write something here:', {
+		// 		content: 'input',
+		// 	}).then((value) => {
+		// 		swal(`You typed: ${value}`);
+		// 	});
+		// });
 	}
 	handleScroll = () => {
 		if (!this.state.showButtonScroll && window.pageYOffset > 300) {
@@ -196,8 +196,8 @@ class MainLayout extends React.Component {
 			z-20 top-0"
 				>
 					<div class="flex flex-wrap justify-between items-center">
-						<div class="flex pt-2 w-1/3 justify-start text-white">
-							<i class="far fa-motorcycle fa-2x px-3"></i>
+						<div class="flex pt-2 w-1/2 md:w-1/3 justify-start text-white">
+							<i class="far fa-motorcycle fa-2x px-3 "></i>
 							<h1 class="font-Montserrat text-base">ABC Motor Parts</h1>
 						</div>
 
@@ -283,7 +283,7 @@ class MainLayout extends React.Component {
 
 				<div class="flex flex-col lg:flex-row bg-gray-800">
 					{this.props.AuthReducer.is_superuser ? (
-						<div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen z-20 w-full lg:w-48 bg-gray-800">
+						<div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800">
 							<div class="lg:mt-20 overflow-x-scroll md:overflow-x-hidden lg:w-48 lg:fixed lg:left-0 lg:top-0 text-left bg-gray-800">
 								<ul
 									id="NavDiv"
@@ -306,7 +306,7 @@ class MainLayout extends React.Component {
 												class={
 													DashboardNavBtn
 														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Dashboard
@@ -330,7 +330,7 @@ class MainLayout extends React.Component {
 												class={
 													ProductsNavBtn
 														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Products
@@ -341,8 +341,7 @@ class MainLayout extends React.Component {
 										class="mr-3 flex-1 NavBtn"
 										onClick={this.setActiveNav('ReportsNavBtn')}
 									>
-										<Link
-											to="/reports"
+										<div
 											class={
 												ReportsNavBtn
 													? 'block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom'
@@ -354,12 +353,73 @@ class MainLayout extends React.Component {
 												class={
 													ReportsNavBtn
 														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Reports
 											</span>
-										</Link>
+										</div>
+									</li>
+									<li
+										class={
+											ReportsNavBtn
+												? 'mr-3 flex-1 NavBtn'
+												: 'mr-3 flex-1 NavBtn hidden'
+										}
+										onClick={this.setActiveNav('ReportsNavBtn')}
+									>
+										<div className="flex justify-center w-full ">
+											<Link
+												to="/reports/sales"
+												class={
+													'py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom'
+												}
+											>
+												<i class="fad fa-money-check-edit pr-0 lg:pr-3 "></i>
+
+												<span
+													class={
+														'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block'
+													}
+												>
+													Sales
+												</span>
+											</Link>
+										</div>
+										<div className="flex justify-center w-full ">
+											<Link
+												to="/reports/inventories"
+												class={
+													'py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom'
+												}
+											>
+												<i class="fad fa-dolly-flatbed-alt  pr-0 lg:pr-3 "></i>
+												<span
+													class={
+														'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block'
+													}
+												>
+													Inventory
+												</span>
+											</Link>
+										</div>
+										<div className="flex justify-center w-full ">
+											<Link
+												to="/reports/products"
+												class={
+													'py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom'
+												}
+											>
+												<i class="fas fa-file-alt  pr-0 lg:pr-3 "></i>
+												<span
+													class={
+														'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block'
+													}
+												>
+													Products
+												</span>
+											</Link>
+										</div>
 									</li>
 									<li
 										class="mr-3 flex-1 NavBtn"
@@ -378,8 +438,8 @@ class MainLayout extends React.Component {
 											<div
 												class={
 													ProductSettingNavBtn
-														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Product Setting
@@ -398,12 +458,12 @@ class MainLayout extends React.Component {
 													: 'block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom'
 											}
 										>
-											<i className="fas fa-clipboard-list pr-0 lg:pr-3"></i>
+											<i className="fad fa-dolly-flatbed-alt pr-0 lg:pr-3"></i>
 											<span
 												class={
 													InventoryNavBtn
 														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Inventory
@@ -427,7 +487,7 @@ class MainLayout extends React.Component {
 												class={
 													SupplierNavBtn
 														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Supplier
@@ -451,7 +511,7 @@ class MainLayout extends React.Component {
 												class={
 													TransactionsNavBtn
 														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Transactions
@@ -475,7 +535,7 @@ class MainLayout extends React.Component {
 												class={
 													TransactionsItemsNavBtn
 														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
 												Transaction Item's History

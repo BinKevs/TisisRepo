@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 # Create your models here.
 class Log_Activity(models.Model):
-    activity_log_id = models.CharField(max_length=255, null=True, default=None)
+    activity_log_id = models.CharField(max_length=255, null=False, default="None")
     account = models.ForeignKey(
         User, related_name="user_accouunt_activity_log", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True,null=True)

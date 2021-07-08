@@ -10,6 +10,8 @@ import Login from './components/Accounts/Login';
 import Registration from './components/Accounts/Registration';
 import { useEffect } from 'react';
 import { loadUser } from './store/actions/account/auth';
+import 'react-datepicker/dist/react-datepicker.css';
+
 function App() {
 	useEffect(() => {
 		store.dispatch(loadUser());

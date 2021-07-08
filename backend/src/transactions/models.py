@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 
 class Transaction(models.Model):
-    transaction_id = models.CharField(max_length=255, null=True, default=None)
+    transaction_id = models.CharField(max_length=255, null=False, default="None")
     creator = models.ForeignKey(
         User, related_name="creator_transaction", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(

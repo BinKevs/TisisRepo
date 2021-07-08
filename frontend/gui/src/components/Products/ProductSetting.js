@@ -232,6 +232,7 @@ class ProductSetting extends React.Component {
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
+		console.log(filteredData);
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
