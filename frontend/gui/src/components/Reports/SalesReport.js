@@ -17,6 +17,7 @@ let TotalItemsSoldPerItem = [];
 let TotalSaleMonthlyPerDay = [];
 let TotalSaleDailyPerDay = [];
 let TotalSaleWeeklyPerDay = [];
+let filterDates = [];
 let DateNow = Date().toLocaleString().split(' ');
 class SalesReport extends React.Component {
 	state = {
@@ -55,8 +56,31 @@ class SalesReport extends React.Component {
 
 		return [start, end];
 	}
+	getDates(startDate, endDate) {
+		const dates = [];
+		let currentDate = startDate;
+		const addDays = function (days) {
+			const date = new Date(this.valueOf());
+			date.setDate(date.getDate() + days);
+			return date;
+		};
+		while (currentDate < endDate) {
+			currentDate = addDays.call(currentDate, 1);
+			dates.push(currentDate);
+		}
+		return dates;
+	}
 	componentDidUpdate(prevProps, prevState) {}
 	render() {
+		let [start, end] = this.GetWeekDates();
+		var StartDayOfTheWeek = new Date(start.toLocaleString());
+		var EndDayOfTheWeek = new Date(end.toLocaleString());
+
+		// Usage
+		const dates = this.getDates(StartDayOfTheWeek, EndDayOfTheWeek);
+
+		console.log(dates);
+
 		transactionsFilteredDateSeparated = [];
 		transactionsForMonthlyFiltered = [];
 		transactionsForWeeklyFiltered = [];
@@ -66,13 +90,14 @@ class SalesReport extends React.Component {
 		TotalSaleMonthlyPerDay = [];
 		TotalSaleDailyPerDay = [];
 		TotalSaleWeeklyPerDay = [];
-		let [start, end] = this.GetWeekDates();
-		var StartDayOfTheWeek = new Date(start.toLocaleString().split(',')[0])
-			.toString()
-			.split(' ');
-		var EndDayOfTheWeek = new Date(end.toLocaleString().split(',')[0])
-			.toString()
-			.split(' ');
+
+		filterDates = [];
+		// var StartDayOfTheWeek = new Date(start.toLocaleString().split(',')[0])
+		// 	.toString()
+		// 	.split(' ');
+		// var EndDayOfTheWeek = new Date(end.toLocaleString().split(',')[0])
+		// 	.toString()
+		// 	.split(' ');
 		this.props.transactions.map((filteredTransactionObject) =>
 			transactionsFilteredDateSeparated.push({
 				id: filteredTransactionObject.id,
@@ -83,7 +108,39 @@ class SalesReport extends React.Component {
 				time: filteredTransactionObject.created_at.split(' ')[3],
 			})
 		);
-
+		dates.map((filterDate) =>
+			filterDates.push({
+				month: filterDate.toString().split(' ')[1],
+				day: filterDate.toString().split(' ')[2],
+				year: filterDate.toString().split(' ')[3],
+			})
+		);
+		for (var i = 0; i < transactionsFilteredDateSeparated.length; i++) {
+			var month = transactionsFilteredDateSeparated[i].month;
+			var day = transactionsFilteredDateSeparated[i].day;
+			var year = transactionsFilteredDateSeparated[i].year;
+			for (var y = 0; y < filterDates.length; y++) {
+				var monthSearching = filterDates[y].month;
+				var daySearching = filterDates[y].day;
+				var yearSearching = filterDates[y].year;
+				if (
+					monthSearching === month &&
+					daySearching === day &&
+					yearSearching === year
+				) {
+					transactionsForWeeklyFiltered.push({
+						totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
+						date: new Date(
+							transactionsFilteredDateSeparated[i].day +
+								' ' +
+								transactionsFilteredDateSeparated[i].month +
+								' ' +
+								transactionsFilteredDateSeparated[i].year
+						),
+					});
+				}
+			}
+		}
 		for (var i = 0; i < transactionsFilteredDateSeparated.length; i++) {
 			var month = transactionsFilteredDateSeparated[i].month;
 			var day = transactionsFilteredDateSeparated[i].day;
@@ -147,52 +204,6 @@ class SalesReport extends React.Component {
 						}
 					}
 				}
-			}
-
-			if (
-				year.includes(StartDayOfTheWeek[3]) &&
-				year.includes(EndDayOfTheWeek[3])
-			) {
-				// if (
-				// 	month.includes(StartDayOfTheWeek[1]) &&
-				// 	month.includes(EndDayOfTheWeek[1])
-				// ) {
-				if (StartDayOfTheWeek[1] !== EndDayOfTheWeek[1]) {
-					if (
-						(month === StartDayOfTheWeek[1] && day > StartDayOfTheWeek[2]) ||
-						(month === EndDayOfTheWeek[1] && day <= EndDayOfTheWeek[2])
-					) {
-						transactionsForWeeklyFiltered.push({
-							totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
-							date: new Date(
-								transactionsFilteredDateSeparated[i].day +
-									' ' +
-									transactionsFilteredDateSeparated[i].month +
-									' ' +
-									transactionsFilteredDateSeparated[i].year
-							),
-						});
-					}
-				} else {
-					if (
-						month === StartDayOfTheWeek[1] &&
-						day > StartDayOfTheWeek[2] &&
-						month === EndDayOfTheWeek[1] &&
-						day <= EndDayOfTheWeek[2]
-					) {
-						transactionsForWeeklyFiltered.push({
-							totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
-							date: new Date(
-								transactionsFilteredDateSeparated[i].day +
-									' ' +
-									transactionsFilteredDateSeparated[i].month +
-									' ' +
-									transactionsFilteredDateSeparated[i].year
-							),
-						});
-					}
-				}
-				// }
 			}
 		}
 

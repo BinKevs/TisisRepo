@@ -7,6 +7,7 @@ import {
 	deleteProduct,
 } from '../../store/actions/product/products';
 import { addToCart } from '../../store/actions/cart/cartActions';
+
 let products = [];
 
 class ProductListIndex extends React.Component {

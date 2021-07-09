@@ -7,6 +7,7 @@ import DatePicker from 'react-datepicker';
 let DateNow = Date().toLocaleString().split(' ');
 let inventoriesFilteredDateSeparated = [];
 let fetchInventoriesFiltered = [];
+let filterDates = [];
 class InventoriesReport extends React.Component {
 	static propTypes = {
 		inventories: PropTypes.array.isRequired,
@@ -18,12 +19,26 @@ class InventoriesReport extends React.Component {
 	};
 	componentDidMount() {
 		this.props.getInventoryListNotOrderByDate();
-	} 
-	
+	}
+	getDates(startDate, endDate) {
+		const dates = [];
+		let currentDate = startDate;
+		const addDays = function (days) {
+			const date = new Date(this.valueOf());
+			date.setDate(date.getDate() + days);
+			return date;
+		};
+		while (currentDate < endDate) {
+			currentDate = addDays.call(currentDate, 1);
+			dates.push(currentDate);
+		}
+		return dates;
+	}
 
 	render() {
 		inventoriesFilteredDateSeparated = [];
 		fetchInventoriesFiltered = [];
+		filterDates = [];
 		this.props.inventories.map((filteredInventoryObject) =>
 			inventoriesFilteredDateSeparated.push({
 				id: filteredInventoryObject.id,
@@ -35,68 +50,54 @@ class InventoriesReport extends React.Component {
 				time: filteredInventoryObject.created_at.split(' ')[3],
 			})
 		);
-		var StartDay = new Date(
-			this.state.StartingDate.toLocaleString().split(',')[0]
-		)
-			.toString()
-			.split(' ');
-		var EndDay = new Date(this.state.EndingDate.toLocaleString().split(',')[0])
-			.toString()
-			.split(' ');
-		// console.log(inventoriesFilteredDateSeparated);
-		// console.log(StartDay);
-		// console.log(EndDay);
-		// for (var i = 0; i < inventoriesFilteredDateSeparated.length; i++) {
-		// 	var month = inventoriesFilteredDateSeparated[i].month;
-		// 	var day = inventoriesFilteredDateSeparated[i].day;
-		// 	var year = inventoriesFilteredDateSeparated[i].year;
+		// var StartDay = new Date(
+		// 	this.state.StartingDate.toLocaleString().split(',')[0]
+		// )
+		// 	.toString()
+		// 	.split(' ');
+		// var EndDay = new Date(this.state.EndingDate.toLocaleString().split(',')[0])
+		// 	.toString()
+		// 	.split(' ');
 
-		// 	if (
-		// 		year.includes(StartDay[3]) &&
-		// 		year.includes(EndDay[3])
-		// 	) {
-		// 		if (StartDay[1] !== EndDay[1]) {
-		// 			if (
-		// 				(month === StartDay[1] && day > StartDay[2]) ||
-		// 				(month === EndDay[1] && day <= EndDay[2])
-		// 			) {
-		// 				fetchInventoriesFiltered.push({
-		// 					added_stock: inventoriesFilteredDateSeparated[i].added_stock,
-		// 					date: new Date(
-		// 						inventoriesFilteredDateSeparated[i].day +
-		// 							' ' +
-		// 							inventoriesFilteredDateSeparated[i].month +
-		// 							' ' +
-		// 							inventoriesFilteredDateSeparated[i].year
-		// 					),
-		// 				});
-		// 			}
-		// 		} else {
-		// 			if (
-		// 				month === StartDay[1] &&
-		// 				day > StartDay[2] &&
-		// 				month === EndDay[1] &&
-		// 				day <= EndDay[2]
-		// 			) {
-		// 				fetchInventoriesFiltered.push({
-		// 					added_stock: inventoriesFilteredDateSeparated[i].added_stock,
-		// 					date: new Date(
-		// 						inventoriesFilteredDateSeparated[i].day +
-		// 							' ' +
-		// 							inventoriesFilteredDateSeparated[i].month +
-		// 							' ' +
-		// 							inventoriesFilteredDateSeparated[i].year
-		// 					),
-		// 				});
-		// 			}
-		// 		}
-		// 	}
-		// }
-		// Returns an array of dates between the two dates
+		var StartDay = new Date(this.state.StartingDate);
+		var EndDay = new Date(this.state.EndingDate);
 
+		// Usage
+		const dates = this.getDates(StartDay, EndDay);
+		dates.map((filterDate) =>
+			filterDates.push({
+				month: filterDate.toString().split(' ')[1],
+				day: filterDate.toString().split(' ')[2],
+				year: filterDate.toString().split(' ')[3],
+			})
+		);
+		for (var i = 0; i < inventoriesFilteredDateSeparated.length; i++) {
+			var month = inventoriesFilteredDateSeparated[i].month;
+			var day = inventoriesFilteredDateSeparated[i].day;
+			var year = inventoriesFilteredDateSeparated[i].year;
+			for (var y = 0; y < filterDates.length; y++) {
+				var monthSearching = filterDates[y].month;
+				var daySearching = filterDates[y].day;
+				var yearSearching = filterDates[y].year;
+				if (
+					monthSearching === month &&
+					daySearching === day &&
+					yearSearching === year
+				) {
+					fetchInventoriesFiltered.push({
+						added_stock: inventoriesFilteredDateSeparated[i].added_stock,
+						date:
+							inventoriesFilteredDateSeparated[i].day +
+							' ' +
+							inventoriesFilteredDateSeparated[i].month +
+							' ' +
+							inventoriesFilteredDateSeparated[i].year,
+					});
+				}
+			}
+		}
 
-
-		console.log(fetchInventoriesFiltered)
+		console.log(fetchInventoriesFiltered);
 		return (
 			<>
 				<div class="flex-1 bg-gray-100 mt-28 md:mt-16 pb-24 md:pb-5">
@@ -166,9 +167,11 @@ class InventoriesReport extends React.Component {
 										labels: fetchInventoriesFiltered.map((x) => x.date),
 										datasets: [
 											{
-												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
+												label: DateNow[1] + ' ' + DateNow[3] + ' Added Stock',
 												fill: false,
-												data: fetchInventoriesFiltered.map((x) => x.added_stock),
+												data: fetchInventoriesFiltered.map(
+													(x) => x.added_stock
+												),
 												backgroundColor: '#3AAFA9',
 											},
 										],

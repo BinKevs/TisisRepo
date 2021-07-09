@@ -363,12 +363,12 @@ class MainLayout extends React.Component {
 									<li
 										class={
 											ReportsNavBtn
-												? 'mr-3 flex-1 NavBtn'
-												: 'mr-3 flex-1 NavBtn hidden'
+												? 'mr-3 flex-1 flex-col ml-10'
+												: 'mr-3 flex-1 hidden'
 										}
 										onClick={this.setActiveNav('ReportsNavBtn')}
 									>
-										<div className="flex justify-center w-full ">
+										<div className="flex justify-start ">
 											<Link
 												to="/reports/sales"
 												class={
@@ -386,7 +386,8 @@ class MainLayout extends React.Component {
 												</span>
 											</Link>
 										</div>
-										<div className="flex justify-center w-full ">
+
+										<div className="flex justify-start ">
 											<Link
 												to="/reports/inventories"
 												class={
@@ -403,7 +404,7 @@ class MainLayout extends React.Component {
 												</span>
 											</Link>
 										</div>
-										<div className="flex justify-center w-full ">
+										<div className="flex justify-start ">
 											<Link
 												to="/reports/products"
 												class={
