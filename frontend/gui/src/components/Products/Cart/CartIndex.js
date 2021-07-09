@@ -158,10 +158,10 @@ class CartIndex extends React.Component {
 											></i>
 										</div>
 										<span class="text-center w-full font-semibold text-sm pr-2 break-words">
-											₱{item.price}
+											₱{this.numberWithCommas(item.price)}
 										</span>
 										<span class="text-center w-full font-semibold text-sm break-words">
-											₱{item.price * item.quantity}
+											₱{this.numberWithCommas(item.price * item.quantity)}
 										</span>
 									</>
 								</div>

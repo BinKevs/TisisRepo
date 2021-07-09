@@ -6,6 +6,7 @@ import {
 	getTransactionItemList,
 	getTransactionListNotOrderByDate,
 } from '../../store/actions/transaction/transactions.js';
+import { getCategoryList } from '../../store/actions/product/products';
 import DatePicker from 'react-datepicker';
 let transactionsForDailyFiltered = [];
 let transactionsForMonthlyFiltered = [];
@@ -21,10 +22,23 @@ class SalesReport extends React.Component {
 	state = {
 		StartingDate: '',
 		EndingDate: '',
+		category: '',
+		dropdown: false,
 	};
+
 	componentDidMount() {
 		this.props.getTransactionItemList();
 		this.props.getTransactionListNotOrderByDate();
+		this.props.getCategoryList();
+	}
+	handleCategory(CategoryName) {
+		return (event) => {
+			event.preventDefault();
+			this.setState({
+				category: CategoryName,
+				dropdown: !this.state.dropdown,
+			});
+		};
 	}
 	GetWeekDates() {
 		let now = new Date();
@@ -190,8 +204,10 @@ class SalesReport extends React.Component {
 				id: filteredTransactionItemObject.id,
 				productName: filteredTransactionItemObject.product_info.name,
 				quantity: filteredTransactionItemObject.quantity,
+				category: filteredTransactionItemObject.category_info.name,
 			})
 		);
+
 		// //Compiling every transaction made per item
 		transactionPerItemsFiltered.forEach(function (obj) {
 			var productNameX = obj.productName;
@@ -199,7 +215,17 @@ class SalesReport extends React.Component {
 				TotalItemsSoldPerItem.push((this[productNameX] = obj));
 			else this[productNameX].quantity += obj.quantity;
 		}, Object.create(null));
-
+		const lowercasedFilter = this.state.category;
+		const filteredData = TotalItemsSoldPerItem.filter((item) => {
+			// return Object.keys(item).some((key) =>
+			// 	item[key].toString().includes(lowercasedFilter)
+			// );
+			{
+				return lowercasedFilter !== ''
+					? item.category === lowercasedFilter
+					: item;
+			}
+		});
 		transactionsForMonthlyFiltered.forEach(function (obj) {
 			var dateX = obj.date;
 			if (!this[dateX]) TotalSaleMonthlyPerDay.push((this[dateX] = obj));
@@ -409,7 +435,92 @@ class SalesReport extends React.Component {
 							</div>
 						</div>
 					</div>
-
+					<div class="w-11/12 flex-auto flex flex-col items-end mt-6">
+						<div class="flex flex-col items-center relative">
+							<div class="w-full  ">
+								<div class="my-2 bg-white p-1 flex border border-gray-200 rounded ">
+									<div class="flex flex-auto flex-wrap"></div>
+									<input
+										value={this.state.category}
+										class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+									/>
+									<div>
+										<button
+											onClick={() => {
+												this.setState({
+													category: '',
+												});
+											}}
+											class="cursor-pointer w-6 h-full flex items-center text-gray-400 outline-none focus:outline-none"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="100%"
+												height="100%"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke="currentColor"
+												stroke-width="2"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												class="feather feather-x w-4 h-4"
+											>
+												<line x1="18" y1="6" x2="6" y2="18"></line>
+												<line x1="6" y1="6" x2="18" y2="18"></line>
+											</svg>
+										</button>
+									</div>
+									<div
+										onClick={() => {
+											this.setState({
+												dropdown: !this.state.dropdown,
+											});
+										}}
+										class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 "
+									>
+										<button class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
+											<i
+												class={
+													this.state.dropdown
+														? 'fad fa-angle-up'
+														: 'fad fa-angle-down'
+												}
+											></i>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div
+								class={
+									this.state.dropdown
+										? 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto'
+										: 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto hidden'
+								}
+							>
+								<div class="flex flex-col w-full">
+									{this.props.categories.map((category) => (
+										<div
+											onClick={this.handleCategory(category.name)}
+											class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
+										>
+											<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 hover:border-teal-600">
+												<div class="w-full items-center flex">
+													<div class="mx-2 leading-6  ">{category.name} </div>
+												</div>
+											</div>
+										</div>
+									))}
+									{/* <div class="cursor-pointer w-full border-gray-100 border-b hover:bg-teal-100 ">
+										<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 border-teal-600">
+											<div class="w-full items-center flex">
+												<div class="mx-2 leading-6  ">Javascript </div>
+											</div>
+										</div>
+									</div> */}
+								</div>
+							</div>
+						</div>
+					</div>
 					<div className="mx-auto w-11/12 mt-6 p-3">
 						<div className="bg-white shadow-lg p-4">
 							<div className="relative w-full max-w-full flex-grow">
@@ -423,12 +534,12 @@ class SalesReport extends React.Component {
 							<div className="chart">
 								<Bar
 									data={{
-										labels: TotalItemsSoldPerItem.map((x) => x.productName),
+										labels: filteredData.map((x) => x.productName),
 										datasets: [
 											{
 												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
 												fill: false,
-												data: TotalItemsSoldPerItem.map((x) => x.quantity),
+												data: filteredData.map((x) => x.quantity),
 												backgroundColor: '#3AAFA9',
 											},
 										],
@@ -459,9 +570,11 @@ class SalesReport extends React.Component {
 const mapStateToProps = (state) => ({
 	transaction_items: state.transactions.transaction_item_list,
 	transactions: state.transactions.transactions,
+	categories: state.products.categories,
 });
 
 export default connect(mapStateToProps, {
 	getTransactionItemList,
 	getTransactionListNotOrderByDate,
+	getCategoryList,
 })(SalesReport);

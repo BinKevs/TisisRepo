@@ -22,23 +22,29 @@ class ProductReport extends React.Component {
 		this.props.getProductList();
 		this.props.getCategoryList();
 	}
-	handleCategory(Category) {
+	handleCategory(CategoryName) {
 		return (event) => {
 			event.preventDefault();
 			this.setState({
-				category: Category,
+				category: CategoryName,
 				dropdown: !this.state.dropdown,
 			});
 		};
 	}
 
 	render() {
-		const lowercasedFilter = this.state.category.toLowerCase();
+		const lowercasedFilter = this.state.category;
 		const filteredData = this.props.products.filter((item) => {
-			return Object.keys(item).some((key) =>
-				item[key].toString().toLowerCase().includes(lowercasedFilter)
-			);
+			// return Object.keys(item).some((key) =>
+			// 	item[key].toString().includes(lowercasedFilter)
+			// );
+			{
+				return lowercasedFilter !== ''
+					? item.category_info.name === lowercasedFilter
+					: item;
+			}
 		});
+		console.log(filteredData);
 		return (
 			<>
 				<div class="flex-1 bg-gray-100 mt-28 md:mt-16 pb-24 md:pb-5">
@@ -159,7 +165,7 @@ class ProductReport extends React.Component {
 										labels: filteredData.map((x) => x.name),
 										datasets: [
 											{
-												label: DateNow[1] + ' ' + DateNow[3] + ' Stocks',
+												label: this.state.category + ' Stocks',
 												fill: false,
 												data: filteredData.map((x) => x.stock),
 												backgroundColor: '#3AAFA9',
