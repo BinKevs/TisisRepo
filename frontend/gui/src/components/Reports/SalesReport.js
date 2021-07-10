@@ -8,22 +8,26 @@ import {
 } from '../../store/actions/transaction/transactions.js';
 import { getCategoryList } from '../../store/actions/product/products';
 import DatePicker from 'react-datepicker';
-let transactionsForDailyFiltered = [];
-let transactionsForMonthlyFiltered = [];
-let transactionsForWeeklyFiltered = [];
-let transactionsFilteredDateSeparated = [];
-let transactionPerItemsFiltered = [];
-let TotalItemsSoldPerItem = [];
-let TotalSaleMonthlyPerDay = [];
-let TotalSaleDailyPerDay = [];
-let TotalSaleWeeklyPerDay = [];
-let filterDates = [];
+let transactionsDateSeparated = [];
+let transactionPerItems = [];
+let ThisDayTransactions = [];
+let ThisMonthTransactions = [];
+let ThisWeekTransactions = [];
+let TransactionItemsCombineSameDate = [];
+let ThisMonthTransactionsCombinedSameDate = [];
+let ThisDayTransactionsCombinedSameDate = [];
+let ThisWeekTransactionsCombinedSameDate = [];
+let DatesThisWeek = [];
+let DatesBetweenInput = [];
+let TransactionsBetweenDatesInput = [];
+let TransactionsBetweenDatesInputCombinedSameDate = [];
+
 let DateNow = Date().toLocaleString().split(' ');
 class SalesReport extends React.Component {
 	state = {
 		StartingDate: '',
 		EndingDate: '',
-		category: '',
+		category: 'Select category',
 		dropdown: false,
 	};
 
@@ -70,28 +74,23 @@ class SalesReport extends React.Component {
 		}
 		return dates;
 	}
-	componentDidUpdate(prevProps, prevState) {}
 	render() {
 		let [start, end] = this.GetWeekDates();
 		var StartDayOfTheWeek = new Date(start.toLocaleString());
 		var EndDayOfTheWeek = new Date(end.toLocaleString());
 
-		// Usage
-		const dates = this.getDates(StartDayOfTheWeek, EndDayOfTheWeek);
+		transactionsDateSeparated = [];
+		transactionPerItems = [];
+		ThisMonthTransactions = [];
+		ThisWeekTransactions = [];
+		ThisDayTransactions = [];
 
-		console.log(dates);
+		TransactionItemsCombineSameDate = [];
+		ThisMonthTransactionsCombinedSameDate = [];
+		ThisDayTransactionsCombinedSameDate = [];
+		ThisWeekTransactionsCombinedSameDate = [];
 
-		transactionsFilteredDateSeparated = [];
-		transactionsForMonthlyFiltered = [];
-		transactionsForWeeklyFiltered = [];
-		transactionsForDailyFiltered = [];
-		transactionPerItemsFiltered = [];
-		TotalItemsSoldPerItem = [];
-		TotalSaleMonthlyPerDay = [];
-		TotalSaleDailyPerDay = [];
-		TotalSaleWeeklyPerDay = [];
-
-		filterDates = [];
+		DatesThisWeek = [];
 		// var StartDayOfTheWeek = new Date(start.toLocaleString().split(',')[0])
 		// 	.toString()
 		// 	.split(' ');
@@ -99,7 +98,7 @@ class SalesReport extends React.Component {
 		// 	.toString()
 		// 	.split(' ');
 		this.props.transactions.map((filteredTransactionObject) =>
-			transactionsFilteredDateSeparated.push({
+			transactionsDateSeparated.push({
 				id: filteredTransactionObject.id,
 				totalAmount: filteredTransactionObject.totalAmount,
 				month: filteredTransactionObject.created_at.split(' ')[0],
@@ -108,96 +107,129 @@ class SalesReport extends React.Component {
 				time: filteredTransactionObject.created_at.split(' ')[3],
 			})
 		);
-		dates.map((filterDate) =>
-			filterDates.push({
+		// Fetch staring and ending date
+		var StartDay = new Date(this.state.StartingDate);
+		var EndDay = new Date(this.state.EndingDate);
+		DatesBetweenInput = [];
+		TransactionsBetweenDatesInput = [];
+		TransactionsBetweenDatesInputCombinedSameDate = [];
+		const BetweenInputedDates = this.getDates(StartDay, EndDay);
+		BetweenInputedDates.map((filterDate) =>
+			DatesBetweenInput.push({
 				month: filterDate.toString().split(' ')[1],
 				day: filterDate.toString().split(' ')[2],
 				year: filterDate.toString().split(' ')[3],
 			})
 		);
-		for (var i = 0; i < transactionsFilteredDateSeparated.length; i++) {
-			var month = transactionsFilteredDateSeparated[i].month;
-			var day = transactionsFilteredDateSeparated[i].day;
-			var year = transactionsFilteredDateSeparated[i].year;
-			for (var y = 0; y < filterDates.length; y++) {
-				var monthSearching = filterDates[y].month;
-				var daySearching = filterDates[y].day;
-				var yearSearching = filterDates[y].year;
+		for (var i = 0; i < transactionsDateSeparated.length; i++) {
+			var month = transactionsDateSeparated[i].month;
+			var day = transactionsDateSeparated[i].day;
+			var year = transactionsDateSeparated[i].year;
+			for (var y = 0; y < DatesBetweenInput.length; y++) {
+				var monthSearching = DatesBetweenInput[y].month;
+				var daySearching = DatesBetweenInput[y].day;
+				var yearSearching = DatesBetweenInput[y].year;
 				if (
 					monthSearching === month &&
 					daySearching === day &&
 					yearSearching === year
 				) {
-					transactionsForWeeklyFiltered.push({
-						totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
+					TransactionsBetweenDatesInput.push({
+						totalAmount: transactionsDateSeparated[i].totalAmount,
+						date:
+							transactionsDateSeparated[i].day +
+							' ' +
+							transactionsDateSeparated[i].month +
+							' ' +
+							transactionsDateSeparated[i].year,
+					});
+				}
+			}
+		}
+		//Fetch weekly sales
+		const WeeklyDates = this.getDates(StartDayOfTheWeek, EndDayOfTheWeek);
+		WeeklyDates.map((filterDate) =>
+			DatesThisWeek.push({
+				month: filterDate.toString().split(' ')[1],
+				day: filterDate.toString().split(' ')[2],
+				year: filterDate.toString().split(' ')[3],
+			})
+		);
+		for (var i = 0; i < transactionsDateSeparated.length; i++) {
+			var month = transactionsDateSeparated[i].month;
+			var day = transactionsDateSeparated[i].day;
+			var year = transactionsDateSeparated[i].year;
+			for (var y = 0; y < DatesThisWeek.length; y++) {
+				var monthSearching = DatesThisWeek[y].month;
+				var daySearching = DatesThisWeek[y].day;
+				var yearSearching = DatesThisWeek[y].year;
+				if (
+					monthSearching === month &&
+					daySearching === day &&
+					yearSearching === year
+				) {
+					ThisWeekTransactions.push({
+						totalAmount: transactionsDateSeparated[i].totalAmount,
 						date: new Date(
-							transactionsFilteredDateSeparated[i].day +
+							transactionsDateSeparated[i].day +
 								' ' +
-								transactionsFilteredDateSeparated[i].month +
+								transactionsDateSeparated[i].month +
 								' ' +
-								transactionsFilteredDateSeparated[i].year
+								transactionsDateSeparated[i].year
 						),
 					});
 				}
 			}
 		}
-		for (var i = 0; i < transactionsFilteredDateSeparated.length; i++) {
-			var month = transactionsFilteredDateSeparated[i].month;
-			var day = transactionsFilteredDateSeparated[i].day;
-			var year = transactionsFilteredDateSeparated[i].year;
+		for (var i = 0; i < transactionsDateSeparated.length; i++) {
+			var month = transactionsDateSeparated[i].month;
+			var day = transactionsDateSeparated[i].day;
+			var year = transactionsDateSeparated[i].year;
 			//Fetch montly sales
 			if (year === DateNow[3]) {
 				if (month === DateNow[1]) {
 					// DateNow[1]
-					transactionsForMonthlyFiltered.push({
-						totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
+					ThisMonthTransactions.push({
+						totalAmount: transactionsDateSeparated[i].totalAmount,
 						date:
-							transactionsFilteredDateSeparated[i].month +
+							transactionsDateSeparated[i].month +
 							' ' +
-							transactionsFilteredDateSeparated[i].day,
+							transactionsDateSeparated[i].day,
 					});
 					//Fetch daily sales
 					if (day === DateNow[2]) {
 						// DateNow[2]
 						if (
-							parseInt(
-								transactionsFilteredDateSeparated[i].time.split(':')[0]
-							) < 12
+							parseInt(transactionsDateSeparated[i].time.split(':')[0]) < 12
 						) {
-							transactionsForDailyFiltered.push({
-								totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
+							ThisDayTransactions.push({
+								totalAmount: transactionsDateSeparated[i].totalAmount,
 								date:
-									transactionsFilteredDateSeparated[i].time.split(':')[0] +
+									transactionsDateSeparated[i].time.split(':')[0] +
 									':' +
-									transactionsFilteredDateSeparated[i].time.split(':')[1] +
+									transactionsDateSeparated[i].time.split(':')[1] +
 									' AM',
 							});
 						} else {
 							if (
-								parseInt(
-									transactionsFilteredDateSeparated[i].time.split(':')[0]
-								) === 12
+								parseInt(transactionsDateSeparated[i].time.split(':')[0]) === 12
 							) {
-								transactionsForDailyFiltered.push({
-									totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
+								ThisDayTransactions.push({
+									totalAmount: transactionsDateSeparated[i].totalAmount,
 									date:
-										parseInt(
-											transactionsFilteredDateSeparated[i].time.split(':')[0]
-										) +
+										parseInt(transactionsDateSeparated[i].time.split(':')[0]) +
 										':' +
-										transactionsFilteredDateSeparated[i].time.split(':')[1] +
+										transactionsDateSeparated[i].time.split(':')[1] +
 										' PM',
 								});
 							} else {
-								transactionsForDailyFiltered.push({
-									totalAmount: transactionsFilteredDateSeparated[i].totalAmount,
+								ThisDayTransactions.push({
+									totalAmount: transactionsDateSeparated[i].totalAmount,
 									date:
-										parseInt(
-											transactionsFilteredDateSeparated[i].time.split(':')[0]
-										) -
+										parseInt(transactionsDateSeparated[i].time.split(':')[0]) -
 										12 +
 										':' +
-										transactionsFilteredDateSeparated[i].time.split(':')[1] +
+										transactionsDateSeparated[i].time.split(':')[1] +
 										' PM',
 								});
 							}
@@ -211,7 +243,7 @@ class SalesReport extends React.Component {
 
 		//Destructuring for the ease of sorting which is which is sold
 		this.props.transaction_items.map((filteredTransactionItemObject) =>
-			transactionPerItemsFiltered.push({
+			transactionPerItems.push({
 				id: filteredTransactionItemObject.id,
 				productName: filteredTransactionItemObject.product_info.name,
 				quantity: filteredTransactionItemObject.quantity,
@@ -220,14 +252,14 @@ class SalesReport extends React.Component {
 		);
 
 		// //Compiling every transaction made per item
-		transactionPerItemsFiltered.forEach(function (obj) {
+		transactionPerItems.forEach(function (obj) {
 			var productNameX = obj.productName;
 			if (!this[productNameX])
-				TotalItemsSoldPerItem.push((this[productNameX] = obj));
+				TransactionItemsCombineSameDate.push((this[productNameX] = obj));
 			else this[productNameX].quantity += obj.quantity;
 		}, Object.create(null));
 		const lowercasedFilter = this.state.category;
-		const filteredData = TotalItemsSoldPerItem.filter((item) => {
+		const filteredData = TransactionItemsCombineSameDate.filter((item) => {
 			// return Object.keys(item).some((key) =>
 			// 	item[key].toString().includes(lowercasedFilter)
 			// );
@@ -237,29 +269,42 @@ class SalesReport extends React.Component {
 					: item;
 			}
 		});
-		transactionsForMonthlyFiltered.forEach(function (obj) {
+		ThisMonthTransactions.forEach(function (obj) {
 			var dateX = obj.date;
-			if (!this[dateX]) TotalSaleMonthlyPerDay.push((this[dateX] = obj));
+			if (!this[dateX])
+				ThisMonthTransactionsCombinedSameDate.push((this[dateX] = obj));
 			else
 				this[dateX].totalAmount =
 					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
 		}, Object.create(null));
 
-		transactionsForDailyFiltered.forEach(function (obj) {
+		ThisDayTransactions.forEach(function (obj) {
 			var dateX = obj.date;
-			if (!this[dateX]) TotalSaleDailyPerDay.push((this[dateX] = obj));
-			else
-				this[dateX].totalAmount =
-					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
-		}, Object.create(null));
-		transactionsForWeeklyFiltered.forEach(function (obj) {
-			var dateX = obj.date;
-			if (!this[dateX]) TotalSaleWeeklyPerDay.push((this[dateX] = obj));
+			if (!this[dateX])
+				ThisDayTransactionsCombinedSameDate.push((this[dateX] = obj));
 			else
 				this[dateX].totalAmount =
 					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
 		}, Object.create(null));
 
+		ThisWeekTransactions.forEach(function (obj) {
+			var dateX = obj.date;
+			if (!this[dateX])
+				ThisWeekTransactionsCombinedSameDate.push((this[dateX] = obj));
+			else
+				this[dateX].totalAmount =
+					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
+		}, Object.create(null));
+		TransactionsBetweenDatesInput.forEach(function (obj) {
+			var dateX = obj.date;
+			if (!this[dateX])
+				TransactionsBetweenDatesInputCombinedSameDate.push((this[dateX] = obj));
+			else
+				this[dateX].totalAmount =
+					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
+		}, Object.create(null));
+
+		console.log(ThisWeekTransactions);
 		return (
 			<>
 				<div class="flex-1 bg-gray-100 mt-28 md:mt-16 pb-24 md:pb-5">
@@ -278,40 +323,86 @@ class SalesReport extends React.Component {
 							<h3 class="font-bold pl-2">Reports</h3>
 						</div>
 					</div>
-					<div className="mx-auto w-11/12 mt-6 flex justify-end space-x-3">
-						<div class="flex">
-							<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
-								Start:
-							</span>
-							<DatePicker
-								selected={this.state.StartingDate}
-								onChange={(date) => this.setState({ StartingDate: date })}
-								value={this.state.StartingDate}
-								closeOnScroll={true}
-								placeholderText="Starting Date"
-								className="px-4 py-2 border-2 rounded-r"
-							/>
-						</div>
-						<div class="flex">
-							<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
-								End:
-							</span>
-							<DatePicker
-								selected={this.state.EndingDate}
-								onChange={(date) => this.setState({ EndingDate: date })}
-								value={this.state.EndingDate}
-								closeOnScroll={true}
-								placeholderText="Ending Date"
-								className="px-4 py-2 border-2 rounded-r"
-							/>
-						</div>
 
-						<button
-							type="submit"
-							class="text-white bg-gray-800 px-4 py-2 rounded"
-						>
-							Fetch Sale
-						</button>
+					<div className="mx-auto w-11/12 mt-6 p-3">
+						<div className="bg-white shadow-lg p-4">
+							<div className="relative w-full max-w-full flex-grow">
+								<h6 className="uppercase text-gray-600 mb-1 text-sm font-semibold">
+									Sales
+								</h6>
+								<div className="mx-auto w-11/12 mt-6 flex justify-start space-x-3">
+									<div class="flex">
+										<h2 className="text-gray-800 mb-2 text-2xl font-semibold mr-5">
+											Between
+										</h2>
+										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
+											Start:
+										</span>
+										<DatePicker
+											selected={this.state.StartingDate}
+											onChange={(date) => this.setState({ StartingDate: date })}
+											value={this.state.StartingDate}
+											closeOnScroll={true}
+											placeholderText="Starting Date"
+											className="px-4 py-2 border-2 rounded-r"
+										/>
+									</div>
+									<div class="flex">
+										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
+											End:
+										</span>
+										<DatePicker
+											selected={this.state.EndingDate}
+											onChange={(date) => this.setState({ EndingDate: date })}
+											value={this.state.EndingDate}
+											closeOnScroll={true}
+											placeholderText="Ending Date"
+											className="px-4 py-2 border-2 rounded-r"
+										/>
+									</div>
+
+									{/* <button
+										type="submit"
+										class="text-white bg-gray-800 px-4 py-2 rounded"
+									>
+										Fetch Sale
+									</button> */}
+								</div>
+							</div>
+							<div className="chart">
+								<Bar
+									data={{
+										labels: TransactionsBetweenDatesInputCombinedSameDate.map(
+											(x) => x.date
+										),
+										datasets: [
+											{
+												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
+												fill: false,
+												data: TransactionsBetweenDatesInputCombinedSameDate.map(
+													(x) => x.totalAmount
+												),
+												backgroundColor: '#3AAFA9',
+											},
+										],
+									}}
+									options={{
+										responsive: true,
+										plugins: {
+											legend: {
+												position: 'top',
+												align: 'end',
+												labels: {
+													font: {
+														size: 15,
+													},
+												},
+											},
+										},
+									}}
+								/>
+							</div>
+						</div>
 					</div>
 					<div className="mx-auto w-11/12 mt-6 p-3">
 						<div className="bg-white shadow-lg p-4">
@@ -326,7 +417,9 @@ class SalesReport extends React.Component {
 							<div className="chart">
 								<Bar
 									data={{
-										labels: TotalSaleDailyPerDay.map((x) => x.date),
+										labels: ThisDayTransactionsCombinedSameDate.map(
+											(x) => x.date
+										),
 										datasets: [
 											{
 												label:
@@ -339,7 +432,9 @@ class SalesReport extends React.Component {
 													DateNow[3] +
 													' Sales',
 												fill: false,
-												data: TotalSaleDailyPerDay.map((x) => x.totalAmount),
+												data: ThisDayTransactionsCombinedSameDate.map(
+													(x) => x.totalAmount
+												),
 												backgroundColor: '#3AAFA9',
 											},
 										],
@@ -375,14 +470,16 @@ class SalesReport extends React.Component {
 							<div className="chart">
 								<Bar
 									data={{
-										labels: TotalSaleWeeklyPerDay.map(
+										labels: ThisWeekTransactionsCombinedSameDate.map(
 											(x) => x.date.toString().split(' ')[0]
 										),
 										datasets: [
 											{
 												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
 												fill: false,
-												data: TotalSaleWeeklyPerDay.map((x) => x.totalAmount),
+												data: ThisWeekTransactionsCombinedSameDate.map(
+													(x) => x.totalAmount
+												),
 												backgroundColor: '#3AAFA9',
 											},
 										],
@@ -418,12 +515,16 @@ class SalesReport extends React.Component {
 							<div className="chart">
 								<Bar
 									data={{
-										labels: TotalSaleMonthlyPerDay.map((x) => x.date),
+										labels: ThisMonthTransactionsCombinedSameDate.map(
+											(x) => x.date
+										),
 										datasets: [
 											{
 												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
 												fill: false,
-												data: TotalSaleMonthlyPerDay.map((x) => x.totalAmount),
+												data: ThisMonthTransactionsCombinedSameDate.map(
+													(x) => x.totalAmount
+												),
 												backgroundColor: '#3AAFA9',
 											},
 										],
@@ -446,101 +547,104 @@ class SalesReport extends React.Component {
 							</div>
 						</div>
 					</div>
-					<div class="w-11/12 flex-auto flex flex-col items-end mt-6">
-						<div class="flex flex-col items-center relative">
-							<div class="w-full  ">
-								<div class="my-2 bg-white p-1 flex border border-gray-200 rounded ">
-									<div class="flex flex-auto flex-wrap"></div>
-									<input
-										value={this.state.category}
-										class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
-									/>
-									<div>
-										<button
-											onClick={() => {
-												this.setState({
-													category: '',
-												});
-											}}
-											class="cursor-pointer w-6 h-full flex items-center text-gray-400 outline-none focus:outline-none"
-										>
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												width="100%"
-												height="100%"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-												stroke-width="2"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												class="feather feather-x w-4 h-4"
-											>
-												<line x1="18" y1="6" x2="6" y2="18"></line>
-												<line x1="6" y1="6" x2="18" y2="18"></line>
-											</svg>
-										</button>
-									</div>
-									<div
-										onClick={() => {
-											this.setState({
-												dropdown: !this.state.dropdown,
-											});
-										}}
-										class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 "
-									>
-										<button class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
-											<i
-												class={
-													this.state.dropdown
-														? 'fad fa-angle-up'
-														: 'fad fa-angle-down'
-												}
-											></i>
-										</button>
-									</div>
-								</div>
-							</div>
-							<div
-								class={
-									this.state.dropdown
-										? 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto'
-										: 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto hidden'
-								}
-							>
-								<div class="flex flex-col w-full">
-									{this.props.categories.map((category) => (
-										<div
-											onClick={this.handleCategory(category.name)}
-											class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
-										>
-											<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 hover:border-teal-600">
-												<div class="w-full items-center flex">
-													<div class="mx-2 leading-6  ">{category.name} </div>
+
+					<div className="mx-auto w-11/12 mt-6 p-3">
+						<div className="bg-white shadow-lg p-4">
+							<div className="relative w-full max-w-full flex-grow">
+								<h6 className="uppercase text-gray-600 mb-3 text-sm font-semibold">
+									Transactions
+								</h6>
+								<div className="flex">
+									<h2 className="text-gray-800 text-2xl font-semibold mr-5">
+										Sales Overview Per Product Item of Category :
+									</h2>
+									<div class="flex flex-col -mt-2">
+										<div class="flex flex-col items-center relative">
+											<div class="my-2 bg-white p-1 flex border border-gray-200 rounded ">
+												<input
+													value={this.state.category}
+													class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+												/>
+												<div>
+													<button
+														onClick={() => {
+															this.setState({
+																category: '',
+															});
+														}}
+														class="cursor-pointer w-6 h-full flex items-center text-gray-400 outline-none focus:outline-none"
+													>
+														<svg
+															xmlns="http://www.w3.org/2000/svg"
+															width="100%"
+															height="100%"
+															fill="none"
+															viewBox="0 0 24 24"
+															stroke="currentColor"
+															stroke-width="2"
+															stroke-linecap="round"
+															stroke-linejoin="round"
+															class="feather feather-x w-4 h-4"
+														>
+															<line x1="18" y1="6" x2="6" y2="18"></line>
+															<line x1="6" y1="6" x2="18" y2="18"></line>
+														</svg>
+													</button>
+												</div>
+												<div
+													onClick={() => {
+														this.setState({
+															dropdown: !this.state.dropdown,
+														});
+													}}
+													class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 "
+												>
+													<button class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
+														<i
+															class={
+																this.state.dropdown
+																	? 'fad fa-angle-up'
+																	: 'fad fa-angle-down'
+															}
+														></i>
+													</button>
 												</div>
 											</div>
-										</div>
-									))}
-									{/* <div class="cursor-pointer w-full border-gray-100 border-b hover:bg-teal-100 ">
+
+											<div
+												class={
+													this.state.dropdown
+														? 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto'
+														: 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto hidden'
+												}
+											>
+												<div class="flex flex-col w-full">
+													{this.props.categories.map((category) => (
+														<div
+															onClick={this.handleCategory(category.name)}
+															class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
+														>
+															<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 hover:border-teal-600">
+																<div class="w-full items-center flex">
+																	<div class="mx-2 leading-6  ">
+																		{category.name}{' '}
+																	</div>
+																</div>
+															</div>
+														</div>
+													))}
+													{/* <div class="cursor-pointer w-full border-gray-100 border-b hover:bg-teal-100 ">
 										<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 border-teal-600">
 											<div class="w-full items-center flex">
 												<div class="mx-2 leading-6  ">Javascript </div>
 											</div>
 										</div>
 									</div> */}
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
-							</div>
-						</div>
-					</div>
-					<div className="mx-auto w-11/12 mt-6 p-3">
-						<div className="bg-white shadow-lg p-4">
-							<div className="relative w-full max-w-full flex-grow">
-								<h6 className="uppercase text-gray-600 mb-1 text-sm font-semibold">
-									Transactions
-								</h6>
-								<h2 className="text-gray-800 mb-2 text-2xl font-semibold">
-									Sales Overview Per Product Item
-								</h2>
 							</div>
 							<div className="chart">
 								<Bar

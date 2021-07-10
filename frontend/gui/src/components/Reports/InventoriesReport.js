@@ -5,9 +5,11 @@ import { Bar, Line } from 'react-chartjs-2';
 import { getInventoryListNotOrderByDate } from '../../store/actions/inventory/inventories.js';
 import DatePicker from 'react-datepicker';
 let DateNow = Date().toLocaleString().split(' ');
-let inventoriesFilteredDateSeparated = [];
-let fetchInventoriesFiltered = [];
-let filterDates = [];
+let InventoriesDateSeparated = [];
+let InventoriesBewtweenDatesInput = [];
+let DatesBetweenInput = [];
+
+let InventoriesBetweenDatesInputCombinedSameDate = [];
 class InventoriesReport extends React.Component {
 	static propTypes = {
 		inventories: PropTypes.array.isRequired,
@@ -16,6 +18,7 @@ class InventoriesReport extends React.Component {
 	state = {
 		StartingDate: '',
 		EndingDate: '',
+		occupied: false,
 	};
 	componentDidMount() {
 		this.props.getInventoryListNotOrderByDate();
@@ -36,11 +39,11 @@ class InventoriesReport extends React.Component {
 	}
 
 	render() {
-		inventoriesFilteredDateSeparated = [];
-		fetchInventoriesFiltered = [];
-		filterDates = [];
+		InventoriesDateSeparated = [];
+		InventoriesBewtweenDatesInput = [];
+		DatesBetweenInput = [];
 		this.props.inventories.map((filteredInventoryObject) =>
-			inventoriesFilteredDateSeparated.push({
+			InventoriesDateSeparated.push({
 				id: filteredInventoryObject.id,
 				added_stock: filteredInventoryObject.new_stock,
 				product: filteredInventoryObject.product_info.name,
@@ -65,39 +68,52 @@ class InventoriesReport extends React.Component {
 		// Usage
 		const dates = this.getDates(StartDay, EndDay);
 		dates.map((filterDate) =>
-			filterDates.push({
+			DatesBetweenInput.push({
 				month: filterDate.toString().split(' ')[1],
 				day: filterDate.toString().split(' ')[2],
 				year: filterDate.toString().split(' ')[3],
 			})
 		);
-		for (var i = 0; i < inventoriesFilteredDateSeparated.length; i++) {
-			var month = inventoriesFilteredDateSeparated[i].month;
-			var day = inventoriesFilteredDateSeparated[i].day;
-			var year = inventoriesFilteredDateSeparated[i].year;
-			for (var y = 0; y < filterDates.length; y++) {
-				var monthSearching = filterDates[y].month;
-				var daySearching = filterDates[y].day;
-				var yearSearching = filterDates[y].year;
+		for (var i = 0; i < InventoriesDateSeparated.length; i++) {
+			var month = InventoriesDateSeparated[i].month;
+			var day = InventoriesDateSeparated[i].day;
+			var year = InventoriesDateSeparated[i].year;
+			for (var y = 0; y < DatesBetweenInput.length; y++) {
+				var monthSearching = DatesBetweenInput[y].month;
+				var daySearching = DatesBetweenInput[y].day;
+				var yearSearching = DatesBetweenInput[y].year;
 				if (
 					monthSearching === month &&
 					daySearching === day &&
 					yearSearching === year
 				) {
-					fetchInventoriesFiltered.push({
-						added_stock: inventoriesFilteredDateSeparated[i].added_stock,
+					InventoriesBewtweenDatesInput.push({
+						added_stock: InventoriesDateSeparated[i].added_stock,
 						date:
-							inventoriesFilteredDateSeparated[i].day +
+							InventoriesDateSeparated[i].day +
 							' ' +
-							inventoriesFilteredDateSeparated[i].month +
+							InventoriesDateSeparated[i].month +
 							' ' +
-							inventoriesFilteredDateSeparated[i].year,
+							InventoriesDateSeparated[i].year,
 					});
 				}
 			}
 		}
+		InventoriesBewtweenDatesInput.forEach(function (obj) {
+			var dateX = obj.date;
+			if (!this[dateX])
+				InventoriesBetweenDatesInputCombinedSameDate.push((this[dateX] = obj));
+			else
+				this[dateX].added_stock =
+					parseInt(this[dateX].added_stock) + parseInt(obj.added_stock);
+		}, Object.create(null));
 
-		console.log(fetchInventoriesFiltered);
+		if (this.state.EndingDate === null) {
+			this.setState({
+				occupied: false,
+				EndingDate: '',
+			});
+		}
 		return (
 			<>
 				<div class="flex-1 bg-gray-100 mt-28 md:mt-16 pb-24 md:pb-5">
@@ -116,7 +132,7 @@ class InventoriesReport extends React.Component {
 							<h3 class="font-bold pl-2">Reports</h3>
 						</div>
 					</div>
-					<div className="mx-auto w-11/12 mt-6 flex justify-end space-x-3">
+					{/* <div className="mx-auto w-11/12 mt-6 flex justify-end space-x-3">
 						<div class="flex">
 							<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
 								Start:
@@ -136,7 +152,12 @@ class InventoriesReport extends React.Component {
 							</span>
 							<DatePicker
 								selected={this.state.EndingDate}
-								onChange={(date) => this.setState({ EndingDate: date })}
+								onChange={(date) =>
+									this.setState({
+										EndingDate: date,
+										occupied: true,
+									})
+								}
 								value={this.state.EndingDate}
 								closeOnScroll={true}
 								placeholderText="Ending Date"
@@ -144,32 +165,89 @@ class InventoriesReport extends React.Component {
 							/>
 						</div>
 
-						<button
-							type="submit"
-							class="text-white bg-gray-800 px-4 py-2 rounded"
-						>
-							Fetch Inventory
-						</button>
-					</div>
-					<div className="mx-auto w-11/12 mt-6 p-3">
+					
+					</div> */}
+
+					<div
+						className={
+							!this.state.occupied
+								? 'mx-auto w-11/12 mt-6 relative'
+								: 'mx-auto w-11/12 mt-6 p-3'
+						}
+					>
+						{!this.state.occupied ? (
+							<>
+								{/* <div class="absolute w-full h-full z-25 bg-gray-900 opacity-50"></div> */}
+								<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 font-medium text-gray-900 text-center text-3xl">
+									<div>No data available!</div> Please select a starting date
+									and ending date in the upper right corner.
+								</div>
+							</>
+						) : (
+							''
+						)}
+
 						<div className="bg-white shadow-lg p-4 ">
 							<div className="relative w-full max-w-full flex-grow">
 								<h6 className="uppercase text-gray-600 mb-1 text-sm font-semibold">
 									Inventories
 								</h6>
-								<h2 className="text-gray-800 mb-2 text-2xl font-semibold">
-									Overview
-								</h2>
+
+								<div className="mx-auto w-11/12 mt-6 flex justify-start space-x-3">
+									<div class="flex">
+										<h2 className="text-gray-800 mb-2 text-2xl font-semibold mr-5	">
+											Overview from
+										</h2>
+										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
+											Start:
+										</span>
+										<DatePicker
+											selected={this.state.StartingDate}
+											onChange={(date) => this.setState({ StartingDate: date })}
+											value={this.state.StartingDate}
+											closeOnScroll={true}
+											placeholderText="Starting Date"
+											className="px-4 py-2 border-2 rounded-r"
+										/>
+									</div>
+									<div class="flex">
+										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
+											End:
+										</span>
+										<DatePicker
+											selected={this.state.EndingDate}
+											onChange={(date) =>
+												this.setState({
+													EndingDate: date,
+													occupied: true,
+												})
+											}
+											value={this.state.EndingDate}
+											closeOnScroll={true}
+											placeholderText="Ending Date"
+											className="px-4 py-2 border-2 rounded-r"
+										/>
+									</div>
+
+									{/* <button
+							type="submit"
+							class="text-white bg-gray-800 px-4 py-2 rounded"
+						>
+							Fetch Inventory
+						</button> */}
+								</div>
 							</div>
 							<div className="chart">
 								<Line
 									data={{
-										labels: fetchInventoriesFiltered.map((x) => x.date),
+										labels: InventoriesBetweenDatesInputCombinedSameDate.map(
+											(x) => x.date
+										),
 										datasets: [
 											{
-												label: DateNow[1] + ' ' + DateNow[3] + ' Added Stock',
-												fill: false,
-												data: fetchInventoriesFiltered.map(
+												label: ' Added Stock',
+												fill: true,
+												data: InventoriesBetweenDatesInputCombinedSameDate.map(
 													(x) => x.added_stock
 												),
 												backgroundColor: '#3AAFA9',

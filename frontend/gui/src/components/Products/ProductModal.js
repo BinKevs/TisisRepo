@@ -30,11 +30,8 @@ const ProductModal = (props) => {
 		<>
 			<div class={modal ? 'h-screen ' : 'h-screen hidden'}>
 				<div class="mx-auto max-w-screen-lg h-full">
-					<div
-						className="z-20 absolute top-0 right-0 bottom-0 left-0"
-						id="modal"
-					>
-						<div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
+					<div className="z-20 absolute top-0 right-0 bottom-0 left-0">
+						<div class="absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
 						<div className="h-full overflow-auto w-full flex flex-col">
 							<div className="m-2 md:m-12">
 								<form

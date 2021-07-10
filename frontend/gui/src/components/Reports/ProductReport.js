@@ -6,7 +6,7 @@ import {
 	getProductList,
 	getCategoryList,
 } from '../../store/actions/product/products';
-
+let filteredProducts = [];
 let DateNow = Date().toLocaleString().split(' ');
 class ProductReport extends React.Component {
 	static propTypes = {
@@ -15,7 +15,7 @@ class ProductReport extends React.Component {
 		getProductList: PropTypes.func.isRequired,
 	};
 	state = {
-		category: '',
+		category: 'Select category',
 		dropdown: false,
 	};
 	componentDidMount() {
@@ -33,18 +33,17 @@ class ProductReport extends React.Component {
 	}
 
 	render() {
-		const lowercasedFilter = this.state.category;
-		const filteredData = this.props.products.filter((item) => {
+		filteredProducts = [];
+		filteredProducts = this.props.products.filter((item) => {
 			// return Object.keys(item).some((key) =>
 			// 	item[key].toString().includes(lowercasedFilter)
 			// );
 			{
-				return lowercasedFilter !== ''
-					? item.category_info.name === lowercasedFilter
+				return this.state.category !== ''
+					? item.category_info.name === this.state.category
 					: item;
 			}
 		});
-		console.log(filteredData);
 		return (
 			<>
 				<div class="flex-1 bg-gray-100 mt-28 md:mt-16 pb-24 md:pb-5">
@@ -162,12 +161,12 @@ class ProductReport extends React.Component {
 							<div className="chart">
 								<Bar
 									data={{
-										labels: filteredData.map((x) => x.name),
+										labels: filteredProducts.map((x) => x.name),
 										datasets: [
 											{
 												label: this.state.category + ' Stocks',
 												fill: false,
-												data: filteredData.map((x) => x.stock),
+												data: filteredProducts.map((x) => x.stock),
 												backgroundColor: '#3AAFA9',
 											},
 										],
