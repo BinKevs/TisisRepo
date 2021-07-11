@@ -2,8 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { numberWithCommas } from '../../../Helpers/functions';
 const PaymentCashModal = (props) => {
-	const { onChange, handleSetAmountTendered, handleClick, onModalToggle } =
-		props;
+	const {
+		onChange,
+		handleSetAmountTendered,
+		handleClick,
+		onModalToggle,
+		handleSetAmountPlus,
+	} = props;
 	const { totalAmount, amount_tendered, change, modal } = props.state;
 	return (
 		<>
@@ -32,7 +37,7 @@ const PaymentCashModal = (props) => {
 									</div>
 									<div class="relative z-0 w-full mb-5">
 										<input
-											type="text"
+											type="text text-center"
 											onChange={onChange}
 											value={amount_tendered > 0 ? amount_tendered : ''}
 											name="amount_tendered"
@@ -87,7 +92,74 @@ const PaymentCashModal = (props) => {
 											</strong>
 										</button>
 									</div>
-									<div className="flex items-center justify-center w-full">
+									<div className="flex flex-col lg:flex-row items-center justify-center w-full space-y-2  lg:space-x-4 lg:space-y-0 mt-4">
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(1)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200 rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">1</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(5)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">5</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(10)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">10</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(20)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">20</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(50)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">50</strong>
+										</button>
+									</div>
+									<div className="flex flex-col lg:flex-row items-center justify-center w-full space-y-2  lg:space-x-4 lg:space-y-0 mt-4">
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(100)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200 rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">100</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(200)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">200</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(500)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">500</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountPlus(1000)}
+											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+										>
+											₱<strong className="ml-1">1000</strong>
+										</button>
+									</div>
+									<div className="flex items-center justify-center w-full space-x-5">
 										<button
 											type="submit"
 											disabled={change < 0 ? true : false}
@@ -95,6 +167,12 @@ const PaymentCashModal = (props) => {
 											className="w-full my-6 focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-lg"
 										>
 											Confirm Payment
+										</button>
+										<button
+											type="submit"
+											className="w-full my-6 focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-lg"
+										>
+											Print Receipt
 										</button>
 									</div>
 									<div

@@ -73,7 +73,7 @@ class CartIndex extends React.Component {
 			this.props.cartItems.map(
 				(item) => (
 					(VariableTotalAmount += item.price * item.quantity),
-					(Variablequantity += item.quantity)
+					(Variablequantity += parseInt(item.quantity))
 				)
 			);
 			this.setState({

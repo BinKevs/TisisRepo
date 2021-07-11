@@ -9,9 +9,12 @@ import {
 	updateInventory,
 } from '../../store/actions/inventory/inventories';
 import { getSupplierList } from '../../store/actions/supplier/suppliers';
-import { getProductList } from '../../store/actions/product/products';
+import {
+	getProductList,
+	getCategoryList,
+} from '../../store/actions/product/products';
 import InventoryModal from './InventoryModal';
-
+import DatePicker from 'react-datepicker';
 import ExportTable from '../Layouts/ExportTable';
 let EditButtonIsClicked = false;
 let ItemAdded = false;
@@ -35,6 +38,7 @@ class InventorySettingIndex extends React.Component {
 		inventoryID: 0,
 		modal: false,
 		table_export_modal: false,
+		StartingDate: '',
 	};
 
 	onChange = (e) => {
@@ -66,6 +70,7 @@ class InventorySettingIndex extends React.Component {
 		this.props.getInventoryList();
 		this.props.getSupplierList();
 		this.props.getProductList();
+		this.props.getCategoryList();
 		// this.props.getInventory(1);
 	}
 
@@ -258,13 +263,19 @@ class InventorySettingIndex extends React.Component {
 											<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Inventory No.
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
 												Product
+												<select class="w-full h-8 border rounded-lg text-xs my-2">
+													<option>Select Category</option>
+													{this.props.categories.map((category) => (
+														<option>{category.name} </option>
+													))}
+												</select>
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Stock Added
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
 												Supplier
 											</th>
 											{/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
@@ -272,11 +283,21 @@ class InventorySettingIndex extends React.Component {
 									<i class="fal fa-arrow-up fa-lg"></i>
 									<i class="fal fa-arrow-down"></i>
 								</th> */}
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-												Date
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
+												<div>Date</div>
+												<DatePicker
+													selected={this.state.StartingDate}
+													onChange={(date) =>
+														this.setState({ StartingDate: date })
+													}
+													value={this.state.StartingDate}
+													closeOnScroll={true}
+													placeholderText="Select Date"
+													className="my-1 px-1 py-1 border-2 rounded-l"
+												/>
 											</th>
 
-											<td className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+											<td className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-right text-sm tracking-normal leading-4">
 												More
 											</td>
 										</tr>
@@ -387,6 +408,7 @@ const mapStateToProps = (state) => ({
 	inventory: state.inventories.inventory,
 	suppliers: state.suppliers.suppliers,
 	products: state.products.products,
+	categories: state.products.categories,
 });
 
 export default connect(mapStateToProps, {
@@ -397,4 +419,5 @@ export default connect(mapStateToProps, {
 	getInventory,
 	deleteInventory,
 	updateInventory,
+	getCategoryList,
 })(InventorySettingIndex);

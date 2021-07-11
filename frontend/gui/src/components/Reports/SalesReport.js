@@ -29,6 +29,8 @@ class SalesReport extends React.Component {
 		EndingDate: '',
 		category: 'Select category',
 		dropdown: false,
+		occupied: false,
+		occupiedDropDown: false,
 	};
 
 	componentDidMount() {
@@ -42,6 +44,7 @@ class SalesReport extends React.Component {
 			this.setState({
 				category: CategoryName,
 				dropdown: !this.state.dropdown,
+				occupiedDropDown: true,
 			});
 		};
 	}
@@ -304,7 +307,18 @@ class SalesReport extends React.Component {
 					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
 		}, Object.create(null));
 
-		console.log(ThisWeekTransactions);
+		if (this.state.EndingDate === null) {
+			this.setState({
+				occupied: false,
+				EndingDate: '',
+			});
+		}
+		if (this.state.category === 'Select category') {
+			this.setState({
+				occupiedDropDown: false,
+				category: 'Select Category',
+			});
+		}
 		return (
 			<>
 				<div class="flex-1 bg-gray-100 mt-28 md:mt-16 pb-24 md:pb-5">
@@ -324,7 +338,24 @@ class SalesReport extends React.Component {
 						</div>
 					</div>
 
-					<div className="mx-auto w-11/12 mt-6 p-3">
+					<div
+						className={
+							!this.state.occupied
+								? 'mx-auto w-11/12 mt-6 relative'
+								: 'mx-auto w-11/12 mt-6 p-3'
+						}
+					>
+						{!this.state.occupied ? (
+							<>
+								{/* <div class="absolute w-full h-full z-25 bg-gray-900 opacity-50"></div> */}
+								<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 font-medium text-gray-900 text-center text-3xl">
+									<div>No data available!</div> Please select a starting date
+									and ending date in the upper right corner.
+								</div>
+							</>
+						) : (
+							''
+						)}
 						<div className="bg-white shadow-lg p-4">
 							<div className="relative w-full max-w-full flex-grow">
 								<h6 className="uppercase text-gray-600 mb-1 text-sm font-semibold">
@@ -353,7 +384,9 @@ class SalesReport extends React.Component {
 										</span>
 										<DatePicker
 											selected={this.state.EndingDate}
-											onChange={(date) => this.setState({ EndingDate: date })}
+											onChange={(date) =>
+												this.setState({ EndingDate: date, occupied: true })
+											}
 											value={this.state.EndingDate}
 											closeOnScroll={true}
 											placeholderText="Ending Date"
@@ -548,7 +581,24 @@ class SalesReport extends React.Component {
 						</div>
 					</div>
 
-					<div className="mx-auto w-11/12 mt-6 p-3">
+					<div
+						className={
+							!this.state.occupiedDropDown
+								? 'mx-auto w-11/12 mt-6 relative'
+								: 'mx-auto w-11/12 mt-6 p-3'
+						}
+					>
+						{!this.state.occupiedDropDown ? (
+							<>
+								{/* <div class="absolute w-full h-full z-25 bg-gray-900 opacity-50"></div> */}
+								<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 font-medium text-gray-900 text-center text-3xl">
+									<div>No data available!</div> Please select a starting date
+									and ending date in the upper right corner.
+								</div>
+							</>
+						) : (
+							''
+						)}
 						<div className="bg-white shadow-lg p-4">
 							<div className="relative w-full max-w-full flex-grow">
 								<h6 className="uppercase text-gray-600 mb-3 text-sm font-semibold">
@@ -569,7 +619,7 @@ class SalesReport extends React.Component {
 													<button
 														onClick={() => {
 															this.setState({
-																category: '',
+																category: 'Select category',
 															});
 														}}
 														class="cursor-pointer w-6 h-full flex items-center text-gray-400 outline-none focus:outline-none"

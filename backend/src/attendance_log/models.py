@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 # Create your models here.
 class Attendance_Log(models.Model):
-    attendance_log_id = models.CharField(max_length=255, null=False, default="None")
+    attendance_log_id = models.CharField(max_length=255, null=True)
     account = models.ForeignKey(
         User, related_name="user_accouunt_attendance_log", on_delete=models.CASCADE, null=True)
     login_at = models.DateTimeField(null=True)

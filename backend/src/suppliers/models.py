@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 class Supplier(models.Model):
-    supplier_id = models.CharField(max_length=255, null=False, default="None")
+    supplier_id = models.CharField(max_length=255, null=True)
     name = models.CharField(max_length=100, unique=True)
     address = models.CharField(max_length=300, unique=True)
     phone_number = models.CharField(max_length=100,null=False, blank=False, unique=True)

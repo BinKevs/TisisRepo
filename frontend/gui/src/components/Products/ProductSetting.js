@@ -15,7 +15,7 @@ import ProductModal from './ProductModal';
 let products = [];
 let EditButtonIsClicked = false;
 let isImageChanged = false;
-let ItemAdded = false;
+let isItemAdded = false;
 class ProductSetting extends React.Component {
 	static propTypes = {
 		products: PropTypes.array.isRequired,
@@ -95,9 +95,9 @@ class ProductSetting extends React.Component {
 			});
 			this.props.getProductList();
 		}
-		if (ItemAdded === true) {
+		if (isItemAdded === true) {
 			this.props.getProductList();
-			ItemAdded = false;
+			isItemAdded = false;
 		}
 	}
 	//this will sent the updated product in the this.props.updateProduct to the action and will reset the state
@@ -166,7 +166,7 @@ class ProductSetting extends React.Component {
 		});
 		isImageChanged = false;
 		this.ModalFunction();
-		ItemAdded = true;
+		isItemAdded = true;
 		this.props.getProductList();
 	};
 
@@ -318,14 +318,20 @@ class ProductSetting extends React.Component {
 											<th className="pl-12 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Item No.
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-1/5">
 												Item Name
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Price
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-												Category
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
+												Category{' '}
+												<select class="w-full h-8 border rounded-lg text-xs my-2">
+													<option>Select Category</option>
+													{this.props.categories.map((category) => (
+														<option>{category.name} </option>
+													))}
+												</select>
 											</th>
 											{/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												<span>Date</span>
@@ -338,7 +344,7 @@ class ProductSetting extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Stock
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-1/5">
 												Description
 											</th>
 											<td className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">

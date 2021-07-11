@@ -7,7 +7,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 class Transaction_item(models.Model):
-    transaction_item_id = models.CharField(max_length=255, null=False, default="None")
+    transaction_item_id = models.CharField(max_length=255, null=True)
     product = models.ForeignKey(
         Product, related_name="product_transaction_item_set", on_delete=models.CASCADE, null=True)
     transaction = models.ForeignKey(

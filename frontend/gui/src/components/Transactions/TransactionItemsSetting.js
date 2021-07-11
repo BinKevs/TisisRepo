@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getTransactionItemList } from '../../store/actions/transaction/transactions.js';
+import DatePicker from 'react-datepicker';
 let TransactionItems = [];
 class TransactionItemsSettingIndex extends React.Component {
 	static propTypes = {
@@ -10,6 +11,7 @@ class TransactionItemsSettingIndex extends React.Component {
 	};
 	state = {
 		search: '',
+		StartingDate: '',
 	};
 	setSeeMore(transaction_items_id) {
 		return (e) => {
@@ -118,8 +120,18 @@ class TransactionItemsSettingIndex extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Price
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-												Date
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
+												<div>Date</div>
+												<DatePicker
+													selected={this.state.StartingDate}
+													onChange={(date) =>
+														this.setState({ StartingDate: date })
+													}
+													value={this.state.StartingDate}
+													closeOnScroll={true}
+													placeholderText="Select Date"
+													className="my-1 px-1 py-1 border-2 rounded-l"
+												/>
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Quantity

@@ -4,7 +4,7 @@ from django.utils import timezone
 
 
 class Category(models.Model):
-    category_id = models.CharField(max_length=255, null=True, default=None)
+    category_id = models.CharField(max_length=255, null=True)
     name = models.CharField(max_length=100, unique=True)
     def save(self,*args, **kwargs):
        if not self.category_id:

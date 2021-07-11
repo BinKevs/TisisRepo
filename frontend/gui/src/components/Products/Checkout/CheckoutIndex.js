@@ -96,6 +96,14 @@ class CheckoutIndex extends React.Component {
 			});
 		};
 	};
+	handleSetAmountPlus = (Amount) => {
+		return (event) => {
+			event.preventDefault();
+			this.setState({
+				amount_tendered: this.state.amount_tendered + parseInt(Amount),
+			});
+		};
+	};
 
 	// This will load the cart items to be rendered and also to compute for the total amount, sub total and the tax;
 	componentDidMount() {
@@ -325,6 +333,7 @@ class CheckoutIndex extends React.Component {
 					state={this.state}
 					onChange={this.onChange}
 					handleSetAmountTendered={this.handleSetAmountTendered}
+					handleSetAmountPlus={this.handleSetAmountPlus}
 					handleClick={this.handleClick}
 					onModalToggle={this.onModalToggle}
 				/>

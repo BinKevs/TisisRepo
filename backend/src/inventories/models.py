@@ -9,7 +9,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 class Inventory(models.Model):
-    inventory_id = models.CharField(max_length=255, null=False, default="None")
+    inventory_id = models.CharField(max_length=255, null=True)
     new_stock = models.IntegerField()
     supplier = models.ForeignKey(
         Supplier, related_name="supplier_set", on_delete=models.CASCADE, null=True)
