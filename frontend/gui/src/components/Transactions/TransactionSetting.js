@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { getTransactionList } from '../../store/actions/transaction/transactions.js';
 import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
+let filteredData = [];
+let Transactions = [];
 class TransactionSettingIndex extends React.Component {
 	static propTypes = {
 		transanctions: PropTypes.array.isRequired,
@@ -12,7 +14,7 @@ class TransactionSettingIndex extends React.Component {
 
 	state = {
 		search: '',
-		StartingDate: '',
+		InputDate: '',
 	};
 	setSeeMore(transaction_id) {
 		return (e) => {
@@ -20,18 +22,59 @@ class TransactionSettingIndex extends React.Component {
 			document.getElementById(transaction_id).classList.toggle('hidden');
 		};
 	}
-	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+	onChange = (e) =>
+		this.setState({ [e.target.name]: e.target.value, InputDate: '' });
 	componentDidMount() {
 		this.props.getTransactionList();
 	}
 	render() {
 		//returning the search filtered
+
+		Transactions = [];
+		this.props.transactions.map((trans) =>
+			Transactions.push({
+				id: trans.id,
+				transaction_id: trans.transaction_id,
+				creator: trans.creator_info.name.split(' ')[0],
+				created_at: trans.created_at,
+				totalAmount: trans.totalAmount,
+				amount_tendered: trans.amount_tendered,
+				change: trans.change,
+				quantity: trans.quantity,
+				mode_of_payment: trans.mode_of_payment,
+			})
+		);
+		filteredData = [];
 		const lowercasedFilter = this.state.search.toLowerCase();
-		const filteredData = this.props.transactions.filter((item) => {
+		filteredData = Transactions.filter((item) => {
 			return Object.keys(item).some((key) =>
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
+		if (this.state.InputDate !== null) {
+			let InputDateDateSeparated = this.state.InputDate.toString().split(' ');
+			if (this.state.InputDate === '') {
+				filteredData = Transactions.filter((item) => {
+					return Object.keys(item).some((key) =>
+						item[key].toString().includes('')
+					);
+				});
+			} else {
+				filteredData = Transactions.filter((item) => {
+					return Object.keys(item).some((key) =>
+						item[key]
+							.toString()
+							.includes(
+								InputDateDateSeparated[1] +
+									' ' +
+									InputDateDateSeparated[2] +
+									' ' +
+									InputDateDateSeparated[3]
+							)
+					);
+				});
+			}
+		}
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -122,11 +165,11 @@ class TransactionSettingIndex extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
 												<div>Date</div>
 												<DatePicker
-													selected={this.state.StartingDate}
+													selected={this.state.InputDate}
 													onChange={(date) =>
-														this.setState({ StartingDate: date })
+														this.setState({ InputDate: date })
 													}
-													value={this.state.StartingDate}
+													value={this.state.InputDate}
 													closeOnScroll={true}
 													placeholderText="Select Date"
 													className="my-1 px-1 py-1 border-2 rounded-l"
@@ -164,9 +207,7 @@ class TransactionSettingIndex extends React.Component {
 													{transaction.transaction_id}
 												</td>
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-													{transaction.creator == null
-														? null
-														: transaction.creator_info.name.split(' ')[0]}
+													{transaction.creator}
 												</td>
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
 													{transaction.created_at}

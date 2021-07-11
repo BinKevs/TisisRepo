@@ -13,6 +13,7 @@ import {
 import { getSupplierList } from '../../store/actions/supplier/suppliers';
 import ProductModal from './ProductModal';
 let products = [];
+let filteredData = [];
 let EditButtonIsClicked = false;
 let isImageChanged = false;
 let isItemAdded = false;
@@ -28,19 +29,28 @@ class ProductSetting extends React.Component {
 		updateProduct: PropTypes.func.isRequired,
 	};
 	state = {
-		name: '',
-		CategoryName: '',
-		supplier: 0,
+		productName: '',
+		CategoryNameForCategoryAdd: '',
+		supplierID: 0,
 		description: '',
 		price: 0,
-		category: 0,
+		categoryID: 0,
 		stock: 0,
 		image: null,
 		productID: 0,
 		search: '',
 		urlFile: '',
 		modal: false,
+		categoryForDropDownSelect: '',
 	};
+	handleCategoryDropDown(CategoryName) {
+		return (event) => {
+			event.preventDefault();
+			this.setState({
+				categoryForDropDownSelect: CategoryName,
+			});
+		};
+	}
 	componentDidMount() {
 		this.props.getProductList();
 		this.props.getSupplierList();
@@ -68,12 +78,12 @@ class ProductSetting extends React.Component {
 	// Submitting the name in the add category action
 	onSubmitCategory = (event) => {
 		event.preventDefault();
-		let name = this.state.CategoryName;
-		const category = { name };
+		let name = this.state.CategoryNameForCategoryAdd;
+		const categoryForCategoryAdd = { name };
 
-		this.props.addCategory(category);
+		this.props.addCategory(categoryForCategoryAdd);
 		this.setState({
-			name: '',
+			CategoryNameForCategoryAdd: '',
 		});
 	};
 	// when the isEditButtonClicked status is change this.props.product
@@ -81,14 +91,22 @@ class ProductSetting extends React.Component {
 	// then we will set it to the state and being passed on the formupdate component
 	componentDidUpdate(prevProps, prevState) {
 		if (this.props.product != prevProps.product) {
-			const { id, name, description, price, supplier, category, stock, image } =
-				this.props.product;
-			this.setState({
+			const {
+				id,
 				name,
 				description,
 				price,
-				supplier,
-				category,
+				supplierID,
+				categoryID,
+				stock,
+				image,
+			} = this.props.product;
+			this.setState({
+				productName: name,
+				description,
+				price,
+				supplierID,
+				categoryID,
 				stock,
 				image,
 				productID: id,
@@ -104,15 +122,22 @@ class ProductSetting extends React.Component {
 	onUpdateSubmit = (productID) => {
 		return (e) => {
 			e.preventDefault();
-			const { name, description, price, category, supplier, stock, image } =
-				this.state;
+			const {
+				productName,
+				description,
+				price,
+				categoryID,
+				supplierID,
+				stock,
+				image,
+			} = this.state;
 			const formData = new FormData();
 
-			formData.append('name', name);
+			formData.append('name', productName);
 			formData.append('description', description);
 			formData.append('price', price);
-			formData.append('category', category);
-			formData.append('supplier', supplier);
+			formData.append('category', categoryID);
+			formData.append('supplier', supplierID);
 			formData.append('stock', stock);
 			if (isImageChanged) {
 				formData.append('image', image);
@@ -120,11 +145,11 @@ class ProductSetting extends React.Component {
 			console.log(productID, formData);
 			this.props.updateProduct(productID, formData);
 			this.setState({
-				name: '',
+				productName: '',
 				description: '',
 				price: 0,
-				supplier: 0,
-				category: 0,
+				supplierID: 0,
+				categoryID: 0,
 				new_stock: 0,
 				stock: 0,
 				image: null,
@@ -140,26 +165,33 @@ class ProductSetting extends React.Component {
 	// sending the product that will be added to this.props.addProduct in the actions also reset the state
 	onAddSubmit = (e) => {
 		e.preventDefault();
-		const { name, description, price, category, supplier, stock, image } =
-			this.state;
+		const {
+			productName,
+			description,
+			price,
+			categoryID,
+			supplierID,
+			stock,
+			image,
+		} = this.state;
 		const action_done = 'Product Added';
 		const formData = new FormData();
 
-		formData.append('name', name);
+		formData.append('name', productName);
 		formData.append('description', description);
 		formData.append('price', price);
-		formData.append('category', category);
-		formData.append('supplier', supplier);
+		formData.append('category', categoryID);
+		formData.append('supplier', supplierID);
 		formData.append('stock', stock);
 		formData.append('image', image);
 		formData.append('action_done', action_done);
 		this.props.addProduct(formData);
 		this.setState({
-			name: '',
+			productName: '',
 			description: '',
 			price: 0,
-			supplier: 0,
-			category: 0,
+			supplierID: 0,
+			categoryID: 0,
 			new_stock: 0,
 			stock: 0,
 			image: null,
@@ -174,11 +206,11 @@ class ProductSetting extends React.Component {
 	onEditCloseButton = (event) => {
 		event.preventDefault();
 		this.setState({
-			name: '',
+			productName: '',
 			description: '',
 			price: 0,
-			supplier: 0,
-			category: 0,
+			supplierID: 0,
+			categoryID: 0,
 			new_stock: 0,
 			stock: 0,
 			image: null,
@@ -213,6 +245,7 @@ class ProductSetting extends React.Component {
 	render() {
 		// destructure the products that came from the reducer so it will be easier to filter and show
 		products = [];
+		filteredData = [];
 		this.props.products.map((product) =>
 			products.push({
 				id: product.id,
@@ -220,19 +253,35 @@ class ProductSetting extends React.Component {
 				name: product.name,
 				price: product.price,
 				category: product.category_info.name,
-				supplier: product.supplier_info.name,
+				supplierID: product.supplier_info.name,
 				stock: product.stock,
 				description: product.description,
 			})
 		);
 		// This will filter the data from inventories array filtered at the top
 		const lowercasedFilter = this.state.search.toLowerCase();
-		const filteredData = products.filter((item) => {
+		filteredData = products.filter((item) => {
 			return Object.keys(item).some((key) =>
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
-		console.log(filteredData);
+		if (this.state.categoryForDropDownSelect !== '') {
+			if (this.state.categoryForDropDownSelect === 'Select Category') {
+				filteredData = products.filter((item) => {
+					return Object.keys(item).some((key) =>
+						item[key].toString().includes('')
+					);
+				});
+			} else {
+				filteredData = products.filter((item) => {
+					return Object.keys(item).some((key) =>
+						item[key].toString().includes(this.state.categoryForDropDownSelect)
+					);
+				});
+			}
+		}
+
+		console.log(this.state.categoryForDropDownSelect);
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -326,10 +375,16 @@ class ProductSetting extends React.Component {
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
 												Category{' '}
-												<select class="w-full h-8 border rounded-lg text-xs my-2">
+												<select
+													onChange={this.onChange}
+													name="categoryForDropDownSelect"
+													class="w-full h-8 border rounded-lg text-xs my-2"
+												>
 													<option>Select Category</option>
 													{this.props.categories.map((category) => (
-														<option>{category.name} </option>
+														<option value={category.name}>
+															{category.name}{' '}
+														</option>
 													))}
 												</select>
 											</th>

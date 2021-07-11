@@ -2,8 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getTransactionItemList } from '../../store/actions/transaction/transactions.js';
+import { getProductList } from '../../store/actions/product/products';
 import DatePicker from 'react-datepicker';
 let TransactionItems = [];
+let filteredData = [];
 class TransactionItemsSettingIndex extends React.Component {
 	static propTypes = {
 		transaction_items: PropTypes.array.isRequired,
@@ -11,7 +13,8 @@ class TransactionItemsSettingIndex extends React.Component {
 	};
 	state = {
 		search: '',
-		StartingDate: '',
+		InputDate: '',
+		productForDropDownSelect: '',
 	};
 	setSeeMore(transaction_items_id) {
 		return (e) => {
@@ -19,11 +22,14 @@ class TransactionItemsSettingIndex extends React.Component {
 			document.getElementById(transaction_items_id).classList.toggle('hidden');
 		};
 	}
+
 	componentDidMount() {
 		this.props.getTransactionItemList();
+		this.props.getProductList();
 	}
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 	render() {
+		filteredData = [];
 		//destructuring the dictionary for searching/ fetching purposes
 		TransactionItems = [];
 		this.props.transaction_items.map((trans) =>
@@ -36,13 +42,55 @@ class TransactionItemsSettingIndex extends React.Component {
 				quantity: trans.quantity,
 			})
 		);
-		//returning the filtered data from search
+		// returning the filtered data from search
 		const lowercasedFilter = this.state.search.toLowerCase();
-		const filteredData = TransactionItems.filter((item) => {
+		filteredData = TransactionItems.filter((item) => {
 			return Object.keys(item).some((key) =>
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
+
+		if (this.state.productForDropDownSelect !== '') {
+			if (this.state.productForDropDownSelect === 'Select Product') {
+				if (this.state.InputDate !== null) {
+					let InputDateDateSeparated =
+						this.state.InputDate.toString().split(' ');
+					if (this.state.InputDate === '') {
+						filteredData = TransactionItems.filter((item) => {
+							return Object.keys(item).some((key) =>
+								item[key].toString().includes('')
+							);
+						});
+					} else {
+						filteredData = TransactionItems.filter((item) => {
+							return Object.keys(item).some((key) =>
+								item[key]
+									.toString()
+									.includes(
+										InputDateDateSeparated[1] +
+											' ' +
+											InputDateDateSeparated[2] +
+											' ' +
+											InputDateDateSeparated[3]
+									)
+							);
+						});
+					}
+				}
+				// filteredData = TransactionItems.filter((item) => {
+				// 	return Object.keys(item).some((key) =>
+				// 		item[key].toString().includes('')
+				// 	);
+				// });
+			} else {
+				filteredData = TransactionItems.filter((item) => {
+					return Object.keys(item).some((key) =>
+						item[key].toString().includes(this.state.productForDropDownSelect)
+					);
+				});
+			}
+		}
+
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -114,8 +162,20 @@ class TransactionItemsSettingIndex extends React.Component {
 											<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Transaction Item ID
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-												Product Name
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
+												Product Name{' '}
+												<select
+													onChange={this.onChange}
+													name="productForDropDownSelect"
+													class="w-full h-8 border rounded-lg text-xs my-2"
+												>
+													<option>Select Product</option>
+													{this.props.products.map((productFetch) => (
+														<option value={productFetch.name}>
+															{productFetch.name}{' '}
+														</option>
+													))}
+												</select>
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Price
@@ -123,11 +183,11 @@ class TransactionItemsSettingIndex extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
 												<div>Date</div>
 												<DatePicker
-													selected={this.state.StartingDate}
+													selected={this.state.InputDate}
 													onChange={(date) =>
-														this.setState({ StartingDate: date })
+														this.setState({ InputDate: date })
 													}
-													value={this.state.StartingDate}
+													value={this.state.InputDate}
 													closeOnScroll={true}
 													placeholderText="Select Date"
 													className="my-1 px-1 py-1 border-2 rounded-l"
@@ -230,8 +290,10 @@ class TransactionItemsSettingIndex extends React.Component {
 }
 const mapStateToProps = (state) => ({
 	transaction_items: state.transactions.transaction_item_list,
+	products: state.products.products,
 });
 
 export default connect(mapStateToProps, {
 	getTransactionItemList,
+	getProductList,
 })(TransactionItemsSettingIndex);

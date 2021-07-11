@@ -15,11 +15,11 @@ const ProductModal = (props) => {
 		modal,
 	} = props;
 	const {
-		name,
+		productName,
 		description,
 		price,
-		category,
-		supplier,
+		categoryID,
+		supplierID,
 		stock,
 		image,
 		productID,
@@ -51,15 +51,15 @@ const ProductModal = (props) => {
 											<div class="relative z-0 w-full mb-5">
 												<input
 													type="text"
-													name="name"
+													name="productName"
 													required
-													value={name}
+													value={productName}
 													onChange={onChange}
 													placeholder=" "
 													class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
 												/>
 												<label
-													for="name"
+													for="productName"
 													class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
 												>
 													Name
@@ -110,36 +110,38 @@ const ProductModal = (props) => {
 													/>
 												)}
 											</div>
-											<div class="w-full mb-5">
+											{/* <div class="w-full mb-5">
 												<button className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm">
 													Add Category
 												</button>
-											</div>
+											</div> */}
 											<div class="relative z-0 w-full mb-5">
 												<label class="block my-2">Select Category</label>
 												<div class="relative inline-block w-full text-gray-700">
 													<select
 														onChange={onChange}
-														name="category"
+														name="categoryID"
 														required
 														class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
 													>
-														{category === 0 ? (
+														{categoryID === 0 ? (
 															<option selected>
 																Open this to select category
 															</option>
 														) : (
 															''
 														)}
-														{categories.map((category1) => (
+														{categories.map((categoryItem) => (
 															<option
 																selected={
-																	category1.id === category ? 'selected' : ''
+																	categoryItem.id === categoryID
+																		? 'selected'
+																		: ''
 																}
-																value={category1.id}
-																key={category1.id}
+																value={categoryItem.id}
+																key={categoryItem.id}
 															>
-																{category1.name}
+																{categoryItem.name}
 															</option>
 														))}
 													</select>
@@ -150,12 +152,12 @@ const ProductModal = (props) => {
 												<div class="relative inline-block w-full text-gray-700">
 													<select
 														onChange={onChange}
-														name="supplier"
+														name="supplierID"
 														required
 														class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
 														placeholder="Regular input"
 													>
-														{supplier === 0 ? (
+														{supplierID === 0 ? (
 															<option selected>
 																Open this to select supplier
 															</option>
@@ -165,7 +167,9 @@ const ProductModal = (props) => {
 														{suppliers.map((supplierItem) => (
 															<option
 																selected={
-																	supplierItem.id === supplier ? 'selected' : ''
+																	supplierItem.id === supplierID
+																		? 'selected'
+																		: ''
 																}
 																value={supplierItem.id}
 																className="text-dark"

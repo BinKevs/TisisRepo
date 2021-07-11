@@ -19,6 +19,7 @@ import ExportTable from '../Layouts/ExportTable';
 let EditButtonIsClicked = false;
 let ItemAdded = false;
 let inventories = [];
+let filteredData = [];
 class InventorySettingIndex extends React.Component {
 	static propTypes = {
 		inventories: PropTypes.array.isRequired,
@@ -39,6 +40,7 @@ class InventorySettingIndex extends React.Component {
 		modal: false,
 		table_export_modal: false,
 		StartingDate: '',
+		productForDropDownSelect: '',
 	};
 
 	onChange = (e) => {
@@ -155,6 +157,7 @@ class InventorySettingIndex extends React.Component {
 	render() {
 		// destructure the inventories that came from the reducer so it will be easier to filter and show
 		inventories = [];
+		filteredData = [];
 		this.props.inventories.map((inventory) =>
 			inventories.push({
 				id: inventory.id,
@@ -167,11 +170,26 @@ class InventorySettingIndex extends React.Component {
 		);
 		// This will filter the data from inventories array filtered at the top
 		const lowercasedFilter = this.state.search.toLowerCase();
-		const filteredData = inventories.filter((item) => {
+		filteredData = inventories.filter((item) => {
 			return Object.keys(item).some((key) =>
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
+		if (this.state.productForDropDownSelect !== '') {
+			if (this.state.productForDropDownSelect === 'Select Product') {
+				filteredData = inventories.filter((item) => {
+					return Object.keys(item).some((key) =>
+						item[key].toString().includes('')
+					);
+				});
+			} else {
+				filteredData = inventories.filter((item) => {
+					return Object.keys(item).some((key) =>
+						item[key].toString().includes(this.state.productForDropDownSelect)
+					);
+				});
+			}
+		}
 		console.log(this.props.suppliers);
 		return (
 			<>
@@ -264,11 +282,17 @@ class InventorySettingIndex extends React.Component {
 												Inventory No.
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
-												Product
-												<select class="w-full h-8 border rounded-lg text-xs my-2">
-													<option>Select Category</option>
-													{this.props.categories.map((category) => (
-														<option>{category.name} </option>
+												Product Name{' '}
+												<select
+													onChange={this.onChange}
+													name="productForDropDownSelect"
+													class="w-full h-8 border rounded-lg text-xs my-2"
+												>
+													<option>Select Product</option>
+													{this.props.products.map((productFetch) => (
+														<option value={productFetch.name}>
+															{productFetch.name}{' '}
+														</option>
 													))}
 												</select>
 											</th>

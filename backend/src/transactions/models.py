@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Transaction(models.Model):
     transaction_id = models.CharField(max_length=255, null=True)
     creator = models.ForeignKey(
-        User, related_name="creator_transaction", on_delete=models.CASCADE, null=True)
+        User, related_name="creator_transaction", on_delete=models.CASCADE, null=False)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=True)
     totalAmount = models.DecimalField(
@@ -14,7 +14,7 @@ class Transaction(models.Model):
     amount_tendered = models.DecimalField(max_digits=12, decimal_places=2)
     change = models.DecimalField(max_digits=12, decimal_places=2,validators=[MinValueValidator(0.00)])
     quantity = models.IntegerField()
-    mode_of_payment = models.CharField(max_length=255, null=True, default=None)
+    mode_of_payment = models.CharField(max_length=255, null=False)
     def __str__(self):
         return str(self.id)
     def save(self,*args, **kwargs):
