@@ -317,7 +317,7 @@ class CheckoutIndex extends React.Component {
 						content={() => this.componentRef}
 					/>
 					;
-					<div className="hidden">
+					<div className="visible">
 						<ReceiptContent
 							cartItems={cartItems}
 							Subtotal={numberWithCommas(Subtotal)}

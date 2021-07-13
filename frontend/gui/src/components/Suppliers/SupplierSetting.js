@@ -130,10 +130,15 @@ class SupplierSettingIndex extends React.Component {
 		let filteredData;
 
 		// This will filter the data from supplier
-		filteredData = this.props.suppliers.filter((item) => {
-			return Object.keys(item).some((key) =>
-				item[key].toString().toLowerCase().includes(lowercasedFilter)
-			);
+		filteredData = this.props.suppliers.filter((supplier) => {
+			if (lowercasedFilter === '') {
+				return supplier;
+			} else {
+				return supplier.name
+					.toString()
+					.toLowerCase()
+					.includes(lowercasedFilter);
+			}
 		});
 
 		//This will change the state if the state.search is not equal to " " where it getting the info from suppliersWithPagination to suppliers to search all data

@@ -40,15 +40,6 @@ export class ReceiptContent extends React.PureComponent {
 								' ' +
 								DateNow[4]}
 						</div>
-
-						{/* <div class="mb-1 flex items-center">
-							<label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">
-								Due date
-							</label>
-							<span class="mr-4 inline-block">:</span>
-							
-							123123
-						</div> */}
 					</div>
 					<div class="pr-5">
 						{/* <div class="w-32 h-32 mb-1 overflow-hidden">

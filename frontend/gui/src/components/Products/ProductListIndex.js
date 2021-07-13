@@ -9,7 +9,7 @@ import {
 import { addToCart } from '../../store/actions/cart/cartActions';
 
 let products = [];
-
+let filteredData = [];
 class ProductListIndex extends React.Component {
 	static propTypes = {
 		products: PropTypes.array.isRequired,
@@ -45,6 +45,7 @@ class ProductListIndex extends React.Component {
 
 	render() {
 		products = [];
+		filteredData = [];
 		this.props.products.map((product) =>
 			products.push({
 				id: product.id,
@@ -58,10 +59,12 @@ class ProductListIndex extends React.Component {
 			})
 		);
 		const lowercasedFilter = this.state.search.toLowerCase();
-		const filteredData = products.filter((item) => {
-			return Object.keys(item).some((key) =>
-				item[key].toString().toLowerCase().includes(lowercasedFilter)
-			);
+		filteredData = products.filter((item) => {
+			if (lowercasedFilter === '') {
+				return item;
+			} else {
+				return item.name.toString().toLowerCase().includes(lowercasedFilter);
+			}
 		});
 		return (
 			<>
@@ -133,7 +136,7 @@ class ProductListIndex extends React.Component {
 									</div>
 								</div>
 							</div>
-							<div class="mt-8 grid 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-5 sm:grid-cols-2  gap-5">
+							<div class="mt-8 grid 2xl:grid-cols-5 xl:grid-cols-3 lg:grid-cols-4 md:grid-cols-5 sm:grid-cols-2  gap-5">
 								{filteredData.map((product) => (
 									<div
 										class="rounded bg-white border-gray-200 shadow-md overflow-hidden relative hover:shadow-lg img-hover"

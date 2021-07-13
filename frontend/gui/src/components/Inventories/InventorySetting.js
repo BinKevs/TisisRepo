@@ -15,7 +15,11 @@ import {
 } from '../../store/actions/product/products';
 import InventoryModal from './InventoryModal';
 import DatePicker from 'react-datepicker';
-import ExportTable from '../Layouts/ExportTable';
+// import ExportTable from '../Layouts/ExportTable';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import ReactToPrint from 'react-to-print';
+import { InventoryTablePrint } from './InventoryTablePrint';
+
 let EditButtonIsClicked = false;
 let ItemAdded = false;
 let inventories = [];
@@ -39,7 +43,7 @@ class InventorySettingIndex extends React.Component {
 		inventoryID: 0,
 		modal: false,
 		table_export_modal: false,
-		StartingDate: '',
+		InputDate: '',
 		productForDropDownSelect: '',
 	};
 
@@ -171,25 +175,49 @@ class InventorySettingIndex extends React.Component {
 		// This will filter the data from inventories array filtered at the top
 		const lowercasedFilter = this.state.search.toLowerCase();
 		filteredData = inventories.filter((item) => {
-			return Object.keys(item).some((key) =>
-				item[key].toString().toLowerCase().includes(lowercasedFilter)
-			);
+			if (lowercasedFilter === '') {
+				return item;
+			} else {
+				return item.product.toString().toLowerCase().includes(lowercasedFilter);
+			}
 		});
-		if (this.state.productForDropDownSelect !== '') {
-			if (this.state.productForDropDownSelect === 'Select Product') {
-				filteredData = inventories.filter((item) => {
-					return Object.keys(item).some((key) =>
-						item[key].toString().includes('')
-					);
-				});
+		if (this.state.InputDate !== null) {
+			let InputDateDateSeparated = this.state.InputDate.toString().split(' ');
+			if (this.state.InputDate === '') {
+				if (this.state.productForDropDownSelect !== '') {
+					if (this.state.productForDropDownSelect === 'Select Product') {
+						filteredData = inventories.filter((item) => {
+							return Object.keys(item).some((key) =>
+								item[key].toString().includes('')
+							);
+						});
+					} else {
+						filteredData = inventories.filter((item) => {
+							return Object.keys(item).some((key) =>
+								item[key]
+									.toString()
+									.includes(this.state.productForDropDownSelect)
+							);
+						});
+					}
+				}
 			} else {
 				filteredData = inventories.filter((item) => {
 					return Object.keys(item).some((key) =>
-						item[key].toString().includes(this.state.productForDropDownSelect)
+						item[key]
+							.toString()
+							.includes(
+								InputDateDateSeparated[1] +
+									' ' +
+									InputDateDateSeparated[2] +
+									' ' +
+									InputDateDateSeparated[3]
+							)
 					);
 				});
 			}
 		}
+
 		console.log(this.props.suppliers);
 		return (
 			<>
@@ -283,7 +311,7 @@ class InventorySettingIndex extends React.Component {
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
 												Product Name{' '}
-												<select
+												{/* <select
 													onChange={this.onChange}
 													name="productForDropDownSelect"
 													class="w-full h-8 border rounded-lg text-xs my-2"
@@ -294,7 +322,7 @@ class InventorySettingIndex extends React.Component {
 															{productFetch.name}{' '}
 														</option>
 													))}
-												</select>
+												</select> */}
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Stock Added
@@ -310,11 +338,11 @@ class InventorySettingIndex extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
 												<div>Date</div>
 												<DatePicker
-													selected={this.state.StartingDate}
+													selected={this.state.InputDate}
 													onChange={(date) =>
-														this.setState({ StartingDate: date })
+														this.setState({ InputDate: date })
 													}
-													value={this.state.StartingDate}
+													value={this.state.InputDate}
 													closeOnScroll={true}
 													placeholderText="Select Date"
 													className="my-1 px-1 py-1 border-2 rounded-l"
@@ -419,10 +447,95 @@ class InventorySettingIndex extends React.Component {
 					EditButtonIsClicked={EditButtonIsClicked}
 					onEditCloseButton={this.onEditCloseButton}
 				/>
-				<ExportTable
-					table_export_modal={this.state.table_export_modal}
-					OnToggleExportTable={this.OnToggleExportTable}
-				/>
+				<div
+					class={
+						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
+					}
+				>
+					<div class="mx-auto max-w-screen-lg h-full">
+						<div
+							className="z-20 absolute top-0 right-0 bottom-0 left-0"
+							id="modal"
+						>
+							<div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
+							<div className="h-full overflow-auto w-1/2 mx-auto flex flex-col">
+								<div className="m-2 md:m-12">
+									<form class="mt-9">
+										<div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
+											<div class="text-left p-0 mb-8">
+												<div>
+													<i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{' '}
+													<h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
+														ABC Motor Parts
+													</h1>
+												</div>
+
+												<h1 class="text-gray-800 text-3xl font-medium">
+													Export to :{' '}
+												</h1>
+											</div>
+											<ReactHTMLTableToExcel
+												className="bg-green-600 h-12 rounded text-white w-full"
+												table="inventory-table"
+												filename="inventory-table"
+												sheet="inventory-table"
+												buttonText="Excel"
+											/>
+											<button className="bg-blue-500 h-12 rounded text-white w-full my-8">
+												Word
+											</button>
+											<div class="text-left p-0 mb-8">
+												<h1 class="text-gray-800 text-3xl font-medium">
+													Or print it :{' '}
+												</h1>
+											</div>
+											<ReactToPrint
+												trigger={() => {
+													// NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+													// to the root node of the returned component as it will be overwritten.
+													return (
+														<div className="text-white cursor-pointer bg-gray-500 w-full h-12 rounded flex items-center justify-center">
+															Print
+														</div>
+													);
+												}}
+												content={() => this.componentRef}
+											/>
+											<div
+												onClick={this.OnToggleExportTable}
+												className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
+											>
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													aria-label="Close"
+													className="icon icon-tabler icon-tabler-x"
+													width={35}
+													height={35}
+													viewBox="0 0 24 24"
+													strokeWidth="2.5"
+													stroke="currentColor"
+													fill="none"
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												>
+													<path stroke="none" d="M0 0h24v24H0z" />
+													<line x1={18} y1={6} x2={6} y2={18} />
+													<line x1={6} y1={6} x2={18} y2={18} />
+												</svg>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="hidden">
+					<InventoryTablePrint
+						inventories={filteredData}
+						ref={(el) => (this.componentRef = el)}
+					/>
+				</div>
 			</>
 		);
 	}

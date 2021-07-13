@@ -41,6 +41,7 @@ class InventoriesReport extends React.Component {
 	render() {
 		InventoriesDateSeparated = [];
 		InventoriesBewtweenDatesInput = [];
+		InventoriesBetweenDatesInputCombinedSameDate = [];
 		DatesBetweenInput = [];
 		this.props.inventories.map((filteredInventoryObject) =>
 			InventoriesDateSeparated.push({

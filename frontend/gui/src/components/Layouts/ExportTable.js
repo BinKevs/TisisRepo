@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+// import { InventoryTablePrint } from '../Inventories';
 const ExportTable = (props) => {
 	const { table_export_modal, OnToggleExportTable } = props;
 	return (
@@ -73,6 +74,12 @@ const ExportTable = (props) => {
 						</div>
 					</div>
 				</div>
+			</div>
+			<div className="hidden">
+				{/* <InventoryTablePrint
+					inventories={filteredData}
+					ref={(el) => (this.componentRef = el)}
+				/> */}
 			</div>
 		</>
 	);

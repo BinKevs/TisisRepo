@@ -535,11 +535,11 @@ class MainLayout extends React.Component {
 											<span
 												class={
 													TransactionsItemsNavBtn
-														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
+														? 'pb-1 lg:pb-0 text-xs align-middle lg:text-base text-white  block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs align-middle lg:text-base text-gray-400 hover:text-white block lg:inline-block'
 												}
 											>
-												Transaction Item's History
+												Transaction <div>Item's History</div>
 											</span>
 										</Link>
 									</li>

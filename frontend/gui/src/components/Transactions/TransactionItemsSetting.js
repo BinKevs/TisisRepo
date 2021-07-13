@@ -45,17 +45,20 @@ class TransactionItemsSettingIndex extends React.Component {
 		// returning the filtered data from search
 		const lowercasedFilter = this.state.search.toLowerCase();
 		filteredData = TransactionItems.filter((item) => {
-			return Object.keys(item).some((key) =>
-				item[key].toString().toLowerCase().includes(lowercasedFilter)
-			);
+			if (lowercasedFilter === '') {
+				return item;
+			} else {
+				return item.productName
+					.toString()
+					.toLowerCase()
+					.includes(lowercasedFilter);
+			}
 		});
-
-		if (this.state.productForDropDownSelect !== '') {
-			if (this.state.productForDropDownSelect === 'Select Product') {
-				if (this.state.InputDate !== null) {
-					let InputDateDateSeparated =
-						this.state.InputDate.toString().split(' ');
-					if (this.state.InputDate === '') {
+		if (this.state.InputDate !== null) {
+			let InputDateDateSeparated = this.state.InputDate.toString().split(' ');
+			if (this.state.InputDate === '') {
+				if (this.state.productForDropDownSelect !== '') {
+					if (this.state.productForDropDownSelect === 'Select Product') {
 						filteredData = TransactionItems.filter((item) => {
 							return Object.keys(item).some((key) =>
 								item[key].toString().includes('')
@@ -66,26 +69,23 @@ class TransactionItemsSettingIndex extends React.Component {
 							return Object.keys(item).some((key) =>
 								item[key]
 									.toString()
-									.includes(
-										InputDateDateSeparated[1] +
-											' ' +
-											InputDateDateSeparated[2] +
-											' ' +
-											InputDateDateSeparated[3]
-									)
+									.includes(this.state.productForDropDownSelect)
 							);
 						});
 					}
 				}
-				// filteredData = TransactionItems.filter((item) => {
-				// 	return Object.keys(item).some((key) =>
-				// 		item[key].toString().includes('')
-				// 	);
-				// });
 			} else {
 				filteredData = TransactionItems.filter((item) => {
 					return Object.keys(item).some((key) =>
-						item[key].toString().includes(this.state.productForDropDownSelect)
+						item[key]
+							.toString()
+							.includes(
+								InputDateDateSeparated[1] +
+									' ' +
+									InputDateDateSeparated[2] +
+									' ' +
+									InputDateDateSeparated[3]
+							)
 					);
 				});
 			}
@@ -164,7 +164,7 @@ class TransactionItemsSettingIndex extends React.Component {
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
 												Product Name{' '}
-												<select
+												{/* <select
 													onChange={this.onChange}
 													name="productForDropDownSelect"
 													class="w-full h-8 border rounded-lg text-xs my-2"
@@ -175,7 +175,7 @@ class TransactionItemsSettingIndex extends React.Component {
 															{productFetch.name}{' '}
 														</option>
 													))}
-												</select>
+												</select> */}
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Price
