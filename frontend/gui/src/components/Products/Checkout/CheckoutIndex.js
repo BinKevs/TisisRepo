@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { PayPalButton } from 'react-paypal-button-v2';
-
+import swal from 'sweetalert';
 import {
 	removeFromCart,
 	changeCartValue,
@@ -41,26 +41,45 @@ class CheckoutIndex extends React.Component {
 	// This will handle the submittion of data from cartItems, and state that will finish the transaction the data will go to store-action-transaction-transactions-addTransactionItems
 	handleClick = (event) => {
 		event.preventDefault();
-		let quantity = 0;
-		this.props.cartItems.map((item) => (quantity += item.quantity));
-		const { totalAmount, amount_tendered, change } = this.state;
-		const action_done = 'Transaction Added';
-		const mode_of_payment = 'Cash';
-		const items = this.props.cartItems;
-		const data = {
-			totalAmount,
-			amount_tendered,
-			change,
-			quantity,
-			items,
-			action_done,
-			mode_of_payment,
-		};
-		this.props.addTransactionItems(data);
 		this.onModalToggleFunction();
-
-		this.props.clearCart();
 		this.props.history.push('/products');
+		swal('Do you want to print the receipt?', {
+			buttons: {
+				print: {
+					text: 'Yes',
+					value: 'print',
+				},
+				cancel: 'No',
+			},
+		}).then((value) => {
+			switch (value) {
+				case 'print':
+					swal('Printing');
+					break;
+				default:
+					swal('Thank you!');
+			}
+		});
+		// let quantity = 0;
+		// this.props.cartItems.map((item) => (quantity += item.quantity));
+		// const { totalAmount, amount_tendered, change } = this.state;
+		// const action_done = 'Transaction Added';
+		// const mode_of_payment = 'Cash';
+		// const items = this.props.cartItems;
+		// const data = {
+		// 	totalAmount,
+		// 	amount_tendered,
+		// 	change,
+		// 	quantity,
+		// 	items,
+		// 	action_done,
+		// 	mode_of_payment,
+		// };
+		// this.props.addTransactionItems(data);
+		// this.onModalToggleFunction();
+
+		// this.props.clearCart();
+		// this.props.history.push('/products');
 	};
 	handleClickPayPal(AmountTendered) {
 		this.setState({
@@ -100,7 +119,8 @@ class CheckoutIndex extends React.Component {
 		return (event) => {
 			event.preventDefault();
 			this.setState({
-				amount_tendered: this.state.amount_tendered + parseInt(Amount),
+				amount_tendered:
+					parseInt(this.state.amount_tendered) + parseInt(Amount),
 			});
 		};
 	};
@@ -312,7 +332,7 @@ class CheckoutIndex extends React.Component {
 						trigger={() => {
 							// NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
 							// to the root node of the returned component as it will be overwritten.
-							return <a href="#">Print this out!</a>;
+							return <div>Print</div>;
 						}}
 						content={() => this.componentRef}
 					/>

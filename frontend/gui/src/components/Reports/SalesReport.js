@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Bar, Line } from 'react-chartjs-2';
+import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
 	getTransactionItemList,
 	getTransactionListNotOrderByDate,
@@ -415,7 +415,8 @@ class SalesReport extends React.Component {
 												data: TransactionsBetweenDatesInputCombinedSameDate.map(
 													(x) => x.totalAmount
 												),
-												backgroundColor: '#3AAFA9',
+												// backgroundColor: '#3AAFA9',
+												backgroundColor: 'rgba(58, 175, 169, 0.3)',
 											},
 										],
 									}}
@@ -468,7 +469,8 @@ class SalesReport extends React.Component {
 												data: ThisDayTransactionsCombinedSameDate.map(
 													(x) => x.totalAmount
 												),
-												backgroundColor: '#3AAFA9',
+												// backgroundColor: '#3AAFA9',
+												backgroundColor: 'rgba(58, 175, 169, 0.3)',
 											},
 										],
 									}}
@@ -513,7 +515,8 @@ class SalesReport extends React.Component {
 												data: ThisWeekTransactionsCombinedSameDate.map(
 													(x) => x.totalAmount
 												),
-												backgroundColor: '#3AAFA9',
+												// backgroundColor: '#3AAFA9',
+												backgroundColor: 'rgba(58, 175, 169, 0.3)',
 											},
 										],
 									}}
@@ -558,7 +561,8 @@ class SalesReport extends React.Component {
 												data: ThisMonthTransactionsCombinedSameDate.map(
 													(x) => x.totalAmount
 												),
-												backgroundColor: '#3AAFA9',
+												// backgroundColor: '#3AAFA9',
+												backgroundColor: 'rgba(58, 175, 169, 0.3)',
 											},
 										],
 									}}
@@ -604,93 +608,92 @@ class SalesReport extends React.Component {
 								<h6 className="uppercase text-gray-600 mb-3 text-sm font-semibold">
 									Transactions
 								</h6>
-								<div className="flex">
-									<h2 className="text-gray-800 text-2xl font-semibold mr-5">
-										Sales Overview Per Product Item of Category :
-									</h2>
-									<div class="flex flex-col -mt-2">
-										<div class="flex flex-col items-center relative">
-											<div class="my-2 bg-white p-1 flex border border-gray-200 rounded ">
-												<input
-													value={this.state.category}
-													class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
-												/>
-												<div>
-													<button
-														onClick={() => {
-															this.setState({
-																category: 'Select category',
-															});
-														}}
-														class="cursor-pointer w-6 h-full flex items-center text-gray-400 outline-none focus:outline-none"
-													>
-														<svg
-															xmlns="http://www.w3.org/2000/svg"
-															width="100%"
-															height="100%"
-															fill="none"
-															viewBox="0 0 24 24"
-															stroke="currentColor"
-															stroke-width="2"
-															stroke-linecap="round"
-															stroke-linejoin="round"
-															class="feather feather-x w-4 h-4"
-														>
-															<line x1="18" y1="6" x2="6" y2="18"></line>
-															<line x1="6" y1="6" x2="18" y2="18"></line>
-														</svg>
-													</button>
-												</div>
-												<div
+
+								<h2 className="text-gray-800 text-2xl font-semibold mr-5">
+									Sales Overview Per Product Item <div> Select Category :</div>
+								</h2>
+								<div class="flex flex-col">
+									<div class="flex flex-col items-start relative">
+										<div class="my-2 bg-white p-1 flex border border-gray-200 rounded ">
+											<input
+												value={this.state.category}
+												class="p-1 px-2 appearance-none outline-none w-full text-gray-800"
+											/>
+											<div>
+												<button
 													onClick={() => {
 														this.setState({
-															dropdown: !this.state.dropdown,
+															category: 'Select category',
 														});
 													}}
-													class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 "
+													class="cursor-pointer w-6 h-full flex items-center text-gray-400 outline-none focus:outline-none"
 												>
-													<button class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
-														<i
-															class={
-																this.state.dropdown
-																	? 'fad fa-angle-up'
-																	: 'fad fa-angle-down'
-															}
-														></i>
-													</button>
-												</div>
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														width="100%"
+														height="100%"
+														fill="none"
+														viewBox="0 0 24 24"
+														stroke="currentColor"
+														stroke-width="2"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														class="feather feather-x w-4 h-4"
+													>
+														<line x1="18" y1="6" x2="6" y2="18"></line>
+														<line x1="6" y1="6" x2="18" y2="18"></line>
+													</svg>
+												</button>
 											</div>
-
 											<div
-												class={
-													this.state.dropdown
-														? 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto'
-														: 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto hidden'
-												}
+												onClick={() => {
+													this.setState({
+														dropdown: !this.state.dropdown,
+													});
+												}}
+												class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 "
 											>
-												<div class="flex flex-col w-full">
-													{this.props.categories.map((category) => (
-														<div
-															onClick={this.handleCategory(category.name)}
-															class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
-														>
-															<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 hover:border-teal-600">
-																<div class="w-full items-center flex">
-																	<div class="mx-2 leading-6  ">
-																		{category.name}{' '}
-																	</div>
+												<button class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
+													<i
+														class={
+															this.state.dropdown
+																? 'fad fa-angle-up'
+																: 'fad fa-angle-down'
+														}
+													></i>
+												</button>
+											</div>
+										</div>
+
+										<div
+											class={
+												this.state.dropdown
+													? 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto'
+													: 'absolute shadow top-100 z-40 w-full lef-0 rounded max-h-select overflow-y-auto hidden'
+											}
+										>
+											<div class="flex flex-col w-full">
+												{this.props.categories.map((category) => (
+													<div
+														onClick={this.handleCategory(category.name)}
+														class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
+													>
+														<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 hover:border-teal-600">
+															<div class="w-full items-center flex">
+																<div class="mx-2 leading-6  ">
+																	{category.name}{' '}
 																</div>
 															</div>
 														</div>
-													))}
-													{/* <div class="cursor-pointer w-full border-gray-100 border-b hover:bg-teal-100 ">
+													</div>
+												))}
+												{/* <div class="cursor-pointer w-full border-gray-100 border-b hover:bg-teal-100 ">
 										<div class="flex w-full items-center p-2 pl-2 border-transparent bg-white border-l-2 relative hover:bg-teal-600 hover:text-teal-100 border-teal-600">
 											<div class="w-full items-center flex">
 												<div class="mx-2 leading-6  ">Javascript </div>
 											</div>
 										</div>
 									</div> */}
-												</div>
 											</div>
 										</div>
 									</div>
@@ -705,7 +708,8 @@ class SalesReport extends React.Component {
 												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
 												fill: false,
 												data: filteredData.map((x) => x.quantity),
-												backgroundColor: '#3AAFA9',
+												// backgroundColor: '#3AAFA9',
+												backgroundColor: 'rgba(58, 175, 169, 0.3)',
 											},
 										],
 									}}

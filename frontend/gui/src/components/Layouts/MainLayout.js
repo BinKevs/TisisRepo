@@ -417,7 +417,7 @@ class MainLayout extends React.Component {
 														'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block'
 													}
 												>
-													Products
+													Stocks
 												</span>
 											</Link>
 										</div>

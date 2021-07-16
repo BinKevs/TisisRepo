@@ -380,7 +380,6 @@ class ProductSetting extends React.Component {
 												Price
 											</th>
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
-												Category{' '}
 												<select
 													onChange={this.onChange}
 													name="categoryForDropDownSelect"
@@ -389,7 +388,7 @@ class ProductSetting extends React.Component {
 													<option>Select Category</option>
 													{this.props.categories.map((category) => (
 														<option value={category.name}>
-															{category.name}{' '}
+															Category : {category.name}{' '}
 														</option>
 													))}
 												</select>

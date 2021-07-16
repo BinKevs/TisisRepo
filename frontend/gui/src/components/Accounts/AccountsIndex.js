@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getAccountList } from '../../store/actions/account/auth';
 import { register } from '../../store/actions/account/auth';
-import RegistrationModal from './RegistrationModal';
+import AccountFormModal from './AccountFormModal';
 let AccountsItems = [];
 let EditButtonIsClicked = false;
 class AccountsIndex extends React.Component {
@@ -281,7 +281,7 @@ class AccountsIndex extends React.Component {
 						</div>
 					</div>
 				</div>
-				<RegistrationModal
+				<AccountFormModal
 					modal={this.state.modal}
 					onModalToggleAdd={this.onModalToggleAdd}
 					state={!EditButtonIsClicked ? this.state : this.props.supplier}

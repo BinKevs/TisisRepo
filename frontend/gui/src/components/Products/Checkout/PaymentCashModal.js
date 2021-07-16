@@ -35,25 +35,51 @@ const PaymentCashModal = (props) => {
 											₱<strong>{numberWithCommas(totalAmount)}</strong>
 										</h1>
 									</div>
-									<div class="relative z-0 w-full mb-5">
+									{/* <div class="relative z-0 w-full mb-5 flex flex-col items-center">
 										<input
-											type="text text-center"
+											type="text"
 											onChange={onChange}
 											value={amount_tendered > 0 ? amount_tendered : ''}
 											name="amount_tendered"
 											placeholder=" "
 											required
-											class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200 text-2xl"
+											class="pt-3 pb-2 block px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200 text-2xl"
 										/>
 										<label
 											for="amount tendered"
-											class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+											class="absolute duration-300 top-3 -z-1 text-gray-500"
 										>
 											Amount tendered
 										</label>
 										<span class="text-sm text-red-600 hidden" id="error">
 											Amount tendered is required
 										</span>
+									</div> */}
+									<div class="flex flex-col items-center mb-5">
+										<label
+											for="name"
+											class="mb-1 text-xl md:text-md tracking-wide text-gray-600"
+										>
+											Amount tendered
+										</label>
+
+										<div class="relative">
+											<div class="absolute flex border border-transparent left-0 top-0 h-full w-10">
+												<div class="flex items-center justify-center rounded-tl rounded-bl z-10 bg-gray-100 text-gray-600 text-lg h-full w-full">
+													₱
+												</div>
+											</div>
+
+											<input
+												onChange={onChange}
+												value={amount_tendered > 0 ? amount_tendered : ''}
+												name="amount_tendered"
+												type="number"
+												required
+												placeholder="Amount tendered"
+												class="text-center text-xl md:text-md relative w-full border rounded placeholder-gray-400 focus:border-indigo-400 focus:outline-none py-2 pr-2 pl-12"
+											/>
+										</div>
 									</div>
 
 									<div className="flex flex-col lg:flex-row items-center justify-center w-full space-y-2  lg:space-x-4 lg:space-y-0">
@@ -92,7 +118,7 @@ const PaymentCashModal = (props) => {
 											</strong>
 										</button>
 									</div>
-									<div className="flex flex-col lg:flex-row items-center justify-center w-full space-y-2  lg:space-x-4 lg:space-y-0 mt-4">
+									{/* <div className="flex flex-col lg:flex-row items-center justify-center w-full space-y-2  lg:space-x-4 lg:space-y-0 mt-4">
 										<button
 											type="button"
 											onClick={handleSetAmountPlus(1)}
@@ -158,7 +184,7 @@ const PaymentCashModal = (props) => {
 										>
 											₱<strong className="ml-1">1000</strong>
 										</button>
-									</div>
+									</div> */}
 									<div className="flex items-center justify-center w-full space-x-5">
 										<button
 											type="submit"

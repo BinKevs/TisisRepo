@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-const RegistrationModal = (props) => {
+const AccountFormModal = (props) => {
 	const { username, email, first_name, last_name, password, password2 } =
 		props.state;
 	const {
@@ -238,7 +238,7 @@ const RegistrationModal = (props) => {
 	);
 };
 
-export default connect(null, {})(RegistrationModal);
+export default connect(null, {})(AccountFormModal);
 
 {
 	/* <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">

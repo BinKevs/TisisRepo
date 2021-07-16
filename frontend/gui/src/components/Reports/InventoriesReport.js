@@ -239,7 +239,7 @@ class InventoriesReport extends React.Component {
 								</div>
 							</div>
 							<div className="chart">
-								<Line
+								<Bar
 									data={{
 										labels: InventoriesBetweenDatesInputCombinedSameDate.map(
 											(x) => x.date
@@ -251,7 +251,8 @@ class InventoriesReport extends React.Component {
 												data: InventoriesBetweenDatesInputCombinedSameDate.map(
 													(x) => x.added_stock
 												),
-												backgroundColor: '#3AAFA9',
+												// backgroundColor: '#3AAFA9',
+												backgroundColor: 'rgba(58, 175, 169, 0.3)',
 											},
 										],
 									}}

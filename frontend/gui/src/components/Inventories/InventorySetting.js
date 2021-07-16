@@ -336,7 +336,7 @@ class InventorySettingIndex extends React.Component {
 									<i class="fal fa-arrow-down"></i>
 								</th> */}
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
-												<div>Date</div>
+												<div>Date : </div>
 												<DatePicker
 													selected={this.state.InputDate}
 													onChange={(date) =>

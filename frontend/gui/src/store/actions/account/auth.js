@@ -88,6 +88,18 @@ export const register =
 				});
 			});
 	};
+// export const addSupplier = (data) => (dispatch, getState) => {
+// 	axios
+// 		.post(url, data, tokenConfig(getState))
+// 		.then((res) => {
+// 			HandleSuccessMessages('Supplier Added', 'success');
+// 			dispatch({
+// 				type: ADD_SUPPLIER,
+// 				payload: res.data,
+// 			});
+// 		})
+// 		.catch((err) => console.log(err));
+// };
 export const logout = () => (dispatch, getState) => {
 	axios
 		.post(URL_IMPORT + '/api/auth/logout/', null, tokenConfig(getState))
