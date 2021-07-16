@@ -60,10 +60,12 @@ class ProductListIndex extends React.Component {
 		);
 		const lowercasedFilter = this.state.search.toLowerCase();
 		filteredData = products.filter((item) => {
-			if (lowercasedFilter === '') {
-				return item;
-			} else {
-				return item.name.toString().toLowerCase().includes(lowercasedFilter);
+			if (item.stock > 0) {
+				if (lowercasedFilter === '') {
+					return item;
+				} else {
+					return item.name.toString().toLowerCase().includes(lowercasedFilter);
+				}
 			}
 		});
 		return (

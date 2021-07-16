@@ -309,8 +309,8 @@ class InventorySettingIndex extends React.Component {
 											<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Inventory No.
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
-												Product Name{' '}
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+												Product Name
 												{/* <select
 													onChange={this.onChange}
 													name="productForDropDownSelect"
@@ -327,15 +327,10 @@ class InventorySettingIndex extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Stock Added
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Supplier
 											</th>
-											{/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-									<span>Date</span>
-									<i class="fal fa-arrow-up fa-lg"></i>
-									<i class="fal fa-arrow-down"></i>
-								</th> */}
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												<div>Date : </div>
 												<DatePicker
 													selected={this.state.InputDate}
@@ -348,10 +343,14 @@ class InventorySettingIndex extends React.Component {
 													className="my-1 px-1 py-1 border-2 rounded-l"
 												/>
 											</th>
-
-											<td className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-right text-sm tracking-normal leading-4">
+											{/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+									<span>Date</span>
+									<i class="fal fa-arrow-up fa-lg"></i>
+									<i class="fal fa-arrow-down"></i>
+								</th> */}
+											<th className="text-gray-600 dark:text-gray-400 font-normal text-left text-sm tracking-normal leading-4">
 												More
-											</td>
+											</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -397,14 +396,10 @@ class InventorySettingIndex extends React.Component {
 														<div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
 															<ul className="bg-white dark:bg-gray-800 shadow rounded p-2">
 																<li
-																	// onClick={this.onModalToggle}
 																	onClick={this.onModalToggleEdit(inventory.id)}
 																	className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
 																>
 																	Edit
-																</li>
-																<li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal">
-																	Delete
 																</li>
 															</ul>
 														</div>

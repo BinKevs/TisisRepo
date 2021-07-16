@@ -7,6 +7,7 @@ const PaymentCashModal = (props) => {
 		handleSetAmountTendered,
 		handleClick,
 		onModalToggle,
+		OnToggleReceiptModal,
 		handleSetAmountPlus,
 	} = props;
 	const { totalAmount, amount_tendered, change, modal } = props.state;
@@ -86,7 +87,7 @@ const PaymentCashModal = (props) => {
 										<button
 											type="button"
 											onClick={handleSetAmountTendered(totalAmount)}
-											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200 rounded text-gray-800 px-8 py-2 text-lg"
+											className="rounded-md w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200 py-2 text-gray-800"
 										>
 											₱
 											<strong className="ml-1">
@@ -96,9 +97,21 @@ const PaymentCashModal = (props) => {
 										<button
 											type="button"
 											onClick={handleSetAmountTendered(
+												Math.ceil(totalAmount / 10) * 10
+											)}
+											className="rounded-md w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200 py-2 text-gray-800"
+										>
+											₱
+											<strong className="ml-1">
+												{numberWithCommas(Math.ceil(totalAmount / 10) * 10)}
+											</strong>
+										</button>
+										<button
+											type="button"
+											onClick={handleSetAmountTendered(
 												Math.ceil(totalAmount / 100) * 100
 											)}
-											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+											className="rounded-md w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200 py-2  text-gray-800"
 										>
 											₱
 											<strong className="ml-1">
@@ -110,7 +123,7 @@ const PaymentCashModal = (props) => {
 											onClick={handleSetAmountTendered(
 												Math.ceil(totalAmount / 1000) * 1000
 											)}
-											className="w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200  rounded text-gray-800 px-8 py-2 text-lg"
+											className="rounded-md w-full focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 hover:text-white bg-gray-200 py-2 text-gray-800"
 										>
 											₱
 											<strong className="ml-1">
@@ -189,17 +202,17 @@ const PaymentCashModal = (props) => {
 										<button
 											type="submit"
 											disabled={change < 0 ? true : false}
-											onClick={handleClick}
-											className="w-full my-6 focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-lg"
+											onClick={OnToggleReceiptModal}
+											className="my-6 focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-lg"
 										>
 											Confirm Payment
 										</button>
-										<button
+										{/* <button
 											type="submit"
 											className="w-full my-6 focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-lg"
 										>
 											Print Receipt
-										</button>
+										</button> */}
 									</div>
 									<div
 										className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"

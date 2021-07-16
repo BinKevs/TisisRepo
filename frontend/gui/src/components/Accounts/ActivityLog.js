@@ -159,20 +159,15 @@ class ActivityLog extends React.Component {
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
 													{item.action_done}
 												</td>
-												<td className="pr-8 relative">
-													<div
-														id={item.id}
+												{/* <td className="pr-8 relative">
+													<div	
 														className="mt-8 absolute left-0 -ml-12 shadow-md z-10 hidden w-32"
 													>
 														<ul className="bg-white dark:bg-gray-800 shadow rounded py-1">
 															<li
-																// onClick={this.onModalToggle}
 																className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal"
 															>
 																Edit
-															</li>
-															<li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal">
-																Delete
 															</li>
 														</ul>
 													</div>
@@ -196,7 +191,7 @@ class ActivityLog extends React.Component {
 															<circle cx={12} cy={5} r={1} />
 														</svg>
 													</button>
-												</td>
+												</td> */}
 											</tr>
 										))}
 									</tbody>

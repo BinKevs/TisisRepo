@@ -11,13 +11,13 @@ export class ReceiptContent extends React.PureComponent {
 							Invoice
 						</h2>
 
-						<div class="mb-1 flex items-center">
+						{/* <div class="mb-1 flex items-center">
 							<label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">
 								Invoice No.
 							</label>
 							<span class="mr-4 inline-block">:</span>
 							INV-0001
-						</div>
+						</div> */}
 						<div class="mb-1 flex items-center">
 							<label class="w-32 text-gray-800 block font-bold text-xs uppercase tracking-wide">
 								Issued By :

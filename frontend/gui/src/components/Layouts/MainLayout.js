@@ -8,7 +8,7 @@ import swal from 'sweetalert';
 class MainLayout extends React.Component {
 	state = {
 		DashboardNavBtn: false,
-		ProductsNavBtn: false,
+		ProductsNavBtn: true,
 		ReportsNavBtn: false,
 		ProductSettingNavBtn: false,
 		InventoryNavBtn: false,
@@ -16,6 +16,7 @@ class MainLayout extends React.Component {
 		TransactionsNavBtn: false,
 		TransactionsItemsNavBtn: false,
 		showButtonScroll: false,
+		ArchiveNavBtn: false,
 	};
 
 	componentDidMount() {
@@ -71,6 +72,7 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: false,
 					TransactionsNavBtn: false,
 					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: false,
 				});
 			} else if (NavBtn === 'ProductsNavBtn') {
 				this.setState({
@@ -82,6 +84,7 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: false,
 					TransactionsNavBtn: false,
 					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: false,
 				});
 			} else if (NavBtn === 'ReportsNavBtn') {
 				this.setState({
@@ -93,6 +96,7 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: false,
 					TransactionsNavBtn: false,
 					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: false,
 				});
 			} else if (NavBtn === 'ProductSettingNavBtn') {
 				this.setState({
@@ -104,6 +108,7 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: false,
 					TransactionsNavBtn: false,
 					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: false,
 				});
 			} else if (NavBtn === 'InventoryNavBtn') {
 				this.setState({
@@ -115,6 +120,7 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: false,
 					TransactionsNavBtn: false,
 					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: false,
 				});
 			} else if (NavBtn === 'SupplierNavBtn') {
 				this.setState({
@@ -126,6 +132,7 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: true,
 					TransactionsNavBtn: false,
 					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: false,
 				});
 			} else if (NavBtn === 'TransactionsNavBtn') {
 				this.setState({
@@ -137,6 +144,7 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: false,
 					TransactionsNavBtn: true,
 					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: false,
 				});
 			} else if (NavBtn === 'TransactionsItemsNavBtn') {
 				this.setState({
@@ -148,6 +156,19 @@ class MainLayout extends React.Component {
 					SupplierNavBtn: false,
 					TransactionsNavBtn: false,
 					TransactionsItemsNavBtn: true,
+					ArchiveNavBtn: false,
+				});
+			} else if (NavBtn === 'ArchiveNavBtn') {
+				this.setState({
+					DashboardNavBtn: false,
+					ProductsNavBtn: false,
+					ReportsNavBtn: false,
+					ProductSettingNavBtn: false,
+					InventoryNavBtn: false,
+					SupplierNavBtn: false,
+					TransactionsNavBtn: false,
+					TransactionsItemsNavBtn: false,
+					ArchiveNavBtn: true,
 				});
 			}
 		};
@@ -173,6 +194,7 @@ class MainLayout extends React.Component {
 			SupplierNavBtn,
 			TransactionsNavBtn,
 			TransactionsItemsNavBtn,
+			ArchiveNavBtn,
 		} = this.state;
 
 		return (
@@ -544,6 +566,30 @@ class MainLayout extends React.Component {
 										</Link>
 									</li>
 
+									<li
+										class="mr-3 flex-1 NavBtn"
+										onClick={this.setActiveNav('ArchiveNavBtn')}
+									>
+										<Link
+											to="/archive"
+											class={
+												ArchiveNavBtn
+													? 'block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom'
+													: 'block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom'
+											}
+										>
+											<i className="fal fa-archive pr-0 lg:pr-3"></i>
+											<span
+												class={
+													ArchiveNavBtn
+														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
+														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
+												}
+											>
+												Archive
+											</span>
+										</Link>
+									</li>
 									{/* <li class="mr-3 flex-1">
 								<a
 									href="#"

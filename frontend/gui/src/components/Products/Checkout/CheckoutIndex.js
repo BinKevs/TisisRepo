@@ -33,6 +33,7 @@ class CheckoutIndex extends React.Component {
 		transanction_id: 0,
 		TotalQuantity: 0,
 		modal: false,
+		receiptModal: false,
 	};
 
 	onChange = (e) => {
@@ -41,45 +42,28 @@ class CheckoutIndex extends React.Component {
 	// This will handle the submittion of data from cartItems, and state that will finish the transaction the data will go to store-action-transaction-transactions-addTransactionItems
 	handleClick = (event) => {
 		event.preventDefault();
-		this.onModalToggleFunction();
+		// this.OnToggleReceiptModal();
 		this.props.history.push('/products');
-		swal('Do you want to print the receipt?', {
-			buttons: {
-				print: {
-					text: 'Yes',
-					value: 'print',
-				},
-				cancel: 'No',
-			},
-		}).then((value) => {
-			switch (value) {
-				case 'print':
-					swal('Printing');
-					break;
-				default:
-					swal('Thank you!');
-			}
-		});
-		// let quantity = 0;
-		// this.props.cartItems.map((item) => (quantity += item.quantity));
-		// const { totalAmount, amount_tendered, change } = this.state;
-		// const action_done = 'Transaction Added';
-		// const mode_of_payment = 'Cash';
-		// const items = this.props.cartItems;
-		// const data = {
-		// 	totalAmount,
-		// 	amount_tendered,
-		// 	change,
-		// 	quantity,
-		// 	items,
-		// 	action_done,
-		// 	mode_of_payment,
-		// };
-		// this.props.addTransactionItems(data);
-		// this.onModalToggleFunction();
 
-		// this.props.clearCart();
-		// this.props.history.push('/products');
+		let quantity = 0;
+		this.props.cartItems.map((item) => (quantity += item.quantity));
+		const { totalAmount, amount_tendered, change } = this.state;
+		const action_done = 'Transaction Added';
+		const mode_of_payment = 'Cash';
+		const items = this.props.cartItems;
+		const data = {
+			totalAmount,
+			amount_tendered,
+			change,
+			quantity,
+			items,
+			action_done,
+			mode_of_payment,
+		};
+		this.props.addTransactionItems(data);
+
+		this.props.clearCart();
+		this.props.history.push('/products');
 	};
 	handleClickPayPal(AmountTendered) {
 		this.setState({
@@ -124,7 +108,16 @@ class CheckoutIndex extends React.Component {
 			});
 		};
 	};
-
+	OnToggleReceiptModal = (event) => {
+		event.preventDefault();
+		this.setState({
+			receiptModal: !this.state.receiptModal,
+			modal: !this.state.modal,
+		});
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+		document.getElementById('Body').classList.toggle('overflow-hidden');
+	};
 	// This will load the cart items to be rendered and also to compute for the total amount, sub total and the tax;
 	componentDidMount() {
 		let VariableTotalAmount = 0;
@@ -328,16 +321,8 @@ class CheckoutIndex extends React.Component {
 							</div>
 						</div>
 					</div>
-					<ReactToPrint
-						trigger={() => {
-							// NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-							// to the root node of the returned component as it will be overwritten.
-							return <div>Print</div>;
-						}}
-						content={() => this.componentRef}
-					/>
-					;
-					<div className="visible">
+
+					<div className="invisible">
 						<ReceiptContent
 							cartItems={cartItems}
 							Subtotal={numberWithCommas(Subtotal)}
@@ -346,7 +331,6 @@ class CheckoutIndex extends React.Component {
 							user={this.props.AuthReducer.user}
 							ref={(el) => (this.componentRef = el)}
 						/>
-						;
 					</div>
 				</div>
 				<PaymentCashModal
@@ -355,8 +339,58 @@ class CheckoutIndex extends React.Component {
 					handleSetAmountTendered={this.handleSetAmountTendered}
 					handleSetAmountPlus={this.handleSetAmountPlus}
 					handleClick={this.handleClick}
+					OnToggleReceiptModal={this.OnToggleReceiptModal}
 					onModalToggle={this.onModalToggle}
 				/>
+				<div class={this.state.receiptModal ? 'h-screen ' : 'h-screen hidden'}>
+					<div class="mx-auto max-w-screen-lg h-full">
+						<div
+							className="z-20 absolute top-0 right-0 bottom-0 left-0"
+							id="modal"
+						>
+							<div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
+							<div className="h-full overflow-auto w-1/2 mx-auto flex flex-col">
+								<div className="m-2 md:m-12">
+									<form class="mt-9">
+										<div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
+											<div class="text-left p-0 mb-8">
+												<div>
+													<i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{' '}
+													<h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
+														ABC Motor Parts
+													</h1>
+												</div>
+
+												<h1 class="text-gray-800 text-3xl font-medium">
+													Print Receipt ?{' '}
+												</h1>
+											</div>
+											<div className="flex items-center justify-center w-full space-x-4">
+												<ReactToPrint
+													trigger={() => {
+														return (
+															<div className="text-white cursor-pointer bg-cyan-700 h-12 w-full rounded flex items-center justify-center text-lg">
+																Yes
+															</div>
+														);
+													}}
+													// onAfterPrint={this.handleClick}
+													content={() => this.componentRef}
+												/>
+												<div
+													onClick={this.handleClick}
+													className="text-white cursor-pointer bg-gray-500 h-12 w-full rounded flex items-center justify-center text-lg"
+												>
+													No
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</>
 		);
 	}

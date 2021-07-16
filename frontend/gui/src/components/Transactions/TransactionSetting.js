@@ -242,7 +242,7 @@ class TransactionSettingIndex extends React.Component {
 													{transaction.mode_of_payment}
 												</td>
 
-												<td className="pr-8 relative">
+												{/* <td className="pr-8 relative">
 													<div
 														id={transaction.id}
 														className="mt-8 absolute left-0 -ml-12 shadow-md z-10 hidden w-32"
@@ -279,7 +279,7 @@ class TransactionSettingIndex extends React.Component {
 															<circle cx={12} cy={5} r={1} />
 														</svg>
 													</button>
-												</td>
+												</td> */}
 											</tr>
 										))}
 									</tbody>
