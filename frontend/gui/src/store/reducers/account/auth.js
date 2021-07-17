@@ -10,6 +10,7 @@ import {
 	GET_ACCOUNT_LIST,
 	GET_ACTIVITY_LOG_LIST,
 	GET_ATTENDANCE_LOG_LIST,
+	ADD_ACCOUNT,
 } from '../../actions/account/types';
 const initialState = {
 	token: localStorage.getItem('token'),
@@ -47,6 +48,12 @@ const AuthReducer = (state = initialState, action) => {
 				isAuthenticated: true,
 				isLoading: false,
 			};
+		case ADD_ACCOUNT:
+			return {
+				...state,
+				accounts: [...state.accounts, action.payload],
+			};
+
 		case USER_LOADED:
 			return {
 				...state,

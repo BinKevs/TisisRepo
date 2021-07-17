@@ -1,14 +1,14 @@
 import React from 'react';
 let DateNow = Date().toLocaleString().split(' ');
 
-export class InventoryTablePrint extends React.PureComponent {
+export class SupplierTablePrint extends React.PureComponent {
 	render() {
 		return (
 			<div className="w-full p-10">
 				<div class="mb-8 flex justify-between">
 					<div>
 						<h2 class="text-3xl font-bold mb-6 pb-2 tracking-wider uppercase">
-							Inventory List
+							Supplier List
 						</h2>
 
 						<div class="mb-1 flex items-center">
@@ -46,54 +46,40 @@ export class InventoryTablePrint extends React.PureComponent {
 						</div>
 					</div>
 				</div>
-				<table
-					id="inventory-table"
-					className="min-w-full bg-white dark:bg-gray-800"
-				>
+				<table className="min-w-full bg-white dark:bg-gray-800">
 					<thead>
 						<tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
 							<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Inventory No.
-							</th>
-							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
-								Product Name
+								Supplier ID
 							</th>
 							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Stock Added
+								Supplier Name
 							</th>
-							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
-								Supplier
+							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+								Address
 							</th>
-
-							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
-								<div>Date</div>
+							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+								Phone Number
 							</th>
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.inventories.map((inventory) => (
+						{this.props.suppliers.map((supplier) => (
 							<tr
-								key={inventory.id}
+								key={supplier.id}
 								className="h-24 border-gray-300 dark:border-gray-200 border-b"
 							>
 								<td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{inventory.inventory_id}
+									{supplier.supplier_id}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{inventory.product}
+									{supplier.name}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{inventory.new_stock}
-								</td>
-
-								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{inventory.supplier}
+									{supplier.address}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{inventory.created_at}
-								</td>
-								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{inventory.description}
+									{supplier.phone_number}
 								</td>
 							</tr>
 						))}

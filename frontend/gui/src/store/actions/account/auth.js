@@ -12,8 +12,10 @@ import {
 	GET_ACCOUNT_LIST,
 	GET_ACTIVITY_LOG_LIST,
 	GET_ATTENDANCE_LOG_LIST,
+	ADD_ACCOUNT,
 } from './types';
 import swal from 'sweetalert';
+import { HandleSuccessMessages } from '../../../Helpers/functions';
 export const loadUser = () => (dispatch, getState) => {
 	dispatch({ type: USER_LOADING });
 	axios
@@ -30,6 +32,18 @@ export const loadUser = () => (dispatch, getState) => {
 				type: AUTH_ERROR,
 			});
 		});
+};
+export const AddAccount = (data) => (dispatch, getState) => {
+	axios
+		.post(URL_IMPORT + '/api/accounts/', data, tokenConfig(getState))
+		.then((res) => {
+			HandleSuccessMessages('Account Added', 'success');
+			dispatch({
+				type: ADD_ACCOUNT,
+				payload: res.data,
+			});
+		})
+		.catch((err) => console.log(err));
 };
 export const login = (username, password) => (dispatch) => {
 	const config = {

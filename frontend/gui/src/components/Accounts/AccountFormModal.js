@@ -10,6 +10,7 @@ const AccountFormModal = (props) => {
 		onEditCloseButton,
 		onModalToggleAdd,
 		modal,
+		handleCheck,
 	} = props;
 	return (
 		<>
@@ -130,6 +131,17 @@ const AccountFormModal = (props) => {
 												Username is required
 											</span>
 										</div>
+										<div class="relative z-0 w-full mb-5">
+											<label class="text-gray-700 pt-3 pb-2">
+												<input
+													type="checkbox"
+													onChange={handleCheck}
+													name="IsAdmin"
+												/>
+												<span class="ml-1">Is Admin Account?</span>
+											</label>
+										</div>
+
 										<div class="relative z-0 w-full mb-5">
 											<input
 												type="password"

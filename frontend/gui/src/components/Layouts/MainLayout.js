@@ -566,7 +566,7 @@ class MainLayout extends React.Component {
 										</Link>
 									</li>
 
-									<li
+									{/* <li
 										class="mr-3 flex-1 NavBtn"
 										onClick={this.setActiveNav('ArchiveNavBtn')}
 									>
@@ -589,18 +589,7 @@ class MainLayout extends React.Component {
 												Archive
 											</span>
 										</Link>
-									</li>
-									{/* <li class="mr-3 flex-1">
-								<a
-									href="#"
-									class="block py-1 lg:py-3 pl-0 lg:pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-red-500"
-								>
-									<i className="fas fa-sitemap pr-0 lg:pr-3"></i>
-									<span class="pb-1 lg:pb-0 text-xs lg:text-base text-gray-600 lg:text-gray-400 block lg:inline-block">
-										Transaction Item's History
-									</span>
-								</a>
-							</li> */}
+									</li> */}
 								</ul>
 							</div>
 						</div>

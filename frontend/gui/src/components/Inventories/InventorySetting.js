@@ -264,16 +264,10 @@ class InventorySettingIndex extends React.Component {
 										>
 											Viewing 1 - 20 of 60
 										</p>
-										<div
-											className="text-gray-600 dark:text-gray-400 ml-2 border-transparent border cursor-pointer rounded mr-4"
-											onclick="pageView(false)"
-										>
+										<div className="text-gray-600 dark:text-gray-400 ml-2 border-transparent border cursor-pointer rounded mr-4">
 											<i class="fad fa-angle-left fa-2x"></i>
 										</div>
-										<div
-											className="text-gray-600 dark:text-gray-400 border-transparent border rounded focus:outline-none cursor-pointer"
-											onclick="pageView(true)"
-										>
+										<div className="text-gray-600 dark:text-gray-400 border-transparent border rounded focus:outline-none cursor-pointer">
 											<i class="fad fa-angle-right fa-2x"></i>
 										</div>
 									</div>
@@ -300,16 +294,13 @@ class InventorySettingIndex extends React.Component {
 								</div>
 							</div>
 							<div className="w-full overflow-x-auto">
-								<table
-									id="inventory-table"
-									className="min-w-full bg-white dark:bg-gray-800"
-								>
+								<table id="inventory-table" className="min-w-full bg-white">
 									<thead>
 										<tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
 											<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Inventory No.
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-1/5">
 												Product Name
 												{/* <select
 													onChange={this.onChange}
@@ -330,7 +321,7 @@ class InventorySettingIndex extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Supplier
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
 												<div>Date : </div>
 												<DatePicker
 													selected={this.state.InputDate}
@@ -343,12 +334,7 @@ class InventorySettingIndex extends React.Component {
 													className="my-1 px-1 py-1 border-2 rounded-l"
 												/>
 											</th>
-											{/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-									<span>Date</span>
-									<i class="fal fa-arrow-up fa-lg"></i>
-									<i class="fal fa-arrow-down"></i>
-								</th> */}
-											<th className="text-gray-600 dark:text-gray-400 font-normal text-left text-sm tracking-normal leading-4">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												More
 											</th>
 										</tr>
@@ -368,28 +354,11 @@ class InventorySettingIndex extends React.Component {
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
 													{inventory.new_stock}
 												</td>
-												{/* <td className="pr-6 whitespace-no-wrap">
-									<div className="flex items-center">
-										<div className="h-8 w-8">
-											<img
-												src="https://tuk-cdn.s3.amazonaws.com/assets/components/advance_tables/at_1.png"
-												alt
-												className="h-full w-full rounded-full overflow-hidden shadow"
-											/>
-										</div>
-										<p className="ml-2 text-gray-800 dark:text-gray-100 tracking-normal leading-4 text-sm">
-											Carrie Anthony
-										</p>
-									</div>
-								</td> */}
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
 													{inventory.supplier}
 												</td>
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
 													{inventory.created_at}
-												</td>
-												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-													{inventory.description}
 												</td>
 												<td className="pr-8 relative">
 													<button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">

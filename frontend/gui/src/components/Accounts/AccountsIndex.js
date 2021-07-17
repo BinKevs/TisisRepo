@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getAccountList } from '../../store/actions/account/auth';
-import { register } from '../../store/actions/account/auth';
+import { AddAccount } from '../../store/actions/account/auth';
 import AccountFormModal from './AccountFormModal';
 let AccountsItems = [];
 let EditButtonIsClicked = false;
@@ -15,6 +15,7 @@ class AccountsIndex extends React.Component {
 		password: '',
 		password2: '',
 		modal: false,
+		IsAdmin: false,
 	};
 	setSeeMore(transaction_items_id) {
 		return (e) => {
@@ -25,12 +26,27 @@ class AccountsIndex extends React.Component {
 	componentDidMount() {
 		this.props.getAccountList();
 	}
-	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+	handleCheck = (e) => {
+		this.setState({ IsAdmin: !this.state.IsAdmin });
+	};
+	onChange = (e) => {
+		this.setState({
+			[e.target.name]: e.target.value,
+		});
+	};
+
 	// Submit the state value to the store actions-accounts-auth-register
 	onSubmit = (e) => {
 		e.preventDefault();
-		const { username, email, first_name, last_name, password, password2 } =
-			this.state;
+		const {
+			username,
+			email,
+			first_name,
+			last_name,
+			IsAdmin,
+			password,
+			password2,
+		} = this.state;
 		if (password !== password2) {
 			console.log('Passwords do not match');
 		} else {
@@ -40,8 +56,10 @@ class AccountsIndex extends React.Component {
 				email,
 				first_name,
 				last_name,
+				is_superuser: IsAdmin,
+				is_active: true,
 			};
-			this.props.register(newUser);
+			this.props.AddAccount(newUser);
 			console.log('Account created!');
 		}
 	};
@@ -100,6 +118,7 @@ class AccountsIndex extends React.Component {
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
+		console.log(this.state);
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -289,6 +308,7 @@ class AccountsIndex extends React.Component {
 					onModalToggleAdd={this.onModalToggleAdd}
 					state={!EditButtonIsClicked ? this.state : this.props.supplier}
 					onChange={this.onChange}
+					handleCheck={this.handleCheck}
 					EditButtonIsClicked={EditButtonIsClicked}
 					onEditCloseButton={this.onEditCloseButton}
 					onSubmit={this.onSubmit}
@@ -304,5 +324,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
 	getAccountList,
-	register,
+	AddAccount,
 })(AccountsIndex);
