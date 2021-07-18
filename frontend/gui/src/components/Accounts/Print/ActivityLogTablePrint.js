@@ -1,14 +1,14 @@
 import React from 'react';
 let DateNow = Date().toLocaleString().split(' ');
 
-export class ProductTablePrint extends React.PureComponent {
+export class ActivityLogTablePrint extends React.PureComponent {
 	render() {
 		return (
 			<div className="w-full p-10">
 				<div class="mb-8 flex justify-between">
 					<div>
 						<h2 class="text-3xl font-bold mb-6 pb-2 tracking-wider uppercase">
-							Product List
+							Activity Log List
 						</h2>
 
 						<div class="mb-1 flex items-center">
@@ -49,67 +49,37 @@ export class ProductTablePrint extends React.PureComponent {
 				<table className="min-w-full bg-white dark:bg-gray-800">
 					<thead>
 						<tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-							<th className="pl-12 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Item No.
-							</th>
-							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-1/5">
-								Item Name
+							<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+								Activity ID
 							</th>
 							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Price
-							</th>
-							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
-								Category{' '}
-							</th>
-							{/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-												<span>Date</span>
-												<i class="fal fa-arrow-up fa-lg"></i>
-												<i class="fal fa-arrow-down"></i>
-											</th> */}
-							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Supplier
+								Creator Name
 							</th>
 							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Stock
+								Created At
+							</th>
+							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+								Action Done
 							</th>
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.products.map((product) => (
+						{this.props.ActivityLogProps.map((activity) => (
 							<tr
-								key={product.id}
+								key={activity.id}
 								className="h-24 border-gray-300 dark:border-gray-200 border-b"
 							>
-								<td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{product.product_id}
+								<td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+									{activity.activity_log_id}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{product.name}
+									{activity.creator}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{product.price}
-								</td>
-
-								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{product.category}
+									{activity.created_at}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{product.supplier}
-								</td>
-								<td className="pr-6 whitespace-no-wrap">
-									<div className="flex items-center">
-										<div
-											className={
-												product.stock >= 10
-													? 'w-2 h-2 rounded-full bg-green-400'
-													: 'w-2 h-2 rounded-full bg-red-400'
-											}
-										/>
-
-										<p className="ml-2 text-gray-800 dark:text-gray-100 tracking-normal leading-4 text-sm">
-											{product.stock}
-										</p>
-									</div>
+									{activity.action_done}
 								</td>
 							</tr>
 						))}

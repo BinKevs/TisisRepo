@@ -1,7 +1,7 @@
 import React from 'react';
 let DateNow = Date().toLocaleString().split(' ');
 
-export class SupplierTablePrint extends React.PureComponent {
+export class AttendanceLogTablePrint extends React.PureComponent {
 	render() {
 		return (
 			<div className="w-full p-10">
@@ -50,36 +50,36 @@ export class SupplierTablePrint extends React.PureComponent {
 					<thead>
 						<tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
 							<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Supplier ID
+								Attendance ID
 							</th>
 							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Supplier Name
+								Account Name
 							</th>
 							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Address
+								Login Time
 							</th>
 							<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-								Phone Number
+								Logout Time
 							</th>
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.suppliers.map((supplier) => (
+						{this.props.AttendanceLogProps.map((attendance) => (
 							<tr
-								key={supplier.id}
+								key={attendance.id}
 								className="h-24 border-gray-300 dark:border-gray-200 border-b"
 							>
 								<td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{supplier.supplier_id}
+									{attendance.attendance_log_id}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{supplier.name}
+									{attendance.account}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{supplier.address}
+									{attendance.login_at}
 								</td>
 								<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-									{supplier.phone_number}
+									{attendance.logout_at}
 								</td>
 							</tr>
 						))}

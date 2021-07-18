@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { getTransactionItemList } from '../../store/actions/transaction/transactions.js';
 import { getProductList } from '../../store/actions/product/products';
 import DatePicker from 'react-datepicker';
+
+import { TransactionItemsTableExportModal } from './Print/TransactionItemsTableExportModal';
 let TransactionItems = [];
 let filteredData = [];
 class TransactionItemsSettingIndex extends React.Component {
@@ -15,6 +17,7 @@ class TransactionItemsSettingIndex extends React.Component {
 		search: '',
 		InputDate: '',
 		productForDropDownSelect: '',
+		table_export_modal: false,
 	};
 	setSeeMore(transaction_items_id) {
 		return (e) => {
@@ -27,6 +30,13 @@ class TransactionItemsSettingIndex extends React.Component {
 		this.props.getTransactionItemList();
 		this.props.getProductList();
 	}
+	OnToggleExportTable = (event) => {
+		event.preventDefault();
+		this.setState({ table_export_modal: !this.state.table_export_modal });
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+		document.getElementById('Body').classList.toggle('overflow-hidden');
+	};
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 	render() {
 		filteredData = [];
@@ -104,12 +114,15 @@ class TransactionItemsSettingIndex extends React.Component {
 							<div className="flex flex-col lg:flex-row p-4 lg:p-8 justify-end items-start lg:items-stretch w-full">
 								<div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
 									<div className="lg:ml-6 flex items-start w-full">
-										<div className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
+										<div
+											onClick={this.OnToggleExportTable}
+											className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
+										>
 											<i class="fal fa-print fa-lg"></i>
 										</div>
-										<div className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
+										{/* <div className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
 											<i class="fal fa-plus fa-lg"></i>
-										</div>
+										</div> */}
 									</div>
 								</div>
 								<div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
@@ -283,6 +296,13 @@ class TransactionItemsSettingIndex extends React.Component {
 							</div>
 						</div>
 					</div>
+				</div>
+				<div
+					class={
+						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
+					}
+				>
+					<TransactionItemsTableExportModal TransactionItems={filteredData} />
 				</div>
 			</>
 		);

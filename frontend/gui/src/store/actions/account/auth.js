@@ -35,7 +35,7 @@ export const loadUser = () => (dispatch, getState) => {
 };
 export const AddAccount = (data) => (dispatch, getState) => {
 	axios
-		.post(URL_IMPORT + '/api/accounts/', data, tokenConfig(getState))
+		.post(URL_IMPORT + '/api/auth/register', data, tokenConfig(getState))
 		.then((res) => {
 			HandleSuccessMessages('Account Added', 'success');
 			dispatch({
@@ -148,7 +148,7 @@ export const tokenConfig = (getState) => {
 // Account setting fetching account list
 export const getAccountList = () => (dispatch, getState) => {
 	axios
-		.get(URL_IMPORT + '/api/accounts/', tokenConfig(getState))
+		.get(URL_IMPORT + '/api/accounts/' + '?ordering=-id', tokenConfig(getState))
 		.then((res) => {
 			dispatch({
 				type: GET_ACCOUNT_LIST,
@@ -172,10 +172,7 @@ export const getActivityLogList = () => (dispatch, getState) => {
 // Fetching attendance log
 export const getAttendanceLogList = () => (dispatch, getState) => {
 	axios
-		.get(
-			URL_IMPORT + '/api/attendance_log/?ordering=-id',
-			tokenConfig(getState)
-		)
+		.get(URL_IMPORT + '/api/attendance_log/?ordering=id', tokenConfig(getState))
 		.then((res) => {
 			dispatch({
 				type: GET_ATTENDANCE_LOG_LIST,

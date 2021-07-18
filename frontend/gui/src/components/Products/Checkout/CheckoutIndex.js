@@ -211,13 +211,13 @@ class CheckoutIndex extends React.Component {
 													<span class="text-red-500 text-xs">
 														{item.supplier}
 													</span>
-													<div
+													{/* <div
 														href="#"
 														class="font-semibold hover:text-red-500 text-gray-500 text-xs"
 														onClick={() => removeFromCart(item)}
 													>
 														Remove
-													</div>
+													</div> */}
 												</div>
 											</div>
 											<span class="text-center w-full font-semibold text-sm pr-2 break-words">
@@ -245,7 +245,9 @@ class CheckoutIndex extends React.Component {
 											</h2>
 										</div>
 										<div class="flex justify-between">
-											<h1 class="font-semibold text-2xl">Total : </h1>
+											<h1 class="font-semibold text-2xl">
+												Total Amount to Pay:{' '}
+											</h1>
 											<h2 class="font-semibold text-2xl">
 												₱{numberWithCommas(totalAmount)}
 											</h2>

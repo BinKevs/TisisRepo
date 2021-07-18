@@ -71,7 +71,7 @@ export class InventoryTablePrint extends React.PureComponent {
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.inventories.map((inventory) => (
+						{this.props.inventoryProps.map((inventory) => (
 							<tr
 								key={inventory.id}
 								className="h-24 border-gray-300 dark:border-gray-200 border-b"

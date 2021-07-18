@@ -338,106 +338,6 @@ class SalesReport extends React.Component {
 						</div>
 					</div>
 
-					<div
-						className={
-							!this.state.occupied
-								? 'mx-auto w-11/12 mt-6 relative'
-								: 'mx-auto w-11/12 mt-6 p-3'
-						}
-					>
-						{!this.state.occupied ? (
-							<>
-								{/* <div class="absolute w-full h-full z-25 bg-gray-900 opacity-50"></div> */}
-								<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 font-medium text-gray-900 text-center text-3xl">
-									<div>No data available!</div> Please select a starting date
-									and ending date in the upper right corner.
-								</div>
-							</>
-						) : (
-							''
-						)}
-						<div className="bg-white shadow-lg p-4">
-							<div className="relative w-full max-w-full flex-grow">
-								<h6 className="uppercase text-gray-600 mb-1 text-sm font-semibold">
-									Sales
-								</h6>
-								<div className="mx-auto w-11/12 mt-6 flex justify-start space-x-3">
-									<div class="flex">
-										<h2 className="text-gray-800 mb-2 text-2xl font-semibold mr-5">
-											Between
-										</h2>
-										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
-											Start:
-										</span>
-										<DatePicker
-											selected={this.state.StartingDate}
-											onChange={(date) => this.setState({ StartingDate: date })}
-											value={this.state.StartingDate}
-											closeOnScroll={true}
-											placeholderText="Starting Date"
-											className="px-4 py-2 border-2 rounded-r"
-										/>
-									</div>
-									<div class="flex">
-										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
-											End:
-										</span>
-										<DatePicker
-											selected={this.state.EndingDate}
-											onChange={(date) =>
-												this.setState({ EndingDate: date, occupied: true })
-											}
-											value={this.state.EndingDate}
-											closeOnScroll={true}
-											placeholderText="Ending Date"
-											className="px-4 py-2 border-2 rounded-r"
-										/>
-									</div>
-
-									{/* <button
-										type="submit"
-										class="text-white bg-gray-800 px-4 py-2 rounded"
-									>
-										Fetch Sale
-									</button> */}
-								</div>
-							</div>
-							<div className="chart">
-								<Bar
-									data={{
-										labels: TransactionsBetweenDatesInputCombinedSameDate.map(
-											(x) => x.date
-										),
-										datasets: [
-											{
-												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
-												fill: false,
-												data: TransactionsBetweenDatesInputCombinedSameDate.map(
-													(x) => x.totalAmount
-												),
-												// backgroundColor: '#3AAFA9',
-												backgroundColor: 'rgba(58, 175, 169, 0.3)',
-											},
-										],
-									}}
-									options={{
-										responsive: true,
-										plugins: {
-											legend: {
-												position: 'top',
-												align: 'end',
-												labels: {
-													font: {
-														size: 15,
-													},
-												},
-											},
-										},
-									}}
-								/>
-							</div>
-						</div>
-					</div>
 					<div className="mx-auto w-11/12 mt-6 p-3">
 						<div className="bg-white shadow-lg p-4">
 							<div className="relative w-full max-w-full flex-grow">
@@ -708,6 +608,106 @@ class SalesReport extends React.Component {
 												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
 												fill: false,
 												data: filteredData.map((x) => x.quantity),
+												// backgroundColor: '#3AAFA9',
+												backgroundColor: 'rgba(58, 175, 169, 0.3)',
+											},
+										],
+									}}
+									options={{
+										responsive: true,
+										plugins: {
+											legend: {
+												position: 'top',
+												align: 'end',
+												labels: {
+													font: {
+														size: 15,
+													},
+												},
+											},
+										},
+									}}
+								/>
+							</div>
+						</div>
+					</div>
+					<div
+						className={
+							!this.state.occupied
+								? 'mx-auto w-11/12 mt-6 relative'
+								: 'mx-auto w-11/12 mt-6 p-3'
+						}
+					>
+						{!this.state.occupied ? (
+							<>
+								{/* <div class="absolute w-full h-full z-25 bg-gray-900 opacity-50"></div> */}
+								<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 font-medium text-gray-900 text-center text-3xl">
+									<div>No data available!</div> Please select a starting date
+									and ending date in the upper right corner.
+								</div>
+							</>
+						) : (
+							''
+						)}
+						<div className="bg-white shadow-lg p-4">
+							<div className="relative w-full max-w-full flex-grow">
+								<h6 className="uppercase text-gray-600 mb-1 text-sm font-semibold">
+									Sales
+								</h6>
+								<div className="mx-auto w-11/12 mt-6 flex justify-start space-x-3">
+									<div class="flex">
+										<h2 className="text-gray-800 mb-2 text-2xl font-semibold mr-5">
+											Between
+										</h2>
+										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
+											Start:
+										</span>
+										<DatePicker
+											selected={this.state.StartingDate}
+											onChange={(date) => this.setState({ StartingDate: date })}
+											value={this.state.StartingDate}
+											closeOnScroll={true}
+											placeholderText="Starting Date"
+											className="px-4 py-2 border-2 rounded-r"
+										/>
+									</div>
+									<div class="flex">
+										<span class="text-sm  border-2 rounded-l px-4 py-2 bg-gray-300 whitespace-no-wrap">
+											End:
+										</span>
+										<DatePicker
+											selected={this.state.EndingDate}
+											onChange={(date) =>
+												this.setState({ EndingDate: date, occupied: true })
+											}
+											value={this.state.EndingDate}
+											closeOnScroll={true}
+											placeholderText="Ending Date"
+											className="px-4 py-2 border-2 rounded-r"
+										/>
+									</div>
+
+									{/* <button
+										type="submit"
+										class="text-white bg-gray-800 px-4 py-2 rounded"
+									>
+										Fetch Sale
+									</button> */}
+								</div>
+							</div>
+							<div className="chart">
+								<Bar
+									data={{
+										labels: TransactionsBetweenDatesInputCombinedSameDate.map(
+											(x) => x.date
+										),
+										datasets: [
+											{
+												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
+												fill: false,
+												data: TransactionsBetweenDatesInputCombinedSameDate.map(
+													(x) => x.totalAmount
+												),
 												// backgroundColor: '#3AAFA9',
 												backgroundColor: 'rgba(58, 175, 169, 0.3)',
 											},

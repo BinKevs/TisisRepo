@@ -7,7 +7,6 @@ import {
 	removeFromCart,
 	changeCartValue,
 } from '../../../store/actions/cart/cartActions';
-
 class CartIndex extends React.Component {
 	static propTypes = {
 		removeFromCart: PropTypes.func.isRequired,
@@ -161,7 +160,10 @@ class CartIndex extends React.Component {
 											₱{this.numberWithCommas(item.price)}
 										</span>
 										<span class="text-center w-full font-semibold text-sm break-words">
-											₱{this.numberWithCommas(item.price * item.quantity)}
+											₱
+											{this.numberWithCommas(
+												this.HandleDecimalPlaces(item.price * item.quantity)
+											)}
 										</span>
 									</>
 								</div>
@@ -192,7 +194,7 @@ class CartIndex extends React.Component {
 									</h2>
 								</div>
 								<div class="flex justify-between">
-									<h1 class="font-semibold text-2xl">Total : </h1>
+									<h1 class="font-semibold text-2xl">Total Amount to Pay: </h1>
 									<h2 class="font-semibold text-2xl">
 										₱{this.numberWithCommas(totalAmount)}
 									</h2>

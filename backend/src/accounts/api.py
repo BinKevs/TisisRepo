@@ -5,6 +5,7 @@ from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions
 from .serializers import AccountSerializer
+from rest_framework import filters
 # API
 
 
@@ -12,6 +13,8 @@ class AccountViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    ordering_fields = ['id'] 
+    filter_backends = [filters.OrderingFilter]
 # Register API
 
 
@@ -24,6 +27,7 @@ class RegisterAPI(generics.GenericAPIView):
         user = serializer.save()
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            # "token" : AuthToken.objects.create(user)
         })
 
 # Login API

@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getActivityLogList } from '../../store/actions/account/auth';
+import { ActivityLogTableExportModal } from './Print/ActivityLogTableExportModal';
+import { Link } from 'react-router-dom';
 let ActivityLogItems = [];
 class ActivityLog extends React.Component {
 	state = {
 		search: '',
+		table_export_modal: false,
 	};
 	setSeeMore(transaction_items_id) {
 		return (e) => {
@@ -16,6 +19,13 @@ class ActivityLog extends React.Component {
 		this.props.getActivityLogList();
 	}
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+	OnToggleExportTable = (event) => {
+		event.preventDefault();
+		this.setState({ table_export_modal: !this.state.table_export_modal });
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+		document.getElementById('Body').classList.toggle('overflow-hidden');
+	};
 	render() {
 		//destructuring the dictionary for searching/ fetching purposes
 		ActivityLogItems = [];
@@ -35,6 +45,7 @@ class ActivityLog extends React.Component {
 				item[key].toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
+
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -53,12 +64,17 @@ class ActivityLog extends React.Component {
 							<div className="flex flex-col lg:flex-row p-4 lg:p-8 justify-end items-start lg:items-stretch w-full">
 								<div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
 									<div className="lg:ml-6 flex items-start w-full">
-										<div className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
+										<div
+											onClick={this.OnToggleExportTable}
+											className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
+										>
 											<i class="fal fa-print fa-lg"></i>
 										</div>
-										<div className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
-											<i class="fal fa-plus fa-lg"></i>
-										</div>
+										<Link to="accounts/settings/menu">
+											<div className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
+												<i class="fad fa-long-arrow-alt-left fa-lg"></i>
+											</div>
+										</Link>
 									</div>
 								</div>
 								<div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
@@ -199,6 +215,16 @@ class ActivityLog extends React.Component {
 							</div>
 						</div>
 					</div>
+				</div>
+				<div
+					class={
+						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
+					}
+				>
+					<ActivityLogTableExportModal
+						OnToggleExportTable={this.OnToggleExportTable}
+						ActivityLog={filteredData}
+					/>
 				</div>
 			</>
 		);

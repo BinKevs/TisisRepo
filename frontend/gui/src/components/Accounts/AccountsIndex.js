@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { getAccountList } from '../../store/actions/account/auth';
 import { AddAccount } from '../../store/actions/account/auth';
 import AccountFormModal from './AccountFormModal';
+import { AccountTableExportModal } from './Print/AccountTableExportModal';
+import { Link } from 'react-router-dom';
 let AccountsItems = [];
 let EditButtonIsClicked = false;
 class AccountsIndex extends React.Component {
@@ -16,6 +18,7 @@ class AccountsIndex extends React.Component {
 		password2: '',
 		modal: false,
 		IsAdmin: false,
+		table_export_modal: false,
 	};
 	setSeeMore(transaction_items_id) {
 		return (e) => {
@@ -60,8 +63,9 @@ class AccountsIndex extends React.Component {
 				is_active: true,
 			};
 			this.props.AddAccount(newUser);
-			console.log('Account created!');
 		}
+		this.ModalFunction();
+		this.props.getAccountList();
 	};
 	// when edit button click this will fetch the supplier that will be edited and change the isEditButtonClicked status to true
 	onEditCloseButton = (event) => {
@@ -96,6 +100,13 @@ class AccountsIndex extends React.Component {
 		document.documentElement.scrollTop = 0;
 		document.getElementById('Body').classList.toggle('overflow-hidden');
 	}
+	OnToggleExportTable = (event) => {
+		event.preventDefault();
+		this.setState({ table_export_modal: !this.state.table_export_modal });
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+		document.getElementById('Body').classList.toggle('overflow-hidden');
+	};
 	render() {
 		const { username, email, first_name, last_name, password, password2 } =
 			this.state;
@@ -114,9 +125,10 @@ class AccountsIndex extends React.Component {
 		//returning the filtered data from search
 		const lowercasedFilter = this.state.search.toLowerCase();
 		const filteredData = AccountsItems.filter((item) => {
-			return Object.keys(item).some((key) =>
-				item[key].toString().toLowerCase().includes(lowercasedFilter)
-			);
+			// return Object.keys(item).some((key) =>
+			// 	item[key].toString().toLowerCase().includes(lowercasedFilter)
+			// );
+			return item;
 		});
 		console.log(this.state);
 		return (
@@ -137,7 +149,10 @@ class AccountsIndex extends React.Component {
 							<div className="flex flex-col lg:flex-row p-4 lg:p-8 justify-end items-start lg:items-stretch w-full">
 								<div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
 									<div className="lg:ml-6 flex items-start w-full">
-										<div className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
+										<div
+											onClick={this.OnToggleExportTable}
+											className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
+										>
 											<i class="fal fa-print fa-lg"></i>
 										</div>
 										<div
@@ -221,26 +236,28 @@ class AccountsIndex extends React.Component {
 										</tr>
 									</thead>
 									<tbody>
-										{filteredData.map((item) => (
+										{filteredData.map((account) => (
 											<tr
-												key={item.id}
+												key={account.id}
 												className="h-24 border-gray-300 dark:border-gray-200 border-b"
 											>
 												<td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-													{item.id}
+													{account.id}
 												</td>
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-													{item.username}
+													{account.username}
 												</td>
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-													{item.name}
+													{account.name}
 												</td>
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-													{item.email}
+													{account.email}
 												</td>
 												<td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-													{item.is_active ? 'Active' : 'Inactive'}{' '}
-													<strong>{item.is_superuser ? '(Admin)' : ''}</strong>
+													{account.is_active ? 'Active' : 'Inactive'}{' '}
+													<strong>
+														{account.is_superuser ? '(Admin)' : ''}
+													</strong>
 												</td>
 												{/* <td className="pr-6 whitespace-no-wrap">
                         							<div className="flex items-center">
@@ -259,7 +276,7 @@ class AccountsIndex extends React.Component {
 
 												<td className="pr-8 relative">
 													<div
-														id={item.id}
+														id={account.id}
 														className="mt-8 absolute left-0 -ml-12 shadow-md z-10 hidden w-32"
 													>
 														<ul className="bg-white dark:bg-gray-800 shadow rounded py-1">
@@ -277,7 +294,7 @@ class AccountsIndex extends React.Component {
 													<button className="text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
-															onClick={this.setSeeMore(item.id)}
+															onClick={this.setSeeMore(account.id)}
 															className="icon icon-tabler icon-tabler-dots-vertical dropbtn"
 															width={28}
 															height={28}
@@ -313,6 +330,16 @@ class AccountsIndex extends React.Component {
 					onEditCloseButton={this.onEditCloseButton}
 					onSubmit={this.onSubmit}
 				/>
+				<div
+					class={
+						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
+					}
+				>
+					<AccountTableExportModal
+						OnToggleExportTable={this.OnToggleExportTable}
+						accounts={filteredData}
+					/>
+				</div>
 			</>
 		);
 	}
