@@ -4,6 +4,7 @@ import ReactToPrint from 'react-to-print';
 import { ProductTablePrint } from './ProductTablePrint';
 export class ProductsTableExportModal extends React.PureComponent {
 	render() {
+		const { OnToggleExportTable, products } = this.props;
 		return (
 			<>
 				<div class="mx-auto max-w-screen-lg h-full">
@@ -56,7 +57,7 @@ export class ProductsTableExportModal extends React.PureComponent {
 											content={() => this.componentRef}
 										/>
 										<div
-											onClick={this.OnToggleExportTable}
+											onClick={OnToggleExportTable}
 											className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
 										>
 											<svg
@@ -85,7 +86,7 @@ export class ProductsTableExportModal extends React.PureComponent {
 				</div>
 				<div className="hidden">
 					<ProductTablePrint
-						productProps={this.props.products}
+						productProps={products}
 						ref={(el) => (this.componentRef = el)}
 					/>
 				</div>

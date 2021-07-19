@@ -3,6 +3,7 @@ let DateNow = Date().toLocaleString().split(' ');
 
 export class AttendanceLogTablePrint extends React.PureComponent {
 	render() {
+		const { AttendanceLogProps } = this.props;
 		return (
 			<div className="w-full p-10">
 				<div class="mb-8 flex justify-between">
@@ -64,7 +65,7 @@ export class AttendanceLogTablePrint extends React.PureComponent {
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.AttendanceLogProps.map((attendance) => (
+						{AttendanceLogProps.map((attendance) => (
 							<tr
 								key={attendance.id}
 								className="h-24 border-gray-300 dark:border-gray-200 border-b"

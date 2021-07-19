@@ -11,7 +11,6 @@ let DateNow = Date().toLocaleString().split(' ');
 class ProductReport extends React.Component {
 	static propTypes = {
 		products: PropTypes.array.isRequired,
-
 		getProductList: PropTypes.func.isRequired,
 	};
 	state = {

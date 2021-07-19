@@ -53,6 +53,7 @@ class DashboardIndex extends React.Component {
 
 	render() {
 		// console.log(Date(start.toLocaleString()), end.toLocaleString());
+		const { transactions, products, transaction_items } = this.props;
 		monthlySalesTransaction = 0;
 		dailySalesTransaction = 0;
 		weeklySalesTransaction = 0;
@@ -62,7 +63,7 @@ class DashboardIndex extends React.Component {
 		ProductCount = 0;
 		transactionsFilteredDateSeparated = [];
 		transactionsDailyFiltered = [];
-		this.props.transactions.map((filteredTransactionObject) =>
+		transactions.map((filteredTransactionObject) =>
 			transactionsFilteredDateSeparated.push({
 				id: filteredTransactionObject.id,
 				totalAmount: filteredTransactionObject.totalAmount,
@@ -138,19 +139,19 @@ class DashboardIndex extends React.Component {
 		}
 
 		//Fetch reorder product
-		this.props.products
+		products
 			.filter((prod) => parseInt(prod.stock) < 10)
 			.map((product) => (ReorderProduct += 1));
 		//Fetch zero product
-		this.props.products
+		products
 			.filter((prod) => parseInt(prod.stock) < 1)
 			.map((product) => (ZeroProduct += 1));
 		//Fetch all product
-		this.props.products.map((product) => (ProductCount += 1));
+		products.map((product) => (ProductCount += 1));
 		//Fetch Combine product quantity sales
 		transactionItemsFiltered = [];
 
-		this.props.transaction_items.map((filteredTransactionItemObject) =>
+		transaction_items.map((filteredTransactionItemObject) =>
 			transactionItemsFiltered.push({
 				id: filteredTransactionItemObject.id,
 				productName: filteredTransactionItemObject.product_info.name,
@@ -433,7 +434,7 @@ class DashboardIndex extends React.Component {
 										</tr>
 									</thead>
 									<tbody>
-										{this.props.products
+										{products
 											.filter((prod) => prod.stock < 10)
 											.map((product) => (
 												<tr

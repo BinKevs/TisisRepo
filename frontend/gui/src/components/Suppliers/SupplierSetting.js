@@ -399,7 +399,10 @@ class SupplierSettingIndex extends React.Component {
 						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
 					}
 				>
-					<SupplierTableExportModal suppliers={filteredData} />
+					<SupplierTableExportModal
+						OnToggleExportTable={this.OnToggleExportTable}
+						suppliers={filteredData}
+					/>
 				</div>
 			</>
 		);

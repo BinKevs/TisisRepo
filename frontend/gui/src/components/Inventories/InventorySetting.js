@@ -156,6 +156,7 @@ class InventorySettingIndex extends React.Component {
 		document.getElementById('Body').classList.toggle('overflow-hidden');
 	};
 	render() {
+		const { InputDate, search, productForDropDownSelect } = this.state;
 		// destructure the inventories that came from the reducer so it will be easier to filter and show
 		inventories = [];
 		filteredData = [];
@@ -170,52 +171,96 @@ class InventorySettingIndex extends React.Component {
 			})
 		);
 		// This will filter the data from inventories array filtered at the top
-		const lowercasedFilter = this.state.search.toLowerCase();
+		const lowercasedFilter = search.toLowerCase();
+
 		filteredData = inventories.filter((item) => {
-			if (lowercasedFilter === '') {
-				return item;
-			} else {
-				return item.product.toString().toLowerCase().includes(lowercasedFilter);
-			}
+			return (
+				item.product.toString().toLowerCase().includes(lowercasedFilter) ||
+				item.inventory_id.toString().toLowerCase().includes(lowercasedFilter)
+			);
 		});
-		if (this.state.InputDate !== null) {
-			let InputDateDateSeparated = this.state.InputDate.toString().split(' ');
-			if (this.state.InputDate === '') {
-				if (this.state.productForDropDownSelect !== '') {
-					if (this.state.productForDropDownSelect === 'Select Product') {
-						filteredData = inventories.filter((item) => {
-							return Object.keys(item).some((key) =>
-								item[key].toString().includes('')
-							);
-						});
-					} else {
-						filteredData = inventories.filter((item) => {
-							return Object.keys(item).some((key) =>
-								item[key]
-									.toString()
-									.includes(this.state.productForDropDownSelect)
-							);
-						});
-					}
-				}
-			} else {
+		if (InputDate === '') {
+			filteredData = inventories.filter((item) => {
+				return (
+					item.product.toString().toLowerCase().includes(lowercasedFilter) ||
+					item.inventory_id.toString().toLowerCase().includes(lowercasedFilter)
+				);
+			});
+		} else {
+			if (InputDate === null) {
 				filteredData = inventories.filter((item) => {
-					return Object.keys(item).some((key) =>
-						item[key]
-							.toString()
-							.includes(
-								InputDateDateSeparated[1] +
-									' ' +
-									InputDateDateSeparated[2] +
-									' ' +
-									InputDateDateSeparated[3]
-							)
+					return (
+						item.product.toString().toLowerCase().includes(lowercasedFilter) ||
+						item.inventory_id.toString().includes(lowercasedFilter)
 					);
+				});
+			} else {
+				let InputDateDateSeparated = InputDate.toString().split(' ');
+				filteredData = inventories.filter((item) => {
+					return item.created_at
+						.toString()
+						.includes(
+							InputDateDateSeparated[1] +
+								' ' +
+								InputDateDateSeparated[2] +
+								' ' +
+								InputDateDateSeparated[3]
+						);
 				});
 			}
 		}
-
-		console.log(this.props.suppliers);
+		if (lowercasedFilter !== '' && InputDate !== null && InputDate !== '') {
+			let InputDateDateSeparated = InputDate.toString().split(' ');
+			filteredData = inventories.filter((item) => {
+				return (
+					item.created_at
+						.toString()
+						.includes(
+							InputDateDateSeparated[1] +
+								' ' +
+								InputDateDateSeparated[2] +
+								' ' +
+								InputDateDateSeparated[3]
+						) &&
+					(item.product.toString().toLowerCase().includes(lowercasedFilter) ||
+						item.inventory_id.toString().includes(lowercasedFilter))
+				);
+			});
+		}
+		// if (InputDate !== null) {
+		// 	let InputDateDateSeparated = InputDate.toString().split(' ');
+		// 	if (InputDate === '') {
+		// 		if (productForDropDownSelect !== '') {
+		// 			if (productForDropDownSelect === 'Select Product') {
+		// 				filteredData = inventories.filter((item) => {
+		// 					return Object.keys(item).some((key) =>
+		// 						item[key].toString().includes('')
+		// 					);
+		// 				});
+		// 			} else {
+		// 				filteredData = inventories.filter((item) => {
+		// 					return Object.keys(item).some((key) =>
+		// 						item[key].toString().includes(productForDropDownSelect)
+		// 					);
+		// 				});
+		// 			}
+		// 		}
+		// 	} else {
+		// 		filteredData = inventories.filter((item) => {
+		// 			return Object.keys(item).some((key) =>
+		// 				item[key]
+		// 					.toString()
+		// 					.includes(
+		// 						InputDateDateSeparated[1] +
+		// 							' ' +
+		// 							InputDateDateSeparated[2] +
+		// 							' ' +
+		// 							InputDateDateSeparated[3]
+		// 					)
+		// 			);
+		// 		});
+		// 	}
+		// }
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -277,7 +322,7 @@ class InventorySettingIndex extends React.Component {
 												required
 												class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
 												onChange={this.onChange}
-												value={this.state.search}
+												value={search}
 											/>
 											<label
 												for="search"
@@ -321,11 +366,11 @@ class InventorySettingIndex extends React.Component {
 											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
 												<div>Date : </div>
 												<DatePicker
-													selected={this.state.InputDate}
+													selected={InputDate}
 													onChange={(date) =>
 														this.setState({ InputDate: date })
 													}
-													value={this.state.InputDate}
+													value={InputDate}
 													closeOnScroll={true}
 													placeholderText="Select Date"
 													className="my-1 px-1 py-1 border-2 rounded-l"
@@ -413,7 +458,10 @@ class InventorySettingIndex extends React.Component {
 						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
 					}
 				>
-					<InventoriesTableExportModal inventories={filteredData} />
+					<InventoriesTableExportModal
+						OnToggleExportTable={this.OnToggleExportTable}
+						inventories={filteredData}
+					/>
 				</div>
 			</>
 		);

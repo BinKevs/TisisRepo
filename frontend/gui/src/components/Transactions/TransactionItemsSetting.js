@@ -38,7 +38,9 @@ class TransactionItemsSettingIndex extends React.Component {
 		document.getElementById('Body').classList.toggle('overflow-hidden');
 	};
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+
 	render() {
+		const { InputDate } = this.state;
 		filteredData = [];
 		//destructuring the dictionary for searching/ fetching purposes
 		TransactionItems = [];
@@ -54,51 +56,75 @@ class TransactionItemsSettingIndex extends React.Component {
 		);
 		// returning the filtered data from search
 		const lowercasedFilter = this.state.search.toLowerCase();
+
 		filteredData = TransactionItems.filter((item) => {
-			if (lowercasedFilter === '') {
-				return item;
-			} else {
-				return item.productName
+			return (
+				item.productName.toString().toLowerCase().includes(lowercasedFilter) ||
+				item.transaction_item_id
 					.toString()
 					.toLowerCase()
-					.includes(lowercasedFilter);
-			}
+					.includes(lowercasedFilter)
+			);
 		});
-		if (this.state.InputDate !== null) {
-			let InputDateDateSeparated = this.state.InputDate.toString().split(' ');
-			if (this.state.InputDate === '') {
-				if (this.state.productForDropDownSelect !== '') {
-					if (this.state.productForDropDownSelect === 'Select Product') {
-						filteredData = TransactionItems.filter((item) => {
-							return Object.keys(item).some((key) =>
-								item[key].toString().includes('')
-							);
-						});
-					} else {
-						filteredData = TransactionItems.filter((item) => {
-							return Object.keys(item).some((key) =>
-								item[key]
-									.toString()
-									.includes(this.state.productForDropDownSelect)
-							);
-						});
-					}
-				}
-			} else {
+		if (InputDate === '') {
+			filteredData = TransactionItems.filter((item) => {
+				return (
+					item.productName
+						.toString()
+						.toLowerCase()
+						.includes(lowercasedFilter) ||
+					item.transaction_item_id
+						.toString()
+						.toLowerCase()
+						.includes(lowercasedFilter)
+				);
+			});
+		} else {
+			if (InputDate === null) {
 				filteredData = TransactionItems.filter((item) => {
-					return Object.keys(item).some((key) =>
-						item[key]
+					return (
+						item.productName
 							.toString()
-							.includes(
-								InputDateDateSeparated[1] +
-									' ' +
-									InputDateDateSeparated[2] +
-									' ' +
-									InputDateDateSeparated[3]
-							)
+							.toLowerCase()
+							.includes(lowercasedFilter) ||
+						item.transaction_item_id.toString().includes(lowercasedFilter)
 					);
 				});
+			} else {
+				let InputDateDateSeparated = InputDate.toString().split(' ');
+				filteredData = TransactionItems.filter((item) => {
+					return item.transactionDate
+						.toString()
+						.includes(
+							InputDateDateSeparated[1] +
+								' ' +
+								InputDateDateSeparated[2] +
+								' ' +
+								InputDateDateSeparated[3]
+						);
+				});
 			}
+		}
+		if (lowercasedFilter !== '' && InputDate !== null && InputDate !== '') {
+			let InputDateDateSeparated = InputDate.toString().split(' ');
+			filteredData = TransactionItems.filter((item) => {
+				return (
+					item.transactionDate
+						.toString()
+						.includes(
+							InputDateDateSeparated[1] +
+								' ' +
+								InputDateDateSeparated[2] +
+								' ' +
+								InputDateDateSeparated[3]
+						) &&
+					(item.productName
+						.toString()
+						.toLowerCase()
+						.includes(lowercasedFilter) ||
+						item.transaction_item_id.toString().includes(lowercasedFilter))
+				);
+			});
 		}
 
 		return (
@@ -175,7 +201,7 @@ class TransactionItemsSettingIndex extends React.Component {
 											<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Transaction Item ID
 											</th>
-											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
+											<th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
 												Product Name{' '}
 												{/* <select
 													onChange={this.onChange}
@@ -302,7 +328,10 @@ class TransactionItemsSettingIndex extends React.Component {
 						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
 					}
 				>
-					<TransactionItemsTableExportModal TransactionItems={filteredData} />
+					<TransactionItemsTableExportModal
+						OnToggleExportTable={this.OnToggleExportTable}
+						TransactionItems={filteredData}
+					/>
 				</div>
 			</>
 		);

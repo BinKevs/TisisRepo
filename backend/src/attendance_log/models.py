@@ -13,7 +13,7 @@ class Attendance_Log(models.Model):
     account = models.ForeignKey(
         User, related_name="user_accouunt_attendance_log", on_delete=models.CASCADE, null=True)
     login_at = models.DateTimeField(null=True)
-    logout_at = models.DateTimeField(blank=True,null=True)
+    logout_at = models.DateTimeField(null=True)
     def save(self,*args, **kwargs):
        if not self.attendance_log_id:
            prefix = 'AT-I{}-{}-'.format(timezone.now().strftime('%y'),timezone.now().strftime('%m%d'))

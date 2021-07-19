@@ -110,7 +110,6 @@ class ProductSetting extends React.Component {
 			this.props.getProductList();
 			isItemAdded = false;
 		}
-		console.log(this.props.product);
 	}
 	//this will sent the updated product in the this.props.updateProduct to the action and will reset the state
 	onUpdateSubmit = (productID) => {
@@ -260,27 +259,79 @@ class ProductSetting extends React.Component {
 		);
 		// This will filter the data from inventories array filtered at the top
 		const lowercasedFilter = this.state.search.toLowerCase();
+
+		// if (this.state.categoryForDropDownSelect !== '') {
+		// 	if (this.state.categoryForDropDownSelect === 'Select Category') {
+		// 		filteredData = products.filter((item) => {
+		// 			if (lowercasedFilter === '') {
+		// 				return item;
+		// 			} else {
+		// 				return item.name
+		// 					.toString()
+		// 					.toLowerCase()
+		// 					.includes(lowercasedFilter);
+		// 			}
+		// 		});
+		// 	} else {
+		// 		filteredData = products.filter((item) => {
+		// 			return Object.keys(item).some((key) =>
+		// 				item[key].toString().includes(this.state.categoryForDropDownSelect)
+		// 			);
+		// 		});
+		// 	}
+		// } else {
+		// 	filteredData = products.filter((item) => {
+		// 		if (lowercasedFilter === '') {
+		// 			return item;
+		// 		} else {
+		// 			return item.name.toString().toLowerCase().includes(lowercasedFilter);
+		// 		}
+		// 	});
+		// }
+		console.log(this.state.categoryForDropDownSelect);
 		filteredData = products.filter((item) => {
-			if (lowercasedFilter === '') {
-				return item;
-			} else {
-				return item.name.toString().toLowerCase().includes(lowercasedFilter);
-			}
+			return (
+				item.name.toString().toLowerCase().includes(lowercasedFilter) ||
+				item.product_id.toString().toLowerCase().includes(lowercasedFilter)
+			);
 		});
-		if (this.state.categoryForDropDownSelect !== '') {
+		if (this.state.categoryForDropDownSelect === '') {
+			filteredData = products.filter((item) => {
+				return (
+					item.name.toString().toLowerCase().includes(lowercasedFilter) ||
+					item.product_id.toString().toLowerCase().includes(lowercasedFilter)
+				);
+			});
+		} else {
 			if (this.state.categoryForDropDownSelect === 'Select Category') {
 				filteredData = products.filter((item) => {
-					return Object.keys(item).some((key) =>
-						item[key].toString().includes('')
+					return (
+						item.name.toString().toLowerCase().includes(lowercasedFilter) ||
+						item.product_id.toString().toLowerCase().includes(lowercasedFilter)
 					);
 				});
 			} else {
 				filteredData = products.filter((item) => {
-					return Object.keys(item).some((key) =>
-						item[key].toString().includes(this.state.categoryForDropDownSelect)
-					);
+					return item.category
+						.toString()
+						.includes(this.state.categoryForDropDownSelect);
 				});
 			}
+		}
+		if (
+			lowercasedFilter !== '' &&
+			this.state.categoryForDropDownSelect !== 'Select Category' &&
+			this.state.categoryForDropDownSelect !== ''
+		) {
+			filteredData = products.filter((item) => {
+				return (
+					item.category
+						.toString()
+						.includes(this.state.categoryForDropDownSelect) &&
+					(item.name.toString().toLowerCase().includes(lowercasedFilter) ||
+						item.product_id.toString().toLowerCase().includes(lowercasedFilter))
+				);
+			});
 		}
 
 		return (
@@ -523,7 +574,10 @@ class ProductSetting extends React.Component {
 						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
 					}
 				>
-					<ProductsTableExportModal products={filteredData} />
+					<ProductsTableExportModal
+						OnToggleExportTable={this.OnToggleExportTable}
+						products={filteredData}
+					/>
 				</div>
 			</>
 		);

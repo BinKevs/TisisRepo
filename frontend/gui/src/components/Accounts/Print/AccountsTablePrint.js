@@ -3,6 +3,7 @@ let DateNow = Date().toLocaleString().split(' ');
 
 export class AccountsTablePrint extends React.PureComponent {
 	render() {
+		const { accountsProps } = this.props;
 		return (
 			<div className="w-full p-10">
 				<div class="mb-8 flex justify-between">
@@ -67,7 +68,7 @@ export class AccountsTablePrint extends React.PureComponent {
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.accountsProps.map((account) => (
+						{accountsProps.map((account) => (
 							<tr
 								key={account.id}
 								className="h-24 border-gray-300 dark:border-gray-200 border-b"

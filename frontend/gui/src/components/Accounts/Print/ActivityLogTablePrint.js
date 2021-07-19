@@ -3,6 +3,7 @@ let DateNow = Date().toLocaleString().split(' ');
 
 export class ActivityLogTablePrint extends React.PureComponent {
 	render() {
+		const { ActivityLogProps } = this.props;
 		return (
 			<div className="w-full p-10">
 				<div class="mb-8 flex justify-between">
@@ -64,7 +65,7 @@ export class ActivityLogTablePrint extends React.PureComponent {
 						</tr>
 					</thead>
 					<tbody>
-						{this.props.ActivityLogProps.map((activity) => (
+						{ActivityLogProps.map((activity) => (
 							<tr
 								key={activity.id}
 								className="h-24 border-gray-300 dark:border-gray-200 border-b"

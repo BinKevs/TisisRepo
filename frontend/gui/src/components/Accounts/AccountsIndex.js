@@ -108,8 +108,6 @@ class AccountsIndex extends React.Component {
 		document.getElementById('Body').classList.toggle('overflow-hidden');
 	};
 	render() {
-		const { username, email, first_name, last_name, password, password2 } =
-			this.state;
 		//destructuring the dictionary for searching/ fetching purposes
 		AccountsItems = [];
 		this.props.accounts.map((accounts) =>
@@ -130,7 +128,6 @@ class AccountsIndex extends React.Component {
 			// );
 			return item;
 		});
-		console.log(this.state);
 		return (
 			<>
 				<div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">

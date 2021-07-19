@@ -38,7 +38,7 @@ class TransactionSettingIndex extends React.Component {
 	};
 	render() {
 		//returning the search filtered
-
+		const { InputDate } = this.state;
 		Transactions = [];
 		this.props.transactions.map((trans) =>
 			Transactions.push({
@@ -56,33 +56,61 @@ class TransactionSettingIndex extends React.Component {
 		filteredData = [];
 		const lowercasedFilter = this.state.search.toLowerCase();
 		filteredData = Transactions.filter((item) => {
-			return Object.keys(item).some((key) =>
-				item[key].toString().toLowerCase().includes(lowercasedFilter)
+			return (
+				item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
+				item.transaction_id.toString().toLowerCase().includes(lowercasedFilter)
 			);
 		});
-		if (this.state.InputDate !== null) {
-			let InputDateDateSeparated = this.state.InputDate.toString().split(' ');
-			if (this.state.InputDate === '') {
+		if (InputDate === '') {
+			filteredData = Transactions.filter((item) => {
+				return (
+					item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
+					item.transaction_id
+						.toString()
+						.toLowerCase()
+						.includes(lowercasedFilter)
+				);
+			});
+		} else {
+			if (InputDate === null) {
 				filteredData = Transactions.filter((item) => {
-					return Object.keys(item).some((key) =>
-						item[key].toString().includes('')
+					return (
+						item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
+						item.transaction_id.toString().includes(lowercasedFilter)
 					);
 				});
 			} else {
+				let InputDateDateSeparated = InputDate.toString().split(' ');
 				filteredData = Transactions.filter((item) => {
-					return Object.keys(item).some((key) =>
-						item[key]
-							.toString()
-							.includes(
-								InputDateDateSeparated[1] +
-									' ' +
-									InputDateDateSeparated[2] +
-									' ' +
-									InputDateDateSeparated[3]
-							)
-					);
+					return item.created_at
+						.toString()
+						.includes(
+							InputDateDateSeparated[1] +
+								' ' +
+								InputDateDateSeparated[2] +
+								' ' +
+								InputDateDateSeparated[3]
+						);
 				});
 			}
+		}
+		if (lowercasedFilter !== '' && InputDate !== null && InputDate !== '') {
+			let InputDateDateSeparated = InputDate.toString().split(' ');
+			filteredData = Transactions.filter((item) => {
+				return (
+					item.created_at
+						.toString()
+						.includes(
+							InputDateDateSeparated[1] +
+								' ' +
+								InputDateDateSeparated[2] +
+								' ' +
+								InputDateDateSeparated[3]
+						) &&
+					(item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
+						item.transaction_id.toString().includes(lowercasedFilter))
+				);
+			});
 		}
 		return (
 			<>
@@ -305,7 +333,10 @@ class TransactionSettingIndex extends React.Component {
 						this.state.table_export_modal ? 'h-screen ' : 'h-screen hidden'
 					}
 				>
-					<TransactionsTableExportModal Transactions={filteredData} />
+					<TransactionsTableExportModal
+						OnToggleExportTable={this.OnToggleExportTable}
+						Transactions={filteredData}
+					/>
 				</div>
 			</>
 		);
