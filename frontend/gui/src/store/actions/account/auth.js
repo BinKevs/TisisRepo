@@ -10,9 +10,11 @@ import {
 	REGISTER_SUCCESS,
 	REGISTER_FAIL,
 	GET_ACCOUNT_LIST,
+	GET_ACCOUNT,
 	GET_ACTIVITY_LOG_LIST,
 	GET_ATTENDANCE_LOG_LIST,
 	ADD_ACCOUNT,
+	UPDATE_ACCOUNT,
 } from './types';
 import swal from 'sweetalert';
 import { HandleSuccessMessages } from '../../../Helpers/functions';
@@ -35,11 +37,27 @@ export const loadUser = () => (dispatch, getState) => {
 };
 export const AddAccount = (data) => (dispatch, getState) => {
 	axios
-		.post(URL_IMPORT + '/api/auth/register', data, tokenConfig(getState))
+		.post(URL_IMPORT + '/api/auth/setting', data, tokenConfig(getState))
 		.then((res) => {
 			HandleSuccessMessages('Account Added', 'success');
 			dispatch({
 				type: ADD_ACCOUNT,
+				payload: res.data,
+			});
+		})
+		.catch((err) => console.log(err));
+};
+export const UpdateAccount = (AccountID, data) => (dispatch, getState) => {
+	axios
+		.put(
+			URL_IMPORT + '/api/auth/setting/' + AccountID + '/',
+			data,
+			tokenConfig(getState)
+		)
+		.then((res) => {
+			HandleSuccessMessages('Account Updated', 'success');
+			dispatch({
+				type: UPDATE_ACCOUNT,
 				payload: res.data,
 			});
 		})
@@ -102,18 +120,6 @@ export const register =
 				});
 			});
 	};
-// export const addSupplier = (data) => (dispatch, getState) => {
-// 	axios
-// 		.post(url, data, tokenConfig(getState))
-// 		.then((res) => {
-// 			HandleSuccessMessages('Supplier Added', 'success');
-// 			dispatch({
-// 				type: ADD_SUPPLIER,
-// 				payload: res.data,
-// 			});
-// 		})
-// 		.catch((err) => console.log(err));
-// };
 export const logout = () => (dispatch, getState) => {
 	axios
 		.post(URL_IMPORT + '/api/auth/logout/', null, tokenConfig(getState))
@@ -125,24 +131,6 @@ export const logout = () => (dispatch, getState) => {
 		.catch((err) => {
 			console.log(err);
 		});
-};
-export const tokenConfig = (getState) => {
-	// Get token from state
-	const token = getState().AuthReducer.token;
-
-	// Headers
-	const config = {
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	};
-
-	// If token, add to headers config
-	if (token) {
-		config.headers['Authorization'] = `Token ${token}`;
-	}
-
-	return config;
 };
 
 // Account setting fetching account list
@@ -156,7 +144,17 @@ export const getAccountList = () => (dispatch, getState) => {
 			});
 		});
 };
-
+export const getAccount = (AccountID) => (dispatch, getState) => {
+	axios
+		.get(URL_IMPORT + '/api/accounts/' + AccountID + '/', tokenConfig(getState))
+		.then((res) => {
+			dispatch({
+				type: GET_ACCOUNT,
+				payload: res.data,
+			});
+		})
+		.catch((err) => console.log(err));
+};
 // Fetching activity log
 export const getActivityLogList = () => (dispatch, getState) => {
 	axios
@@ -179,4 +177,22 @@ export const getAttendanceLogList = () => (dispatch, getState) => {
 				payload: res.data,
 			});
 		});
+};
+export const tokenConfig = (getState) => {
+	// Get token from state
+	const token = getState().AuthReducer.token;
+
+	// Headers
+	const config = {
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	};
+
+	// If token, add to headers config
+	if (token) {
+		config.headers['Authorization'] = `Token ${token}`;
+	}
+
+	return config;
 };

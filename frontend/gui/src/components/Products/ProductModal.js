@@ -24,6 +24,7 @@ const ProductModal = (props) => {
 		image,
 		productID,
 		urlFile,
+		ProductNameError,
 	} = props.state;
 	console.log(props.state);
 	return (
@@ -42,10 +43,19 @@ const ProductModal = (props) => {
 									}
 								>
 									<div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
-										<div className="flex items-center justify-center w-full">
-											<h1 className="text-center text-gray-800 dark:text-gray-100 text-2xl font-bold tracking-normal leading-tight mb-4">
-												{!EditButtonIsClicked ? 'Add' : 'Update'} Product
-											</h1>
+										<div className="flex items-center justify-start w-full">
+											<div class="text-left p-0 mb-8">
+												<div>
+													<i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{' '}
+													<h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
+														ABC Motor Parts
+													</h1>
+												</div>
+
+												<h1 class="text-gray-800 text-3xl font-medium">
+													{!EditButtonIsClicked ? 'Add' : 'Update'} Product
+												</h1>
+											</div>
 										</div>
 										<div className="">
 											<div class="relative z-0 w-full mb-5">
@@ -56,7 +66,11 @@ const ProductModal = (props) => {
 													value={productName}
 													onChange={onChange}
 													placeholder=" "
-													class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+													class={
+														ProductNameError !== ''
+															? 'pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-red-600 text-red-600'
+															: 'pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200'
+													}
 												/>
 												<label
 													for="productName"
@@ -64,8 +78,8 @@ const ProductModal = (props) => {
 												>
 													Name
 												</label>
-												<span class="text-sm text-red-600 hidden" id="error">
-													Name is required
+												<span class="text-sm text-red-600" id="error">
+													{ProductNameError}
 												</span>
 											</div>
 											<div class="relative z-0 w-full mb-5">
@@ -89,12 +103,22 @@ const ProductModal = (props) => {
 											</div>
 											<div class="relative z-0 w-full mb-5 space-y-4">
 												<label class="block">Image</label>
-												<input
-													class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
-													type="file"
-													name="image"
-													onChange={onChange}
-												/>
+												{!EditButtonIsClicked ? (
+													<input
+														class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
+														type="file"
+														name="image"
+														required
+														onChange={onChange}
+													/>
+												) : (
+													<input
+														class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
+														type="file"
+														name="image"
+														onChange={onChange}
+													/>
+												)}
 
 												{!EditButtonIsClicked ? (
 													<></>
@@ -118,6 +142,11 @@ const ProductModal = (props) => {
 											<div class="relative z-0 w-full mb-5">
 												<label class="block my-2">Select Category</label>
 												<div class="relative inline-block w-full text-gray-700">
+													{/* <input
+														type="text"
+														placeholder="Search"
+														class="pt-3 pb-2 block w-full border-gray-200"
+													/> */}
 													<select
 														onChange={onChange}
 														name="categoryID"
@@ -131,6 +160,7 @@ const ProductModal = (props) => {
 														) : (
 															''
 														)}
+
 														{categories.map((categoryItem) => (
 															<option
 																selected={

@@ -179,7 +179,7 @@ class InventoriesReport extends React.Component {
 						{!this.state.occupied ? (
 							<>
 								{/* <div class="absolute w-full h-full z-25 bg-gray-900 opacity-50"></div> */}
-								<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 font-medium text-gray-900 text-center text-3xl">
+								<div class=" z-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-medium text-gray-900 text-center text-3xl">
 									<div>No data available!</div> Please select a starting date
 									and ending date in the upper right corner.
 								</div>

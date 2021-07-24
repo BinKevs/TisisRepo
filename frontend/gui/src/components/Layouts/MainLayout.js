@@ -5,6 +5,7 @@ import { logout } from '../../store/actions/account/auth';
 import React from 'react';
 import { loadUser } from '../../store/actions/account/auth';
 import swal from 'sweetalert';
+import { Redirect } from 'react-router-dom';
 class MainLayout extends React.Component {
 	state = {
 		DashboardNavBtn: false,
@@ -17,6 +18,7 @@ class MainLayout extends React.Component {
 		TransactionsItemsNavBtn: false,
 		showButtonScroll: false,
 		ArchiveNavBtn: false,
+		SideButton: false,
 	};
 
 	componentDidMount() {

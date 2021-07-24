@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 const AccountFormModal = (props) => {
-	const { username, email, first_name, last_name, password, password2 } =
+	const { id, username, email, first_name, last_name, password, password2 } =
 		props.state;
 	const {
 		onChange,
@@ -11,6 +11,7 @@ const AccountFormModal = (props) => {
 		onModalToggleAdd,
 		modal,
 		handleCheck,
+		onUpdateSubmit,
 	} = props;
 	return (
 		<>
@@ -35,7 +36,12 @@ const AccountFormModal = (props) => {
 										Create your Account here.
 									</h1>
 								</div> */}
-								<form onSubmit={onSubmit} class="mt-9">
+								<form
+									onSubmit={
+										!EditButtonIsClicked ? onSubmit : onUpdateSubmit(id)
+									}
+									class="mt-9"
+								>
 									<div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
 										<div class="text-left p-0 mb-8">
 											<div>

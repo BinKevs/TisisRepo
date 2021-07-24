@@ -33,10 +33,19 @@ const InventoryModal = (props) => {
 									}
 								>
 									<div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
-										<div className="flex items-center justify-center w-full">
-											<h1 className="text-center text-gray-800 dark:text-gray-100 text-2xl font-bold tracking-normal leading-tight mb-4">
-												{!EditButtonIsClicked ? 'Add' : 'Update'} Inventory
-											</h1>
+										<div className="flex items-center justify-start w-full">
+											<div class="text-left p-0 mb-8">
+												<div>
+													<i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{' '}
+													<h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
+														ABC Motor Parts
+													</h1>
+												</div>
+
+												<h1 class="text-gray-800 text-3xl font-medium">
+													{!EditButtonIsClicked ? 'Add' : 'Update'} Inventory
+												</h1>
+											</div>
 										</div>
 
 										<div className="">

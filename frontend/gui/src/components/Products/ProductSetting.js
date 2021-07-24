@@ -44,6 +44,7 @@ class ProductSetting extends React.Component {
 		modal: false,
 		categoryForDropDownSelect: '',
 		table_export_modal: false,
+		ProductNameError: '',
 	};
 	handleCategoryDropDown(CategoryName) {
 		return (event) => {
@@ -73,7 +74,26 @@ class ProductSetting extends React.Component {
 
 			isImageChanged = true;
 		} else {
-			this.setState({ [e.target.name]: e.target.value });
+			if (e.target.name === 'productName') {
+				const found = this.props.products.some(
+					(item) => item.name === e.target.value
+				);
+				if (found) {
+					this.setState({
+						ProductNameError: 'Product name already exist!',
+						[e.target.name]: e.target.value,
+					});
+				} else {
+					this.setState({
+						ProductNameError: '',
+						[e.target.name]: e.target.value,
+					});
+				}
+			} else {
+				this.setState({
+					[e.target.name]: e.target.value,
+				});
+			}
 		}
 	};
 	// Submitting the name in the add category action
@@ -158,41 +178,43 @@ class ProductSetting extends React.Component {
 	// sending the product that will be added to this.props.addProduct in the actions also reset the state
 	onAddSubmit = (e) => {
 		e.preventDefault();
-		const {
-			productName,
-			description,
-			price,
-			categoryID,
-			supplierID,
-			stock,
-			image,
-		} = this.state;
-		const action_done = 'Product Added';
-		const formData = new FormData();
+		if (this.state.ProductNameError === '') {
+			const {
+				productName,
+				description,
+				price,
+				categoryID,
+				supplierID,
+				stock,
+				image,
+			} = this.state;
+			const action_done = 'Product Added';
+			const formData = new FormData();
 
-		formData.append('name', productName);
-		formData.append('description', description);
-		formData.append('price', price);
-		formData.append('category', categoryID);
-		formData.append('supplier', supplierID);
-		formData.append('stock', stock);
-		formData.append('image', image);
-		formData.append('action_done', action_done);
-		this.props.addProduct(formData);
-		this.setState({
-			productName: '',
-			description: '',
-			price: 0,
-			supplierID: 0,
-			categoryID: 0,
-			new_stock: 0,
-			stock: 0,
-			image: null,
-		});
-		isImageChanged = false;
-		this.ModalFunction();
-		isItemAdded = true;
-		this.props.getProductList();
+			formData.append('name', productName);
+			formData.append('description', description);
+			formData.append('price', price);
+			formData.append('category', categoryID);
+			formData.append('supplier', supplierID);
+			formData.append('stock', stock);
+			formData.append('image', image);
+			formData.append('action_done', action_done);
+			this.props.addProduct(formData);
+			this.setState({
+				productName: '',
+				description: '',
+				price: 0,
+				supplierID: 0,
+				categoryID: 0,
+				new_stock: 0,
+				stock: 0,
+				image: null,
+			});
+			isImageChanged = false;
+			this.ModalFunction();
+			isItemAdded = true;
+			this.props.getProductList();
+		}
 	};
 
 	// when edit button click this will fetch the supplier that will be edited and change the isEditButtonClicked status to true

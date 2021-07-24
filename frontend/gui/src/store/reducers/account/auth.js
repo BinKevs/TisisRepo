@@ -8,9 +8,11 @@ import {
 	REGISTER_SUCCESS,
 	REGISTER_FAIL,
 	GET_ACCOUNT_LIST,
+	GET_ACCOUNT,
 	GET_ACTIVITY_LOG_LIST,
 	GET_ATTENDANCE_LOG_LIST,
 	ADD_ACCOUNT,
+	UPDATE_ACCOUNT,
 } from '../../actions/account/types';
 const initialState = {
 	token: localStorage.getItem('token'),
@@ -51,9 +53,13 @@ const AuthReducer = (state = initialState, action) => {
 		case ADD_ACCOUNT:
 			return {
 				...state,
-				accounts: [...state.accounts, action.payload],
+				accounts: [action.payload, ...state.accounts],
 			};
-
+		case UPDATE_ACCOUNT:
+			return {
+				...state,
+				accounts: [action.payload, ...state.accounts],
+			};
 		case USER_LOADED:
 			return {
 				...state,
@@ -66,6 +72,11 @@ const AuthReducer = (state = initialState, action) => {
 			return {
 				...state,
 				accounts: action.payload,
+			};
+		case GET_ACCOUNT:
+			return {
+				...state,
+				account: action.payload,
 			};
 		case GET_ACTIVITY_LOG_LIST:
 			return {

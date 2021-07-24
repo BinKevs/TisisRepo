@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getAccountList } from '../../store/actions/account/auth';
-import { AddAccount } from '../../store/actions/account/auth';
+import { getAccountList, getAccount } from '../../store/actions/account/auth';
+import { AddAccount, UpdateAccount } from '../../store/actions/account/auth';
 import AccountFormModal from './AccountFormModal';
 import { AccountTableExportModal } from './Print/AccountTableExportModal';
 import { Link } from 'react-router-dom';
 let AccountsItems = [];
 let EditButtonIsClicked = false;
+let ItemAdded = false;
 class AccountsIndex extends React.Component {
 	state = {
 		search: '',
@@ -28,6 +29,26 @@ class AccountsIndex extends React.Component {
 	}
 	componentDidMount() {
 		this.props.getAccountList();
+	}
+	componentDidUpdate(prevProps, prevState) {
+		if (this.props.account !== prevProps.account) {
+			const { id, username, email, first_name, last_name, IsAdmin } =
+				this.props.account;
+			this.setState({
+				id,
+				username,
+				email,
+				first_name,
+				last_name,
+				IsAdmin,
+			});
+			this.props.getAccountList();
+		}
+		if (ItemAdded === true) {
+			this.props.getAccountList();
+			console.log(this.props.accounts);
+			ItemAdded = false;
+		}
 	}
 	handleCheck = (e) => {
 		this.setState({ IsAdmin: !this.state.IsAdmin });
@@ -67,6 +88,38 @@ class AccountsIndex extends React.Component {
 		this.ModalFunction();
 		this.props.getAccountList();
 	};
+
+	onUpdateSubmit = (AccountID) => {
+		return (event) => {
+			event.preventDefault();
+			const {
+				username,
+				email,
+				first_name,
+				last_name,
+				IsAdmin,
+				password,
+				password2,
+			} = this.state;
+			if (password !== password2) {
+				console.log('Passwords do not match');
+			} else {
+				const newUser = {
+					username,
+					email,
+					is_superuser: IsAdmin,
+					first_name,
+					last_name,
+					password,
+					is_active: true,
+				};
+				this.props.UpdateAccount(AccountID, newUser);
+			}
+			ItemAdded = true;
+			this.props.getAccountList();
+			this.ModalFunction();
+		};
+	};
 	// when edit button click this will fetch the supplier that will be edited and change the isEditButtonClicked status to true
 	onEditCloseButton = (event) => {
 		event.preventDefault();
@@ -85,12 +138,13 @@ class AccountsIndex extends React.Component {
 		this.ModalFunction();
 	};
 	//this will toggle the edit modal form
-	onModalToggleEdit(supplierID) {
+	onModalToggleEdit(AccountID) {
 		return (event) => {
 			event.preventDefault();
-			this.props.getSupplier(supplierID);
+			this.props.getAccount(AccountID);
 			this.ModalFunction();
 			EditButtonIsClicked = true;
+			console.log(this.props.account);
 		};
 	}
 	// function that called to open or close modal
@@ -110,6 +164,7 @@ class AccountsIndex extends React.Component {
 	render() {
 		//destructuring the dictionary for searching/ fetching purposes
 		AccountsItems = [];
+		console.log(this.props.accounts);
 		this.props.accounts.map((accounts) =>
 			AccountsItems.push({
 				id: accounts.id,
@@ -270,28 +325,24 @@ class AccountsIndex extends React.Component {
                             							</p>
                        								 </div>
                     							</td> */}
-
 												<td className="pr-8 relative">
-													<div
-														id={account.id}
-														className="mt-8 absolute left-0 -ml-12 shadow-md z-10 hidden w-32"
-													>
-														<ul className="bg-white dark:bg-gray-800 shadow rounded py-1">
-															<li
-																// onClick={this.onModalToggle}
-																className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal"
-															>
-																Edit
-															</li>
-															<li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal">
-																Delete
-															</li>
-														</ul>
-													</div>
-													<button className="text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
+													<button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
+														<div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
+															<ul className="bg-white dark:bg-gray-800 shadow rounded p-2">
+																<li
+																	// onClick={this.onModalToggle}
+																	onClick={this.onModalToggleEdit(account.id)}
+																	className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
+																>
+																	Edit
+																</li>
+																<li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal">
+																	Delete
+																</li>
+															</ul>
+														</div>
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
-															onClick={this.setSeeMore(account.id)}
 															className="icon icon-tabler icon-tabler-dots-vertical dropbtn"
 															width={28}
 															height={28}
@@ -320,12 +371,13 @@ class AccountsIndex extends React.Component {
 				<AccountFormModal
 					modal={this.state.modal}
 					onModalToggleAdd={this.onModalToggleAdd}
-					state={!EditButtonIsClicked ? this.state : this.props.supplier}
+					state={this.state}
 					onChange={this.onChange}
 					handleCheck={this.handleCheck}
 					EditButtonIsClicked={EditButtonIsClicked}
 					onEditCloseButton={this.onEditCloseButton}
 					onSubmit={this.onSubmit}
+					onUpdateSubmit={this.onUpdateSubmit}
 				/>
 				<div
 					class={
@@ -343,10 +395,13 @@ class AccountsIndex extends React.Component {
 }
 const mapStateToProps = (state) => ({
 	accounts: state.AuthReducer.accounts,
+	account: state.AuthReducer.account,
 	isAuthenticated: state.AuthReducer.isAuthenticated,
 });
 
 export default connect(mapStateToProps, {
 	getAccountList,
+	getAccount,
 	AddAccount,
+	UpdateAccount,
 })(AccountsIndex);
