@@ -1,7 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 const SupplierModal = (props) => {
-	const { name, address, phone_number, supplierID } = props.state;
+	const {
+		name,
+		address,
+		phone_number,
+		supplierID,
+		SupplierNameError,
+		SupplierPhoneNumberError,
+	} = props.state;
 	const {
 		onChange,
 		onAddSubmit,
@@ -52,7 +59,11 @@ const SupplierModal = (props) => {
 													value={name}
 													placeholder=" "
 													required
-													class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+													class={
+														SupplierNameError !== ''
+															? 'pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-red-600 text-red-600'
+															: 'pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200'
+													}
 												/>
 												<label
 													for="name"
@@ -60,8 +71,8 @@ const SupplierModal = (props) => {
 												>
 													Name
 												</label>
-												<span class="text-sm text-red-600 hidden" id="error">
-													Name is required
+												<span class="text-sm text-red-600" id="error">
+													{SupplierNameError}
 												</span>
 											</div>
 											<div class="relative z-0 w-full mb-5">
@@ -92,7 +103,11 @@ const SupplierModal = (props) => {
 												value={phone_number}
 												placeholder=" "
 												required
-												class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+												class={
+													SupplierPhoneNumberError !== ''
+														? 'pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-red-600 text-red-600'
+														: 'pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200'
+												}
 											/>
 											<label
 												for="telephone"
@@ -100,8 +115,8 @@ const SupplierModal = (props) => {
 											>
 												Telephone
 											</label>
-											<span class="text-sm text-red-600 hidden" id="error">
-												Telephone is required
+											<span class="text-sm text-red-600" id="error">
+												{SupplierPhoneNumberError}
 											</span>
 										</div>
 										<div className="flex items-center justify-center w-full">

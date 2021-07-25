@@ -47,7 +47,10 @@ export class ActivityLogTablePrint extends React.PureComponent {
 						</div>
 					</div>
 				</div>
-				<table className="min-w-full bg-white dark:bg-gray-800">
+				<table
+					id="ActivityLog-table"
+					className="min-w-full bg-white dark:bg-gray-800"
+				>
 					<thead>
 						<tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
 							<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">

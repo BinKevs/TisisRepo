@@ -26,6 +26,8 @@ class SupplierSettingIndex extends React.Component {
 		start: 1,
 		end: 15,
 		table_export_modal: false,
+		SupplierNameError: '',
+		SupplierPhoneNumberError: '',
 	};
 	static propTypes = {
 		suppliers: PropTypes.array.isRequired,
@@ -58,7 +60,58 @@ class SupplierSettingIndex extends React.Component {
 			ItemAdded = false;
 		}
 	}
-	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+	onChange = (e) => {
+		if (e.target.name === 'name') {
+			const foundSupplierName = this.props.suppliers.some(
+				(item) => item.name === e.target.value
+			);
+			if (foundSupplierName) {
+				this.setState({
+					SupplierNameError: 'Supplier name already exist!',
+					[e.target.name]: e.target.value,
+				});
+			} else {
+				this.setState({
+					SupplierNameError: '',
+					[e.target.name]: e.target.value,
+				});
+			}
+		}
+		if (e.target.name === 'phone_number') {
+			const foundPhoneNumber = this.props.suppliers.some(
+				(item) => item.phone_number === e.target.value
+			);
+			if (foundPhoneNumber) {
+				this.setState({
+					SupplierPhoneNumberError: 'Phone number already exist!',
+					[e.target.name]: e.target.value,
+				});
+			} else {
+				if (e.target.value.length >= 11) {
+					if (e.target.value.match(/^(09|\+639)\d{9}$/g)) {
+						this.setState({
+							SupplierPhoneNumberError: '',
+							[e.target.name]: e.target.value,
+						});
+					} else {
+						this.setState({
+							SupplierPhoneNumberError: 'Phone number is invalid!',
+							[e.target.name]: e.target.value,
+						});
+					}
+				} else {
+					this.setState({
+						[e.target.name]: e.target.value,
+					});
+				}
+			}
+		} else {
+			this.setState({
+				[e.target.name]: e.target.value,
+			});
+		}
+	};
+
 	// sending the product that will be added to this.props.addSupplier in the actions also reset the state
 	onAddSubmit = (e) => {
 		e.preventDefault();

@@ -336,7 +336,7 @@ class InventorySettingIndex extends React.Component {
 								</div>
 							</div>
 							<div className="w-full overflow-x-auto">
-								<table id="inventory-table" className="min-w-full bg-white">
+								<table className="min-w-full bg-white">
 									<thead>
 										<tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
 											<th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
