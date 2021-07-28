@@ -246,7 +246,22 @@ class InventoriesReport extends React.Component {
 										),
 										datasets: [
 											{
-												label: ' Added Stock',
+												// label:
+												// 	this.state.StartingDate.toString().split(' ')[1] +
+												// 	' ' +
+												// 	this.state.StartingDate.toString().split(' ')[2] +
+												// 	' ' +
+												// 	this.state.StartingDate.toString().split(' ')[3] +
+												// 	' ' +
+												// 	' to ' +
+												// 	this.state.EndingDate.toString().split(' ')[1] +
+												// 	' ' +
+												// 	this.state.EndingDate.toString().split(' ')[2] +
+												// 	' ' +
+												// 	this.state.EndingDate.toString().split(' ')[3] +
+												// 	' ' +
+												// 	' Added Stock',
+												label: 'Added Stock',
 												fill: true,
 												data: InventoriesBetweenDatesInputCombinedSameDate.map(
 													(x) => x.added_stock

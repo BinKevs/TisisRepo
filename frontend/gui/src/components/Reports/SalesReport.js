@@ -12,9 +12,11 @@ let transactionsDateSeparated = [];
 let transactionPerItems = [];
 let ThisDayTransactions = [];
 let ThisMonthTransactions = [];
+let LastMonthTransactions = [];
 let ThisWeekTransactions = [];
 let TransactionItemsCombineSameDate = [];
 let ThisMonthTransactionsCombinedSameDate = [];
+let LastMonthTransactionsCombinedSameDate = [];
 let ThisDayTransactionsCombinedSameDate = [];
 let ThisWeekTransactionsCombinedSameDate = [];
 let DatesThisWeek = [];
@@ -85,11 +87,13 @@ class SalesReport extends React.Component {
 		transactionsDateSeparated = [];
 		transactionPerItems = [];
 		ThisMonthTransactions = [];
+		LastMonthTransactions = [];
 		ThisWeekTransactions = [];
 		ThisDayTransactions = [];
 
 		TransactionItemsCombineSameDate = [];
 		ThisMonthTransactionsCombinedSameDate = [];
+		LastMonthTransactionsCombinedSameDate = [];
 		ThisDayTransactionsCombinedSameDate = [];
 		ThisWeekTransactionsCombinedSameDate = [];
 
@@ -239,6 +243,15 @@ class SalesReport extends React.Component {
 						}
 					}
 				}
+				if (month === 'Jun') {
+					LastMonthTransactions.push({
+						totalAmount: transactionsDateSeparated[i].totalAmount,
+						date:
+							transactionsDateSeparated[i].month +
+							' ' +
+							transactionsDateSeparated[i].day,
+					});
+				}
 			}
 		}
 
@@ -276,6 +289,14 @@ class SalesReport extends React.Component {
 			var dateX = obj.date;
 			if (!this[dateX])
 				ThisMonthTransactionsCombinedSameDate.push((this[dateX] = obj));
+			else
+				this[dateX].totalAmount =
+					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
+		}, Object.create(null));
+		LastMonthTransactions.forEach(function (obj) {
+			var dateX = obj.date;
+			if (!this[dateX])
+				LastMonthTransactionsCombinedSameDate.push((this[dateX] = obj));
 			else
 				this[dateX].totalAmount =
 					parseInt(this[dateX].totalAmount) + parseInt(obj.totalAmount);
@@ -410,7 +431,7 @@ class SalesReport extends React.Component {
 										),
 										datasets: [
 											{
-												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
+												label: 'This week Sales',
 												fill: false,
 												data: ThisWeekTransactionsCombinedSameDate.map(
 													(x) => x.totalAmount
@@ -451,6 +472,10 @@ class SalesReport extends React.Component {
 							<div className="chart">
 								<Bar
 									data={{
+										// labels: [
+										// 	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+										// 	18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+										// ],
 										labels: ThisMonthTransactionsCombinedSameDate.map(
 											(x) => x.date
 										),
@@ -466,6 +491,7 @@ class SalesReport extends React.Component {
 											},
 										],
 									}}
+									// LastMonthTransactionsCombinedSameDate
 									options={{
 										responsive: true,
 										plugins: {
@@ -605,7 +631,7 @@ class SalesReport extends React.Component {
 										labels: filteredData.map((x) => x.productName),
 										datasets: [
 											{
-												label: DateNow[1] + ' ' + DateNow[3] + ' Sales',
+												label: this.state.category + ' Sales',
 												fill: false,
 												data: filteredData.map((x) => x.quantity),
 												// backgroundColor: '#3AAFA9',
