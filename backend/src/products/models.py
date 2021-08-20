@@ -3,6 +3,7 @@ from suppliers.models import Supplier
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from categories.models import Category
+from product_files.models import Product_file
 from django_resized import ResizedImageField
 from django.utils import timezone
 class Product(models.Model):
@@ -16,13 +17,13 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=2)
-
+    file_content = models.ManyToManyField(Product_file, related_name='file_content', blank=True)
+    
     def __str__(self):
         return self.name
     def save(self,*args, **kwargs):
        if not self.product_id:
            prefix = 'PI{}-{}-'.format(timezone.now().strftime('%y'),timezone.now().strftime('%m%d'))
-           print(prefix)
            prev_instances = self.__class__.objects.filter(product_id__contains=prefix)
            if prev_instances.exists():
               last_instance_id = prev_instances.last().product_id[-4:]
@@ -30,18 +31,16 @@ class Product(models.Model):
            else:
                self.product_id = prefix+'{0:04d}'.format(1)
        super(Product, self).save(*args, **kwargs)
-    @receiver(post_save, sender='inventories.Inventory')
-    def update_product_inventory_on_save(sender, instance, raw, **kwargs):
-        print(instance)
-        print(raw)
-        if instance.id:
-            product = Product.objects.get(id=instance.product.id)
-        instance.product.stock += int(instance.new_stock)
-        instance.product.save()
-
+  
     @receiver(post_save, sender='transaction_items.Transaction_item')
     def update_product_transaction_on_save(sender, instance, **kwargs):
         if instance.id:
             product = Product.objects.get(id=instance.product_id)
         instance.product.stock -= instance.quantity
+        instance.product.save()
+    @receiver(post_save, sender='inventories.Inventory')
+    def update_product_inventory_on_save(sender, instance, raw, **kwargs):
+        if instance.id:
+            product = Product.objects.get(id=instance.product.id)
+        instance.product.stock += int(instance.new_stock)
         instance.product.save()

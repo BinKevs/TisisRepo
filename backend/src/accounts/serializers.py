@@ -4,6 +4,16 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 
 
+from django.conf import settings
+
+from rest_framework import serializers
+from dj_rest_auth.models import TokenModel
+from dj_rest_auth.utils import import_callable
+from dj_rest_auth.serializers import UserDetailsSerializer as DefaultUserDetailsSerializer
+
+
+# from allauth.account.models import EmailAddress
+# email_address_user = EmailAddress.objects.get(user_id=96)
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -15,10 +25,16 @@ class AccountSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = ('id', 'username', 'email','is_active','is_superuser','password','date_joined','first_name','last_name')
 # Register Serializer
+
+# class UserEmailSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = EmailAddress
+#         fields = '__all__'
 
 
 class AccountSettingSerializer(serializers.ModelSerializer):
@@ -49,3 +65,20 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Incorrect Credentials")
+
+
+
+# This is to allow you to override the UserDetailsSerializer at any time.
+# If you're sure you won't, you can skip this and use DefaultUserDetailsSerializer directly
+# rest_auth_serializers = getattr(settings, 'REST_AUTH_SERIALIZERS', {})
+# UserDetailsSerializer = import_callable(
+#     rest_auth_serializers.get('USER_DETAILS_SERIALIZER', DefaultUserDetailsSerializer)
+# )
+
+class CustomTokenSerializer(serializers.ModelSerializer):
+    # user = UserDetailsSerializer(read_only=True)
+    user = UserSerializer(many=False, read_only=True)  # this is add by myself.
+
+    class Meta:
+        model = TokenModel
+        fields = ('key','user', )

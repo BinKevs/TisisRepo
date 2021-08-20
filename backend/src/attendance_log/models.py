@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from knox.models import AuthToken
 import datetime
-  
+from activities_log.models import Log_Activity
 from django.db.models.signals import post_save,pre_delete
 from django.dispatch import receiver
 from django.utils import timezone
@@ -29,7 +29,7 @@ class Attendance_Log(models.Model):
         return str(self.id)
     @staticmethod
     def save_log(account):
-        activity_log = Activity_Log(
+        activity_log = Log_Activity(
            account = account,
            login_at = datetime.datetime.now()
         )

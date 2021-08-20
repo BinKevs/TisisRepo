@@ -1,5 +1,4 @@
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
 from categories.models import Category
 import random
 from django.utils import timezone

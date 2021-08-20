@@ -11,7 +11,6 @@ class Log_Activity(models.Model):
     def save(self,*args, **kwargs):
        if not self.activity_log_id:
            prefix = 'AC-I{}-{}-'.format(timezone.now().strftime('%y'),timezone.now().strftime('%m%d'))
-           print(prefix)
            prev_instances = self.__class__.objects.filter(activity_log_id__contains=prefix)
            if prev_instances.exists():
               last_instance_id = prev_instances.last().activity_log_id[-4:]
