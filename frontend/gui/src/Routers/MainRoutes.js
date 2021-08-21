@@ -34,61 +34,53 @@ import PrivateRoute from "../Helpers/PrivateRoute";
 const MainBaseRouter = () => (
   <>
     <Switch>
-      <PrivateRoute
+      <Route
         exact
         path="/customer/products"
         component={ProductListIndexOnlineCustomer}
       />
-      <PrivateRoute
+      <Route
         exact
         path="/customer/products/:productID"
         component={ProductDetails}
       />
-      <PrivateRoute
+      <Route
         exact
         path="/customer/account/settings"
         component={OnlineCustomerAccountSetting}
       />
-      <PrivateRoute
+      <Route
         exact
         path="/customer-checkout"
         component={CheckoutOnlineCustomer}
       />
 
-      <PrivateRoute exact path="/checkout" component={CheckoutIndex} />
-      <PrivateRoute
-        exact
-        path="/products/settings"
-        component={ProductSetting}
-      />
-      <PrivateRoute exact path="/products" component={ProductListIndex} />
+      <Route exact path="/checkout" component={CheckoutIndex} />
+      <Route exact path="/products/settings" component={ProductSetting} />
+      <Route exact path="/products" component={ProductListIndex} />
 
       <Route exact path="/dashboard" component={DashboardIndex} />
 
-      <PrivateRoute exact path="/inventories" component={InventorySetting} />
+      <Route exact path="/inventories" component={InventorySetting} />
 
-      <PrivateRoute exact path="/supplier" component={SupplierSetting} />
+      <Route exact path="/supplier" component={SupplierSetting} />
 
-      <PrivateRoute exact path="/transactions" component={TransactionSetting} />
-      <PrivateRoute
+      <Route exact path="/transactions" component={TransactionSetting} />
+      <Route
         exact
         path="/transactions/items"
         component={TransactionItemsSetting}
       />
 
       {/* <PrivateRoute exact path="/reports" component={ReportIndex} /> */}
-      <PrivateRoute
-        exact
-        path="/reports/inventories"
-        component={InventoriesReport}
-      />
-      <PrivateRoute exact path="/reports/products" component={ProductReport} />
-      <PrivateRoute exact path="/reports/sales" component={SalesReport} />
+      <Route exact path="/reports/inventories" component={InventoriesReport} />
+      <Route exact path="/reports/products" component={ProductReport} />
+      <Route exact path="/reports/sales" component={SalesReport} />
 
-      <PrivateRoute exact path="/activity_log" component={ActivityLog} />
-      <PrivateRoute exact path="/attendance_log" component={AttendanceLog} />
-      <PrivateRoute exact path="/accounts" component={AccountsIndex} />
-      <PrivateRoute
+      <Route exact path="/activity_log" component={ActivityLog} />
+      <Route exact path="/attendance_log" component={AttendanceLog} />
+      <Route exact path="/accounts" component={AccountsIndex} />
+      <Route
         exact
         path="/accounts/settings/menu"
         component={AccountSettingsMenu}

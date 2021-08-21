@@ -1,43 +1,52 @@
 import React from "react";
 class OnlineCustomerAccountSetting extends React.Component {
   render() {
+    let thumbnails = document.getElementsByClassName("thumbnail");
+    let activeImages = document.getElementsByClassName("active");
+
+    for (var i = 0; i < thumbnails.length; i++) {
+      thumbnails[i].addEventListener("click", function () {
+        if (activeImages.length > 0) {
+          activeImages[0].classList.remove("active");
+        }
+
+        this.classList.add("active");
+        document.getElementById("featured").src = this.src;
+      });
+    }
     return (
       <>
         {" "}
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
           <div class="bg-gray-800 pt-3">
-            <div
-              class="
-rounded-tl-3xl
-bg-gradient-to-r
-from-teal_custom
-to-gray-800
-p-4
-shadow
-text-2xl text-white
-"
-            >
+            <div class="rounded-tl-3xl bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white">
               <h3 class="font-bold pl-2">Account Setting</h3>
             </div>
           </div>
           <div className="p-5 w-full">
             {/* overflow-x-hidden */}
-            <div class="bg-white border-t-2 py-2">
-              <nav class="flex flex-col justify-evenly sm:flex-row">
-                <button class=" py-4 px-6 block hover:gray-600 focus:outline-none text-gray-600 border-b-2 font-medium border-gray-600">
-                  ORDERS
-                </button>
-                <button class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
-                  ADDRESSES
-                </button>
-                <button class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
-                  PERSONAL DETAILS
-                </button>
-                <button class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
-                  PASSWORD
-                </button>
-              </nav>
-            </div>
+
+            <section class="mx-auto p-6">
+              <div class="w-full pb-2 overflow-hidden rounded-lg shadow-lg bg-white">
+                <nav class="flex flex-col justify-evenly sm:flex-row">
+                  <button class="py-4 px-6 block hover:gray-600 focus:outline-none text-gray-600 border-b-2 font-medium border-gray-600">
+                    Orders
+                  </button>
+                  <button class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
+                    Address
+                  </button>
+                  <button class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
+                    Payment
+                  </button>
+                  <button class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
+                    Personal Details
+                  </button>
+                  <button class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
+                    Password
+                  </button>
+                </nav>
+              </div>
+            </section>
             <section class="mx-auto p-6 font-mono">
               <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg ">
                 <div class="w-full">

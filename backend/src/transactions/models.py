@@ -38,3 +38,6 @@ class Transaction(models.Model):
             mode_of_payment= mode_of_payment,
         )
         transaction.save()
+
+class OnlineTransaction(models.Model):
+    transaction = models.ForeignKey(Transaction, related_name="online_transaction", on_delete=models.CASCADE, null=False)

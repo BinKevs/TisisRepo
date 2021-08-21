@@ -28,7 +28,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email','is_active','is_superuser','password','date_joined','first_name','last_name')
+        fields = '__all__'
+        # fields = ('id', 'username', 'email','is_active','is_superuser','password','date_joined','first_name','last_name')
 # Register Serializer
 
 # class UserEmailSerializer(serializers.ModelSerializer):
@@ -81,4 +82,5 @@ class CustomTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TokenModel
-        fields = ('key','user', )
+        # fields = ('key','user', )
+        fields = '__all__'
