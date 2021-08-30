@@ -6,110 +6,75 @@ class OnlineTransactionQueuing extends React.Component {
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
           <div class="bg-gray-800 pt-3">
             <div class="rounded-tl-3xl bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white">
-              <h3 class="font-bold pl-2">Transaction Items</h3>
+              <h3 class="font-bold pl-2">Transaction Queueing</h3>
             </div>
           </div>
           <div className="p-5 w-full">
             <div className="w-full overflow-x-auto">
-              <table className="min-w-full bg-white dark:bg-gray-800">
-                <thead>
-                  <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                    <th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                      Transaction ID
-                    </th>
-                    <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                      Product Name
-                    </th>
-                    <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                      Variation
-                    </th>
-                    <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
-                      Date
-                    </th>
-                    <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                      Price
-                    </th>
-
-                    <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                      Quantity
-                    </th>
-                    <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="h-24 border-gray-300 dark:border-gray-200 border-b">
-                    <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                      QWE
-                    </td>
-                    <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                      QWE
-                    </td>
-                    <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                      QWE
-                    </td>
-                    {/* <td className="pr-6 whitespace-no-wrap">
-                        <div className="flex items-center">
-                        <div className="h-8 w-8">
-                            <img
-                            src="https://tuk-cdn.s3.amazonaws.com/assets/components/advance_tables/at_1.png"
-                            alt
-                            className="h-full w-full rounded-full overflow-hidden shadow"
-                        />
-                        </div>
-                        <p className="ml-2 text-gray-800 dark:text-gray-100 tracking-normal leading-4 text-sm">
-                        Carrie Anthony
-                            </p>
+              <section class="mx-auto p-6">
+                <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg bg-white">
+                  <div class="px-4 py-6 text-gray-800 text-3xl font-medium border-b border-gray-300">
+                    Queue Order/s
+                  </div>
+                  <table class="w-full ">
+                    <thead>
+                      <tr class="text-md font-semibold tracking-wide text-left text-gray-600 bg-white uppercase border-b border-gray-300">
+                        {/* <th class="px-4 py-3">Transaction ID</th> */}
+                        <th class="px-4 py-3">Product Name</th>
+                        <th class="px-4 py-3">Variation</th>
+                        <th class="px-4 py-3">Date</th>
+                        <th class="px-4 py-3">Quantity</th>
+                        <th class="px-4 py-3">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="">
+                      <tr class="text-gray-700 border-b border-gray-300">
+                        {/*<td class="px-4 py-3">
+                          <div class="flex items-center text-sm">
+                            <div class="relative w-8 h-8 mr-3 rounded-full md:block">
+                              <img
+                                class="object-cover w-full h-full rounded-full"
+                                src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
+                                alt=""
+                                loading="lazy"
+                              />
+                              <div
+                                class="absolute inset-0 rounded-full shadow-inner"
+                                aria-hidden="true"
+                              ></div>
+                            </div> 
+                            <div>
+                              <p class="font-semibold text-black">Sufyan</p>
+                              <p class="text-xs text-gray-600">Helmet</p>
                             </div>
-                    </td> */}
-                    <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                      QWE
-                    </td>
-                    <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                      QWE
-                    </td>
-                    {/* <td className="pr-8 relative">
-                        <div
-                            id={item.id}
-                            className="mt-8 absolute left-0 -ml-12 shadow-md z-10 hidden w-32"
-                        >
-                            <ul className="bg-white dark:bg-gray-800 shadow rounded py-1">
-                                <li
-                                    
-                                    className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal"
-                                >
-                                    Edit
-                                </li>
-                                <li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal">
-                                    Delete
-                                </li>
-                            </ul>
-                        </div>
-                        <button className="text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                onClick={this.setSeeMore(item.id)}
-                                className="icon icon-tabler icon-tabler-dots-vertical dropbtn"
-                                width={28}
-                                height={28}
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                fill="none"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path stroke="none" d="M0 0h24v24H0z" />
-                                <circle cx={12} cy={12} r={1} />
-                                <circle cx={12} cy={19} r={1} />
-                                <circle cx={12} cy={5} r={1} />
-                            </svg>
-                        </button>
-                    </td> */}
-                  </tr>
-                </tbody>
-              </table>
+                          </div>
+                        </td>*/}
+                        {/* <td class="px-4 py-3 text-sm font-semibold">1821</td> */}
+                        <td class="px-4 py-3 text-sm font-semibold">
+                          Bolt Nut
+                        </td>
+                        <td class="px-4 py-3 text-sm font-semibold">
+                          <div>
+                            <p>Size : XL</p>
+                            <p>Color : RED</p>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 text-sm">Aug 02 2021 21:46:20</td>
+
+                        <td class="px-4 py-3 text-sm">12</td>
+                        <td class="px-4 py-3 text-sm">
+                          <select class="w-full h-8 border rounded-lg text-xs my-2">
+                            <option>Select Category</option>
+                            <option>Category : 12</option>
+                            <option>Category : 12</option>
+                            <option>Category : 12</option>
+                          </select>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
             </div>
           </div>
         </div>

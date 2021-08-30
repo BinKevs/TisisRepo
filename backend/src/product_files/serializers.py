@@ -10,7 +10,7 @@ class Product_FileSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = Product_file
-        fields = ["image"]
+        fields = '__all__'
     # @ staticmethod
     # def get_product_info(obj):
     #     product = Product.objects.get(pk=obj.product.id)

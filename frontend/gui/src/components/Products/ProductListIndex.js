@@ -258,7 +258,15 @@ class ProductListIndex extends React.Component {
                         {/* <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {product.description}
                         </td> */}
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td
+                          onClick={this.onSubmit(
+                            product.id,
+                            product.name,
+                            product.price,
+                            product.supplier
+                          )}
+                          className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4"
+                        >
                           <i class="far fa-mouse-pointer fa-3x"></i>
                         </td>
                       </tr>

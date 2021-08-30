@@ -17,5 +17,5 @@ class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birthdate = models.DateTimeField(null=True)
     address_id = models.ManyToManyField(Address, related_name='account_address', blank=True)
-    contact_number_id = models.ManyToManyField(Address, related_name='account_contact_number', blank=True)
+    contact_number_id = models.ManyToManyField(Contact_number, related_name='account_contact_number', blank=True)
     

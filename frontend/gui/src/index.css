@@ -21,6 +21,27 @@ select:focus ~ label {
 .swal-text {
   @apply text-gray-800 text-2xl font-bold text-center;
 }
+.accountSettingNavButton {
+  @apply text-gray-600 py-4 px-6 block focus:outline-none;
+}
+.accountSettingNavButtonActive {
+  @apply border-b-2 font-medium border-gray-600;
+}
+/* ? "block py-1 lg:py-3 pl-1 align-middle no-underline border-b-2 text-teal_custom border-teal_custom"
+: "block py-1 lg:py-3 pl-1 align-middle no-underline border-b-2 hover:text-white hover:border-teal_custom text-white border-gray-800 " */
+
+.MainLayoutNav {
+  @apply block py-1 lg:py-3 pl-1 align-middle no-underline border-b-2 hover:border-teal_custom hover:text-white text-white border-gray-800;
+}
+.MainLayoutNavActive {
+  @apply text-teal_custom border-teal_custom;
+}
+.MainLayoutNav2 {
+  @apply pb-1 lg:pb-0 text-xs align-middle lg:text-base text-gray-400 hover:text-white block lg:inline-block;
+}
+.MainLayoutNavActive2 {
+  @apply text-white;
+}
 
 /* image hover css */
 .middle {

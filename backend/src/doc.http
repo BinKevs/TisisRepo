@@ -1,0 +1,17 @@
+### Registration
+POST http://127.0.0.1:8000/api/transactions-online/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "creator": 2,
+    "transaction_id": "TI21-0802-0001",
+    "created_at": "Aug 02 2021 21:46:20",
+    "totalAmount": "37309.90",
+    "amount_tendered": "37310.00",
+    "change": "0.10",
+    "quantity": 2,
+    "mode_of_payment": "Cash",
+    "status":"Complete",
+    "shipping_details":"Unanvailable"
+
+}

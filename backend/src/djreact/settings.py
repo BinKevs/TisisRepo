@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'attendance_log',
     'activities_log',
     'product_files',
+    'vouchers',
 
     'rest_framework',
     'knox',
@@ -186,6 +187,9 @@ REST_FRAMEWORK = {
 
     # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',)
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    #  'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ],
     'DEFAULT_PAGINATION_CLASSES': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 15,
 }

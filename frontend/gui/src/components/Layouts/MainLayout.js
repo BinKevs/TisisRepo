@@ -7,6 +7,7 @@ import { loadUser } from "../../store/actions/account/auth";
 import swal from "sweetalert";
 import { Redirect } from "react-router-dom";
 import CartIndex from "../Online_Customers/Cart/CartIndex";
+import CheckoutNav from "../Layouts/OnlineComponentNav/CheckoutNav";
 let Variablequantity = 0;
 class MainLayout extends React.Component {
   state = {
@@ -295,12 +296,14 @@ class MainLayout extends React.Component {
                   >
                     <div className="">
                       {this.props.AuthReducer.is_superuser ? (
-                        <Link
-                          to="/accounts/settings/menu"
-                          class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block"
-                        >
-                          <i class="fa fa-cog fa-fw"></i> Settings
-                        </Link>
+                        <div onClick={this.setDropDown}>
+                          <Link
+                            to="/accounts/settings/menu"
+                            class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block"
+                          >
+                            <i class="fa fa-cog fa-fw"></i> Settings
+                          </Link>
+                        </div>
                       ) : (
                         ""
                       )}
@@ -354,16 +357,16 @@ class MainLayout extends React.Component {
                       to="/dashboard"
                       class={
                         DashboardNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fas fa-chart-line pr-0 lg:pr-3"></i>
                       <span
                         class={
                           DashboardNavBtn
-                            ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav2 MainLayoutNavActive2"
+                            : "MainLayoutNav2"
                         }
                       >
                         Dashboard
@@ -375,19 +378,19 @@ class MainLayout extends React.Component {
                     onClick={this.setActiveNav("ProductsNavBtn")}
                   >
                     <Link
-                      to="/customer/products"
+                      to="/products"
                       class={
                         ProductsNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fas fa-cart-plus pr-0 lg:pr-3"></i>
                       <span
                         class={
                           ProductsNavBtn
-                            ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav2 MainLayoutNavActive2"
+                            : "MainLayoutNav2"
                         }
                       >
                         Products
@@ -401,16 +404,16 @@ class MainLayout extends React.Component {
                     <div
                       class={
                         ReportsNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i class="fas fa-file-alt  pr-0 lg:pr-3 "></i>
                       <span
                         class={
                           ReportsNavBtn
-                            ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav2 MainLayoutNavActive2"
+                            : "MainLayoutNav2"
                         }
                       >
                         Reports
@@ -487,8 +490,8 @@ class MainLayout extends React.Component {
                       to="/products/settings"
                       class={
                         ProductSettingNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fas fa-sliders-h pr-0 lg:pr-3"></i>
@@ -496,8 +499,8 @@ class MainLayout extends React.Component {
                       <div
                         class={
                           ProductSettingNavBtn
-                            ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav2 MainLayoutNavActive2"
+                            : "MainLayoutNav2"
                         }
                       >
                         Product Setting
@@ -512,16 +515,16 @@ class MainLayout extends React.Component {
                       to="/inventories"
                       class={
                         InventoryNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fad fa-dolly-flatbed-alt pr-0 lg:pr-3"></i>
                       <span
                         class={
                           InventoryNavBtn
-                            ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav2 MainLayoutNavActive2"
+                            : "MainLayoutNav2"
                         }
                       >
                         Inventory
@@ -536,16 +539,16 @@ class MainLayout extends React.Component {
                       to="/supplier"
                       class={
                         SupplierNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fas fa-clipboard-list pr-0 lg:pr-3"></i>
                       <span
                         class={
                           SupplierNavBtn
-                            ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav2 MainLayoutNavActive2"
+                            : "MainLayoutNav2"
                         }
                       >
                         Supplier
@@ -560,16 +563,16 @@ class MainLayout extends React.Component {
                       to="/transactions"
                       class={
                         TransactionsNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fas fa-coins pr-0 lg:pr-3"></i>
                       <span
                         class={
                           TransactionsNavBtn
-                            ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav2 MainLayoutNavActive2"
+                            : "MainLayoutNav2"
                         }
                       >
                         Transactions
@@ -584,8 +587,8 @@ class MainLayout extends React.Component {
                       to="/transactions/items"
                       class={
                         TransactionsItemsNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fas fa-coins pr-0 lg:pr-3"></i>
@@ -608,8 +611,8 @@ class MainLayout extends React.Component {
                       to="/customer/account/settings"
                       class={
                         TransactionsItemsNavBtn
-                          ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
-                          : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                          ? "MainLayoutNav MainLayoutNavActive"
+                          : "MainLayoutNav"
                       }
                     >
                       <i className="fas fa-coins pr-0 lg:pr-3"></i>
@@ -654,10 +657,15 @@ class MainLayout extends React.Component {
           ) : (
             ""
           )}
+
           <div className={!this.state.cartShow ? "hidden" : ""}>
             <div class="absolute top-0 left-0 w-full h-full bg-gray-900 opacity-50"></div>
             <CartIndex />
           </div>
+          {/* <div className="flex-1">
+            <CheckoutNav />
+          </div> */}
+
           {this.props.children}
         </div>
       </>

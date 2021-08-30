@@ -2,17 +2,17 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-
+from .models import Account
 
 from django.conf import settings
-
+from django.core import serializers as core_serializers
 from rest_framework import serializers
 from dj_rest_auth.models import TokenModel
 from dj_rest_auth.utils import import_callable
 from dj_rest_auth.serializers import UserDetailsSerializer as DefaultUserDetailsSerializer
-
-
-# from allauth.account.models import EmailAddress
+from activities_log.models import Log_Activity
+from allauth.account.models import EmailAddress
+from django.http import HttpResponse
 # email_address_user = EmailAddress.objects.get(user_id=96)
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,7 +23,11 @@ class AccountSerializer(serializers.ModelSerializer):
 
 # User Serializer
 
+class AccountSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Account
+        fields = '__all__'
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -79,8 +83,17 @@ class LoginSerializer(serializers.Serializer):
 class CustomTokenSerializer(serializers.ModelSerializer):
     # user = UserDetailsSerializer(read_only=True)
     user = UserSerializer(many=False, read_only=True)  # this is add by myself.
-
+    # email_info = serializers.SerializerMethodField()
     class Meta:
         model = TokenModel
         # fields = ('key','user', )
         fields = '__all__'
+    # @staticmethod
+    # def get_email_info(obj):
+    #     email = Log_Activity.objects.filter(account=obj.user.id)
+    #     return {
+    #        core_serializers.serialize('json', email)
+    #     }
+      
+        
+        # return HttpResponse(data, content_type="application/json")

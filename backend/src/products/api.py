@@ -1,5 +1,5 @@
 from products.models import Product
-from rest_framework import viewsets, permissions
+from rest_framework import serializers, viewsets, permissions
 from .serializers import ProductSerializer
 from inventories.models import Inventory
 from suppliers.models import Supplier
@@ -24,12 +24,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter]
     
     def create(self, request, *args, **kwargs):
-        # print(request.data)
+        print(request.data)
         Log_Activity.save_log_activity(
                 account=request.user,
                 action_done = request.data['action_done'],
             )
-
         files = request.FILES.getlist('file_content')
         request.data.pop('file_content')
         serializer = ProductSerializer(data=request.data)
@@ -46,7 +45,41 @@ class ProductViewSet(viewsets.ModelViewSet):
         context["file_content"] = [file.id for file in uploaded_files]
         return Response(context, status=status.HTTP_201_CREATED)
 
-        # serializer = self.get_serializer(data=request.data)
+        
+
+
+@api_view(["POST"])
+@parser_classes([MultiPartParser, FormParser])
+def ProductImageAddUpdate(request, pk):
+    files = request.FILES.getlist('file_content')
+    product_to_update = Product.objects.get(id=pk)
+    uploaded_files = []
+    for file in files:
+        content = Product_file.objects.create(image=file)
+        uploaded_files.append(content)
+    product_to_update.file_content.add(*uploaded_files)
+    # context = [file.id for file in uploaded_files]
+    serializer = ProductSerializer(Product.objects.get(id=pk))
+    context = serializer.data
+    context["file_content"] = [file.id for file in uploaded_files]
+    return Response(context,status=status.HTTP_201_CREATED)
+    # product_object.id = data.get("id",product_object.id)
+    # product_object.product_id = data.get("product_id",product_object.product_id)
+    # product_object.name = data.get("name",product_object.name)
+    # product_object.category = data.get("category",product_object.category)
+    # product_object.supplier = data.get("supplier",product_object.supplier)
+    # product_object.image = data.get("image",product_object.image)
+    # product_object.description = data.get("description",product_object.description)
+    # product_object.stock = data.get("stock",product_object.stock)
+    # product_object.price = data.get("price",product_object.price)
+    # product_object.size = data.get("size",product_object.size)
+    # product_object.color = data.get("color",product_object.color)
+    # product_object.file_content = data.get("file_content",product_object.file_content)
+    # product_object.status = data.get("status",product_object.status)
+    
+
+
+# serializer = self.get_serializer(data=request.data)
         # # request.data.pop('file_content')
         # serializer.is_valid(raise_exception=True)
         # self.perform_create(serializer)

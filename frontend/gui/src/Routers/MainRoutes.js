@@ -1,10 +1,17 @@
 import { Route, Switch } from "react-router-dom";
+
 // import ProductListIndex from '../components/Products/ProductListIndex';
 
 import ProductListIndexOnlineCustomer from "../components/Online_Customers/ProductListIndexOnlineCustomer";
 import ProductDetails from "../components/Online_Customers/ProductDetails";
 import OnlineCustomerAccountSetting from "../components/Online_Customers/OnlineCustomerAccountSetting";
 import CheckoutOnlineCustomer from "../components/Online_Customers/Checkout/CheckoutOnlineCustomer";
+
+import CheckoutOrders from "../components/Online_Customers/Checkout/CheckoutOrders";
+import CheckoutAddress from "../components/Online_Customers/Checkout/CheckoutAddress";
+import CheckoutPayment from "../components/Online_Customers/Checkout/CheckoutPayment";
+
+import OnlineTransactionQueuing from "../components/Online_Customers/OnlineTransactionQueuing";
 
 import ProductListIndex from "../components/Products/ProductListIndex";
 import ProductSetting from "../components/Products/ProductSetting";
@@ -53,6 +60,27 @@ const MainBaseRouter = () => (
         exact
         path="/customer-checkout"
         component={CheckoutOnlineCustomer}
+      />
+      <Route
+        exact
+        path="/customer-checkout/orders"
+        component={CheckoutOrders}
+      />
+      <Route
+        exact
+        path="/customer-checkout/address"
+        component={CheckoutAddress}
+      />
+      <Route
+        exact
+        path="/customer-checkout/payment"
+        component={CheckoutPayment}
+      />
+
+      <Route
+        exact
+        path="/customer/account/queuing"
+        component={OnlineTransactionQueuing}
       />
 
       <Route exact path="/checkout" component={CheckoutIndex} />

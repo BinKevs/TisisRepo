@@ -6,6 +6,7 @@ from categories.models import Category
 from product_files.models import Product_file
 from django_resized import ResizedImageField
 from django.utils import timezone
+
 class Product(models.Model):
     product_id = models.CharField(max_length=255, null=True)
     name = models.CharField(max_length=100, unique=True)
@@ -17,8 +18,10 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=2)
+    size = models.CharField(max_length=150, null=True, blank=True)
+    color = models.CharField(max_length=150, null=True, blank=True)
     file_content = models.ManyToManyField(Product_file, related_name='file_content', blank=True)
-    
+    status = models.CharField(max_length=150, null=True, blank=True)
     def __str__(self):
         return self.name
     def save(self,*args, **kwargs):
@@ -44,3 +47,5 @@ class Product(models.Model):
             product = Product.objects.get(id=instance.product.id)
         instance.product.stock += int(instance.new_stock)
         instance.product.save()
+
+

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions
 from .serializers import AccountSerializer
 from rest_framework import filters
+from .models import Account
 # API
 
 
@@ -67,6 +68,8 @@ class UserAPI(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get_object(self):
+       
+        print(AccountSerializer(Account.objects.get(user=self.request.user)).data)
         return self.request.user
 
 

@@ -4,9 +4,9 @@ from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 
 class Transaction(models.Model):
-    transaction_id = models.CharField(max_length=255, null=True)
+    transaction_id = models.CharField(max_length=255, null=True,blank=True)
     creator = models.ForeignKey(
-        User, related_name="creator_transaction", on_delete=models.CASCADE, null=False)
+        User, related_name="creator_transaction", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=True)
     totalAmount = models.DecimalField(
@@ -14,7 +14,10 @@ class Transaction(models.Model):
     amount_tendered = models.DecimalField(max_digits=12, decimal_places=2)
     change = models.DecimalField(max_digits=12, decimal_places=2,validators=[MinValueValidator(0.00)])
     quantity = models.IntegerField()
-    mode_of_payment = models.CharField(max_length=255, null=False)
+    mode_of_payment = models.CharField(max_length=255, null=False,blank=True)
+    status = models.CharField(max_length=255, null=True)
+    address = models.CharField(max_length=255, null=True,blank=True)
+    contact_number = models.CharField(max_length=25, null=True,blank=True)
     def __str__(self):
         return str(self.id)
     def save(self,*args, **kwargs):
@@ -39,5 +42,7 @@ class Transaction(models.Model):
         )
         transaction.save()
 
-class OnlineTransaction(models.Model):
-    transaction = models.ForeignKey(Transaction, related_name="online_transaction", on_delete=models.CASCADE, null=False)
+# class OnlineTransaction(models.Model):
+#     transaction = models.ForeignKey(Transaction, related_name="online_transaction", on_delete=models.CASCADE, null=True,blank=True)
+#     status = models.CharField(max_length=255, null=True)
+#     shipping_details = models.CharField(max_length=255, null=True,blank=True)

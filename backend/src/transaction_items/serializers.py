@@ -11,13 +11,14 @@ from categories.models import Category
 class Transaction_itemSerializer(serializers.ModelSerializer):
     transaction = serializers.PrimaryKeyRelatedField(
         queryset=Transaction.objects.all())
-   
+    transaction_date = serializers.SerializerMethodField()
+    # online_transaction_info = serializers.SerializerMethodField()
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
     product_info = serializers.SerializerMethodField()
     category_info = serializers.SerializerMethodField()
 
-    transaction_date = serializers.SerializerMethodField()
+   
 
     class Meta:
         model = Transaction_item
@@ -61,3 +62,19 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
                 "id": None,
                 "created_at": None
             }
+            # OnlineTransaction
+    # @staticmethod
+    # def get_online_transaction_info(obj):
+    #     try:
+    #         online_transaction = OnlineTransaction.objects.get(transaction=obj.transaction.id)
+    #         return {
+    #             "id": online_transaction.id,
+    #             "status" : online_transaction.status,
+    #             "shipping_details": online_transaction.shipping_details
+    #         }
+    #     except:
+    #         return {
+    #             "id": None,
+    #             "status" : None,
+    #             "shipping_details": None
+    #         }
