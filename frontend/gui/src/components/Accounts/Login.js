@@ -3,7 +3,6 @@ import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { login } from "../../store/actions/account/auth";
-
 class Login extends React.Component {
   state = {
     username: "",
@@ -14,6 +13,9 @@ class Login extends React.Component {
     login: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool,
   };
+  componentDidMount() {
+    // console.log(this.props);
+  }
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
     console.log(this.state);
@@ -27,8 +29,10 @@ class Login extends React.Component {
 
   render() {
     if (this.props.AuthReducer.isAuthenticated) {
-      return <Redirect to={"/products"} />;
+      return <Redirect to={"/dashboard"} />;
     }
+    // console.log(this.props);
+
     return (
       <>
         <div class="flex min-h-screen bg-white">

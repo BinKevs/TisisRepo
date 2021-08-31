@@ -6,7 +6,7 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-
+import { Link } from "react-router-dom";
 class CheckoutAddress extends React.Component {
   render() {
     return (
@@ -167,11 +167,13 @@ class CheckoutAddress extends React.Component {
                       </div> */}
 
                       <div class="mt-10">
-                        <input
-                          type="submit"
-                          value="Confirm changes and proceed to payment"
-                          class="py-3 px-3 bg-gray-800 text-white rounded hover:bg-gray-600"
-                        />
+                        <Link to="/customer-checkout/payment">
+                          <input
+                            type="submit"
+                            value="Confirm changes and proceed to payment"
+                            class="py-3 px-3 bg-gray-800 text-white rounded hover:bg-gray-600"
+                          />
+                        </Link>
                       </div>
                     </form>
                   </div>

@@ -41,6 +41,8 @@ const AuthReducer = (state = initialState, action) => {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
+        user: action.payload,
+        is_superuser: action.payload.is_superuser,
       };
     case REGISTER_SUCCESS:
       localStorage.setItem("token", action.payload.token);

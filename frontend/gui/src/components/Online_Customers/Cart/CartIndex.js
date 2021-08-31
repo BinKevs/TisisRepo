@@ -201,7 +201,7 @@ class CartIndex extends React.Component {
                     ₱{this.numberWithCommas(totalAmount)}
                   </h2>
                 </div>
-                <Link to="/checkout">
+                <Link to="/customer-checkout/orders">
                   <button
                     class="
 							bg-teal_custom 

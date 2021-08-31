@@ -205,7 +205,7 @@ class MainLayout extends React.Component {
 
   handleLogout = (e) => {
     e.preventDefault();
-    this.props.history.push("/login");
+    window.location.href = "/login";
     this.props.logout();
   };
   setDropDown(e) {
@@ -214,6 +214,7 @@ class MainLayout extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     const {
       DashboardNavBtn,
       ProductsNavBtn,
@@ -265,7 +266,13 @@ class MainLayout extends React.Component {
                 <div class="relative inline-block space-x-4 lg:mr-2 py-2">
                   <div
                     onClick={this.handleCartShow}
-                    className="inline-block space-x-2 text-white cursor-pointer"
+                    className={
+                      this.props.AuthReducer.user
+                        ? !this.props.AuthReducer.user.is_staff
+                          ? "hidden"
+                          : "inline-block space-x-2 text-white cursor-pointer"
+                        : ""
+                    }
                   >
                     <i class="fad fa-shopping-cart"></i>
                     <span>Cart</span>
@@ -659,7 +666,7 @@ class MainLayout extends React.Component {
           )}
 
           <div className={!this.state.cartShow ? "hidden" : ""}>
-            <div class="absolute top-0 left-0 w-full h-full bg-gray-900 opacity-50"></div>
+            <div class="fixed top-0 left-0 w-full h-full bg-gray-900 opacity-50"></div>
             <CartIndex />
           </div>
           {/* <div className="flex-1">

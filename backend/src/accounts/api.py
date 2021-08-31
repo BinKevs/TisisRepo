@@ -68,8 +68,7 @@ class UserAPI(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get_object(self):
-       
-        print(AccountSerializer(Account.objects.get(user=self.request.user)).data)
+        # print(AccountSerializer(Account.objects.get(user=self.request.user)).data)
         return self.request.user
 
 

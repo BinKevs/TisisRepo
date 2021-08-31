@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 class CheckoutOrders extends React.Component {
   render() {
     return (
@@ -58,11 +58,13 @@ class CheckoutOrders extends React.Component {
                 </table>
               </div>
               <div class="mt-10">
-                <input
-                  type="submit"
-                  value="Confirm Order/s"
-                  class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
-                />
+                <Link to="/customer-checkout/address">
+                  <input
+                    type="submit"
+                    value="Confirm Order/s"
+                    class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
+                  />
+                </Link>
               </div>
             </section>
           </div>
