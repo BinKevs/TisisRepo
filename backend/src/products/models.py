@@ -6,7 +6,6 @@ from categories.models import Category
 from product_files.models import Product_file
 from django_resized import ResizedImageField
 from django.utils import timezone
-
 class Product(models.Model):
     product_id = models.CharField(max_length=255, null=True)
     name = models.CharField(max_length=100, unique=True)
@@ -14,14 +13,15 @@ class Product(models.Model):
         Category, related_name="category_product", on_delete=models.CASCADE, null=True)
     supplier = models.ForeignKey(
         Supplier, related_name="supplier_product", on_delete=models.CASCADE, null=True)
-    image = ResizedImageField(size=[600,410],crop=['middle', 'center'], default='No-Image-Available.jpeg',null=True, blank=True)
+    # image = ResizedImageField(size=[600,410],crop=['middle', 'center'], default='No-Image-Available.jpeg',null=True, blank=True)
     description = models.TextField(blank=True)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=2)
-    size = models.CharField(max_length=150, null=True, blank=True)
-    color = models.CharField(max_length=150, null=True, blank=True)
     file_content = models.ManyToManyField(Product_file, related_name='file_content', blank=True)
+    variation = models.ManyToManyField(
+        "product_variations.Product_variation", related_name="variation_product", null=True, blank=True)
     status = models.CharField(max_length=150, null=True, blank=True)
+    
     def __str__(self):
         return self.name
     def save(self,*args, **kwargs):
@@ -34,18 +34,18 @@ class Product(models.Model):
            else:
                self.product_id = prefix+'{0:04d}'.format(1)
        super(Product, self).save(*args, **kwargs)
-  
+
     @receiver(post_save, sender='transaction_items.Transaction_item')
     def update_product_transaction_on_save(sender, instance, **kwargs):
         if instance.id:
             product = Product.objects.get(id=instance.product_id)
         instance.product.stock -= instance.quantity
         instance.product.save()
-    @receiver(post_save, sender='inventories.Inventory')
-    def update_product_inventory_on_save(sender, instance, raw, **kwargs):
-        if instance.id:
-            product = Product.objects.get(id=instance.product.id)
-        instance.product.stock += int(instance.new_stock)
-        instance.product.save()
+    # @receiver(post_save, sender='inventories.Inventory')
+    # def update_product_inventory_on_save(sender, instance, raw, **kwargs):
+    #     if instance.id:
+    #         product = Product.objects.get(id=instance.product.id)
+    #     instance.product.stock += int(instance.new_stock)
+    #     instance.product.save()
 
 

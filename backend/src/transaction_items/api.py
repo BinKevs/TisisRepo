@@ -3,6 +3,7 @@ from rest_framework import viewsets, permissions
 from .serializers import Transaction_itemSerializer
 from transactions.models import Transaction
 from products.models import Product
+# from product_variations.models import Product_variation
 from rest_framework.response import Response
 from rest_framework import status
 from collections import defaultdict
@@ -71,6 +72,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 # serializer.data,, headers=headers
         ####
         request.data['creator'] = request.user.id
+        print(request.data)
         transactionsSerializer = TransactionSerializer(data=request.data)
         transactionsSerializer.is_valid(raise_exception=True)
         transactionsSerializer.save()
@@ -81,6 +83,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=data, many=True)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data,status=status.HTTP_201_CREATED,headers=headers)
         

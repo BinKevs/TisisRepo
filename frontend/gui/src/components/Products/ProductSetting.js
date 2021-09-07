@@ -38,6 +38,8 @@ class ProductSetting extends React.Component {
     price: 0,
     categoryID: 0,
     stock: 0,
+    size: "",
+    color: "",
     image: null,
     productID: 0,
     search: "",
@@ -208,6 +210,8 @@ class ProductSetting extends React.Component {
         categoryID,
         supplierID,
         stock,
+        size,
+        color,
         image,
         file_content,
       } = this.state;
@@ -220,7 +224,9 @@ class ProductSetting extends React.Component {
       formData.append("category", categoryID);
       formData.append("supplier", supplierID);
       formData.append("stock", stock);
-      formData.append("image", image);
+      formData.append("size", size);
+      formData.append("color", color);
+      // formData.append("image", image);
       formData.append("action_done", action_done);
       for (let i = 0; i < file_content.length; i++) {
         formData.append("file_content", file_content[i]);
@@ -235,6 +241,8 @@ class ProductSetting extends React.Component {
         categoryID: 0,
         new_stock: 0,
         stock: 0,
+        size: "",
+        color: "",
         image: null,
       });
       isImageChanged = false;
@@ -254,6 +262,8 @@ class ProductSetting extends React.Component {
       supplierID: 0,
       categoryID: 0,
       new_stock: 0,
+      size: "",
+      color: "",
       stock: 0,
       image: null,
       productID: 0,

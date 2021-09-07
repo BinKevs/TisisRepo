@@ -6,7 +6,7 @@ from products.models import Product
 from transactions.models import Transaction
 from datetime import datetime, timedelta
 from categories.models import Category
-
+from product_variations.models import Product_variation
 # from django.utils import timezone
 class Transaction_itemSerializer(serializers.ModelSerializer):
     transaction = serializers.PrimaryKeyRelatedField(
@@ -17,7 +17,7 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
         queryset=Product.objects.all())
     product_info = serializers.SerializerMethodField()
     category_info = serializers.SerializerMethodField()
-
+    product_variation_info = serializers.SerializerMethodField()
    
 
     class Meta:
@@ -34,6 +34,32 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             "stock": product.stock,
             "price": product.price,
         }
+    @staticmethod
+    def get_product_variation_info(obj):
+        try :
+            product_variation = Product_variation.objects.get(pk=obj.product_with_variation.id)
+            product = Product.objects.get(pk=obj.product_with_variation.product.id)
+            return {
+                "product_variation_id": product_variation.id,
+                "color":product_variation.color,
+                "size":product_variation.size,
+                "stock":product_variation.stock,
+                "product_id": product.id,
+                "name": product.name,
+                "description": product.description,
+                "price": product.price,
+            }
+        except:
+             return {
+                "product_variation_id": None,
+                "color":None,
+                "size":None,
+                "stock":None,
+                "product_id": None,
+                "name": None,
+                "description": None,
+                "price": None,
+            }
     @staticmethod
     def get_category_info(obj):
         product = Product.objects.get(pk=obj.product.id)

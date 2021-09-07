@@ -6,6 +6,7 @@ from suppliers.models import Supplier
 from rest_framework import filters
 from activities_log.models import Log_Activity
 from product_files.models import Product_file
+
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -14,8 +15,10 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view, parser_classes
 from .models import Product
+from product_variations.models import Product_variation
+from inventories.models import Inventory
 from product_files.models import Product_file
-
+from suppliers.models import Supplier
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -34,14 +37,19 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        product_qs = Product.objects.get(id=serializer.data['id'])
+        product_current = Product.objects.get(id=serializer.data['id'])
+        supplier_current = Supplier.objects.get(id=request.data['supplier'])
+        productVariation = Product_variation.objects.create(product=product_current,stock=request.data['stock'],size=request.data['size'],color=request.data['color'])
+        Inventory.objects.create(new_stock=request.data['stock'],supplier=supplier_current,product=product_current)
+        product_current.variation = productVariation
         uploaded_files = []
         for file in files:
             content = Product_file.objects.create(image=file)
             uploaded_files.append(content)
-        product_qs.file_content.add(*uploaded_files)
+        product_current.file_content.add(*uploaded_files)
         context = serializer.data
         print(uploaded_files)
+        context["variation"] = productVariation.id
         context["file_content"] = [file.id for file in uploaded_files]
         return Response(context, status=status.HTTP_201_CREATED)
 
@@ -98,13 +106,13 @@ def ProductImageAddUpdate(request, pk):
 #             request.data.pop('file_content')
 #             serializer = ProductSerializer(data=request.data)
 #             if serializer.is_valid():
-#                 product_qs = Product.objects.get(id=serializer.data['id'])
+#                 product_current = Product.objects.get(id=serializer.data['id'])
 #                 uploaded_files = []
 #                 for file in files:
 #                     content = Product_file.objects.create(media=file)
 #                     uploaded_files.append(content)
 
-#                 product_qs.file_content.add(*uploaded_files)
+#                 product_current.file_content.add(*uploaded_files)
 #                 context = serializer.data
 #                 context["file_content"] = [file.id for file in uploaded_files]
 #                 return Response(context, status=status.HTTP_201_CREATED)

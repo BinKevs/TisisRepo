@@ -5,9 +5,18 @@ import { getProduct } from "../../store/actions/product/products";
 import { addToCart } from "../../store/actions/cart/cartActions";
 import ReactPlayer from "react-player";
 import video1 from "../../Group2.mp4";
+let color = [];
+let size = [];
 class ProductDetails extends React.Component {
   runCallback = (cb) => {
     return cb();
+  };
+  state = {
+    size: "",
+    color: "",
+  };
+  onChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
   };
   static propTypes = {
     product: PropTypes.object.isRequired,
@@ -23,8 +32,9 @@ class ProductDetails extends React.Component {
   onSubmit(product_id, product_name, price, supplier) {
     return (event) => {
       event.preventDefault();
-      const product = { product_id, product_name, price, supplier };
-      this.props.addToCart(product);
+      // const product = { product_id, product_name, price, supplier };
+      // this.props.addToCart(product);
+      console.log(this.state);
     };
   }
   OnRightScroll = () => {
@@ -43,10 +53,30 @@ class ProductDetails extends React.Component {
     };
   }
   render() {
-    console.log(this.props);
-    console.log(this.state);
+    color = [];
+    size = [];
     const { product } = this.props;
-
+    if (product.variation) {
+      product.variation.map(
+        (product) => (
+          !color.find((o) => o.color === product.color)
+            ? color.push({
+                color: product.color,
+              })
+            : "",
+          this.state.color !== ""
+            ? this.state.color === product.color
+              ? !size.find((o) => o.size === product.size)
+                ? size.push({
+                    size: product.size,
+                  })
+                : ""
+              : ""
+            : ""
+        )
+      );
+    }
+    console.log(this.state);
     return (
       <>
         <section class="flex-1 w-full text-gray-700 body-font bg-white">
@@ -106,6 +136,7 @@ class ProductDetails extends React.Component {
                 <h2 class="text-sm title-font text-gray-500 tracking-widest">
                   {product.supplier_info ? product.supplier_info.name : ""}
                 </h2>
+
                 <h1 class="text-gray-900 text-2xl title-font font-medium mb-1">
                   {product.name}
                 </h1>
@@ -214,38 +245,121 @@ class ProductDetails extends React.Component {
                 </div>
                 <p class="leading-relaxed">{product.description}</p>
                 <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5"></div>
-                <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5">
-                  <div class="flex">
-                    <span class="mr-3">Color</span>
-                    <button class="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
+                <div class="border-b-2 border-gray-200 mb-5">
+                  <div className="flex mt-6 items-center border-gray-600">
+                    <div class="flex ml-6 items-center">
+                      <span class="mr-3">Color</span>
+                      {/* <button class="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
                     <button class="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none"></button>
-                    <button class="border-2 border-gray-300 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none"></button>
-                  </div>
-                  <div class="flex ml-6 items-center">
-                    <span class="mr-3">Size</span>
-                    <div class="relative">
-                      <select class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-red-500 text-base pl-3 pr-10">
-                        <option>SM</option>
-                        <option>M</option>
-                        <option>L</option>
-                        <option>XL</option>
-                      </select>
-                      <span class="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-                        <svg
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          class="w-4 h-4"
-                          viewBox="0 0 24 24"
+                    <button class="border-2 border-gray-300 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none"></button> */}
+                      <div class="relative">
+                        <select
+                          name="color"
+                          onChange={this.onChange}
+                          class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-teal_custom text-base pl-3 pr-10"
                         >
-                          <path d="M6 9l6 6 6-6"></path>
-                        </svg>
-                      </span>
+                          <option value="" selected>
+                            Open this to select color
+                          </option>
+                          {color
+                            ? color.map((c) => (
+                                <option value={c.color}>{c.color}</option>
+                              ))
+                            : ""}
+                        </select>
+                        <span class="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
+                          <svg
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M6 9l6 6 6-6"></path>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex ml-6 items-center">
+                      <span class="mr-3">Size</span>
+                      <div class="relative">
+                        <select
+                          name="size"
+                          onChange={this.onChange}
+                          // disabled={!this.state.color ? true : false}
+                          class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-teal_custom text-base pl-3 pr-10"
+                        >
+                          <option value="" selected>
+                            Open this to select size
+                          </option>
+                          {size
+                            ? size.map((s) => (
+                                <option value={s.size}>{s.size}</option>
+                              ))
+                            : ""}
+                        </select>
+                        <span class="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
+                          <svg
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M6 9l6 6 6-6"></path>
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className=" ml-6 mt-6  pb-5 text-lg font-medium text-gray-700">
+                    {this.state.color !== "" && this.state.size !== "" ? (
+                      <div className="flex items-center">
+                        <span class="mr-3"> Stock : </span>
+                        {product.variation
+                          ? product.variation.map((p) =>
+                              this.state.color === p.color &&
+                              this.state.size === p.size
+                                ? p.stock
+                                : ""
+                            )
+                          : ""}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div class="custom-number-input h-10 flex items-center">
+                      {" "}
+                      <span class="mr-3"> Quantity : </span>
+                      <div class="flex flex-row h-10  rounded-lg relative bg-transparent mt-1">
+                        <button
+                          data-action="decrement"
+                          class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                        >
+                          <span class="m-auto text-2xl font-thin">−</span>
+                        </button>
+                        <input
+                          type="number"
+                          class="outline-none focus:outline-none text-center w-1/6 bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700"
+                          name="custom-input-number"
+                          value="0"
+                        ></input>
+                        <button
+                          data-action="increment"
+                          class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                        >
+                          <span class="m-auto text-2xl font-thin">+</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="flex">
                   <button
                     class="flex ml-auto text-white bg-teal_custom border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded cursor-pointer"

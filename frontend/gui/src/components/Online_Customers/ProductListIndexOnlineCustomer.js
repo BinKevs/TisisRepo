@@ -7,6 +7,7 @@ import {
 } from "../../store/actions/product/products";
 import { addToCart } from "../../store/actions/cart/cartActions";
 import { Link } from "react-router-dom";
+import noImageAvailable from "../../no-image-available.png";
 let products = [];
 let filteredData = [];
 class ProductListIndexOnlineCustomer extends React.Component {
@@ -51,12 +52,14 @@ class ProductListIndexOnlineCustomer extends React.Component {
         name: product.name,
         price: product.price,
         image: product.image,
+        file_content: product.file_content,
         category: product.category_info.name,
         supplier: product.supplier_info.name,
         stock: product.stock,
         description: product.description,
       })
     );
+
     const lowercasedFilter = this.state.search.toLowerCase();
     filteredData = products.filter((item) => {
       if (item.stock > 0) {
@@ -67,6 +70,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
         }
       }
     });
+    console.log(filteredData);
     return (
       <>
         <div class="flex-1 bg-gray-100 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -145,11 +149,20 @@ class ProductListIndexOnlineCustomer extends React.Component {
                     class="rounded bg-white border-gray-200 shadow-md overflow-hidden relative hover:shadow-lg img-hover h-auto"
                     key={product.id}
                   >
-                    <img
-                      src={product.image}
-                      alt="stew"
-                      class="h-32 sm:h-48 w-full object-cover imgg"
-                    />
+                    {product.file_content[0] ? (
+                      <img
+                        src={product.file_content[0].image}
+                        alt="stew"
+                        class="h-32 sm:h-48 w-full object-cover imgg"
+                      />
+                    ) : (
+                      <img
+                        src={noImageAvailable}
+                        alt="stew"
+                        class="h-32 sm:h-48 w-full object-cover imgg"
+                      />
+                    )}
+
                     <div class="m-4 bodi">
                       <span class="font-bold">
                         {this.trimmedString(product.name)}
@@ -162,6 +175,9 @@ class ProductListIndexOnlineCustomer extends React.Component {
                     <div class="absolute top-0 ml-2 p-2 mt-2 bg-teal_custom text-white text-sm uppercase font-bold rounded-full ">
                       <i class="fad fa-tags fa-lg"></i>
                       <span>₱{this.numberWithCommas(product.price)}</span>
+                    </div>
+                    <div class="absolute bottom-0 right-2 ml-2 p-2 mb-2 text-gray-600  text-sm uppercase font-bold ">
+                      <span>({product.stock})</span>
                     </div>
                     <div class="product-tooltip absolute bottom-0 py-6 px-4 p-2 text-gray-800 text-sm uppercase font-bold">
                       <span>{product.name}</span>

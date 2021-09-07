@@ -28,7 +28,7 @@ class MainLayout extends React.Component {
 
   componentDidMount() {
     Variablequantity = 0;
-    this.props.loadUser();
+
     window.addEventListener("scroll", this.handleScroll);
     // window.addEventListener('beforeunload', (ev) => {
     // 	ev.preventDefault();
@@ -44,6 +44,7 @@ class MainLayout extends React.Component {
     this.setState({
       quantity: Variablequantity,
     });
+    this.props.loadUser();
   }
   componentDidUpdate(prevProps, prevState) {
     Variablequantity = 0;
@@ -350,7 +351,7 @@ class MainLayout extends React.Component {
 
         <div class="relative flex flex-col lg:flex-row bg-gray-800">
           {this.props.AuthReducer.is_superuser ? (
-            <div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800">
+            <div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800 hidden">
               <div class="lg:mt-20 overflow-x-scroll md:overflow-x-hidden lg:w-48 lg:fixed lg:left-0 lg:top-0 text-left bg-gray-800">
                 <ul
                   id="NavDiv"

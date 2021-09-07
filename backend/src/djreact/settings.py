@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'attendance_log',
     'activities_log',
     'product_files',
+    'product_variations',
     'vouchers',
 
     'rest_framework',

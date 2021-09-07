@@ -21,10 +21,12 @@ const ProductModal = (props) => {
     categoryID,
     supplierID,
     stock,
-    image,
+    size,
+    color,
     productID,
-    urlFile,
     ProductNameError,
+    image,
+    urlFile,
   } = props.state;
   console.log(props.state);
   return (
@@ -105,13 +107,13 @@ const ProductModal = (props) => {
                         <label class="block">Image</label>
                         {!EditButtonIsClicked ? (
                           <>
-                            <input
+                            {/* <input
                               class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
                               type="file"
                               name="image"
                               required
                               onChange={onChange}
-                            />
+                            /> */}
                             <input
                               class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
                               type="file"
@@ -122,15 +124,16 @@ const ProductModal = (props) => {
                             />
                           </>
                         ) : (
-                          <input
-                            class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
-                            type="file"
-                            name="image"
-                            onChange={onChange}
-                          />
+                          // <input
+                          //   class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
+                          //   type="file"
+                          //   name="image"
+                          //   onChange={onChange}
+                          // />
+                          ""
                         )}
 
-                        {!EditButtonIsClicked ? (
+                        {/* {!EditButtonIsClicked ? (
                           <></>
                         ) : (
                           <img
@@ -142,7 +145,7 @@ const ProductModal = (props) => {
                             }
                             src={isImageChanged ? urlFile : image}
                           />
-                        )}
+                        )} */}
                       </div>
                       {/* <div class="w-full mb-5">
 												<button className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm">
@@ -223,15 +226,61 @@ const ProductModal = (props) => {
                       </div>
                       <div class="relative z-0 w-full mb-5">
                         <input
+                          type="text"
+                          name="size"
+                          required
+                          value={size}
+                          onChange={onChange}
+                          placeholder=" "
+                          class={
+                            "pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+                          }
+                        />
+                        <label
+                          for="size"
+                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+                        >
+                          Size
+                        </label>
+                        {/* <span class="text-sm text-red-600" id="error">
+                          {ProductNameError}
+                        </span> */}
+                      </div>
+                      <div class="relative z-0 w-full mb-5">
+                        <input
+                          type="text"
+                          name="color"
+                          required
+                          value={color}
+                          onChange={onChange}
+                          placeholder=" "
+                          class={
+                            "pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+                          }
+                        />
+                        <label
+                          for="color"
+                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+                        >
+                          Color
+                        </label>
+                        {/* <span class="text-sm text-red-600" id="error">
+                          {ProductNameError}
+                        </span> */}
+                      </div>
+                      <div class="relative z-0 w-full mb-5">
+                        <input
                           type="number"
                           name="price"
+                          required
                           onChange={onChange}
                           value={price > 0 ? price : ""}
-                          required
+                          onChange={onChange}
+                          placeholder=" "
                           class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
                         />
                         <label
-                          for="price"
+                          for="number"
                           class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
                         >
                           Price
@@ -240,13 +289,16 @@ const ProductModal = (props) => {
                           Price is required
                         </span>
                       </div>
+
                       <div class="relative z-0 w-full mb-5">
                         <input
                           type="number"
                           name="stock"
+                          required
                           onChange={onChange}
                           value={stock > 0 ? stock : ""}
-                          required
+                          onChange={onChange}
+                          placeholder=" "
                           class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
                         />
                         <label
