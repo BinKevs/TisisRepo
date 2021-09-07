@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import noImageAvailable from "../../no-image-available.png";
 let products = [];
 let filteredData = [];
+// let AvailableStock = [];
 class ProductListIndexOnlineCustomer extends React.Component {
   static propTypes = {
     products: PropTypes.array.isRequired,
@@ -46,18 +47,24 @@ class ProductListIndexOnlineCustomer extends React.Component {
   render() {
     products = [];
     filteredData = [];
-    this.props.products.map((product) =>
-      products.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        file_content: product.file_content,
-        category: product.category_info.name,
-        supplier: product.supplier_info.name,
-        stock: product.stock,
-        description: product.description,
-      })
+    let temp = 0;
+    this.props.products.map(
+      (product) => (
+        product.variation.map((p) => (temp += p.stock)),
+        products.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          file_content: product.file_content,
+          variation: temp,
+          category: product.category_info.name,
+          supplier: product.supplier_info.name,
+          stock: product.stock,
+          description: product.description,
+        }),
+        (temp = 0)
+      )
     );
 
     const lowercasedFilter = this.state.search.toLowerCase();
@@ -70,7 +77,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
         }
       }
     });
-    console.log(filteredData);
+    console.log(this.props.products);
     return (
       <>
         <div class="flex-1 bg-gray-100 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -177,7 +184,8 @@ class ProductListIndexOnlineCustomer extends React.Component {
                       <span>₱{this.numberWithCommas(product.price)}</span>
                     </div>
                     <div class="absolute bottom-0 right-2 ml-2 p-2 mb-2 text-gray-600  text-sm uppercase font-bold ">
-                      <span>({product.stock})</span>
+                      {/* <span>({product.stock})</span> */}
+                      {product.variation ? product.variation : ""}
                     </div>
                     <div class="product-tooltip absolute bottom-0 py-6 px-4 p-2 text-gray-800 text-sm uppercase font-bold">
                       <span>{product.name}</span>

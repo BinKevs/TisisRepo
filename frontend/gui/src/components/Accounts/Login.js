@@ -3,6 +3,7 @@ import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { login } from "../../store/actions/account/auth";
+import { withRouter } from "react-router";
 class Login extends React.Component {
   state = {
     username: "",
@@ -123,4 +124,4 @@ const mapStateToProps = (state) => {
     AuthReducer: state.AuthReducer,
   };
 };
-export default connect(mapStateToProps, { login })(Login);
+export default withRouter(connect(mapStateToProps, { login })(Login));

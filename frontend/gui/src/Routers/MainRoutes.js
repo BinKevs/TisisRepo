@@ -1,5 +1,4 @@
 import { Route, Switch } from "react-router-dom";
-
 // import ProductListIndex from '../components/Products/ProductListIndex';
 
 import ProductListIndexOnlineCustomer from "../components/Online_Customers/ProductListIndexOnlineCustomer";

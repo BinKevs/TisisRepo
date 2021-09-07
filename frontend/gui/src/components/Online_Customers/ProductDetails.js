@@ -7,6 +7,9 @@ import ReactPlayer from "react-player";
 import video1 from "../../Group2.mp4";
 let color = [];
 let size = [];
+let variantStock = 0;
+let TempStock = 0;
+let variant_id = "";
 class ProductDetails extends React.Component {
   runCallback = (cb) => {
     return cb();
@@ -14,9 +17,24 @@ class ProductDetails extends React.Component {
   state = {
     size: "",
     color: "",
+    quantity: 0,
   };
   onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === "quantity") {
+      if (e.target.value > variantStock) {
+        this.setState({ [e.target.name]: parseInt(variantStock) });
+      } else {
+        this.setState({ [e.target.name]: parseInt(e.target.value) });
+      }
+    } else {
+      if (e.target.name === "color") {
+        this.setState({ [e.target.name]: e.target.value, size: "" });
+        var dropDown = document.getElementById("size");
+        dropDown.selectedIndex = 0;
+      } else {
+        this.setState({ [e.target.name]: e.target.value });
+      }
+    }
   };
   static propTypes = {
     product: PropTypes.object.isRequired,
@@ -28,13 +46,56 @@ class ProductDetails extends React.Component {
     const productID = this.props.match.params.productID;
     this.props.getProduct(productID);
   }
-
-  onSubmit(product_id, product_name, price, supplier) {
+  IncrementQuantity = (e) => {
+    e.preventDefault();
+    if (this.state.quantity >= variantStock) {
+      this.setState({
+        quantity: parseInt(variantStock),
+      });
+    } else {
+      this.setState({
+        quantity: parseInt(this.state.quantity + 1),
+      });
+    }
+  };
+  DecrementQuantity = (e) => {
+    e.preventDefault();
+    if (this.state.quantity === 0) {
+      this.setState({
+        quantity: parseInt(0),
+      });
+    } else {
+      this.setState({
+        quantity: parseInt(this.state.quantity - 1),
+      });
+    }
+  };
+  onSubmit(
+    product_id,
+    product_name,
+    price,
+    supplier,
+    size,
+    color,
+    quantity,
+    variant
+  ) {
     return (event) => {
       event.preventDefault();
-      // const product = { product_id, product_name, price, supplier };
-      // this.props.addToCart(product);
-      console.log(this.state);
+      const product = {
+        product_id,
+        product_name,
+        price,
+        supplier,
+        size,
+        color,
+        quantity,
+        variant,
+      };
+      this.props.addToCart(product);
+      // console.log(variant_id);
+      // console.log(this.state);
+      // console.log(this.props);
     };
   }
   OnRightScroll = () => {
@@ -53,8 +114,11 @@ class ProductDetails extends React.Component {
     };
   }
   render() {
-    color = [];
-    size = [];
+    color = [{ color: "Open this to select color" }];
+    size = [{ size: "Open this to select size" }];
+    TempStock = 0;
+    variantStock = 0;
+    variant_id = "";
     const { product } = this.props;
     if (product.variation) {
       product.variation.map(
@@ -76,7 +140,32 @@ class ProductDetails extends React.Component {
         )
       );
     }
-    console.log(this.state);
+
+    if (this.state.color !== "" && this.state.size !== "") {
+      if (product.variation) {
+        product.variation.map((p) =>
+          this.state.color === p.color && this.state.size === p.size
+            ? ((variantStock = p.stock), (variant_id = p.id))
+            : ""
+        );
+      }
+    }
+
+    if (this.state.color !== "" && this.state.size !== "") {
+      if (product.variation) {
+        product.variation.map((p) =>
+          this.state.color === p.color && this.state.size === p.size
+            ? (TempStock = p.stock)
+            : ""
+        );
+      }
+    } else {
+      if (product.variation) {
+        product.variation.map((p) => (TempStock += p.stock));
+      }
+    }
+
+    console.log(variant_id);
     return (
       <>
         <section class="flex-1 w-full text-gray-700 body-font bg-white">
@@ -258,9 +347,9 @@ class ProductDetails extends React.Component {
                           onChange={this.onChange}
                           class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-teal_custom text-base pl-3 pr-10"
                         >
-                          <option value="" selected>
+                          {/* <option value="" selected>
                             Open this to select color
-                          </option>
+                          </option> */}
                           {color
                             ? color.map((c) => (
                                 <option value={c.color}>{c.color}</option>
@@ -287,13 +376,14 @@ class ProductDetails extends React.Component {
                       <div class="relative">
                         <select
                           name="size"
+                          id="size"
                           onChange={this.onChange}
                           // disabled={!this.state.color ? true : false}
                           class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-teal_custom text-base pl-3 pr-10"
                         >
-                          <option value="" selected>
+                          {/* <option value="" selected>
                             Open this to select size
-                          </option>
+                          </option> */}
                           {size
                             ? size.map((s) => (
                                 <option value={s.size}>{s.size}</option>
@@ -318,39 +408,40 @@ class ProductDetails extends React.Component {
                   </div>
 
                   <div className=" ml-6 mt-6  pb-5 text-lg font-medium text-gray-700">
-                    {this.state.color !== "" && this.state.size !== "" ? (
-                      <div className="flex items-center">
-                        <span class="mr-3"> Stock : </span>
-                        {product.variation
+                    {/* {this.state.color !== "" && this.state.size !== "" ? ( */}
+                    <div className="flex items-center">
+                      <span class="mr-3"> Stock : {TempStock}</span>
+                      {/* {product.variation
                           ? product.variation.map((p) =>
                               this.state.color === p.color &&
                               this.state.size === p.size
                                 ? p.stock
                                 : ""
                             )
-                          : ""}
-                      </div>
-                    ) : (
+                          : ""} */}
+                    </div>
+                    {/* ) : (
                       ""
-                    )}
-                    <div class="custom-number-input h-10 flex items-center">
+                    )} */}
+                    <div class="custom-number-input mt-6 h-10 flex items-center">
                       {" "}
-                      <span class="mr-3"> Quantity : </span>
+                      <span class="mr-3"> Quantity: </span>
                       <div class="flex flex-row h-10  rounded-lg relative bg-transparent mt-1">
                         <button
-                          data-action="decrement"
+                          onClick={this.DecrementQuantity}
                           class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                         >
                           <span class="m-auto text-2xl font-thin">−</span>
                         </button>
                         <input
                           type="number"
-                          class="outline-none focus:outline-none text-center w-1/6 bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700"
-                          name="custom-input-number"
-                          value="0"
+                          class="outline-none focus:outline-none text-center  bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700"
+                          name="quantity"
+                          onChange={this.onChange}
+                          value={this.state.quantity}
                         ></input>
                         <button
-                          data-action="increment"
+                          onClick={this.IncrementQuantity}
                           class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
                         >
                           <span class="m-auto text-2xl font-thin">+</span>
@@ -367,7 +458,11 @@ class ProductDetails extends React.Component {
                       product.id,
                       product.name,
                       product.price,
-                      this.props.supplier_name
+                      this.props.supplier_name,
+                      this.state.size,
+                      this.state.color,
+                      this.state.quantity,
+                      variant_id
                     )}
                   >
                     ADD TO CART

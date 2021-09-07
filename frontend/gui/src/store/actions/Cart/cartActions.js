@@ -12,11 +12,11 @@ export const addToCart = (product) => (dispatch, getState) => {
   cartItems.forEach((x) => {
     if (x.product_id === product.product_id) {
       alreadyExists = true;
-      x.quantity++;
+      x.quantity += product.quantity;
     }
   });
   if (!alreadyExists) {
-    cartItems.push({ ...product, quantity: 1 });
+    cartItems.push({ ...product, quantity: product.quantity });
   }
   dispatch({
     type: ADD_TO_CART,

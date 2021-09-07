@@ -1,7 +1,8 @@
 import React from "react";
-
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
 import PropTypes from "prop-types";
 import {
   removeFromCart,
@@ -43,6 +44,12 @@ class CartIndex extends React.Component {
   numberWithCommas(x) {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  handleRedirect = (e) => {
+    e.preventDefault();
+    this.props.handleCartShow();
+    this.props.history.push("/customer-checkout/orders");
+  };
   // On component load or the app load it will look for the cartItems values from cartReducer *The cartReducer is always check if there are any values from local storage and store it to state*
   // and this CDM get the props pass by cartReducer to render it and compute for totalAmount, sub amount and tax.
   componentDidMount() {
@@ -90,14 +97,14 @@ class CartIndex extends React.Component {
     const { Subtotal, tax, totalAmount, quantity } = this.state;
     return (
       <>
-        <div class="absolute top-12 right-3 lg:mx-4 -mt-4 w-full lg:w-2/5">
+        <div class="fixed top-12 lg:right-3 lg:mx-4 -mt-4 w-full lg:w-2/5">
           <div class="flex shadow-lg my-10 h-cart">
-            <div class="w-full bg-white px-10 py-10">
+            <div class="w-full bg-white px-10 py-5">
               <div class="flex justify-between border-b pb-8">
                 <h1 class="font-semibold text-2xl">Shopping Cart</h1>
                 <h2 class="font-semibold text-2xl">{quantity} Items</h2>
               </div>
-              <div class="flex justify-between mt-10 mb-5">
+              <div class="flex justify-between mt-5 mb-2">
                 <h3 class="font-semibold text-gray-600 text-xs uppercase w-full">
                   Product Details
                 </h3>
@@ -113,10 +120,10 @@ class CartIndex extends React.Component {
               </div>
               <div className="max-h-64 overflow-y-scroll">
                 {cartItems.map((item) => (
-                  <div class=" flex items-center justify-between hover:bg-gray-100 py-5">
+                  <div class=" flex items-center justify-between hover:bg-gray-100 py-2">
                     <>
                       <div class="flex w-full">
-                        <div class="HoverCartProductName flex flex-col justify-between flex-grow h-24 relative">
+                        <div class="HoverCartProductName flex flex-col justify-between flex-grow h-14 relative">
                           <span class="font-bold text-sm">
                             {/* {item.product_name} */}
                             {this.trimmedString(item.product_name)}
@@ -124,8 +131,10 @@ class CartIndex extends React.Component {
                               {item.product_name}
                             </div>
                           </span>
-                          <span class="text-red-500 text-xs">
-                            {this.trimmedString(item.supplier)}
+                          <span class="text-gray-600 text-sm">
+                            {item.color}
+                            {" / "}
+                            {item.size}
                           </span>
                           <div
                             href="#"
@@ -201,9 +210,10 @@ class CartIndex extends React.Component {
                     ₱{this.numberWithCommas(totalAmount)}
                   </h2>
                 </div>
-                <Link to="/customer-checkout/orders">
-                  <button
-                    class="
+
+                <button
+                  onClick={this.handleRedirect}
+                  class="
 							bg-teal_custom 
 							font-semibold
 							py-3
@@ -213,10 +223,9 @@ class CartIndex extends React.Component {
 							w-full
 							rounded-lg
 						"
-                  >
-                    Checkout
-                  </button>
-                </Link>
+                >
+                  Checkout
+                </button>
               </div>
             </div>
           </div>
@@ -230,7 +239,9 @@ class CartIndex extends React.Component {
 const mapToStateToProps = (state) => ({
   cartItems: state.cartReducer.cartItems,
 });
-export default connect(mapToStateToProps, {
-  removeFromCart,
-  changeCartValue,
-})(CartIndex);
+export default withRouter(
+  connect(mapToStateToProps, {
+    removeFromCart,
+    changeCartValue,
+  })(CartIndex)
+);

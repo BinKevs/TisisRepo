@@ -1,7 +1,61 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 class CheckoutOrders extends React.Component {
+  state = {
+    totalAmount: 0,
+    Subtotal: 0,
+    tax: 0,
+    quantity: 0,
+  };
+  componentDidMount() {
+    let VariableTotalAmount = 0;
+    let Variablequantity = 0;
+    this.props.cartItems.map(
+      (item) => (
+        (VariableTotalAmount += item.price * item.quantity),
+        (Variablequantity += item.quantity)
+      )
+    );
+    this.setState({
+      totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
+      Subtotal: this.HandleDecimalPlaces(
+        (VariableTotalAmount -= VariableTotalAmount * 0.12)
+      ),
+      tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
+      quantity: Variablequantity,
+    });
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.cartItems !== prevProps.cartItems) {
+      let VariableTotalAmount = 0;
+      let Variablequantity = 0;
+      this.props.cartItems.map(
+        (item) => (
+          (VariableTotalAmount += item.price * item.quantity),
+          (Variablequantity += parseInt(item.quantity))
+        )
+      );
+      this.setState({
+        totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
+        Subtotal: this.HandleDecimalPlaces(
+          (VariableTotalAmount -= VariableTotalAmount * 0.12)
+        ),
+        tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
+        quantity: Variablequantity,
+      });
+    }
+  }
+  HandleDecimalPlaces = (Variable) => {
+    return Math.round((Variable + Number.EPSILON) * 100) / 100;
+  };
+
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
   render() {
+    const { cartItems } = this.props;
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -27,10 +81,14 @@ class CheckoutOrders extends React.Component {
                     </tr>
                   </thead>
                   <tbody class="">
-                    <tr class="text-gray-700 border-b border-gray-300">
-                      <td class="px-4 py-3">
-                        <div class="flex items-center text-sm">
-                          {/* <div class="relative w-8 h-8 mr-3 rounded-full md:block">
+                    {cartItems.map((item) => (
+                      <tr class="text-gray-700 border-b border-gray-300">
+                        <td class="px-4 py-3 text-sm font-semibold">
+                          {item.product_name}
+                        </td>
+                        <td class="px-4 py-3">
+                          <div class="flex items-center text-sm">
+                            {/* <div class="relative w-8 h-8 mr-3 rounded-full md:block">
                               <img
                                 class="object-cover w-full h-full rounded-full"
                                 src="https://images.pexels.com/photos/5212324/pexels-photo-5212324.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260"
@@ -42,18 +100,34 @@ class CheckoutOrders extends React.Component {
                                 aria-hidden="true"
                               ></div>
                             </div> */}
-                          <div>
-                            <p class="font-semibold text-black">Sufyan</p>
-                            <p class="text-xs text-gray-600">Helmet</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-4 py-3 text-sm font-semibold">Variation</td>
-                      <td class="px-4 py-3 text-sm font-semibold">22</td>
 
-                      <td class="px-4 py-3 text-sm">₱459.00</td>
-                      <td class="px-4 py-3 text-sm">₱559.00</td>
-                    </tr>
+                            <div>
+                              <p class="text-sm  text-black">
+                                Size :{" "}
+                                <span className="font-bold">{item.size}</span>
+                              </p>
+                              <p class="text-sm text-black">
+                                Color :{" "}
+                                <span className="font-bold">{item.color}</span>
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 text-sm font-semibold">
+                          {item.quantity}
+                        </td>
+
+                        <td class="px-4 py-3 text-sm">
+                          ₱ {this.numberWithCommas(item.price)}
+                        </td>
+                        <td class="px-4 py-3 text-sm">
+                          ₱{" "}
+                          {this.numberWithCommas(
+                            this.HandleDecimalPlaces(item.price * item.quantity)
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -73,4 +147,7 @@ class CheckoutOrders extends React.Component {
     );
   }
 }
-export default CheckoutOrders;
+const mapToStateToProps = (state) => ({
+  cartItems: state.cartReducer.cartItems,
+});
+export default withRouter(connect(mapToStateToProps)(CheckoutOrders));

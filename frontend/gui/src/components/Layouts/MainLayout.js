@@ -206,14 +206,18 @@ class MainLayout extends React.Component {
 
   handleLogout = (e) => {
     e.preventDefault();
-    window.location.href = "/login";
     this.props.logout();
+    window.location.href = "http://localhost:3000/login";
   };
   setDropDown(e) {
     e.preventDefault();
     document.getElementById("myDropdown").classList.toggle("invisible");
   }
-
+  setDropdownWithRedirect = (e) => {
+    e.preventDefault();
+    document.getElementById("myDropdown").classList.toggle("invisible");
+    this.props.history.push("/accounts/settings/menu");
+  };
   render() {
     console.log(this.props);
     const {
@@ -304,13 +308,10 @@ class MainLayout extends React.Component {
                   >
                     <div className="">
                       {this.props.AuthReducer.is_superuser ? (
-                        <div onClick={this.setDropDown}>
-                          <Link
-                            to="/accounts/settings/menu"
-                            class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block"
-                          >
+                        <div onClick={this.setDropdownWithRedirect}>
+                          <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block">
                             <i class="fa fa-cog fa-fw"></i> Settings
-                          </Link>
+                          </div>
                         </div>
                       ) : (
                         ""
@@ -351,7 +352,7 @@ class MainLayout extends React.Component {
 
         <div class="relative flex flex-col lg:flex-row bg-gray-800">
           {this.props.AuthReducer.is_superuser ? (
-            <div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800 hidden">
+            <div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800">
               <div class="lg:mt-20 overflow-x-scroll md:overflow-x-hidden lg:w-48 lg:fixed lg:left-0 lg:top-0 text-left bg-gray-800">
                 <ul
                   id="NavDiv"
@@ -666,9 +667,9 @@ class MainLayout extends React.Component {
             ""
           )}
 
-          <div className={!this.state.cartShow ? "hidden" : ""}>
-            <div class="fixed top-0 left-0 w-full h-full bg-gray-900 opacity-50"></div>
-            <CartIndex />
+          <div className={!this.state.cartShow ? "hidden" : "z-10"}>
+            <div class="fixed w-full h-full bg-gray-900 opacity-50"></div>
+            <CartIndex handleCartShow={this.handleCartShow} />
           </div>
           {/* <div className="flex-1">
             <CheckoutNav />
