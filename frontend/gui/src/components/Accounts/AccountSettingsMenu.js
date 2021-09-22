@@ -5,7 +5,7 @@ class AccountSettingsMenu extends React.Component {
   render() {
     return (
       <>
-        <div class="flex-1 bg-gray-100 mt-28 md:mt-16 pb-24 md:pb-5">
+        <div class="flex-1 mt-16 md:pb-5 bg-gray-100 pb-24 ">
           <div class="bg-gray-800 pt-3">
             <div class="rounded-tl-3xl bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white">
               <h3 class="font-bold pl-2">Account settings</h3>

@@ -12,21 +12,22 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     ordering_fields = ['created_at'] 
     filter_backends = [filters.OrderingFilter]
-#  OnlineTransactionSerializer
-# class OnlineTransactionViewSet(viewsets.ModelViewSet):
-   
-#     queryset = OnlineTransaction.objects.all()
-#     serializer_class = OnlineTransactionSerializer
-
-#     def create(self, request, *args, **kwargs):
-#         serializer = OnlineTransactionSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.save()
-#         content = Transaction.objects.create(creator=request.user.id,totalAmount=request.data['totalAmount'],amount_tendered=request.data['amount_tendered'],change=request.data['change'],quantity=request.data['quantity'],mode_of_payment=request.data['mode_of_payment'])
-#         OnlineTransaction.objects.filter(pk=serializer.data['id']).update(transaction=content)
-#         context = serializer.data
-#         context["transaction"] = content.id
-#         return Response(context,status=status.HTTP_201_CREATED)
+    def put(self,request,*args,**kwargs):
+        transaction = Transaction.objects.get()
+        data = request.data
+        transaction.transaction_id = data.get("transaction_id",transaction.code)
+        transaction.user = data.get("user",transaction.user)
+        transaction.created_at = data.get("created_at",transaction.created_at)
+        transaction.totalAmount = data.get("totalAmount",transaction.totalAmount)
+        transaction.quantity = data.get("quantity",transaction.quantity)
+        transaction.payment_method = data.get("payment_method",transaction.payment_method)
+        transaction.status = data.get("status",transaction.status)
+        transaction.address = data.get("address",transaction.address)
+        transaction.contact_number = data.get("contact_number",transaction.contact_number)
+        transaction.items = data.get("items",transaction.items)
+        transaction.save()
+        
+        return Response(self.get_serializer(transaction),status=status.HTTP_201_CREATED)
 
 @api_view(["POST"])
 @parser_classes([MultiPartParser, FormParser])

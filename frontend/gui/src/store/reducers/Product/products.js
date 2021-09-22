@@ -8,6 +8,8 @@ import {
   ADD_CATEGORY,
   DELETE_CATEGORY,
   PRODUCT_LOADING,
+  GET_VOUCHER_LIST,
+  ADD_REVIEW,
 } from "../../actions/product/actionTypes";
 
 const initialState = {
@@ -16,6 +18,8 @@ const initialState = {
   supplier_name: "",
   images: [],
   categories: [],
+  vouchers: [],
+  reviews: [],
   isLoading: false,
 };
 
@@ -72,6 +76,16 @@ export default function (state = initialState, action) {
         categories: state.categories.filter(
           (category) => category.id !== action.payload
         ),
+      };
+    case GET_VOUCHER_LIST:
+      return {
+        ...state,
+        vouchers: action.payload,
+      };
+    case ADD_REVIEW:
+      return {
+        ...state,
+        reviews: [...state.reviews, action.payload],
       };
     default:
       return state;

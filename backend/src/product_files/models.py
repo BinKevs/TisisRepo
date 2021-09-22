@@ -6,7 +6,8 @@ from rest_framework.decorators import  parser_classes
 class Product_file(models.Model):
     # product = models.ForeignKey(
     #     Product, related_name="product_file_set", on_delete=models.CASCADE, null=True,blank=True)
-    image = ResizedImageField(size=[1200,820],crop=['middle', 'center'], default='No-Image-Available.jpeg',null=True, blank=True)
+    image = models.FileField(null=True, blank=True)
+
     # media = models.FileField(null=True, blank=True)
     # @staticmethod
     # def save_product_file(image):

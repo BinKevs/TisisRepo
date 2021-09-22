@@ -5,19 +5,21 @@ from django.contrib.auth.models import User
 
 class Transaction(models.Model):
     transaction_id = models.CharField(max_length=255, null=True,blank=True)
-    creator = models.ForeignKey(
-        User, related_name="creator_transaction", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(
+        User, related_name="user_transaction", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=True)
     totalAmount = models.DecimalField(
         max_digits=20, decimal_places=2, null=True)
-    amount_tendered = models.DecimalField(max_digits=12, decimal_places=2)
-    change = models.DecimalField(max_digits=12, decimal_places=2,validators=[MinValueValidator(0.00)])
-    quantity = models.IntegerField()
-    mode_of_payment = models.CharField(max_length=255, null=False,blank=True)
+    # amount_tendered = models.DecimalField(max_digits=12, decimal_places=2)
+    # change = models.DecimalField(max_digits=12, decimal_places=2,validators=[MinValueValidator(0.00)])
+    quantity = models.IntegerField(blank=True,null=True)
+    payment_method = models.CharField(max_length=255, null=False,blank=True)
     status = models.CharField(max_length=255, null=True)
-    address = models.CharField(max_length=255, null=True,blank=True)
+    address = models.CharField(max_length=655, null=True,blank=True)
     contact_number = models.CharField(max_length=25, null=True,blank=True)
+    items = models.ManyToManyField(
+        "transaction_items.Transaction_item", related_name="transaction_item", null=True, blank=True)
     def __str__(self):
         return str(self.id)
     def save(self,*args, **kwargs):

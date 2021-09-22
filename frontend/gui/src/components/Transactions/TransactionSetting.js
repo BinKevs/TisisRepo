@@ -40,19 +40,19 @@ class TransactionSettingIndex extends React.Component {
     //returning the search filtered
     const { InputDate } = this.state;
     Transactions = [];
-    console.log(this.props.transactions);
 
     this.props.transactions.map((trans) =>
       Transactions.push({
         id: trans.id,
         transaction_id: trans.transaction_id,
-        creator: trans.creator_info.name.split(" ")[0],
+        creator: trans.user_info.name
+          ? trans.user_info.name.split(" ")[0]
+          : "None",
+        items: trans.items,
         created_at: trans.created_at,
         totalAmount: trans.totalAmount,
-        amount_tendered: trans.amount_tendered,
-        change: trans.change,
         quantity: trans.quantity,
-        mode_of_payment: trans.mode_of_payment,
+        mode_of_payment: trans.payment_method,
       })
     );
     filteredData = [];
@@ -114,6 +114,7 @@ class TransactionSettingIndex extends React.Component {
         );
       });
     }
+
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -133,7 +134,7 @@ class TransactionSettingIndex extends React.Component {
             </div>
           </div>
           <div className="p-5 w-full">
-            <div className="mx-auto bg-white dark:bg-gray-800 shadow rounded">
+            <div className="mx-auto bg-white shadow rounded">
               <div className="flex flex-col lg:flex-row p-4 lg:p-8 justify-end items-start lg:items-stretch w-full">
                 <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
                   <div className="lg:ml-6 flex items-start w-full">
@@ -143,35 +144,20 @@ class TransactionSettingIndex extends React.Component {
                     >
                       <i class="fal fa-print fa-lg"></i>
                     </div>
-                    {/* <Link to="/transactions/items">
-											<div className="text-white ml-4 p-3 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600  rounded flex items-center justify-center">
-												<i class="fad fa-sitemap fa-lg mr-2"></i>Transaction
-												Items
-											</div>
-										</Link> */}
                   </div>
                 </div>
                 <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
-                  <div className="flex items-center lg:border-l lg:border-r border-gray-300 dark:border-gray-200 py-3 lg:py-0 lg:px-6">
-                    <p
-                      className="text-base text-gray-600 dark:text-gray-400"
-                      id="page-view"
-                    >
+                  {/* <div className="flex items-center lg:border-l lg:border-r border-gray-300  py-3 lg:py-0 lg:px-6">
+                    <p className="text-base text-gray-600 " id="page-view">
                       Viewing 1 - 20 of 60
                     </p>
-                    <div
-                      className="text-gray-600 dark:text-gray-400 ml-2 border-transparent border cursor-pointer rounded mr-4"
-                      onclick="pageView(false)"
-                    >
+                    <div className="text-gray-600  ml-2 border-transparent border cursor-pointer rounded mr-4">
                       <i class="fad fa-angle-left fa-2x"></i>
                     </div>
-                    <div
-                      className="text-gray-600 dark:text-gray-400 border-transparent border rounded focus:outline-none cursor-pointer"
-                      onclick="pageView(true)"
-                    >
+                    <div className="text-gray-600  border-transparent border rounded focus:outline-none cursor-pointer">
                       <i class="fad fa-angle-right fa-2x"></i>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="lg:ml-6 flex items-center">
                     <div class="relative w-full">
                       <input
@@ -195,16 +181,16 @@ class TransactionSettingIndex extends React.Component {
                 </div>
               </div>
               <div className="w-full overflow-x-auto">
-                <table className="min-w-full bg-white dark:bg-gray-800">
+                <table className="min-w-full bg-white ">
                   <thead>
-                    <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                      <th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                    <tr className="w-full h-16 border-gray-300  border-b py-8">
+                      <th className="pl-14 text-gray-600 pr-6 text-left text-md font-normal">
                         Transaction ID
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      <th className="text-gray-600 pr-6 text-left text-md font-normal">
                         Creator Name
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12 ">
+                      <th className="text-gray-600  pr-6 text-left text-md w-2/12 font-normal">
                         <div>Date</div>
                         <DatePicker
                           selected={this.state.InputDate}
@@ -217,111 +203,78 @@ class TransactionSettingIndex extends React.Component {
                           className="my-1 px-1 py-1 border-2 rounded-l"
                         />
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      <th className="text-gray-600   pr-6 text-left text-md font-normal">
+                        <div className="text-center">Items</div>
+                        {/* <div className="flex justify-around">
+                          <div>Product Name</div> <div>Unit Price</div>{" "}
+                          <div>Quantity</div>{" "}
+                        </div> */}
+                      </th>
+
+                      <th className="text-gray-600  pr-6 text-left text-md font-normal">
                         Total Amount
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Amount Tendered
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Change
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      <th className="text-gray-600   pr-6 text-left text-md font-normal">
                         Total Number of Items
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      <th className="text-gray-600  pr-6 text-left text-md font-normal">
                         Mode of Payment
                       </th>
-                      {/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        <span>Date</span>
-                        <i class="fal fa-arrow-up fa-lg"></i>
-                        <i class="fal fa-arrow-down"></i>
-                    </th> */}
                     </tr>
                   </thead>
                   <tbody>
                     {filteredData.map((transaction) => (
                       <tr
                         key={transaction.id}
-                        className="h-24 border-gray-300 dark:border-gray-200 border-b"
+                        className="h-24 border-gray-300  border-b font-semibold"
                       >
-                        <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {transaction.transaction_id}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {transaction.creator}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {transaction.created_at}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {transaction.totalAmount}
-                        </td>
-                        {/* <td className="pr-6 whitespace-no-wrap">
-                        <div className="flex items-center">
-                            <div className="h-8 w-8">
-                                <img
-                                    src="https://tuk-cdn.s3.amazonaws.com/assets/components/advance_tables/at_1.png"
-                                    alt
-                                    className="h-full w-full rounded-full overflow-hidden shadow"
-                                />
-                            </div>
-                            <p className="ml-2 text-gray-800 dark:text-gray-100 tracking-normal leading-4 text-sm">
-                                Carrie Anthony
-                            </p>
-                        </div>
-                    </td> */}
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {transaction.amount_tendered}
-                        </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {transaction.change}
-                        </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {transaction.quantity}
-                        </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {transaction.mode_of_payment}
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 w-3/12">
+                          {transaction.items.map((transac, index) => (
+                            <tr
+                              className={
+                                transaction.items.length === 1
+                                  ? "h-20 border-gray-300"
+                                  : index + 1 === transaction.items.length
+                                  ? "h-20 border-gray-300"
+                                  : "h-20 border-gray-300 border-b-2"
+                              }
+                            >
+                              <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                                {transac.product.name}
+                                <div>
+                                  ({transac.product_variation_info.color}/
+                                  {transac.product_variation_info.size})
+                                </div>
+                              </td>
+                              <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                                {transac.product.price}
+                              </td>
+                              <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                                {transac.quantity}
+                              </td>
+                            </tr>
+                          ))}
                         </td>
 
-                        {/* <td className="pr-8 relative">
-													<div
-														id={transaction.id}
-														className="mt-8 absolute left-0 -ml-12 shadow-md z-10 hidden w-32"
-													>
-														<ul className="bg-white dark:bg-gray-800 shadow rounded py-1">
-															<li
-																// onClick={this.onModalToggle}
-																className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal"
-															>
-																Edit
-															</li>
-															<li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-indigo-700 hover:text-white px-3 font-normal">
-																Delete
-															</li>
-														</ul>
-													</div>
-													<button className="text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
-														<svg
-															xmlns="http://www.w3.org/2000/svg"
-															onClick={this.setSeeMore(transaction.id)}
-															className="icon icon-tabler icon-tabler-dots-vertical dropbtn"
-															width={28}
-															height={28}
-															viewBox="0 0 24 24"
-															strokeWidth="1.5"
-															stroke="currentColor"
-															fill="none"
-															strokeLinecap="round"
-															strokeLinejoin="round"
-														>
-															<path stroke="none" d="M0 0h24v24H0z" />
-															<circle cx={12} cy={12} r={1} />
-															<circle cx={12} cy={19} r={1} />
-															<circle cx={12} cy={5} r={1} />
-														</svg>
-													</button>
-												</td> */}
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                          {transaction.totalAmount}
+                        </td>
+
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                          {transaction.quantity}
+                        </td>
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                          {transaction.mode_of_payment}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

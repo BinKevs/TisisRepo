@@ -1,21 +1,21 @@
 from rest_framework import serializers
 from transactions.models import Transaction
 from django.contrib.auth.models import User
-
-
+from transaction_items.serializers import Transaction_itemSerializer
 class TransactionSerializer(serializers.ModelSerializer):
-    creator = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all())
-    creator_info = serializers.SerializerMethodField()
+    # creator = serializers.PrimaryKeyRelatedField(
+    #     queryset=User.objects.all())
+    items = Transaction_itemSerializer(many=True,read_only=True)
+    user_info = serializers.SerializerMethodField()
+    
     class Meta:
         model = Transaction
         fields = '__all__'
     
     @ staticmethod
-    def get_creator_info(obj):
-       
+    def get_user_info(obj):
         try:
-            user = User.objects.get(pk=obj.creator.id)
+            user = User.objects.get(pk=obj.user.id)
             return {
                 "id": user.id,
                 "username": user.username,
@@ -27,7 +27,7 @@ class TransactionSerializer(serializers.ModelSerializer):
                 "username": None,
                 "name": None,
             }
-    
+
 # class OnlineTransactionSerializer(serializers.ModelSerializer):
     # transaction = serializers.PrimaryKeyRelatedField(
     #     queryset=User.objects.all())

@@ -18,7 +18,6 @@ class Transaction_item(models.Model):
     def save(self,*args, **kwargs):
        if not self.transaction_item_id:
            prefix = 'TI-I{}-{}-'.format(timezone.now().strftime('%y'),timezone.now().strftime('%m%d'))
-           print(prefix)
            prev_instances = self.__class__.objects.filter(transaction_item_id__contains=prefix)
            if prev_instances.exists():
                 last_instance_id = prev_instances.last().transaction_item_id[-4:]

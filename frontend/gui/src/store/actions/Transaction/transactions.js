@@ -1,104 +1,119 @@
-import axios from 'axios';
-import { URL_IMPORT } from '../../../Helpers/constant';
-import { tokenConfig } from '../account/auth';
+import axios from "axios";
+import { URL_IMPORT } from "../../../Helpers/constant";
+import { tokenConfig } from "../account/auth";
 import {
-	GET_TRANSACTION_LIST,
-	GET_TRANSACTION,
-	DELETE_TRANSACTION,
-	ADD_TRANSACTION,
-	UPDATE_TRANSACTION,
-	ADD_TRANSACTION_ITEMS,
-	GET_TRANSACTION_ITEM_LIST,
-} from './actionTypes';
-import swal from 'sweetalert';
-const url = URL_IMPORT + '/api/transactions/';
+  GET_TRANSACTION_LIST,
+  GET_TRANSACTION,
+  DELETE_TRANSACTION,
+  ADD_TRANSACTION,
+  UPDATE_TRANSACTION,
+  ADD_TRANSACTION_ITEMS,
+  GET_TRANSACTION_ITEM_LIST,
+  UPDATE_TRANSACTION_STATUS,
+} from "./actionTypes";
+import swal from "sweetalert";
+import { HandleSuccessMessages } from "../../../Helpers/functions";
+const url = URL_IMPORT + "/api/transactions/";
 export const getTransactionList = () => (dispatch, getState) => {
-	axios
-		.get(url + '?ordering=-created_at', tokenConfig(getState))
-		.then((res) => {
-			dispatch({
-				type: GET_TRANSACTION_LIST,
-				payload: res.data,
-			});
-		});
+  axios
+    .get(url + "?ordering=-created_at", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_TRANSACTION_LIST,
+        payload: res.data,
+      });
+    });
 };
 export const getTransactionListNotOrderByDate = () => (dispatch, getState) => {
-	axios.get(url, tokenConfig(getState)).then((res) => {
-		dispatch({
-			type: GET_TRANSACTION_LIST,
-			payload: res.data,
-		});
-	});
+  axios.get(url, tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: GET_TRANSACTION_LIST,
+      payload: res.data,
+    });
+  });
 };
 
 export const getTransaction = (TransactionID) => (dispatch, getState) => {
-	axios
-		.get(url + TransactionID + '/', tokenConfig(getState))
-		.then((res) => {
-			dispatch({
-				type: GET_TRANSACTION,
-				payload: res.data,
-			});
-		})
-		.catch((err) => console.log(err));
+  axios
+    .get(url + TransactionID + "/", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_TRANSACTION,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 export const deleteTransaction = (TransactionID) => (dispatch, getState) => {
-	axios
-		.delete(url + TransactionID + '/', tokenConfig(getState))
-		.then((res) => {
-			console.log('Transaction Deleted');
-			dispatch({
-				type: DELETE_TRANSACTION,
-				payload: TransactionID,
-			});
-		})
-		.catch((err) => console.log(err));
+  axios
+    .delete(url + TransactionID + "/", tokenConfig(getState))
+    .then((res) => {
+      console.log("Transaction Deleted");
+      dispatch({
+        type: DELETE_TRANSACTION,
+        payload: TransactionID,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 export const updateTransaction =
-	(TransactionID, data) => (dispatch, getState) => {
-		axios
-			.put(url + TransactionID + '/', data, tokenConfig(getState))
-			.then((res) => {
-				console.log('Transaction Updated');
-				dispatch({
-					type: UPDATE_TRANSACTION,
-					payload: res.data,
-				});
-			})
-			.catch((err) => console.log(err));
-	};
+  (TransactionID, data) => (dispatch, getState) => {
+    axios
+      .put(url + TransactionID + "/", data, tokenConfig(getState))
+      .then((res) => {
+        console.log("Transaction Updated");
+        dispatch({
+          type: UPDATE_TRANSACTION,
+          payload: res.data,
+        });
+      })
+      .catch((err) => console.log(err));
+  };
 
 // Transaction Items part
 export const getTransactionItemList = () => (dispatch, getState) => {
-	axios
-		.get(
-			URL_IMPORT + '/api/transactions/items/?ordering=-id',
-			tokenConfig(getState)
-		)
-		.then((res) => {
-			dispatch({
-				type: GET_TRANSACTION_ITEM_LIST,
-				payload: res.data,
-			});
-		});
+  axios
+    .get(
+      URL_IMPORT + "/api/transactions/items/?ordering=-id",
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_TRANSACTION_ITEM_LIST,
+        payload: res.data,
+      });
+    });
 };
 
 // Sending the transaction items together with the transaction information such as amount rendered, change, total amount and quantity
 
 export const addTransactionItems = (data) => (dispatch, getState) => {
-	axios
-		.post(URL_IMPORT + '/api/transactions/items/', data, tokenConfig(getState))
-		.then((res) => {
-			swal({
-				title: 'Transaction Success',
-				text: 'Change : ' + data.change,
-				icon: 'success',
-			});
-			dispatch({
-				type: ADD_TRANSACTION_ITEMS,
-				payload: res.data,
-			});
-		})
-		.catch((err) => console.log(err));
+  axios
+    .post(URL_IMPORT + "/api/transactions/items/", data, tokenConfig(getState))
+    .then((res) => {
+      swal({
+        title: "Transaction Success",
+        text: "Thank you for shopping with us!",
+        icon: "success",
+      });
+      dispatch({
+        type: ADD_TRANSACTION_ITEMS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
 };
+export const updateTransactionStatus =
+  (TransactionID, data) => (dispatch, getState) => {
+    axios
+      .put(url + TransactionID + "/", data, tokenConfig(getState))
+      .then((res) => {
+        HandleSuccessMessages("Transaction Status Updated", "success");
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: res.data,
+        });
+      })
+      .catch((err) => console.log(err));
+  };

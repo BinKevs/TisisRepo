@@ -6,9 +6,4 @@ class Voucher(models.Model):
     value = models.CharField(max_length=55, null=True,blank=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=True)
-    valid_till = models.DateTimeField(
-       null=True, blank=True)
-    claimed_date = models.DateTimeField(
-       null=True, blank=True)
-    claimed_by = models.ForeignKey(
-        User, related_name="user_accouunt_voucher", on_delete=models.CASCADE, null=True,blank=True)
+    status = models.CharField(max_length=255, null=True,blank=True)

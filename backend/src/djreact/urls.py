@@ -14,7 +14,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('api/products/', include('products.urls')),
-
+    path('api/accounts-user/', include('accounts.urls2')),
+    
     path('api/products-image/<pk>',ProductImageAddUpdate, name="products-image-add-update"),
 
 
@@ -22,6 +23,7 @@ urlpatterns = [
     path('api/product_files/', include('product_files.urls')),
     path('api/categories/', include('categories.urls')),
     path('api/vouchers/', include('vouchers.urls')),
+    path('api/reviews/', include('reviews.urls')),
     path('api/suppliers/', include('suppliers.urls')),
     # path('api/suppliers/withPagination', include('suppliers.urlsWithPagination')),
     path('api/inventories/', include('inventories.urls')),

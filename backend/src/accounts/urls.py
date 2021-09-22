@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .api import AccountSettingAPI, LoginAPI, UserAPI, AccountViewSet
+from .api import AccountSettingAPI, LoginAPI, LoadAccountUser, AccountViewSet
 # LogoutAPI
 from knox import views as knox_views
 from rest_framework.routers import DefaultRouter
@@ -11,7 +11,7 @@ urlpatterns = [
     path('api/auth/setting', AccountSettingAPI.as_view()),
     path('api/auth/setting/<int:pk>/', AccountSettingAPI.as_view()),
     path('api/auth/login', LoginAPI.as_view()),
-    path('api/auth/user', UserAPI.as_view()),
+    path('api/auth/user', LoadAccountUser),
     path('api/auth/logout', knox_views.LogoutView.as_view(), name='knox_logout')
     # path('api/auth/logout', LogoutAPI.as_view())
 ]

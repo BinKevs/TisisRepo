@@ -3,7 +3,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from .models import Account
+# ,Contact_number,Address
 
+from contact_numbers.serializers import ContactSerializer
+from addresses.serializers import AddressSerializer
 from django.conf import settings
 from django.core import serializers as core_serializers
 from rest_framework import serializers
@@ -23,16 +26,13 @@ class AccountSerializer(serializers.ModelSerializer):
 
 # User Serializer
 
-class AccountSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Account
-        fields = '__all__'
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         fields = '__all__'
+        extra_kwargs = {'password': {'write_only': True}}
         # fields = ('id', 'username', 'email','is_active','is_superuser','password','date_joined','first_name','last_name')
 # Register Serializer
 
@@ -71,6 +71,13 @@ class LoginSerializer(serializers.Serializer):
             return user
         raise serializers.ValidationError("Incorrect Credentials")
 
+class AccountSerializer(serializers.ModelSerializer):
+    address= AddressSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Account
+        fields = '__all__'
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 # This is to allow you to override the UserDetailsSerializer at any time.

@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     store.dispatch(loadUser());
   });
+
   return (
     <>
       <Provider store={store}>
@@ -24,6 +25,7 @@ function App() {
             <Route exact path="/" component={Login} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Registration} />
+
             <MainLayout>
               <MainBaseRouter />
             </MainLayout>

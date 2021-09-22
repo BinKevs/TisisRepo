@@ -27,23 +27,18 @@ class InventorySerializer(serializers.ModelSerializer):
             "id": product.id,
             "name": product.name,
             "description": product.description,
-            "stock": product.stock,
             "price": product.price,
         }
     @staticmethod
     def get_product_variation_info(obj):
         try :
             product_variation = Product_variation.objects.get(pk=obj.product_with_variation.id)
-            product = Product.objects.get(pk=obj.product_with_variation.product.id)
+           
             return {
                 "product_variation_id": product_variation.id,
                 "color":product_variation.color,
                 "size":product_variation.size,
                 "stock":product_variation.stock,
-                "product_id": product.id,
-                "name": product.name,
-                "description": product.description,
-                "price": product.price,
             }
         except:
              return {
@@ -51,10 +46,6 @@ class InventorySerializer(serializers.ModelSerializer):
                 "color":None,
                 "size":None,
                 "stock":None,
-                "product_id": None,
-                "name": None,
-                "description": None,
-                "price": None,
             }
     @staticmethod
     def get_supplier_info(obj):

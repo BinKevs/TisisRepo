@@ -6,12 +6,13 @@ import React from "react";
 import { loadUser } from "../../store/actions/account/auth";
 import swal from "sweetalert";
 import { Redirect } from "react-router-dom";
-import CartIndex from "../Online_Customers/Cart/CartIndex";
-import CheckoutNav from "../Layouts/OnlineComponentNav/CheckoutNav";
+import CartIndex from "../Customers/Cart/CartIndex";
 let Variablequantity = 0;
 class MainLayout extends React.Component {
   state = {
     DashboardNavBtn: false,
+    VoucherNavBtn: false,
+    QueueNavBtn: false,
     ProductsNavBtn: true,
     ReportsNavBtn: false,
     ProductSettingNavBtn: false,
@@ -95,6 +96,36 @@ class MainLayout extends React.Component {
       if (NavBtn === "DashboardNavBtn") {
         this.setState({
           DashboardNavBtn: true,
+          QueueNavBtn: false,
+          VoucherNavBtn: false,
+          ProductsNavBtn: false,
+          ReportsNavBtn: false,
+          ProductSettingNavBtn: false,
+          InventoryNavBtn: false,
+          SupplierNavBtn: false,
+          TransactionsNavBtn: false,
+          TransactionsItemsNavBtn: false,
+          ArchiveNavBtn: false,
+        });
+      } else if (NavBtn === "VoucherNavBtn") {
+        this.setState({
+          VoucherNavBtn: true,
+          DashboardNavBtn: false,
+          QueueNavBtn: false,
+          ProductsNavBtn: false,
+          ReportsNavBtn: false,
+          ProductSettingNavBtn: false,
+          InventoryNavBtn: false,
+          SupplierNavBtn: false,
+          TransactionsNavBtn: false,
+          TransactionsItemsNavBtn: false,
+          ArchiveNavBtn: false,
+        });
+      } else if (NavBtn === "QueueNavBtn") {
+        this.setState({
+          DashboardNavBtn: false,
+          VoucherNavBtn: false,
+          QueueNavBtn: true,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -107,6 +138,8 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "ProductsNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          VoucherNavBtn: false,
+          QueueNavBtn: false,
           ProductsNavBtn: true,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -119,6 +152,8 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "ReportsNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          VoucherNavBtn: false,
+          QueueNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: true,
           ProductSettingNavBtn: false,
@@ -131,6 +166,8 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "ProductSettingNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          VoucherNavBtn: false,
+          QueueNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: true,
@@ -143,6 +180,8 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "InventoryNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          VoucherNavBtn: false,
+          QueueNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -155,6 +194,8 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "SupplierNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          QueueNavBtn: false,
+          VoucherNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -167,6 +208,8 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "TransactionsNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          QueueNavBtn: false,
+          VoucherNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -179,7 +222,9 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "TransactionsItemsNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          QueueNavBtn: false,
           ProductsNavBtn: false,
+          VoucherNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
           InventoryNavBtn: false,
@@ -191,7 +236,9 @@ class MainLayout extends React.Component {
       } else if (NavBtn === "ArchiveNavBtn") {
         this.setState({
           DashboardNavBtn: false,
+          QueueNavBtn: false,
           ProductsNavBtn: false,
+          VoucherNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
           InventoryNavBtn: false,
@@ -213,13 +260,14 @@ class MainLayout extends React.Component {
     e.preventDefault();
     document.getElementById("myDropdown").classList.toggle("invisible");
   }
-  setDropdownWithRedirect = (e) => {
-    e.preventDefault();
-    document.getElementById("myDropdown").classList.toggle("invisible");
-    this.props.history.push("/accounts/settings/menu");
+  setDropdownWithRedirect = (ComponentTogo) => {
+    return (e) => {
+      e.preventDefault();
+      document.getElementById("myDropdown").classList.toggle("invisible");
+      this.props.history.push(ComponentTogo);
+    };
   };
   render() {
-    console.log(this.props);
     const {
       DashboardNavBtn,
       ProductsNavBtn,
@@ -229,6 +277,8 @@ class MainLayout extends React.Component {
       SupplierNavBtn,
       TransactionsNavBtn,
       TransactionsItemsNavBtn,
+      QueueNavBtn,
+      VoucherNavBtn,
       ArchiveNavBtn,
     } = this.state;
 
@@ -308,11 +358,35 @@ class MainLayout extends React.Component {
                   >
                     <div className="">
                       {this.props.AuthReducer.is_superuser ? (
-                        <div onClick={this.setDropdownWithRedirect}>
-                          <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block">
-                            <i class="fa fa-cog fa-fw"></i> Settings
+                        <>
+                          <div
+                            onClick={this.setDropdownWithRedirect(
+                              "/accounts/settings/menu"
+                            )}
+                          >
+                            <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
+                              Settings
+                            </div>
                           </div>
-                        </div>
+                          <div
+                            onClick={this.setDropdownWithRedirect(
+                              "/account/purchases"
+                            )}
+                          >
+                            <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
+                              Purchases
+                            </div>
+                          </div>
+                          <div
+                            onClick={this.setDropdownWithRedirect(
+                              "/account/settings"
+                            )}
+                          >
+                            <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
+                              Account
+                            </div>
+                          </div>
+                        </>
                       ) : (
                         ""
                       )}
@@ -339,7 +413,7 @@ class MainLayout extends React.Component {
                         onClick={this.handleLogout}
                         class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer"
                       >
-                        <i class="fas fa-sign-out-alt fa-fw"></i> Logout
+                        Logout
                       </div>
                       {/* )} */}
                     </div>
@@ -351,318 +425,347 @@ class MainLayout extends React.Component {
         </nav>
 
         <div class="relative flex flex-col lg:flex-row bg-gray-800">
-          {this.props.AuthReducer.is_superuser ? (
-            <div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800">
-              <div class="lg:mt-20 overflow-x-scroll md:overflow-x-hidden lg:w-48 lg:fixed lg:left-0 lg:top-0 text-left bg-gray-800">
-                <ul
-                  id="NavDiv"
-                  class="flex flex-row lg:flex-col py-0 lg:py-3 px-1 lg:px-2 text-center lg:text-left"
-                >
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("DashboardNavBtn")}
+          {this.props.AuthReducer.user ? (
+            this.props.AuthReducer.user.is_superuser ? (
+              <div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800">
+                <div class="lg:mt-20 overflow-x-scroll md:overflow-x-hidden lg:w-48 lg:fixed lg:left-0 lg:top-0 text-left bg-gray-800">
+                  <ul
+                    id="NavDiv"
+                    class="flex flex-row lg:flex-col py-0 lg:py-3 px-1 lg:px-2 text-center lg:text-left"
                   >
-                    <Link
-                      to="/dashboard"
-                      class={
-                        DashboardNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("DashboardNavBtn")}
                     >
-                      <i className="fas fa-chart-line pr-0 lg:pr-3"></i>
-                      <span
+                      <Link
+                        to="/dashboard"
                         class={
                           DashboardNavBtn
-                            ? "MainLayoutNav2 MainLayoutNavActive2"
-                            : "MainLayoutNav2"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Dashboard
-                      </span>
-                    </Link>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("ProductsNavBtn")}
-                  >
-                    <Link
-                      to="/products"
-                      class={
-                        ProductsNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                        <i className="fas fa-chart-line pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            DashboardNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Dashboard
+                        </span>
+                      </Link>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("QueueNavBtn")}
                     >
-                      <i className="fas fa-cart-plus pr-0 lg:pr-3"></i>
-                      <span
+                      <Link
+                        to="/transactions/queuing"
+                        class={
+                          QueueNavBtn
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
+                        }
+                      >
+                        <i className="fad fa-pause pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            QueueNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Transaction Queue
+                        </span>
+                      </Link>
+                    </li>
+                    {/* <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("ProductsNavBtn")}
+                    >
+                      <Link
+                        to="/products"
                         class={
                           ProductsNavBtn
-                            ? "MainLayoutNav2 MainLayoutNavActive2"
-                            : "MainLayoutNav2"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Products
-                      </span>
-                    </Link>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("ReportsNavBtn")}
-                  >
-                    <div
-                      class={
-                        ReportsNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                        <i className="fas fa-cart-plus pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            ProductsNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Products
+                        </span>
+                      </Link>
+                    </li> */}
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("ReportsNavBtn")}
                     >
-                      <i class="fas fa-file-alt  pr-0 lg:pr-3 "></i>
-                      <span
+                      <div
                         class={
                           ReportsNavBtn
-                            ? "MainLayoutNav2 MainLayoutNavActive2"
-                            : "MainLayoutNav2"
-                        }
-                      >
-                        Reports
-                      </span>
-                    </div>
-                  </li>
-                  <li
-                    class={
-                      ReportsNavBtn
-                        ? "mr-3 flex-1 flex-col ml-10"
-                        : "mr-3 flex-1 hidden"
-                    }
-                    onClick={this.setActiveNav("ReportsNavBtn")}
-                  >
-                    <div className="flex justify-start ">
-                      <Link
-                        to="/reports/sales"
-                        class={
-                          "py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom"
-                        }
-                      >
-                        <i class="fad fa-money-check-edit pr-0 lg:pr-3 "></i>
-
-                        <span
-                          class={
-                            "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block"
-                          }
-                        >
-                          Sales
-                        </span>
-                      </Link>
-                    </div>
-
-                    <div className="flex justify-start ">
-                      <Link
-                        to="/reports/inventories"
-                        class={
-                          "py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom"
-                        }
-                      >
-                        <i class="fad fa-dolly-flatbed-alt  pr-0 lg:pr-3 "></i>
-                        <span
-                          class={
-                            "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block"
-                          }
-                        >
-                          Inventory
-                        </span>
-                      </Link>
-                    </div>
-                    <div className="flex justify-start ">
-                      <Link
-                        to="/reports/products"
-                        class={
-                          "py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
                         <i class="fas fa-file-alt  pr-0 lg:pr-3 "></i>
                         <span
                           class={
-                            "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block"
+                            ReportsNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
                           }
                         >
-                          Stocks
+                          Reports
                         </span>
-                      </Link>
-                    </div>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("ProductSettingNavBtn")}
-                  >
-                    <Link
-                      to="/products/settings"
+                      </div>
+                    </li>
+                    <li
                       class={
-                        ProductSettingNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
+                        ReportsNavBtn
+                          ? "mr-3 flex-1 flex-col ml-10"
+                          : "mr-3 flex-1 hidden"
                       }
+                      onClick={this.setActiveNav("ReportsNavBtn")}
                     >
-                      <i className="fas fa-sliders-h pr-0 lg:pr-3"></i>
+                      <div className="flex justify-start ">
+                        <Link
+                          to="/reports/sales"
+                          class={
+                            "py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom"
+                          }
+                        >
+                          <i class="fad fa-money-check-edit pr-0 lg:pr-3 "></i>
 
-                      <div
+                          <span
+                            class={
+                              "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block"
+                            }
+                          >
+                            Sales
+                          </span>
+                        </Link>
+                      </div>
+
+                      <div className="flex justify-start ">
+                        <Link
+                          to="/reports/inventories"
+                          class={
+                            "py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom"
+                          }
+                        >
+                          <i class="fad fa-dolly-flatbed-alt  pr-0 lg:pr-3 "></i>
+                          <span
+                            class={
+                              "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block"
+                            }
+                          >
+                            Inventory
+                          </span>
+                        </Link>
+                      </div>
+                      <div className="flex justify-start ">
+                        <Link
+                          to="/reports/products"
+                          class={
+                            "py-3 text-white no-underline hover:text-white border-b-2 border-gray-800  hover:border-teal_custom"
+                          }
+                        >
+                          <i class="fas fa-file-alt  pr-0 lg:pr-3 "></i>
+                          <span
+                            class={
+                              "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white  block lg:inline-block"
+                            }
+                          >
+                            Stocks
+                          </span>
+                        </Link>
+                      </div>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("ProductSettingNavBtn")}
+                    >
+                      <Link
+                        to="/products/settings"
                         class={
                           ProductSettingNavBtn
-                            ? "MainLayoutNav2 MainLayoutNavActive2"
-                            : "MainLayoutNav2"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Product Setting
-                      </div>
-                    </Link>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("InventoryNavBtn")}
-                  >
-                    <Link
-                      to="/inventories"
-                      class={
-                        InventoryNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                        <i className="fas fa-sliders-h pr-0 lg:pr-3"></i>
+
+                        <div
+                          class={
+                            ProductSettingNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Product Setting
+                        </div>
+                      </Link>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("InventoryNavBtn")}
                     >
-                      <i className="fad fa-dolly-flatbed-alt pr-0 lg:pr-3"></i>
-                      <span
+                      <Link
+                        to="/inventories"
                         class={
                           InventoryNavBtn
-                            ? "MainLayoutNav2 MainLayoutNavActive2"
-                            : "MainLayoutNav2"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Inventory
-                      </span>
-                    </Link>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("SupplierNavBtn")}
-                  >
-                    <Link
-                      to="/supplier"
-                      class={
-                        SupplierNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                        <i className="fad fa-dolly-flatbed-alt pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            InventoryNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Inventory
+                        </span>
+                      </Link>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("SupplierNavBtn")}
                     >
-                      <i className="fas fa-clipboard-list pr-0 lg:pr-3"></i>
-                      <span
+                      <Link
+                        to="/supplier"
                         class={
                           SupplierNavBtn
-                            ? "MainLayoutNav2 MainLayoutNavActive2"
-                            : "MainLayoutNav2"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Supplier
-                      </span>
-                    </Link>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("TransactionsNavBtn")}
-                  >
-                    <Link
-                      to="/transactions"
-                      class={
-                        TransactionsNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                        <i className="fas fa-clipboard-list pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            SupplierNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Supplier
+                        </span>
+                      </Link>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("TransactionsNavBtn")}
                     >
-                      <i className="fas fa-coins pr-0 lg:pr-3"></i>
-                      <span
+                      <Link
+                        to="/transactions"
                         class={
                           TransactionsNavBtn
-                            ? "MainLayoutNav2 MainLayoutNavActive2"
-                            : "MainLayoutNav2"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Transactions
-                      </span>
-                    </Link>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("TransactionsItemsNavBtn")}
-                  >
-                    <Link
-                      to="/transactions/items"
-                      class={
-                        TransactionsItemsNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                        <i className="fas fa-coins pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            TransactionsNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Transactions
+                        </span>
+                      </Link>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("TransactionsItemsNavBtn")}
                     >
-                      <i className="fas fa-coins pr-0 lg:pr-3"></i>
-                      <span
+                      <Link
+                        to="/transactions/items"
                         class={
                           TransactionsItemsNavBtn
-                            ? "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Transaction <div>Item's History</div>
-                      </span>
-                    </Link>
-                  </li>
-                  <li
-                    class="mr-3 flex-1 NavBtn"
-                    onClick={this.setActiveNav("TransactionsItemsNavBtn")}
-                  >
-                    <Link
-                      to="/customer/account/settings"
-                      class={
-                        TransactionsItemsNavBtn
-                          ? "MainLayoutNav MainLayoutNavActive"
-                          : "MainLayoutNav"
-                      }
+                        <i className="fas fa-coins pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            TransactionsItemsNavBtn
+                              ? "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-white  block lg:inline-block"
+                              : "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                          }
+                        >
+                          Transaction <div>Item's History</div>
+                        </span>
+                      </Link>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("VoucherNavBtn")}
                     >
-                      <i className="fas fa-coins pr-0 lg:pr-3"></i>
-                      <span
+                      <Link
+                        to="/vouchers"
                         class={
-                          TransactionsItemsNavBtn
-                            ? "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-white  block lg:inline-block"
-                            : "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                          VoucherNavBtn
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
                         }
                       >
-                        Testing button
-                      </span>
-                    </Link>
-                  </li>
-                  {/* <li
-										class="mr-3 flex-1 NavBtn"
-										onClick={this.setActiveNav('ArchiveNavBtn')}
-									>
-										<Link
-											to="/archive"
-											class={
-												ArchiveNavBtn
-													? 'block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom'
-													: 'block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom'
-											}
-										>
-											<i className="fal fa-archive pr-0 lg:pr-3"></i>
-											<span
-												class={
-													ArchiveNavBtn
-														? 'pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block'
-														: 'pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block'
-												}
-											>
-												Archive
-											</span>
-										</Link>
-									</li> */}
-                </ul>
+                        <i className="fad fa-percent pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            VoucherNavBtn
+                              ? "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-white  block lg:inline-block"
+                              : "pb-1 lg:pb-0 text-xs align-middle lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                          }
+                        >
+                          Vouchers
+                        </span>
+                      </Link>
+                    </li>
+
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("ArchiveNavBtn")}
+                    >
+                      <Link
+                        to="/archive"
+                        class={
+                          ArchiveNavBtn
+                            ? "block py-1 lg:py-3 pl-1 align-middle text-teal_custom no-underline border-b-2 border-teal_custom"
+                            : "block py-1 lg:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-teal_custom"
+                        }
+                      >
+                        <i className="fal fa-archive pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            ArchiveNavBtn
+                              ? "pb-1 lg:pb-0 text-xs lg:text-base text-white  block lg:inline-block"
+                              : "pb-1 lg:pb-0 text-xs lg:text-base text-gray-400 hover:text-white block lg:inline-block"
+                          }
+                        >
+                          Archive
+                        </span>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )
           ) : (
             ""
           )}
@@ -671,10 +774,6 @@ class MainLayout extends React.Component {
             <div class="fixed w-full h-full bg-gray-900 opacity-50"></div>
             <CartIndex handleCartShow={this.handleCartShow} />
           </div>
-          {/* <div className="flex-1">
-            <CheckoutNav />
-          </div> */}
-
           {this.props.children}
         </div>
       </>

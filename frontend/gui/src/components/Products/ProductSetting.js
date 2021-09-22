@@ -432,7 +432,7 @@ class ProductSetting extends React.Component {
                   </div>
                 </div>
                 <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
-                  <div className="flex items-center lg:border-l lg:border-r border-gray-300 dark:border-gray-200 py-3 lg:py-0 lg:px-6">
+                  {/* <div className="flex items-center lg:border-l lg:border-r border-gray-300 dark:border-gray-200 py-3 lg:py-0 lg:px-6">
                     <p
                       className="text-base text-gray-600 dark:text-gray-400"
                       id="page-view"
@@ -451,7 +451,7 @@ class ProductSetting extends React.Component {
                     >
                       <i class="fad fa-angle-right fa-2x"></i>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="lg:ml-6 flex items-center">
                     <div class="relative w-full">
                       <input

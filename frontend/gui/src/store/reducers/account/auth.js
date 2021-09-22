@@ -19,6 +19,8 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   user: null,
+  addresses: [],
+  contact_numbers: [],
   is_superuser: null,
   logout: false,
   accounts: [],
@@ -36,6 +38,7 @@ const AuthReducer = (state = initialState, action) => {
       };
     case LOGIN_SUCCESS:
       localStorage.setItem("token", action.payload.token);
+      console.log(action.payload);
       return {
         ...state,
         ...action.payload,
@@ -65,10 +68,12 @@ const AuthReducer = (state = initialState, action) => {
     case USER_LOADED:
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
+        addresses: action.payload.address,
+        contact_numbers: action.payload.contact_number,
         isAuthenticated: true,
         isLoading: false,
-        is_superuser: action.payload.is_superuser,
+        is_superuser: action.payload.user.is_superuser,
       };
     case GET_ACCOUNT_LIST:
       return {

@@ -7,6 +7,9 @@ from rest_framework import viewsets, permissions
 from .serializers import AccountSerializer
 from rest_framework import filters
 from .models import Account
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 # API
 
 
@@ -72,3 +75,16 @@ class UserAPI(generics.RetrieveAPIView):
         return self.request.user
 
 
+@api_view(["GET"])
+def LoadAccountUser(request):
+    # context = {}
+    # context["User"] = UserSerializer(User.objects.get(id=request.user.id)).data
+    # Account_info = Account.objects.get(user=request.user)
+    
+    return Response(AccountSerializer(Account.objects.get(user=request.user.id)).data,status=status.HTTP_201_CREATED)
+
+
+class AccountViewSet(viewsets.ModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+    parser_classes = (MultiPartParser,FormParser)

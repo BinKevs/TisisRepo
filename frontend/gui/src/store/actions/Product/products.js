@@ -11,6 +11,9 @@ import {
   ADD_CATEGORY,
   DELETE_CATEGORY,
   PRODUCT_LOADING,
+  GET_VOUCHER_LIST,
+  ADD_VOUCHER,
+  ADD_REVIEW,
 } from "./actionTypes";
 import swal from "sweetalert";
 import { HandleSuccessMessages } from "../../../Helpers/functions";
@@ -122,6 +125,42 @@ export const deleteCategory = (CategoryID) => (dispatch, getState) => {
       dispatch({
         type: DELETE_CATEGORY,
         payload: CategoryID,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+//Vocuhers
+export const getVoucherList = () => (dispatch, getState) => {
+  axios
+    .get(URL_IMPORT + "/api/vouchers/", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_VOUCHER_LIST,
+        payload: res.data,
+      });
+    });
+};
+export const addVoucher = (data) => (dispatch, getState) => {
+  axios
+    .post(URL_IMPORT + "/api/vouchers/", data, tokenConfig(getState))
+    .then((res) => {
+      HandleSuccessMessages("Vouchers Added", "success");
+      dispatch({
+        type: ADD_VOUCHER,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const addReview = (data) => (dispatch, getState) => {
+  axios
+    .post(URL_IMPORT + "/api/reviews/", data, tokenConfig(getState))
+    .then((res) => {
+      HandleSuccessMessages("Review Added", "success");
+      dispatch({
+        type: ADD_REVIEW,
+        payload: res.data,
       });
     })
     .catch((err) => console.log(err));

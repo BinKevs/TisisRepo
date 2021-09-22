@@ -1,26 +1,24 @@
 import { Route, Switch } from "react-router-dom";
 // import ProductListIndex from '../components/Products/ProductListIndex';
+import PurchasesIndex from "../components/Customers/Purchases/Purchases";
+import ProductListIndexOnlineCustomer from "../components/Customers/ProductListIndexOnlineCustomer";
+import ProductDetails from "../components/Customers/ProductDetails";
+import AccountSetting from "../components/Customers/AccountSetting";
+import Checkout from "../components/Customers/Checkout/Checkout";
 
-import ProductListIndexOnlineCustomer from "../components/Online_Customers/ProductListIndexOnlineCustomer";
-import ProductDetails from "../components/Online_Customers/ProductDetails";
-import OnlineCustomerAccountSetting from "../components/Online_Customers/OnlineCustomerAccountSetting";
-import CheckoutOnlineCustomer from "../components/Online_Customers/Checkout/CheckoutOnlineCustomer";
-
-import CheckoutOrders from "../components/Online_Customers/Checkout/CheckoutOrders";
-import CheckoutAddress from "../components/Online_Customers/Checkout/CheckoutAddress";
-import CheckoutPayment from "../components/Online_Customers/Checkout/CheckoutPayment";
-
-import OnlineTransactionQueuing from "../components/Online_Customers/OnlineTransactionQueuing";
+import TransactionQueuing from "../components/Transactions/TransactionQueuing";
 
 import ProductListIndex from "../components/Products/ProductListIndex";
 import ProductSetting from "../components/Products/ProductSetting";
 import CheckoutIndex from "../components/Products/Checkout/CheckoutIndex";
+import VoucherSetting from "../components/Vouchers/VoucherSetting";
 
 import DashboardIndex from "../components/Dashboard/dashboard";
 
 import InventorySetting from "../components/Inventories/InventorySetting";
 
 import SupplierSetting from "../components/Suppliers/SupplierSetting";
+import Archive from "../components/Archives/Archive";
 
 import TransactionSetting from "../components/Transactions/TransactionSetting";
 import TransactionItemsSetting from "../components/Transactions/TransactionItemsSetting";
@@ -43,59 +41,48 @@ function MainBaseRouter() {
       <Switch>
         <PrivateRoute
           exact
-          path="/customer/products"
+          path="/products"
           component={ProductListIndexOnlineCustomer}
         />
         <PrivateRoute
           exact
-          path="/customer/products/:productID"
+          path="/product/:productID"
           component={ProductDetails}
         />
+        <PrivateRoute exact path="/vouchers" component={VoucherSetting} />
         <PrivateRoute
           exact
-          path="/customer/account/settings"
-          component={OnlineCustomerAccountSetting}
+          path="/account/settings"
+          component={AccountSetting}
         />
         <PrivateRoute
           exact
-          path="/customer-checkout"
-          component={CheckoutOnlineCustomer}
+          path="/account/purchases"
+          component={PurchasesIndex}
         />
-        <PrivateRoute
-          exact
-          path="/customer-checkout/orders"
-          component={CheckoutOrders}
-        />
-        <PrivateRoute
-          exact
-          path="/customer-checkout/address"
-          component={CheckoutAddress}
-        />
-        <PrivateRoute
-          exact
-          path="/customer-checkout/payment"
-          component={CheckoutPayment}
-        />
+
+        <PrivateRoute exact path="/checkout" component={Checkout} />
 
         <PrivateRoute
           exact
-          path="/customer/account/queuing"
-          component={OnlineTransactionQueuing}
+          path="/transactions/queuing"
+          component={TransactionQueuing}
         />
 
-        <PrivateRoute exact path="/checkout" component={CheckoutIndex} />
+        {/* <PrivateRoute exact path="/checkout" component={CheckoutIndex} /> */}
         <PrivateRoute
           exact
           path="/products/settings"
           component={ProductSetting}
         />
-        <PrivateRoute exact path="/products" component={ProductListIndex} />
+        {/* <PrivateRoute exact path="/products" component={ProductListIndex} /> */}
 
         <PrivateRoute exact path="/dashboard" component={DashboardIndex} />
 
         <PrivateRoute exact path="/inventories" component={InventorySetting} />
 
         <PrivateRoute exact path="/supplier" component={SupplierSetting} />
+        <PrivateRoute exact path="/archive" component={Archive} />
 
         <PrivateRoute
           exact

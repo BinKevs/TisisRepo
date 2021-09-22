@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'activities_log',
     'product_files',
     'product_variations',
+    'addresses',
+    'contact_numbers',
+    'reviews',
     'vouchers',
 
     'rest_framework',

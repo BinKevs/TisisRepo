@@ -39,9 +39,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.save()
         product_current = Product.objects.get(id=serializer.data['id'])
         supplier_current = Supplier.objects.get(id=request.data['supplier'])
-        productVariation = Product_variation.objects.create(product=product_current,stock=request.data['stock'],size=request.data['size'],color=request.data['color'])
+        productVariation = Product_variation.objects.create(stock=request.data['stock'],size=request.data['size'],color=request.data['color'])
         Inventory.objects.create(new_stock=request.data['stock'],supplier=supplier_current,product=product_current)
-        product_current.variation = productVariation
+        product_current.variation.add(productVariation) 
         uploaded_files = []
         for file in files:
             content = Product_file.objects.create(image=file)

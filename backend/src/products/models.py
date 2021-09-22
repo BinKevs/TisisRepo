@@ -15,13 +15,12 @@ class Product(models.Model):
         Supplier, related_name="supplier_product", on_delete=models.CASCADE, null=True)
     # image = ResizedImageField(size=[600,410],crop=['middle', 'center'], default='No-Image-Available.jpeg',null=True, blank=True)
     description = models.TextField(blank=True)
-    stock = models.IntegerField()
+    # stock = models.IntegerField()
     price = models.DecimalField(max_digits=20, decimal_places=2)
     file_content = models.ManyToManyField(Product_file, related_name='file_content', blank=True)
     variation = models.ManyToManyField(
         "product_variations.Product_variation", related_name="variation_product", null=True, blank=True)
     status = models.CharField(max_length=150, null=True, blank=True)
-    
     def __str__(self):
         return self.name
     def save(self,*args, **kwargs):
@@ -35,12 +34,12 @@ class Product(models.Model):
                self.product_id = prefix+'{0:04d}'.format(1)
        super(Product, self).save(*args, **kwargs)
 
-    @receiver(post_save, sender='transaction_items.Transaction_item')
-    def update_product_transaction_on_save(sender, instance, **kwargs):
-        if instance.id:
-            product = Product.objects.get(id=instance.product_id)
-        instance.product.stock -= instance.quantity
-        instance.product.save()
+    # @receiver(post_save, sender='transaction_items.Transaction_item')
+    # def update_product_transaction_on_save(sender, instance, **kwargs):
+    #     if instance.id:
+    #         product = Product.objects.get(id=instance.product_id)
+    #     instance.product.stock -= instance.quantity
+    #     instance.product.save()
     # @receiver(post_save, sender='inventories.Inventory')
     # def update_product_inventory_on_save(sender, instance, raw, **kwargs):
     #     if instance.id:

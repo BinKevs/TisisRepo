@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from transaction_items.models import Transaction_item
-from transactions.serializers import TransactionSerializer
-from products.serializers import ProductSerializer
+from products.serializers import ProductSerializer,Product_serializer_for_transaction
 from products.models import Product
 from transactions.models import Transaction
 from datetime import datetime, timedelta
@@ -9,14 +8,15 @@ from categories.models import Category
 from product_variations.models import Product_variation
 # from django.utils import timezone
 class Transaction_itemSerializer(serializers.ModelSerializer):
-    transaction = serializers.PrimaryKeyRelatedField(
-        queryset=Transaction.objects.all())
+    # transaction = serializers.PrimaryKeyRelatedField(
+    #     queryset=Transaction.objects.all())
     transaction_date = serializers.SerializerMethodField()
     # online_transaction_info = serializers.SerializerMethodField()
     product = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all())
-    product_info = serializers.SerializerMethodField()
-    category_info = serializers.SerializerMethodField()
+    product = Product_serializer_for_transaction(read_only=True)
+    # product_info = serializers.SerializerMethodField()
+    # category_info = serializers.SerializerMethodField()
     product_variation_info = serializers.SerializerMethodField()
    
 
@@ -31,23 +31,18 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             "id": product.id,
             "name": product.name,
             "description": product.description,
-            "stock": product.stock,
             "price": product.price,
+
         }
     @staticmethod
     def get_product_variation_info(obj):
         try :
             product_variation = Product_variation.objects.get(pk=obj.product_with_variation.id)
-            product = Product.objects.get(pk=obj.product_with_variation.product.id)
             return {
                 "product_variation_id": product_variation.id,
                 "color":product_variation.color,
                 "size":product_variation.size,
                 "stock":product_variation.stock,
-                "product_id": product.id,
-                "name": product.name,
-                "description": product.description,
-                "price": product.price,
             }
         except:
              return {
@@ -55,10 +50,6 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
                 "color":None,
                 "size":None,
                 "stock":None,
-                "product_id": None,
-                "name": None,
-                "description": None,
-                "price": None,
             }
     @staticmethod
     def get_category_info(obj):
@@ -69,6 +60,7 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             "name": category.name,
         }
 
+
     @staticmethod
     def get_transaction_date(obj):
         
@@ -77,7 +69,7 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             
             date = transaction.created_at
             modified_date = date + timedelta(hours=8)
-           
+        
             return {
                 
                 "id": transaction.id,
@@ -88,19 +80,9 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
                 "id": None,
                 "created_at": None
             }
-            # OnlineTransaction
-    # @staticmethod
-    # def get_online_transaction_info(obj):
-    #     try:
-    #         online_transaction = OnlineTransaction.objects.get(transaction=obj.transaction.id)
-    #         return {
-    #             "id": online_transaction.id,
-    #             "status" : online_transaction.status,
-    #             "shipping_details": online_transaction.shipping_details
-    #         }
-    #     except:
-    #         return {
-    #             "id": None,
-    #             "status" : None,
-    #             "shipping_details": None
-    #         }
+
+
+class Transaction_item_for_create_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction_item
+        fields = "__all__"

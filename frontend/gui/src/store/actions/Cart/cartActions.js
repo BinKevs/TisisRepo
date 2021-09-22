@@ -10,7 +10,7 @@ export const addToCart = (product) => (dispatch, getState) => {
   const cartItems = getState().cartReducer.cartItems.slice();
   let alreadyExists = false;
   cartItems.forEach((x) => {
-    if (x.product_id === product.product_id) {
+    if (x.product_with_variation === product.product_with_variation) {
       alreadyExists = true;
       x.quantity += product.quantity;
     }
@@ -69,6 +69,6 @@ export const removeFromCart = (product) => (dispatch, getState) => {
 };
 // When a checkout and payment successfully done local storage will be clear automatically with this.
 export const clearCart = () => (dispatch) => {
-  localStorage.removeItem("cartItem");
-  dispatch({ type: CLEAR_CART });
+  // localStorage.removeItem("cartItem");
+  // dispatch({ type: CLEAR_CART });
 };
