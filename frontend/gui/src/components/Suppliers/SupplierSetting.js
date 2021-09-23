@@ -395,7 +395,7 @@ class SupplierSettingIndex extends React.Component {
                                 >
                                   Edit
                                 </li>
-                                <li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal">
+                                <li className="cursor-pointer text-sm leading-3 py-3 bg-red-500 text-white px-3 font-normal">
                                   Delete
                                 </li>
                               </ul>

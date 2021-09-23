@@ -19,6 +19,9 @@ from product_variations.models import Product_variation
 from inventories.models import Inventory
 from product_files.models import Product_file
 from suppliers.models import Supplier
+from product_variations.serializers import Product_VariationSerializer
+from .serializers import ProductSerializer
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -49,8 +52,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         product_current.file_content.add(*uploaded_files)
         context = serializer.data
         print(uploaded_files)
-        context["variation"] = productVariation.id
+        context["variation"] = [{"id":productVariation.id,"size":productVariation.size,"color":productVariation.color,"stock":productVariation.stock}]
         context["file_content"] = [file.id for file in uploaded_files]
+        print(context)
         return Response(context, status=status.HTTP_201_CREATED)
 
         

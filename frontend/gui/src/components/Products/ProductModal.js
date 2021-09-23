@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import ReactPlayer from "react-player";
 const ProductModal = (props) => {
   const {
     suppliers,
@@ -12,6 +13,9 @@ const ProductModal = (props) => {
     EditButtonIsClicked,
     onEditCloseButton,
     onModalToggleAdd,
+    OnLeftScroll,
+    OnRightScroll,
+    onRemoveImage,
     modal,
   } = props;
   const {
@@ -28,7 +32,7 @@ const ProductModal = (props) => {
     image,
     urlFile,
   } = props.state;
-  console.log(props.state);
+  // console.log(props.state);
   return (
     <>
       <div class={modal ? "h-screen " : "h-screen hidden"}>
@@ -116,6 +120,7 @@ const ProductModal = (props) => {
                             /> */}
                             <input
                               class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
+                              id="file_content"
                               type="file"
                               multiple
                               name="file_content"
@@ -132,6 +137,65 @@ const ProductModal = (props) => {
                           // />
                           ""
                         )}
+
+                        <div className="relative w-full flex items-center">
+                          <span
+                            onClick={OnLeftScroll}
+                            className="h-12 w-16 flex items-center justify-center text-gray-600"
+                          >
+                            <i class="fad fa-angle-left fa-3x"></i>
+                          </span>
+                          <div
+                            id="slider"
+                            className="w-full flex overflow-x-hidden space-x-4"
+                          >
+                            {urlFile.map((url, index) =>
+                              url.type.includes("video") ? (
+                                // <ReactPlayer
+                                //   height="13rem"
+                                //   playing={true}
+                                //   controls={true}
+                                //   url={url.file}
+                                // />
+                                <>
+                                  <div>
+                                    <video width="400" controls>
+                                      <source src={url.file} type="video/mp4" />
+                                      Your browser does not support HTML video.
+                                    </video>
+                                    <button
+                                      onClick={onRemoveImage(index)}
+                                      className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
+                                </>
+                              ) : (
+                                <div>
+                                  <img
+                                    alt="product image"
+                                    class="object-cover h-52 border-4"
+                                    src={url.file}
+                                  />
+                                  <button
+                                    onClick={onRemoveImage(index)}
+                                    className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              )
+                            )}
+                          </div>
+
+                          <span
+                            onClick={OnRightScroll}
+                            className="h-12 w-16 flex items-center justify-center text-gray-600"
+                          >
+                            <i class="fad fa-angle-right fa-3x"></i>
+                          </span>
+                        </div>
 
                         {/* {!EditButtonIsClicked ? (
                           <></>

@@ -14,7 +14,8 @@ import { getSupplierList } from "../../store/actions/supplier/suppliers";
 import ProductModal from "./ProductModal";
 import { ProductsTableExportModal } from "./Print/ProductsTableExportModal";
 let products = [];
-let ImageFilesArray = [];
+
+let FilesArray = [];
 let filteredData = [];
 let EditButtonIsClicked = false;
 let isImageChanged = false;
@@ -43,7 +44,7 @@ class ProductSetting extends React.Component {
     image: null,
     productID: 0,
     search: "",
-    urlFile: "",
+    urlFile: [],
     modal: false,
     categoryForDropDownSelect: "",
     table_export_modal: false,
@@ -58,6 +59,12 @@ class ProductSetting extends React.Component {
       });
     };
   }
+  OnRightScroll = () => {
+    document.getElementById("slider").scrollLeft += 120;
+  };
+  OnLeftScroll = () => {
+    document.getElementById("slider").scrollLeft -= 120;
+  };
   componentDidMount() {
     this.props.getProductList();
     this.props.getSupplierList();
@@ -68,33 +75,49 @@ class ProductSetting extends React.Component {
   // when the image field changes it will save the image and also change the state of
   // isImageChanged to true for the update Form component to know that we didnt change the image
   // because we sent all data whenever we make a post or update so when the isImageChanged's status is false we will not include the field
-
-  onChange = (e) => {
-    if (e.target.name === "image") {
+  onRemoveImage = (fileID) => {
+    return (e) => {
+      e.preventDefault();
+      FilesArray = [];
+      const fileListArr = [...this.state.file_content];
+      if (fileID > -1) {
+        fileListArr.splice(fileID, 1);
+      }
       this.setState({
-        [e.target.name]: e.target.files[0],
-        urlFile: URL.createObjectURL(e.target.files[0]),
+        file_content: fileListArr,
       });
-      isImageChanged = true;
-    } else if (e.target.name === "file_content") {
-      //   e.target.files.map((product) =>
-      //   ImageFilesArray.push({
-      //     id: product.id,
-      //     product_id: product.product_id,
-      //     name: product.name,
-      //     price: product.price,
-      //     category: product.category_info.name,
-      //     supplier: product.supplier_info.name,
-      //     stock: product.stock,
-      //     description: product.description,
-      //   })
-      // );
 
-      // for (var i = 0; i < e.target.files.length; i++) {
-      //   ImageFilesArray.push(e.target.files[i]);
-      // }
+      for (let i = 0; i < fileListArr.length; i++) {
+        FilesArray.push({
+          file: URL.createObjectURL(fileListArr[i]),
+          type: fileListArr[i].type,
+        });
+      }
+      this.setState({
+        urlFile: FilesArray,
+      });
+    };
+  };
+  onChange = (e) => {
+    // if (e.target.name === "image") {
+    //   this.setState({
+    //     [e.target.name]: e.target.files[0],
+    //     urlFile: URL.createObjectURL(e.target.files[0]),
+    //   });
+    //   isImageChanged = true;
+    // } else
+    if (e.target.name === "file_content") {
+      for (let i = 0; i < e.target.files.length; i++) {
+        FilesArray.push({
+          file: URL.createObjectURL(e.target.files[i]),
+          type: e.target.files[i].type,
+        });
+      }
       this.setState({
         [e.target.name]: e.target.files,
+      });
+      this.setState({
+        urlFile: FilesArray,
       });
     } else {
       if (e.target.name === "productName") {
@@ -118,7 +141,6 @@ class ProductSetting extends React.Component {
         });
       }
     }
-    console.log(this.state);
   };
   // Submitting the name in the add category action
   onSubmitCategory = (event) => {
@@ -212,7 +234,6 @@ class ProductSetting extends React.Component {
         stock,
         size,
         color,
-        image,
         file_content,
       } = this.state;
       const action_done = "Product Added";
@@ -226,13 +247,12 @@ class ProductSetting extends React.Component {
       formData.append("stock", stock);
       formData.append("size", size);
       formData.append("color", color);
-      // formData.append("image", image);
       formData.append("action_done", action_done);
       for (let i = 0; i < file_content.length; i++) {
         formData.append("file_content", file_content[i]);
       }
       this.props.addProduct(formData);
-      // console.log(formData);
+
       this.setState({
         productName: "",
         description: "",
@@ -304,6 +324,7 @@ class ProductSetting extends React.Component {
     // destructure the products that came from the reducer so it will be easier to filter and show
     products = [];
     filteredData = [];
+
     this.props.products.map((product) =>
       products.push({
         id: product.id,
@@ -312,8 +333,8 @@ class ProductSetting extends React.Component {
         price: product.price,
         category: product.category_info.name,
         supplier: product.supplier_info.name,
-        stock: product.stock,
         description: product.description,
+        variation: product.variation,
       })
     );
     // This will filter the data from inventories array filtered at the top
@@ -347,7 +368,7 @@ class ProductSetting extends React.Component {
     // 		}
     // 	});
     // }
-    console.log(this.state.categoryForDropDownSelect);
+
     filteredData = products.filter((item) => {
       return (
         item.name.toString().toLowerCase().includes(lowercasedFilter) ||
@@ -392,7 +413,7 @@ class ProductSetting extends React.Component {
         );
       });
     }
-
+    console.log(this.props.products);
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -434,19 +455,19 @@ class ProductSetting extends React.Component {
                 <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
                   {/* <div className="flex items-center lg:border-l lg:border-r border-gray-300 dark:border-gray-200 py-3 lg:py-0 lg:px-6">
                     <p
-                      className="text-base text-gray-600 dark:text-gray-400"
+                      className="text-base text-gray-600 "
                       id="page-view"
                     >
                       Viewing 1 - 20 of 60
                     </p>
                     <div
-                      className="text-gray-600 dark:text-gray-400 ml-2 border-transparent border cursor-pointer rounded mr-4"
+                      className="text-gray-600  ml-2 border-transparent border cursor-pointer rounded mr-4"
                       onclick="pageView(false)"
                     >
                       <i class="fad fa-angle-left fa-2x"></i>
                     </div>
                     <div
-                      className="text-gray-600 dark:text-gray-400 border-transparent border rounded focus:outline-none cursor-pointer"
+                      className="text-gray-600  border-transparent border rounded focus:outline-none cursor-pointer"
                       onclick="pageView(true)"
                     >
                       <i class="fad fa-angle-right fa-2x"></i>
@@ -478,16 +499,19 @@ class ProductSetting extends React.Component {
                 <table className="min-w-full bg-white dark:bg-gray-800">
                   <thead>
                     <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                      <th className="pl-12 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      <th className="pl-12 text-gray-600  font-normal pr-6 text-left text-sm leading-4">
                         Item No.
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-1/5">
-                        Item Name
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm w-1/5">
+                        Product
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm leading-4">
+                        (Variation) Stock
+                      </th>
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm leading-4">
                         Price
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm w-2/12">
                         <select
                           onChange={this.onChange}
                           name="categoryForDropDownSelect"
@@ -501,21 +525,15 @@ class ProductSetting extends React.Component {
                           ))}
                         </select>
                       </th>
-                      {/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-												<span>Date</span>
-												<i class="fal fa-arrow-up fa-lg"></i>
-												<i class="fal fa-arrow-down"></i>
-											</th> */}
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm">
                         Supplier
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Stock
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-1/5">
+
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm w-1/5">
                         Description
                       </th>
-                      <td className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      <td className="text-gray-600  font-normal pr-6 text-left text-sm">
                         More
                       </td>
                     </tr>
@@ -526,13 +544,40 @@ class ProductSetting extends React.Component {
                         key={product.id}
                         className="h-24 border-gray-300 dark:border-gray-200 border-b"
                       >
-                        <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
                           {product.product_id}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
                           {product.name}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 w-3/12">
+                          {product.variation
+                            ? product.variation.map(
+                                (productVariation, index) => (
+                                  <tr
+                                    className={
+                                      product.variation.length === 1
+                                        ? "h-20 border-gray-300"
+                                        : index + 1 === product.variation.length
+                                        ? "h-20 border-gray-300"
+                                        : "h-20 border-gray-300 border-b-2"
+                                    }
+                                  >
+                                    <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                                      <div>
+                                        ({productVariation.color}/
+                                        {productVariation.size})
+                                      </div>
+                                    </td>
+                                    <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                                      {productVariation.stock}
+                                    </td>
+                                  </tr>
+                                )
+                              )
+                            : ""}
+                        </td>
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
                           {product.price}
                         </td>
                         {/* <td className="pr-6 whitespace-no-wrap">
@@ -544,33 +589,19 @@ class ProductSetting extends React.Component {
 															className="h-full w-full rounded-full overflow-hidden shadow"
 														/>
 													</div>
-													<p className="ml-2 text-gray-800 dark:text-gray-100 tracking-normal leading-4 text-sm">
+													<p className="ml-2 text-gray-800 dark:text-gray-100 text-sm">
 														Carrie Anthony
 													</p>
 												</div>
 											</td> */}
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
                           {product.category}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
                           {product.supplier}
                         </td>
-                        <td className="pr-6 whitespace-no-wrap">
-                          <div className="flex items-center">
-                            <div
-                              className={
-                                product.stock >= 10
-                                  ? "w-2 h-2 rounded-full bg-green-400"
-                                  : "w-2 h-2 rounded-full bg-red-400"
-                              }
-                            />
 
-                            <p className="ml-2 text-gray-800 dark:text-gray-100 tracking-normal leading-4 text-sm">
-                              {product.stock}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
                           {product.description}
                         </td>
                         <td className="pr-8 relative">
@@ -579,11 +610,11 @@ class ProductSetting extends React.Component {
                               <ul className="bg-white dark:bg-gray-800 shadow rounded p-2">
                                 <li
                                   onClick={this.onModalToggleEdit(product.id)}
-                                  className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
+                                  className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
                                 >
                                   Edit
                                 </li>
-                                <li className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal">
+                                <li className="cursor-pointer text-sm leading-3 py-3 bg-red-500 text-white px-3 font-normal">
                                   Delete
                                 </li>
                               </ul>
@@ -627,6 +658,9 @@ class ProductSetting extends React.Component {
           EditButtonIsClicked={EditButtonIsClicked}
           isImageChanged={isImageChanged}
           onEditCloseButton={this.onEditCloseButton}
+          OnRightScroll={this.OnRightScroll}
+          OnLeftScroll={this.OnLeftScroll}
+          onRemoveImage={this.onRemoveImage}
         />
         <div
           class={

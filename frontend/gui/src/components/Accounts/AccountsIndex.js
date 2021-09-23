@@ -164,15 +164,14 @@ class AccountsIndex extends React.Component {
   render() {
     //destructuring the dictionary for searching/ fetching purposes
     AccountsItems = [];
-    console.log(this.props.accounts);
-    this.props.accounts.map((accounts) =>
+    this.props.accounts.map((account) =>
       AccountsItems.push({
-        id: accounts.id,
-        username: accounts.username,
-        email: accounts.email,
-        is_active: accounts.is_active,
-        is_superuser: accounts.is_superuser,
-        name: accounts.last_name + " " + accounts.first_name,
+        id: account.id,
+        username: account.user.username,
+        email: account.user.email,
+        is_active: account.user.is_active,
+        is_superuser: account.user.is_superuser,
+        name: account.user.last_name + " " + account.user.first_name,
       })
     );
     //returning the filtered data from search

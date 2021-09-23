@@ -52,12 +52,40 @@ class TransactionQueuing extends React.Component {
           </div>
 
           <div className="p-5 w-full">
-            <div className="w-full overflow-x-auto">
+            <div className="mx-auto bg-white shadow rounded">
+              <div className="flex flex-col lg:flex-row p-4 lg:p-8 justify-end items-start lg:items-stretch w-full">
+                <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
+                  <div className="lg:ml-6 flex items-start w-full">
+                    <div className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center">
+                      <i class="fal fa-print fa-lg"></i>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
+                  <div className="lg:ml-6 flex items-center">
+                    <div class="relative w-full">
+                      <input
+                        type="text"
+                        name="search"
+                        placeholder=" "
+                        required
+                        class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+                        // onChange={this.onChange}
+                        // value={this.state.search}
+                      />
+                      <label
+                        for="search"
+                        class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+                      >
+                        Search
+                      </label>
+                    </div>
+                    <i class="fad fa-search fa-lg"></i>
+                  </div>
+                </div>
+              </div>
               <section class="mx-auto p-6">
                 <div class="w-full mb-8 overflow-hidden rounded-lg shadow-lg bg-white">
-                  <div class="px-4 py-6 text-gray-800 text-3xl font-medium border-gray-300">
-                    Queue Order/s
-                  </div>
                   <table class="w-full ">
                     <thead>
                       <tr class="text-sm font-normal text-left text-gray-600 bg-white border-b border-gray-300">
