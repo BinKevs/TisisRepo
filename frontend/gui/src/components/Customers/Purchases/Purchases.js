@@ -5,7 +5,10 @@ import {
   getTransactionList,
   updateTransactionStatus,
 } from "../../../store/actions/transaction/transactions.js";
-import { addReview } from "../../../store/actions/product/products";
+import {
+  addReview,
+  getReviewList,
+} from "../../../store/actions/product/products";
 
 import noImageAvailable from "../../../no-image-available.png";
 import ReviewsModal from "./ReviewsModal";
@@ -13,9 +16,11 @@ let NavButton = document.getElementsByClassName("NavButton");
 let NavButtonActive = document.getElementsByClassName("NavButtonActive");
 let SectionPanelActive = document.getElementsByClassName("SectionPanelActive");
 let filteredData = [];
+let reviews = [];
 class PurchasesIndex extends React.Component {
   componentDidMount() {
     this.props.getTransactionList();
+    this.props.getReviewList();
   }
   state = {
     showModal: false,
@@ -23,16 +28,45 @@ class PurchasesIndex extends React.Component {
     comment: "",
     product_name: "",
     product_image: "",
-    product_id: "",
+    product_id: 0,
+    transaction_item_id: 0,
     filter_nav: "All",
     transactionId: 0,
   };
   onSubmit = (star_rate) => {
     return (e) => {
       e.preventDefault();
-      const { comment, product_id } = this.state;
-      const review = { star_rate, comment, product_id };
+      const { comment, product_id, transaction_item_id, transaction_id } =
+        this.state;
+      const review = {
+        star_rate,
+        comment,
+        product: product_id,
+        transaction_item_id,
+        transaction_id,
+      };
       this.props.addReview(review);
+
+      this.setState({
+        showModal: !this.state.showModal,
+        product_name: "",
+        product_image: "",
+        product_id: "",
+        transaction_item_id: "",
+        transaction_id: "",
+      });
+      this.props.getTransactionList();
+      filteredData = [];
+
+      filteredData = this.props.transactions.filter((item) => {
+        return this.state.filter_nav === "All"
+          ? item.status.toString().includes("")
+          : this.state.filter_nav === "To Ship"
+          ? item.status.toString().includes(this.state.filter_nav) ||
+            item.status.toString().includes("Prefering")
+          : item.status.toString().includes(this.state.filter_nav);
+      });
+      console.log(this.props.transactions);
     };
   };
   onUpdateSubmit = (e) => {
@@ -72,7 +106,13 @@ class PurchasesIndex extends React.Component {
       showModalOrderReceived: !this.state.showModalOrderReceived,
     });
   };
-  onToggleModalReview = (product_name, product_image, product_id) => {
+  onToggleModalReview = (
+    product_name,
+    product_image,
+    product_id,
+    transaction_item_id,
+    transaction_id
+  ) => {
     return (event) => {
       event.preventDefault();
       this.setState({
@@ -80,6 +120,8 @@ class PurchasesIndex extends React.Component {
         product_name: product_name,
         product_image: product_image,
         product_id: product_id,
+        transaction_item_id: transaction_item_id,
+        transaction_id: transaction_id,
       });
     };
   };
@@ -108,6 +150,7 @@ class PurchasesIndex extends React.Component {
   };
   render() {
     filteredData = [];
+
     filteredData = this.props.transactions.filter((item) => {
       return this.state.filter_nav === "All"
         ? item.status.toString().includes("")
@@ -116,6 +159,19 @@ class PurchasesIndex extends React.Component {
           item.status.toString().includes("Prefering")
         : item.status.toString().includes(this.state.filter_nav);
     });
+    // this.props.reviews.map((rev) => reviews.push(rev.id));
+    // filteredData.map((filtered) =>
+    //   filtered.items.map((item) =>
+    //     this.props.reviews
+    //       .filter(
+    //         (review) =>
+    //           review.user === this.props.AuthReducer.user.id &&
+    //           review.product === item.product.id
+    //       )
+    //       .map((filteredReview) => RatedProducts.push(filteredReview.product))
+    //   )
+    // );
+    console.log(filteredData);
     return (
       <>
         <div class="bg-gray-200 flex-1 mt-14 pb-24 md:pb-5">
@@ -207,14 +263,26 @@ class PurchasesIndex extends React.Component {
                             <div className="flex justify-start pt-5 space-x-4">
                               {transaction.status === "Complete" ? (
                                 <>
-                                  {" "}
+                                  {/* {this.props.reviews.map((review) =>
+                                    review.product !== item.product.id ? (
+                                      
+                                    ) : (
+                                      ""
+                                    )
+                                  )} */}
                                   <button
                                     onClick={this.onToggleModalReview(
                                       item.product.name,
                                       item.product.file_content[0].image,
-                                      item.product.id
+                                      item.product.id,
+                                      item.id,
+                                      transaction.id
                                     )}
-                                    class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                                    class={
+                                      item.review !== null
+                                        ? "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md hidden"
+                                        : "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                                    }
                                   >
                                     <span>Rate</span>
                                   </button>
@@ -351,9 +419,12 @@ class PurchasesIndex extends React.Component {
 }
 const mapStateToProps = (state) => ({
   transactions: state.transactions.transactions,
+  reviews: state.products.reviews,
+  AuthReducer: state.AuthReducer,
 });
 export default connect(mapStateToProps, {
   getTransactionList,
   addReview,
   updateTransactionStatus,
+  getReviewList,
 })(PurchasesIndex);

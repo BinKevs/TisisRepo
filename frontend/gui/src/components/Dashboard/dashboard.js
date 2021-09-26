@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link, Redirect } from "react-router-dom";
 import { getProductList } from "../../store/actions/product/products";
 import { getTransactionList } from "../../store/actions/transaction/transactions";
 import { getTransactionItemList } from "../../store/actions/transaction/transactions.js";
@@ -52,6 +53,11 @@ class DashboardIndex extends React.Component {
   }
 
   render() {
+    if (this.props.AuthReducer.user)
+      if (!this.props.AuthReducer.user.is_staff) {
+        return <Redirect to="/products" />;
+      }
+    console.log(this.props.AuthReducer.user);
     // console.log(Date(start.toLocaleString()), end.toLocaleString());
     const { transactions, products, transaction_items } = this.props;
     monthlySalesTransaction = 0;
@@ -499,6 +505,7 @@ const mapStateToProps = (state) => ({
   products: state.products.products,
   transactions: state.transactions.transactions,
   transaction_items: state.transactions.transaction_item_list,
+  AuthReducer: state.AuthReducer,
 });
 
 export default connect(mapStateToProps, {

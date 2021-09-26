@@ -300,10 +300,14 @@ class MainLayout extends React.Component {
         </div>
         <nav class="bg-gray-800 pt-2 pb-1 px-1 mt-0 h-auto fixed w-full z-20 top-0">
           <div class="flex flex-wrap justify-between items-center">
-            <div class="flex pt-2 w-1/2 md:w-1/3 justify-start text-white">
+            <Link
+              to="/products"
+              replace
+              class="flex pt-2 w-1/2 md:w-1/3 justify-start text-white"
+            >
               <i class="far fa-motorcycle fa-2x px-3 "></i>
               <h1 class="font-Montserrat text-base">ABC Motor Parts</h1>
-            </div>
+            </Link>
 
             <div
               class="flex
@@ -323,7 +327,7 @@ class MainLayout extends React.Component {
                     onClick={this.handleCartShow}
                     className={
                       this.props.AuthReducer.user
-                        ? !this.props.AuthReducer.user.is_staff
+                        ? this.props.AuthReducer.user.is_staff
                           ? "hidden"
                           : "inline-block space-x-2 text-white cursor-pointer"
                         : ""
@@ -357,36 +361,41 @@ class MainLayout extends React.Component {
                     class="dropdownlist absolute bg-gray-800 text-white right-0 mt-3 p-3 overflow-auto z-30 w-36 invisible"
                   >
                     <div className="">
-                      {this.props.AuthReducer.is_superuser ? (
-                        <>
-                          <div
-                            onClick={this.setDropdownWithRedirect(
-                              "/accounts/settings/menu"
-                            )}
-                          >
-                            <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
-                              Settings
+                      {this.props.AuthReducer.user ? (
+                        this.props.AuthReducer.user.is_staff ? (
+                          <>
+                            <div
+                              onClick={this.setDropdownWithRedirect(
+                                "/accounts/settings/menu"
+                              )}
+                            >
+                              <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
+                                Settings
+                              </div>
                             </div>
-                          </div>
-                          <div
-                            onClick={this.setDropdownWithRedirect(
-                              "/account/purchases"
-                            )}
-                          >
-                            <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
-                              Purchases
+                          </>
+                        ) : (
+                          <>
+                            <div
+                              onClick={this.setDropdownWithRedirect(
+                                "/account/purchases"
+                              )}
+                            >
+                              <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
+                                Purchases
+                              </div>
                             </div>
-                          </div>
-                          <div
-                            onClick={this.setDropdownWithRedirect(
-                              "/account/settings"
-                            )}
-                          >
-                            <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
-                              Account
+                            <div
+                              onClick={this.setDropdownWithRedirect(
+                                "/account/settings"
+                              )}
+                            >
+                              <div class="p-2 hover:bg-gray-800 text-white text-sm hover:no-underline inline-block cursor-pointer">
+                                Account
+                              </div>
                             </div>
-                          </div>
-                        </>
+                          </>
+                        )
                       ) : (
                         ""
                       )}
@@ -426,7 +435,7 @@ class MainLayout extends React.Component {
 
         <div class="relative flex flex-col lg:flex-row bg-gray-800">
           {this.props.AuthReducer.user ? (
-            this.props.AuthReducer.user.is_superuser ? (
+            this.props.AuthReducer.user.is_staff ? (
               <div class="shadow-xl h-16 fixed bottom-0 lg:relative lg:h-screen w-full lg:w-48 z-10 bg-gray-800">
                 <div class="lg:mt-20 overflow-x-scroll md:overflow-x-hidden lg:w-48 lg:fixed lg:left-0 lg:top-0 text-left bg-gray-800">
                   <ul

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import {
   getProductList,
   deleteProduct,
+  getCategoryList,
 } from "../../store/actions/product/products";
 import { addToCart } from "../../store/actions/cart/cartActions";
 import { Link } from "react-router-dom";
@@ -42,7 +43,14 @@ class ProductListIndexOnlineCustomer extends React.Component {
   }
   componentDidMount() {
     this.props.getProductList();
+    this.props.getCategoryList();
   }
+  OnRightScroll = () => {
+    document.getElementById("slider").scrollLeft += 120;
+  };
+  OnLeftScroll = () => {
+    document.getElementById("slider").scrollLeft -= 120;
+  };
 
   render() {
     products = [];
@@ -79,7 +87,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
 
     return (
       <>
-        <div class="flex-1 bg-gray-100 mt-20 md:mt-14 pb-24 md:pb-5">
+        <div class="flex-1 w-full bg-gray-100 mt-20 md:mt-14 pb-24 md:pb-5">
           <div class="bg-gray-800 pt-3">
             <div
               class="
@@ -99,8 +107,9 @@ class ProductListIndexOnlineCustomer extends React.Component {
               <h3 class="font-bold pl-2">Products</h3>
             </div>
           </div>
-          <div class="w-full mt-4 p-8 order-last lg:order-first">
-            <div className="flex flex-col xl:flex-row p-4 lg:p-8 justify-end items-start xl:items-stretch w-full">
+
+          <div class="w-full mt-2 p-8 order-last lg:order-first">
+            <div className="flex flex-col xl:flex-row justify-end items-start xl:items-stretch w-full">
               <div className="w-full xl:w-2/3 flex flex-col xl:flex-row items-start xl:items-center justify-end">
                 {/* <div className="flex items-center xl:border-l xl:border-r border-gray-300 dark:border-gray-200 py-3 xl:py-0 xl:px-6">
                   <p
@@ -121,7 +130,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
                   >
                     <i class="fad fa-angle-right fa-2x"></i>
                   </div>
-                </div> */}
+            </div> */}
 
                 <div className="xl:ml-6 flex items-center">
                   <div class="relative w-full">
@@ -144,6 +153,31 @@ class ProductListIndexOnlineCustomer extends React.Component {
                   <i class="fad fa-search fa-lg"></i>
                 </div>
               </div>
+            </div>
+            <div className="relative w-full flex items-center mt-3 border-t-4 border-b-4">
+              <span
+                onClick={this.OnLeftScroll}
+                className="h-12 w-16 flex items-center justify-center text-gray-600"
+              >
+                <i class="fal fa-chevron-left fa-2x"></i>
+              </span>
+              <div
+                id="slider"
+                className="w-full flex overflow-x-hidden space-x-4"
+              >
+                {this.props.categories.map((category) => (
+                  <button class="text-white px-4 bg-teal_custom rounded-full hover:bg-teal-800 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none whitespace-nowrap h-10">
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+
+              <span
+                onClick={this.OnRightScroll}
+                className="h-12 w-16 flex items-center justify-center text-gray-600"
+              >
+                <i class="fal fa-chevron-right fa-2x"></i>
+              </span>
             </div>
             <div class="mt-8 grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-5">
               {filteredData.map((product) => (
@@ -207,8 +241,10 @@ const mapToStateToProps = (state) => ({
   products: state.products.products,
   // token: state.AuthReducer.token,
   isLoading: state.products.isLoading,
+  categories: state.products.categories,
 });
 export default connect(mapToStateToProps, {
+  getCategoryList,
   getProductList,
   deleteProduct,
   addToCart,

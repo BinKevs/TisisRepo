@@ -34,7 +34,6 @@ import AccountsIndex from "../components/Accounts/AccountsIndex";
 import AccountSettingsMenu from "../components/Accounts/AccountSettingsMenu";
 
 import PrivateRoute from "../Helpers/PrivateRoute";
-
 function MainBaseRouter() {
   return (
     <>

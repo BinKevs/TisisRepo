@@ -30,7 +30,7 @@ class Login extends React.Component {
 
   render() {
     if (this.props.AuthReducer.isAuthenticated) {
-      return <Redirect to={"/dashboard"} />;
+      return <Redirect to="/dashboard" />;
     }
     // console.log(this.props);
 

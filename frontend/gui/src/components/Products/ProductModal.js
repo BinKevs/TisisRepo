@@ -147,44 +147,46 @@ const ProductModal = (props) => {
                           </span>
                           <div
                             id="slider"
-                            className="w-full flex overflow-x-hidden space-x-4"
+                            className="w-full flex overflow-x-hidden space-x-4 border-4"
                           >
                             {urlFile.map((url, index) =>
                               url.type.includes("video") ? (
-                                // <ReactPlayer
-                                //   height="13rem"
-                                //   playing={true}
-                                //   controls={true}
-                                //   url={url.file}
-                                // />
                                 <>
-                                  <div>
-                                    <video width="400" controls>
-                                      <source src={url.file} type="video/mp4" />
-                                      Your browser does not support HTML video.
-                                    </video>
+                                  <div className="img-hover relative border-4">
+                                    <div className="h-55">
+                                      <video width="400" height="300" controls>
+                                        <source
+                                          src={url.file}
+                                          type="video/mp4"
+                                        />
+                                        Your browser does not support HTML
+                                        video.
+                                      </video>
+                                    </div>
                                     <button
                                       onClick={onRemoveImage(index)}
-                                      className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
+                                      className="middle"
                                     >
-                                      Remove
-                                    </button>
+                                      <i class="far fa-trash-alt fa-3x"></i>
+                                    </button>{" "}
                                   </div>
                                 </>
                               ) : (
-                                <div>
+                                <>
+                                  {/* <div className="img-hover relative border-4"> */}
                                   <img
                                     alt="product image"
-                                    class="object-cover h-52 border-4"
+                                    class="border-4 object-cover h-55 w-64"
                                     src={url.file}
                                   />
-                                  <button
-                                    onClick={onRemoveImage(index)}
-                                    className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
-                                  >
-                                    Remove
-                                  </button>
-                                </div>
+                                  {/* <button
+                                      onClick={onRemoveImage(index)}
+                                      className="middle"
+                                    >
+                                      <i class="far fa-trash-alt fa-3x"></i>
+                                    </button>{" "} */}
+                                  {/* </div> */}
+                                </>
                               )
                             )}
                           </div>

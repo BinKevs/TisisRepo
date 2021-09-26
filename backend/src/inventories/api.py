@@ -22,16 +22,15 @@ class InventoryViewSet(viewsets.ModelViewSet):
                 account=request.user,
                 action_done = request.data['action_done'],
             )
-        product_current = Product.objects.get(id=request.data['product'])
-        product_current_variation = Product_variation.objects.get(product=request.data['product'],size=request.data['size'],color=request.data['color'])
+        product_current_variation = Product_variation.objects.get(id=request.data['productVariation'])
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        product_current.stock = int(product_current.stock) + int(serializer.data['new_stock'])
         product_current_variation.stock = int(product_current_variation.stock) + int(serializer.data['new_stock'])
-        product_current.save()
         product_current_variation.save()
-
+        inventory_current = Inventory.objects.get(id=serializer.data['id'])
+        inventory_current.product_with_variation = product_current_variation
+        inventory_current.save()
         # print(serializer.data['new_stock'])
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

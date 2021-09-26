@@ -50,6 +50,13 @@ class ProductSetting extends React.Component {
     table_export_modal: false,
     ProductNameError: "",
     file_content: "",
+    showModalCategory: false,
+  };
+
+  handleModalCategory = () => {
+    this.setState({
+      showModalCategory: !this.state.showModalCategory,
+    });
   };
   handleCategoryDropDown(CategoryName) {
     return (event) => {
@@ -107,6 +114,7 @@ class ProductSetting extends React.Component {
     //   isImageChanged = true;
     // } else
     if (e.target.name === "file_content") {
+      FilesArray = [];
       for (let i = 0; i < e.target.files.length; i++) {
         FilesArray.push({
           file: URL.createObjectURL(e.target.files[i]),
@@ -269,6 +277,7 @@ class ProductSetting extends React.Component {
       this.ModalFunction();
       isItemAdded = true;
       this.props.getProductList();
+      FilesArray = [];
     }
   };
 
@@ -306,6 +315,7 @@ class ProductSetting extends React.Component {
       EditButtonIsClicked = true;
     };
   }
+
   // function that called to open or close modal
   ModalFunction() {
     this.setState({ modal: !this.state.modal });
@@ -413,7 +423,7 @@ class ProductSetting extends React.Component {
         );
       });
     }
-    console.log(this.props.products);
+
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -434,7 +444,7 @@ class ProductSetting extends React.Component {
           </div>
 
           <div className="p-5 w-full">
-            <div className="mx-auto bg-white dark:bg-gray-800 shadow rounded">
+            <div className="mx-auto bg-white shadow rounded">
               <div className="flex flex-col lg:flex-row p-4 lg:p-8 justify-end items-start lg:items-stretch w-full">
                 <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
                   <div className="lg:ml-6 flex items-start w-full">
@@ -495,20 +505,30 @@ class ProductSetting extends React.Component {
                   </div>
                 </div>
               </div>
+              <div className="w-full flex justify-end pr-6">
+                <div
+                  onClick={this.handleModalCategory}
+                  className="flex ml-4 bg-teal_custom text-white cursor-pointer h-12 rounded items-center justify-center px-3"
+                >
+                  <i class="fal fa-sliders-v mr-2"></i>
+                  <div>Categories Setting</div>
+                </div>
+              </div>
+
               <div className="w-full overflow-x-auto">
-                <table className="min-w-full bg-white dark:bg-gray-800">
+                <table className="min-w-full bg-white">
                   <thead>
                     <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                      <th className="pl-12 text-gray-600  font-normal pr-6 text-left text-sm leading-4">
+                      <th className="pl-12 text-gray-600  font-normal pr-6 text-left text-sm ">
                         Item No.
                       </th>
                       <th className="text-gray-600  font-normal pr-6 text-left text-sm w-1/5">
                         Product
                       </th>
-                      <th className="text-gray-600  font-normal pr-6 text-left text-sm leading-4">
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm ">
                         (Variation) Stock
                       </th>
-                      <th className="text-gray-600  font-normal pr-6 text-left text-sm leading-4">
+                      <th className="text-gray-600  font-normal pr-6 text-left text-sm ">
                         Price
                       </th>
                       <th className="text-gray-600  font-normal pr-6 text-left text-sm w-2/12">
@@ -544,10 +564,10 @@ class ProductSetting extends React.Component {
                         key={product.id}
                         className="h-24 border-gray-300 dark:border-gray-200 border-b"
                       >
-                        <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
+                        <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.product_id}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.name}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 w-3/12">
@@ -577,7 +597,7 @@ class ProductSetting extends React.Component {
                               )
                             : ""}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.price}
                         </td>
                         {/* <td className="pr-6 whitespace-no-wrap">
@@ -589,25 +609,25 @@ class ProductSetting extends React.Component {
 															className="h-full w-full rounded-full overflow-hidden shadow"
 														/>
 													</div>
-													<p className="ml-2 text-gray-800 dark:text-gray-100 text-sm">
+													<p className="ml-2 text-gray-800 text-sm">
 														Carrie Anthony
 													</p>
 												</div>
 											</td> */}
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.category}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.supplier}
                         </td>
 
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 leading-4">
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.description}
                         </td>
                         <td className="pr-8 relative">
                           <button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
                             <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
-                              <ul className="bg-white dark:bg-gray-800 shadow rounded p-2">
+                              <ul className="bg-white shadow rounded p-2">
                                 <li
                                   onClick={this.onModalToggleEdit(product.id)}
                                   className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
@@ -671,6 +691,108 @@ class ProductSetting extends React.Component {
             OnToggleExportTable={this.OnToggleExportTable}
             products={filteredData}
           />
+        </div>
+        <div
+          class={this.state.showModalCategory ? "h-screen " : "h-screen hidden"}
+        >
+          <div class="mx-auto max-w-screen-lg h-full">
+            <div
+              className="z-20 absolute top-0 right-0 bottom-0 left-0"
+              id="modal"
+            >
+              <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
+              <div className="h-full overflow-auto w-full flex flex-col">
+                <div className="m-2 md:m-12">
+                  <form class="mt-9">
+                    <div className="relative p-4 md:p-8 bg-white dark:border-gray-700 shadow-md rounded border border-gray-400 ">
+                      <div class="text-left p-0 mb-8">
+                        <div>
+                          <i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{" "}
+                          <h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
+                            ABC Motor Parts
+                          </h1>
+                        </div>
+
+                        <h1 class="text-gray-800 text-3xl font-medium">
+                          Categories Setting
+                        </h1>
+                      </div>
+                      <table className="min-w-full bg-white p-28">
+                        <thead>
+                          <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
+                            <th className="pl-12 text-gray-600  font-normal pr-6 text-left text-sm ">
+                              ID
+                            </th>
+                            <th className="text-gray-600  font-normal pr-6 text-left text-sm">
+                              Category Name
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {this.props.categories.map((category) => (
+                            <tr
+                              key={category.id}
+                              className="h-24 border-gray-300 dark:border-gray-200 border-b"
+                            >
+                              <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                                {category.id}
+                              </td>
+                              <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                                {category.name}
+                              </td>
+                              <td className="text-gray-800">
+                                <div className="shadow rounded p-2 text-center cursor-pointer  text-sm py-3 bg-teal_custom text-white px-3 font-normal">
+                                  Edit
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      {/* <div className="flex items-center justify-center w-full mt-4">
+                        <button
+                          value="Complete"
+                          type="submit"
+                          className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-md"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={this.handleModalCategory}
+                          className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-md"
+                        >
+                          Cancel
+                        </button>
+                      </div> */}
+
+                      <div
+                        onClick={this.handleModalCategory}
+                        className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-label="Close"
+                          className="icon icon-tabler icon-tabler-x"
+                          width={35}
+                          height={35}
+                          viewBox="0 0 24 24"
+                          strokeWidth="2.5"
+                          stroke="currentColor"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" />
+                          <line x1={18} y1={6} x2={6} y2={18} />
+                          <line x1={6} y1={6} x2={18} y2={18} />
+                        </svg>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </>
     );

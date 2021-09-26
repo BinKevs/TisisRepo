@@ -7,7 +7,7 @@ import {
   deleteProduct,
 } from "../../store/actions/product/products";
 import { addToCart } from "../../store/actions/cart/cartActions";
-
+import { Link, Redirect } from "react-router-dom";
 let products = [];
 let filteredData = [];
 class ProductListIndex extends React.Component {

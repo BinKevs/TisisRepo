@@ -10,3 +10,4 @@ export const ADD_CATEGORY = "ADD_CATEGORY";
 export const GET_VOUCHER_LIST = "GET_VOUCHER_LIST";
 export const ADD_VOUCHER = "ADD_VOUCHER";
 export const ADD_REVIEW = "ADD_REVIEW";
+export const GET_REVIEW_LIST = "GET_REVIEW_LIST";

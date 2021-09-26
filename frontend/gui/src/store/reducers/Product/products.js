@@ -9,6 +9,7 @@ import {
   DELETE_CATEGORY,
   PRODUCT_LOADING,
   GET_VOUCHER_LIST,
+  GET_REVIEW_LIST,
   ADD_REVIEW,
 } from "../../actions/product/actionTypes";
 
@@ -81,6 +82,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         vouchers: action.payload,
+      };
+    case GET_REVIEW_LIST:
+      return {
+        ...state,
+        reviews: action.payload,
       };
     case ADD_REVIEW:
       return {

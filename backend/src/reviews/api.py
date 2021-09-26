@@ -1,11 +1,26 @@
 
-from .models import Reveiew
+from .models import Review
 from rest_framework import viewsets, permissions
-from .serializers import ReveiewSerializer
+from .serializers import ReviewSerializer
 from rest_framework.response import Response
 from rest_framework import status
-
+from transaction_items.models import Transaction_item
+from transactions.models import Transaction
+from transactions.serializers import TransactionSerializer
 class ReviewViewSet(viewsets.ModelViewSet):
     
-    queryset = Reveiew.objects.all()
-    serializer_class = ReveiewSerializer
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def create(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id
+        Serializer = ReviewSerializer(data=request.data)
+        Serializer.is_valid(raise_exception=True)
+        Serializer.save()
+        context = Serializer.data
+        transaction_item_current = Transaction_item.objects.get(id=request.data['transaction_item_id'])
+        transaction_item_current.review = Review.objects.get(id=Serializer.data["id"]) 
+        transaction_item_current.save()
+        context["transactions"] = TransactionSerializer(Transaction.objects.get(id=request.data['transaction_id'])).data
+        return Response(context,status=status.HTTP_201_CREATED)
+        # Transaction_item.objects.get(id=request.data['transaction_item_id'])

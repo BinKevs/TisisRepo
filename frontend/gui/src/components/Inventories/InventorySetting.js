@@ -36,6 +36,7 @@ class InventorySettingIndex extends React.Component {
     new_stock: 0,
     product: 0,
     supplier: 0,
+    productVariation: 0,
     search: "",
     inventoryID: 0,
     modal: false,
@@ -45,6 +46,20 @@ class InventorySettingIndex extends React.Component {
   };
 
   onChange = (e) => {
+    // productVariationArray = [];
+    // if (e.target.name === "product") {
+    //   this.props.products.map((productItem) =>
+    //     parseInt(productItem.id) === parseInt(e.target.value)
+    //       ? productItem.variation.map((productVariation) =>
+    //           productVariationArray.push({
+    //             id: productVariation.id,
+    //             color: productVariation.color,
+    //             size: productVariation.size,
+    //           })
+    //         )
+    //       : ""
+    //   );
+    // }
     this.setState({ [e.target.name]: e.target.value });
   };
   // this will be passed to the form add component
@@ -53,15 +68,14 @@ class InventorySettingIndex extends React.Component {
   // and clear the state for adding a new inventory
   onAddSubmit = (event) => {
     event.preventDefault();
-    const { new_stock, product, supplier } = this.state;
+    const { new_stock, product, supplier, productVariation } = this.state;
     const action_done = "Inventory Added";
     const inventory = {
       new_stock,
       product,
       supplier,
       action_done,
-      color: "Red",
-      size: "Large",
+      productVariation,
     };
     this.props.addInventory(inventory);
 
@@ -70,6 +84,7 @@ class InventorySettingIndex extends React.Component {
       product: 0,
       supplier: 0,
       inventoryID: 0,
+      productVariation: 0,
     });
     this.ModalFunction();
     ItemAdded = true;

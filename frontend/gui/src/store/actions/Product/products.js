@@ -14,7 +14,9 @@ import {
   GET_VOUCHER_LIST,
   ADD_VOUCHER,
   ADD_REVIEW,
+  GET_REVIEW_LIST,
 } from "./actionTypes";
+import { UPDATE_TRANSACTION_STATUS } from "../transaction/actionTypes";
 import swal from "sweetalert";
 import { HandleSuccessMessages } from "../../../Helpers/functions";
 const url = URL_IMPORT + "/api/products/";
@@ -162,6 +164,19 @@ export const addReview = (data) => (dispatch, getState) => {
         type: ADD_REVIEW,
         payload: res.data,
       });
+      dispatch({
+        type: UPDATE_TRANSACTION_STATUS,
+        payload: res.data.transactions,
+      });
+      console.log(res.data.transactions);
     })
     .catch((err) => console.log(err));
+};
+export const getReviewList = () => (dispatch, getState) => {
+  axios.get(URL_IMPORT + "/api/reviews/", tokenConfig(getState)).then((res) => {
+    dispatch({
+      type: GET_REVIEW_LIST,
+      payload: res.data,
+    });
+  });
 };

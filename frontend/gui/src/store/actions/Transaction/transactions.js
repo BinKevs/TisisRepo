@@ -114,6 +114,7 @@ export const updateTransactionStatus =
           type: UPDATE_TRANSACTION_STATUS,
           payload: res.data,
         });
+        console.log(res.data);
       })
       .catch((err) => console.log(err));
   };

@@ -36,6 +36,5 @@ class TransactionViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         for item in serializer.data:
             transaction_current.items.add(item['id'])
-        print(transaction_current)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data,status=status.HTTP_201_CREATED,headers=headers)

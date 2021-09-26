@@ -12,3 +12,5 @@ class Account(models.Model):
     address = models.OneToOneField(Address, related_name='account_address',on_delete=models.CASCADE,null=True, blank=True)
     contact_number = models.CharField(max_length=20, null=True)
 
+    def __str__(self):
+        return self.user.username
