@@ -621,8 +621,10 @@ class ProductSetting extends React.Component {
                           {product.supplier}
                         </td>
 
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
-                          {product.description}
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800">
+                          <div className="w-full h-36 overflow-clip overflow-hidden">
+                            {product.description}
+                          </div>
                         </td>
                         <td className="pr-8 relative">
                           <button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
@@ -634,7 +636,7 @@ class ProductSetting extends React.Component {
                                 >
                                   Edit
                                 </li>
-                                <li className="cursor-pointer text-sm leading-3 py-3 bg-red-500 text-white px-3 font-normal">
+                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 hover:text-white px-3 font-normal">
                                   Delete
                                 </li>
                               </ul>

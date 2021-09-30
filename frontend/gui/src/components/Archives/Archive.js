@@ -12,7 +12,7 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-let AccountsItems = [];
+
 let ItemAdded = false;
 class Archive extends React.Component {
   state = { search: "" };
@@ -25,51 +25,56 @@ class Archive extends React.Component {
 
   render() {
     let lowercasedFilter = this.state.search.toLowerCase();
-    let filteredSupplierData;
-    let filteredData;
+    let filteredDataSupplier;
+    let filteredDataProduct;
+    let filteredDataAccounts;
     let products;
+    let Accounts;
     // This will filter the data from supplier
-    filteredSupplierData = this.props.suppliers.filter((supplier) => {
-      if (lowercasedFilter === "") {
-        return supplier;
-      } else {
-        return supplier.name
-          .toString()
-          .toLowerCase()
-          .includes(lowercasedFilter);
-      }
+    filteredDataSupplier = this.props.suppliers.filter((supplier) => {
+      if (!supplier.status)
+        if (lowercasedFilter === "") {
+          return supplier;
+        } else {
+          return supplier.name
+            .toString()
+            .toLowerCase()
+            .includes(lowercasedFilter);
+        }
     });
-    filteredData = [];
+    filteredDataProduct = [];
     products = [];
     this.props.products.map((product) =>
       products.push({
         id: product.id,
         product_id: product.product_id,
         name: product.name,
+        status: product.status,
       })
     );
-    filteredData = products.filter((item) => {
-      return (
-        item.name.toString().toLowerCase().includes(lowercasedFilter) ||
-        item.product_id.toString().toLowerCase().includes(lowercasedFilter)
-      );
+    filteredDataProduct = products.filter((product) => {
+      if (!product.status)
+        return (
+          product.name.toString().toLowerCase().includes(lowercasedFilter) ||
+          product.product_id.toString().toLowerCase().includes(lowercasedFilter)
+        );
     });
-    AccountsItems = [];
+    Accounts = [];
     this.props.accounts.map((account) =>
-      AccountsItems.push({
+      Accounts.push({
         id: account.id,
         username: account.user.username,
         email: account.user.email,
-        is_active: account.user.is_active,
+        status: account.user.is_active,
         is_superuser: account.user.is_superuser,
         name: account.user.last_name + " " + account.user.first_name,
       })
     );
-    const filteredDataAccounts = AccountsItems.filter((item) => {
+    filteredDataAccounts = Accounts.filter((account) => {
       // return Object.keys(item).some((key) =>
       // 	item[key].toString().toLowerCase().includes(lowercasedFilter)
       // );
-      return item;
+      if (!account.status) return account;
     });
     return (
       <>
@@ -134,7 +139,7 @@ class Archive extends React.Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredData.map((product) => (
+                          {filteredDataProduct.map((product) => (
                             <tr
                               key={product.id}
                               className="h-24 border-gray-300 dark:border-gray-200 border-b"
@@ -158,7 +163,7 @@ class Archive extends React.Component {
                     </div>
                   </AccordionItemPanel>
                 </AccordionItem>
-                <AccordionItem className="mt-10">
+                <AccordionItem>
                   <AccordionItemHeading>
                     <AccordionItemButton>
                       <span class=" text-2xl font-medium">Suppliers</span>
@@ -209,7 +214,7 @@ class Archive extends React.Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredSupplierData.map((supplier) => (
+                          {filteredDataSupplier.map((supplier) => (
                             <tr
                               key={supplier.id}
                               className="h-24 border-gray-300 dark:border-gray-200 border-b"
@@ -232,7 +237,7 @@ class Archive extends React.Component {
                     </div>
                   </AccordionItemPanel>
                 </AccordionItem>
-                <AccordionItem className="mt-10">
+                <AccordionItem>
                   <AccordionItemHeading>
                     <AccordionItemButton>
                       <span class=" text-2xl font-medium">Accounts</span>

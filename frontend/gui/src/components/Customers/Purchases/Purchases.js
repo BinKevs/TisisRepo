@@ -22,6 +22,7 @@ class PurchasesIndex extends React.Component {
     this.props.getTransactionList();
     this.props.getReviewList();
   }
+
   state = {
     showModal: false,
     showModalOrderReceived: false,
@@ -56,8 +57,8 @@ class PurchasesIndex extends React.Component {
         transaction_id: "",
       });
       this.props.getTransactionList();
+      this.props.getTransactionList();
       filteredData = [];
-
       filteredData = this.props.transactions.filter((item) => {
         return this.state.filter_nav === "All"
           ? item.status.toString().includes("")
@@ -66,7 +67,17 @@ class PurchasesIndex extends React.Component {
             item.status.toString().includes("Prefering")
           : item.status.toString().includes(this.state.filter_nav);
       });
-      console.log(this.props.transactions);
+      // filteredData = [];
+
+      // filteredData = this.props.transactions.filter((item) => {
+      //   return this.state.filter_nav === "All"
+      //     ? item.status.toString().includes("")
+      //     : this.state.filter_nav === "To Ship"
+      //     ? item.status.toString().includes(this.state.filter_nav) ||
+      //       item.status.toString().includes("Prefering")
+      //     : item.status.toString().includes(this.state.filter_nav);
+      // });
+      // window.location.reload();
     };
   };
   onUpdateSubmit = (e) => {
@@ -148,6 +159,11 @@ class PurchasesIndex extends React.Component {
       filter_nav: event.target.value,
     });
   };
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (this.props.transactions.items !== prevProps.transactions.items) {
+
+  //   }
+  // }
   render() {
     filteredData = [];
 
@@ -171,7 +187,7 @@ class PurchasesIndex extends React.Component {
     //       .map((filteredReview) => RatedProducts.push(filteredReview.product))
     //   )
     // );
-    console.log(filteredData);
+
     return (
       <>
         <div class="bg-gray-200 flex-1 mt-14 pb-24 md:pb-5">
@@ -270,22 +286,24 @@ class PurchasesIndex extends React.Component {
                                       ""
                                     )
                                   )} */}
-                                  <button
-                                    onClick={this.onToggleModalReview(
-                                      item.product.name,
-                                      item.product.file_content[0].image,
-                                      item.product.id,
-                                      item.id,
-                                      transaction.id
-                                    )}
-                                    class={
-                                      item.review !== null
-                                        ? "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md hidden"
-                                        : "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
-                                    }
-                                  >
-                                    <span>Rate</span>
-                                  </button>
+                                  {item.review > 0 ? (
+                                    ""
+                                  ) : (
+                                    <button
+                                      onClick={this.onToggleModalReview(
+                                        item.product.name,
+                                        item.product.file_content[0].image,
+                                        item.product.id,
+                                        item.id,
+                                        transaction.id
+                                      )}
+                                      class={
+                                        "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                                      }
+                                    >
+                                      <span>Rate</span>
+                                    </button>
+                                  )}
                                   <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md">
                                     <span>Buy Again</span>
                                   </button>{" "}

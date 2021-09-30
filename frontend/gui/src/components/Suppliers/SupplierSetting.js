@@ -194,14 +194,15 @@ class SupplierSettingIndex extends React.Component {
 
     // This will filter the data from supplier
     filteredData = this.props.suppliers.filter((supplier) => {
-      if (lowercasedFilter === "") {
-        return supplier;
-      } else {
-        return supplier.name
-          .toString()
-          .toLowerCase()
-          .includes(lowercasedFilter);
-      }
+      if (supplier.status)
+        if (lowercasedFilter === "") {
+          return supplier;
+        } else {
+          return supplier.name
+            .toString()
+            .toLowerCase()
+            .includes(lowercasedFilter);
+        }
     });
 
     //This will change the state if the state.search is not equal to " " where it getting the info from suppliersWithPagination to suppliers to search all data
@@ -395,7 +396,7 @@ class SupplierSettingIndex extends React.Component {
                                 >
                                   Edit
                                 </li>
-                                <li className="cursor-pointer text-sm leading-3 py-3 bg-red-500 text-white px-3 font-normal">
+                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 text-white px-3 font-normal">
                                   Delete
                                 </li>
                               </ul>

@@ -11,7 +11,8 @@ class Supplier(models.Model):
     name = models.CharField(max_length=100, unique=True)
     address = models.CharField(max_length=300, unique=True)
     phone_number = models.CharField(max_length=100,null=False, blank=False, unique=True)
-    status = models.CharField(max_length=150, null=True, blank=True)
+    status = models.BooleanField(default=True)
+    
     def save(self,*args, **kwargs):
        if not self.supplier_id:
            prefix = 'SI{}-{}-'.format(timezone.now().strftime('%y'),timezone.now().strftime('%m%d'))

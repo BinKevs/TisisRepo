@@ -7,6 +7,7 @@ import {
   ADD_TRANSACTION_ITEMS,
   GET_TRANSACTION_ITEM_LIST,
   UPDATE_TRANSACTION_STATUS,
+  UPDATE_TRANSACTION_ITEMS,
 } from "../../actions/transaction/actionTypes";
 const initialState = {
   transactions: [],
@@ -51,7 +52,14 @@ export default function (state = initialState, action) {
         ...state,
         transactions: [...state.transactions, action.payload],
       };
-
+    case UPDATE_TRANSACTION_ITEMS:
+      return {
+        ...state,
+        transactions: state.transactions.filter(
+          (transaction) => transaction.id !== action.payload.id
+        ),
+        transactions: [...state.transactions, action.payload],
+      };
     case GET_TRANSACTION_ITEM_LIST:
       return {
         ...state,

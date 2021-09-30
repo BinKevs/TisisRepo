@@ -16,7 +16,7 @@ import {
   ADD_REVIEW,
   GET_REVIEW_LIST,
 } from "./actionTypes";
-import { UPDATE_TRANSACTION_STATUS } from "../transaction/actionTypes";
+import { UPDATE_TRANSACTION_ITEMS } from "../transaction/actionTypes";
 import swal from "sweetalert";
 import { HandleSuccessMessages } from "../../../Helpers/functions";
 const url = URL_IMPORT + "/api/products/";
@@ -165,7 +165,7 @@ export const addReview = (data) => (dispatch, getState) => {
         payload: res.data,
       });
       dispatch({
-        type: UPDATE_TRANSACTION_STATUS,
+        type: UPDATE_TRANSACTION_ITEMS,
         payload: res.data.transactions,
       });
       console.log(res.data.transactions);

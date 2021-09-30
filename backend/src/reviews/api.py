@@ -7,6 +7,7 @@ from rest_framework import status
 from transaction_items.models import Transaction_item
 from transactions.models import Transaction
 from transactions.serializers import TransactionSerializer
+from django.core import serializers
 class ReviewViewSet(viewsets.ModelViewSet):
     
     queryset = Review.objects.all()
@@ -21,6 +22,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         transaction_item_current = Transaction_item.objects.get(id=request.data['transaction_item_id'])
         transaction_item_current.review = Review.objects.get(id=Serializer.data["id"]) 
         transaction_item_current.save()
-        context["transactions"] = TransactionSerializer(Transaction.objects.get(id=request.data['transaction_id'])).data
+        transaction_current = Transaction.objects.get(id=request.data['transaction_id'])
+        context["transactions"] = TransactionSerializer(transaction_current).data
         return Response(context,status=status.HTTP_201_CREATED)
         # Transaction_item.objects.get(id=request.data['transaction_item_id'])

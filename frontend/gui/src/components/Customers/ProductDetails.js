@@ -4,21 +4,24 @@ import { connect } from "react-redux";
 import { getProduct } from "../../store/actions/product/products";
 import { addToCart } from "../../store/actions/cart/cartActions";
 import ReactPlayer from "react-player";
+import { getReviewList } from "../../store/actions/product/products";
+import { Rating } from "react-simple-star-rating";
 import video1 from "../../Group2.mp4";
+
 let color = [];
 let size = [];
 let variantStock = 0;
 let TempStock = 0;
 let variant_id = "";
+let rates = 0;
+let count = 0;
 class ProductDetails extends React.Component {
-  runCallback = (cb) => {
-    return cb();
-  };
   state = {
     size: "",
     color: "",
     quantity: 0,
     video_link: "",
+    product_rate: 0,
   };
   onChange = (e) => {
     if (e.target.name === "quantity") {
@@ -46,6 +49,7 @@ class ProductDetails extends React.Component {
   componentDidMount() {
     const productID = this.props.match.params.productID;
     this.props.getProduct(productID);
+    this.props.getReviewList();
   }
   IncrementQuantity = (e) => {
     e.preventDefault();
@@ -131,7 +135,16 @@ class ProductDetails extends React.Component {
     TempStock = 0;
     variantStock = 0;
     variant_id = "";
+    rates = 0;
+    count = 0;
     const { product } = this.props;
+    this.props.reviews
+      .filter((rev) => rev.product === product.id)
+      .map(
+        (filteredReview, index) => (
+          (rates += filteredReview.star_rate), (count += 1)
+        )
+      );
     if (product.variation) {
       product.variation.map(
         (product) => (
@@ -176,8 +189,6 @@ class ProductDetails extends React.Component {
         product.variation.map((p) => (TempStock += p.stock));
       }
     }
-
-    console.log(variant_id);
     return (
       <>
         <section class="flex-1 w-full text-gray-700 body-font bg-white">
@@ -275,63 +286,12 @@ class ProductDetails extends React.Component {
                 <div class="flex mt-6 pb-5 border-t-2 border-gray-200 mb-5"></div>
                 <div class="flex mb-4">
                   <span class="flex items-center">
-                    <svg
-                      fill="currentColor"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      class="w-4 h-4 text-red-500"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
-                    <svg
-                      fill="currentColor"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      class="w-4 h-4 text-red-500"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
-                    <svg
-                      fill="currentColor"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      class="w-4 h-4 text-red-500"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
-                    <svg
-                      fill="currentColor"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      class="w-4 h-4 text-red-500"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
-                    <svg
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      class="w-4 h-4 text-red-500"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                    </svg>
-                    <span class="text-gray-600 ml-3">4 Reviews</span>
+                    <Rating ratingValue={Math.floor(rates / count)} size={20} />
+                    <span class="text-gray-600 ml-3">
+                      {count} {count > 1 ? "Reviews" : "Review"}
+                    </span>
                   </span>
+                  {/* */}
                   {/* <span class="flex ml-3 pl-3 py-2 border-l-2 border-gray-200">
                     <a class="text-gray-500">
                       <svg
@@ -492,7 +452,7 @@ class ProductDetails extends React.Component {
 
                 <div class="flex">
                   <button
-                    class="flex ml-auto text-white bg-teal_custom border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded cursor-pointer"
+                    class="flex ml-auto text-white bg-teal_custom border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded cursor-pointer"
                     onClick={this.onSubmit(
                       product.id,
                       product.name,
@@ -511,105 +471,43 @@ class ProductDetails extends React.Component {
             </div>
           </div>
           <div className="flex-col w-full space-y-5">
-            {this.runCallback(() => {
-              const col = [];
-              for (var i = 0; i < 6; i++) {
-                col.push(
-                  <div class="flex justify-center items-center mx-auto w-4/6 bg-white rounded-xl shadow-2xl">
-                    {/* <div class="md:flex-shrink-0">
-                        <img
-                          class="h-48 w-full object-cover md:w-48"
-                          src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=448&q=80"
-                          alt="A cat"
-                        />
-                      </div> */}
+            {this.props.reviews.map((rev) =>
+              rev.product === product.id ? (
+                <div class="flex items-center mx-auto w-4/6 bg-white rounded-xl shadow-2xl">
+                  {/* <div class="md:flex-shrink-0">
                     <img
-                      class="h-16 w-16 rounded-full mx-4"
+                      class="h-48 w-full object-cover md:w-48"
                       src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=448&q=80"
                       alt="A cat"
                     />
-                    <div class="m-4">
-                      <div class="flex">
-                        <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold mr-4">
-                          Cat News
-                        </div>
-                        <span class="flex items-center">
-                          <svg
-                            fill="currentColor"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            class="w-4 h-4 text-red-500"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                          </svg>
-                          <svg
-                            fill="currentColor"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            class="w-4 h-4 text-red-500"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                          </svg>
-                          <svg
-                            fill="currentColor"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            class="w-4 h-4 text-red-500"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                          </svg>
-                          <svg
-                            fill="currentColor"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            class="w-4 h-4 text-red-500"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                          </svg>
-                          <svg
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            class="w-4 h-4 text-red-500"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                          </svg>
-                        </span>
+                  </div> */}
+                  <img
+                    class="h-16 w-16 rounded-full mx-4"
+                    src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=448&q=80"
+                    alt="A cat"
+                  />
+                  <div class="m-4 w-full">
+                    <div class="flex">
+                      <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold mr-4">
+                        {rev.user_info.username}
                       </div>
-                      <a
-                        href="#"
-                        class="block mt-1 text-lg leading-tight font-medium text-black hover:underline"
-                      >
-                        Lorem ipsum dolor sit amet
-                      </a>
-                      <p class="mt-2 text-gray-500">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Dolorum animi repellendus qui praesentium ducimus,
-                        commodi et facere, quo amet delectus ea ut totam
-                        officiis earum exercitationem mollitia ullam expedita
-                        aspernatur?
-                      </p>
+                      <span class="flex items-center">
+                        <Rating
+                          // onClick={handleRating}
+                          ratingValue={rev.star_rate}
+                          size={20}
+                        />
+                      </span>
                     </div>
+                    <p class="mt-1 text-lg leading-tight font-medium text-black">
+                      {rev.comment}
+                    </p>
                   </div>
-                );
-              }
-              return col;
-            })}
+                </div>
+              ) : (
+                ""
+              )
+            )}
           </div>
         </section>
       </>
@@ -620,7 +518,10 @@ const mapToStateToProps = (state) => ({
   product: state.products.product,
   supplier_name: state.products.supplier_name,
   images: state.products.images,
+  reviews: state.products.reviews,
 });
-export default connect(mapToStateToProps, { getProduct, addToCart })(
-  ProductDetails
-);
+export default connect(mapToStateToProps, {
+  getProduct,
+  addToCart,
+  getReviewList,
+})(ProductDetails);

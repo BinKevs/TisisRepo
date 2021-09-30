@@ -20,7 +20,8 @@ class Product(models.Model):
     file_content = models.ManyToManyField(Product_file, related_name='file_content', blank=True)
     variation = models.ManyToManyField(
         "product_variations.Product_variation", related_name="variation_product", null=True, blank=True)
-    status = models.CharField(max_length=150, null=True, blank=True)
+    status = models.BooleanField(default=True)
+    
     def __str__(self):
         return self.name
     def save(self,*args, **kwargs):

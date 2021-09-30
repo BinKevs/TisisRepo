@@ -11,6 +11,17 @@ import {
   clearCart,
 } from "../../../store/actions/cart/cartActions";
 import { getVoucherList } from "../../../store/actions/product/products";
+import {
+  regions,
+  provinces,
+  cities,
+  barangays,
+} from "select-philippines-address";
+let regionsArray = [];
+let provincesArray = [];
+let citiesArray = [];
+let barangaysArray = [];
+
 class Checkout extends React.Component {
   state = {
     address: "",
@@ -30,7 +41,64 @@ class Checkout extends React.Component {
     voucher_value: 0,
     voucher_error: "",
     currentScrollState: 0,
+    regionData: [],
+    provinceData: [],
+    cityData: [],
+    barangayData: [],
+    regionAddr: "",
+    provinceAddr: "",
+    cityAddr: "",
+    barangayAddr: "",
   };
+  region = () => {
+    regions().then((response) => {
+      this.setState({
+        regionData: response,
+      });
+    });
+  };
+
+  province = (e) => {
+    this.setState({
+      regionAddr: e.target.selectedOptions[0].text,
+    });
+    provinces(e.target.value).then((response) => {
+      this.setState({
+        provinceData: response,
+        cityData: [],
+        barangayData: [],
+      });
+    });
+  };
+
+  city = (e) => {
+    this.setState({
+      provinceAddr: e.target.selectedOptions[0].text,
+    });
+    cities(e.target.value).then((response) => {
+      this.setState({
+        cityData: response,
+      });
+    });
+  };
+
+  barangay = (e) => {
+    this.setState({
+      cityAddr: e.target.selectedOptions[0].text,
+    });
+    barangays(e.target.value).then((response) => {
+      this.setState({
+        barangayData: response,
+      });
+    });
+  };
+
+  brgy = (e) => {
+    this.setState({
+      barangayAddr: e.target.selectedOptions[0].text,
+    });
+  };
+
   onSubmit = (event) => {
     event.preventDefault();
     if (this.state.payment_method === "E-Wallet") {
@@ -76,6 +144,7 @@ class Checkout extends React.Component {
     this.props.loadUser();
     let VariableTotalAmount = 0;
     let Variablequantity = 0;
+
     this.props.cartItems.map(
       (item) => (
         (VariableTotalAmount += item.price * item.quantity),
@@ -90,7 +159,9 @@ class Checkout extends React.Component {
       tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
       quantity: Variablequantity,
     });
+    this.region();
   }
+
   handlePaymentMethod(PaymentMethod) {
     return (event) => {
       event.preventDefault();
@@ -130,6 +201,7 @@ class Checkout extends React.Component {
     );
     window.scrollTo({ top: this.state.currentScrollState, behavior: "smooth" });
   };
+
   onChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value,
@@ -149,9 +221,19 @@ class Checkout extends React.Component {
   numberWithCommas(x) {
     return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
+
   render() {
+    let {
+      Subtotal,
+      tax,
+      totalAmount,
+      regionData,
+      provinceData,
+      cityData,
+      barangayData,
+    } = this.state;
+
     const { cartItems } = this.props;
-    const { Subtotal, tax, totalAmount } = this.state;
 
     return (
       <>
@@ -189,11 +271,10 @@ class Checkout extends React.Component {
                         <label class="inline-flex items-center mt-3">
                           <span class="ml-2">
                             {this.props.AuthReducer.addresses.street}{" "}
+                            {this.props.AuthReducer.addresses.barangay}{" "}
                             {this.props.AuthReducer.addresses.city_town}{" "}
-                            {
-                              this.props.AuthReducer.addresses
-                                .state_province_area
-                            }{" "}
+                            {this.props.AuthReducer.addresses.province}{" "}
+                            {this.props.AuthReducer.addresses.region}{" "}
                             {this.props.AuthReducer.addresses.country}
                           </span>
                         </label>
@@ -498,7 +579,120 @@ class Checkout extends React.Component {
                           Address
                         </h1>
                       </div>
+                      <div class="relative z-0 w-full mb-5">
+                        <input
+                          type="text"
+                          name="phone_number"
+                          placeholder=" "
+                          required
+                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+                        />
+                        <label
+                          for="name"
+                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+                        >
+                          Phone Number
+                        </label>
+                      </div>
+                      <div class="relative z-0 w-full mb-5">
+                        <label class="block my-2">Select Region</label>
+                        <div class="relative inline-block w-full text-gray-700">
+                          <select
+                            onChange={this.province}
+                            onSelect={this.region}
+                            required
+                            name="region"
+                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
+                            placeholder="Region"
+                          >
+                            <option disabled>Select Region</option>
+                            {regionData &&
+                              regionData.length > 0 &&
+                              regionData.map((item) => (
+                                <option
+                                  key={item.region_code}
+                                  value={item.region_code}
+                                >
+                                  {item.region_name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
 
+                      <div class="relative z-0 w-full mb-5">
+                        <label class="block my-2">Select Province</label>
+                        <div class="relative inline-block w-full text-gray-700">
+                          <select
+                            onChange={this.city}
+                            required
+                            name="province"
+                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
+                            placeholder="Province"
+                          >
+                            <option disabled>Select Province</option>
+                            {provinceData &&
+                              provinceData.length > 0 &&
+                              provinceData.map((item) => (
+                                <option
+                                  key={item.province_code}
+                                  value={item.province_code}
+                                >
+                                  {item.province_name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="relative z-0 w-full mb-5">
+                        <label class="block my-2">Select City</label>
+                        <div class="relative inline-block w-full text-gray-700">
+                          <select
+                            onChange={this.barangay}
+                            required
+                            name="city"
+                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
+                            placeholder="City"
+                          >
+                            <option disabled>Select City</option>
+                            {cityData &&
+                              cityData.length > 0 &&
+                              cityData.map((item) => (
+                                <option
+                                  key={item.city_code}
+                                  value={item.city_code}
+                                >
+                                  {item.city_name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="relative z-0 w-full mb-5">
+                        <label class="block my-2">Select Brgy</label>
+                        <div class="relative inline-block w-full text-gray-700">
+                          <select
+                            onChange={this.brgy}
+                            required
+                            name="brgy"
+                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
+                            placeholder="Brgy"
+                          >
+                            <option disabled>Select Barangay</option>
+                            {barangayData &&
+                              barangayData.length > 0 &&
+                              barangayData.map((item) => (
+                                <option
+                                  key={item.brgy_code}
+                                  value={item.brgy_code}
+                                >
+                                  {item.brgy_name}
+                                </option>
+                              ))}
+                          </select>
+                        </div>
+                      </div>
                       <div class="relative z-0 w-full mb-5">
                         <input
                           type="text"
@@ -511,69 +705,10 @@ class Checkout extends React.Component {
                           for="name"
                           class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
                         >
-                          House No., Street name, Building. Subd, Brgy
+                          House No., Street name, Building. Subd
                         </label>
                       </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="city"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          City Town
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="state"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          State Province Area
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="country"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          Country
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="country"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          Phone Number
-                        </label>
-                      </div>
+
                       <div className="flex items-center justify-center w-full">
                         <button
                           type="submit"

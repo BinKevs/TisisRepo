@@ -169,7 +169,7 @@ class AccountsIndex extends React.Component {
         id: account.id,
         username: account.user.username,
         email: account.user.email,
-        is_active: account.user.is_active,
+        status: account.user.is_active,
         is_superuser: account.user.is_superuser,
         name: account.user.last_name + " " + account.user.first_name,
       })
@@ -180,7 +180,7 @@ class AccountsIndex extends React.Component {
       // return Object.keys(item).some((key) =>
       // 	item[key].toString().toLowerCase().includes(lowercasedFilter)
       // );
-      return item;
+      if (item.status) return item;
     });
     return (
       <>
@@ -273,9 +273,9 @@ class AccountsIndex extends React.Component {
                       <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
                         Email
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
+                      {/* <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
                         Status
-                      </th>
+                      </th> */}
                       <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
                         More
                       </th>
@@ -304,12 +304,12 @@ class AccountsIndex extends React.Component {
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {account.email}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        {/* <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {account.is_active ? "Active" : "Inactive"}{" "}
                           <strong>
                             {account.is_superuser ? "(Admin)" : ""}
                           </strong>
-                        </td>
+                        </td> */}
                         {/* <td className="pr-6 whitespace-no-wrap">
                         							<div className="flex items-center">
                             						<div className="h-8 w-8">
