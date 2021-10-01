@@ -47,7 +47,6 @@ class PurchasesIndex extends React.Component {
         transaction_id,
       };
       this.props.addReview(review);
-
       this.setState({
         showModal: !this.state.showModal,
         product_name: "",
@@ -56,17 +55,15 @@ class PurchasesIndex extends React.Component {
         transaction_item_id: "",
         transaction_id: "",
       });
-      this.props.getTransactionList();
-      this.props.getTransactionList();
-      filteredData = [];
-      filteredData = this.props.transactions.filter((item) => {
-        return this.state.filter_nav === "All"
-          ? item.status.toString().includes("")
-          : this.state.filter_nav === "To Ship"
-          ? item.status.toString().includes(this.state.filter_nav) ||
-            item.status.toString().includes("Prefering")
-          : item.status.toString().includes(this.state.filter_nav);
-      });
+      // filteredData = [];
+      // filteredData = this.props.transactions.filter((item) => {
+      //   return this.state.filter_nav === "All"
+      //     ? item.status.toString().includes("")
+      //     : this.state.filter_nav === "To Ship"
+      //     ? item.status.toString().includes(this.state.filter_nav) ||
+      //       item.status.toString().includes("Prefering")
+      //     : item.status.toString().includes(this.state.filter_nav);
+      // });
       // filteredData = [];
 
       // filteredData = this.props.transactions.filter((item) => {
@@ -90,16 +87,16 @@ class PurchasesIndex extends React.Component {
       transactionId: 0,
       filter_nav: "Complete",
     });
-    this.props.getTransactionList();
-    filteredData = [];
-    filteredData = this.props.transactions.filter((item) => {
-      return this.state.filter_nav === "All"
-        ? item.status.toString().includes("")
-        : this.state.filter_nav === "To Ship"
-        ? item.status.toString().includes(this.state.filter_nav) ||
-          item.status.toString().includes("Prefering")
-        : item.status.toString().includes(this.state.filter_nav);
-    });
+    // this.props.getTransactionList();
+    // filteredData = [];
+    // filteredData = this.props.transactions.filter((item) => {
+    //   return this.state.filter_nav === "All"
+    //     ? item.status.toString().includes("")
+    //     : this.state.filter_nav === "To Ship"
+    //     ? item.status.toString().includes(this.state.filter_nav) ||
+    //       item.status.toString().includes("Prefering")
+    //     : item.status.toString().includes(this.state.filter_nav);
+    // });
   };
 
   onToggleModalOrderReceive = (transactionId) => {
@@ -166,7 +163,6 @@ class PurchasesIndex extends React.Component {
   // }
   render() {
     filteredData = [];
-
     filteredData = this.props.transactions.filter((item) => {
       return this.state.filter_nav === "All"
         ? item.status.toString().includes("")
@@ -175,6 +171,7 @@ class PurchasesIndex extends React.Component {
           item.status.toString().includes("Prefering")
         : item.status.toString().includes(this.state.filter_nav);
     });
+    console.log(this.props.transactions);
     // this.props.reviews.map((rev) => reviews.push(rev.id));
     // filteredData.map((filtered) =>
     //   filtered.items.map((item) =>

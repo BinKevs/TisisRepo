@@ -36,13 +36,13 @@ class ProductViewSet(viewsets.ModelViewSet):
                 action_done = request.data['action_done'],
             )
         files = request.FILES.getlist('file_content')
-        request.data.pop('file_content')
+        request.data.pop('file_content') 
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         product_current = Product.objects.get(id=serializer.data['id'])
         supplier_current = Supplier.objects.get(id=request.data['supplier'])
-        productVariation = Product_variation.objects.create(stock=request.data['stock'],size=request.data['size'],color=request.data['color'])
+        productVariation = Product_variation.objects.create(stock=request.data['stock'],size=request.data['size'],color=request.data['color'],weight=request.data['weight'])
         Inventory.objects.create(new_stock=request.data['stock'],supplier=supplier_current,product=product_current)
         product_current.variation.add(productVariation) 
         uploaded_files = []
@@ -52,7 +52,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         product_current.file_content.add(*uploaded_files)
         context = serializer.data
         print(uploaded_files)
-        context["variation"] = [{"id":productVariation.id,"size":productVariation.size,"color":productVariation.color,"stock":productVariation.stock}]
+        context["variation"] = [{"id":productVariation.id,"size":productVariation.size,"color":productVariation.color,"stock":productVariation.stock,"weight":productVariation.weight}]
         context["file_content"] = [file.id for file in uploaded_files]
         print(context)
         return Response(context, status=status.HTTP_201_CREATED)

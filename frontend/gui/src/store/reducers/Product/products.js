@@ -6,7 +6,7 @@ import {
   UPDATE_PRODUCT,
   GET_CATEGORY_LIST,
   ADD_CATEGORY,
-  DELETE_CATEGORY,
+  UPDATE_CATEGORY,
   PRODUCT_LOADING,
   GET_VOUCHER_LIST,
   GET_REVIEW_LIST,
@@ -71,12 +71,13 @@ export default function (state = initialState, action) {
         ...state,
         categories: [...state.categories, action.payload],
       };
-    case DELETE_CATEGORY:
+    case UPDATE_CATEGORY:
       return {
         ...state,
-        categories: state.categories.filter(
-          (category) => category.id !== action.payload
-        ),
+        categories: [
+          ...state.categories.filter((cat) => cat.id !== action.payload.id),
+          action.payload,
+        ],
       };
     case GET_VOUCHER_LIST:
       return {

@@ -8,11 +8,14 @@ import {
   updateProduct,
   addProduct,
   addCategory,
+  updateCategory,
   getCategoryList,
 } from "../../store/actions/product/products";
 import { getSupplierList } from "../../store/actions/supplier/suppliers";
 import ProductModal from "./ProductModal";
+import CategoryModal from "./CategoryModal";
 import { ProductsTableExportModal } from "./Print/ProductsTableExportModal";
+
 let products = [];
 
 let FilesArray = [];
@@ -33,7 +36,6 @@ class ProductSetting extends React.Component {
   };
   state = {
     productName: "",
-    CategoryNameForCategoryAdd: "",
     supplierID: 0,
     description: "",
     price: 0,
@@ -41,6 +43,7 @@ class ProductSetting extends React.Component {
     stock: 0,
     size: "",
     color: "",
+    weight: 0,
     image: null,
     productID: 0,
     search: "",
@@ -51,11 +54,18 @@ class ProductSetting extends React.Component {
     ProductNameError: "",
     file_content: "",
     showModalCategory: false,
+    categoryName: "",
+    showModalCategoryAddEdit: false,
   };
 
   handleModalCategory = () => {
     this.setState({
       showModalCategory: !this.state.showModalCategory,
+    });
+  };
+  handleModalCategoryAddEdit = () => {
+    this.setState({
+      showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
     });
   };
   handleCategoryDropDown(CategoryName) {
@@ -106,13 +116,6 @@ class ProductSetting extends React.Component {
     };
   };
   onChange = (e) => {
-    // if (e.target.name === "image") {
-    //   this.setState({
-    //     [e.target.name]: e.target.files[0],
-    //     urlFile: URL.createObjectURL(e.target.files[0]),
-    //   });
-    //   isImageChanged = true;
-    // } else
     if (e.target.name === "file_content") {
       FilesArray = [];
       for (let i = 0; i < e.target.files.length; i++) {
@@ -153,13 +156,33 @@ class ProductSetting extends React.Component {
   // Submitting the name in the add category action
   onSubmitCategory = (event) => {
     event.preventDefault();
-    let name = this.state.CategoryNameForCategoryAdd;
+    let name = this.state.categoryName;
     const categoryForCategoryAdd = { name };
-
     this.props.addCategory(categoryForCategoryAdd);
     this.setState({
-      CategoryNameForCategoryAdd: "",
+      categoryName: "",
     });
+  };
+  onSubmitUpdateCategory = (event) => {
+    event.preventDefault();
+    let name = this.state.categoryName;
+    const categoryForCategoryAdd = { name };
+    this.props.updateCategory(this.state.categoryID, categoryForCategoryAdd);
+    this.setState({
+      categoryID: 0,
+      categoryName: "",
+      showModalCategoryAddEdit: false,
+    });
+  };
+  onModalToggleCategoryEdit = (categoryID, categoryName) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        categoryID: categoryID,
+        categoryName: categoryName,
+        showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
+      });
+    };
   };
   // when the isEditButtonClicked status is change this.props.product
   // *the product that will be edited* is being fetch because we trigger it in the bottom
@@ -206,6 +229,7 @@ class ProductSetting extends React.Component {
       formData.append("category", categoryID);
       formData.append("supplier", supplierID);
       formData.append("stock", stock);
+
       if (isImageChanged) {
         formData.append("image", image);
       }
@@ -241,10 +265,12 @@ class ProductSetting extends React.Component {
         supplierID,
         stock,
         size,
+        weight,
         color,
         file_content,
       } = this.state;
       const action_done = "Product Added";
+
       const formData = new FormData();
 
       formData.append("name", productName);
@@ -255,6 +281,7 @@ class ProductSetting extends React.Component {
       formData.append("stock", stock);
       formData.append("size", size);
       formData.append("color", color);
+      formData.append("weight", weight);
       formData.append("action_done", action_done);
       for (let i = 0; i < file_content.length; i++) {
         formData.append("file_content", file_content[i]);
@@ -350,35 +377,6 @@ class ProductSetting extends React.Component {
     // This will filter the data from inventories array filtered at the top
     const lowercasedFilter = this.state.search.toLowerCase();
 
-    // if (this.state.categoryForDropDownSelect !== '') {
-    // 	if (this.state.categoryForDropDownSelect === 'Select Category') {
-    // 		filteredData = products.filter((item) => {
-    // 			if (lowercasedFilter === '') {
-    // 				return item;
-    // 			} else {
-    // 				return item.name
-    // 					.toString()
-    // 					.toLowerCase()
-    // 					.includes(lowercasedFilter);
-    // 			}
-    // 		});
-    // 	} else {
-    // 		filteredData = products.filter((item) => {
-    // 			return Object.keys(item).some((key) =>
-    // 				item[key].toString().includes(this.state.categoryForDropDownSelect)
-    // 			);
-    // 		});
-    // 	}
-    // } else {
-    // 	filteredData = products.filter((item) => {
-    // 		if (lowercasedFilter === '') {
-    // 			return item;
-    // 		} else {
-    // 			return item.name.toString().toLowerCase().includes(lowercasedFilter);
-    // 		}
-    // 	});
-    // }
-
     filteredData = products.filter((item) => {
       return (
         item.name.toString().toLowerCase().includes(lowercasedFilter) ||
@@ -463,26 +461,6 @@ class ProductSetting extends React.Component {
                   </div>
                 </div>
                 <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
-                  {/* <div className="flex items-center lg:border-l lg:border-r border-gray-300 dark:border-gray-200 py-3 lg:py-0 lg:px-6">
-                    <p
-                      className="text-base text-gray-600 "
-                      id="page-view"
-                    >
-                      Viewing 1 - 20 of 60
-                    </p>
-                    <div
-                      className="text-gray-600  ml-2 border-transparent border cursor-pointer rounded mr-4"
-                      onclick="pageView(false)"
-                    >
-                      <i class="fad fa-angle-left fa-2x"></i>
-                    </div>
-                    <div
-                      className="text-gray-600  border-transparent border rounded focus:outline-none cursor-pointer"
-                      onclick="pageView(true)"
-                    >
-                      <i class="fad fa-angle-right fa-2x"></i>
-                    </div>
-                  </div> */}
                   <div className="lg:ml-6 flex items-center">
                     <div class="relative w-full">
                       <input
@@ -600,20 +578,7 @@ class ProductSetting extends React.Component {
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.price}
                         </td>
-                        {/* <td className="pr-6 whitespace-no-wrap">
-												<div className="flex items-center">
-													<div className="h-8 w-8">
-														<img
-															src="https://tuk-cdn.s3.amazonaws.com/assets/components/advance_tables/at_1.png"
-															alt
-															className="h-full w-full rounded-full overflow-hidden shadow"
-														/>
-													</div>
-													<p className="ml-2 text-gray-800 text-sm">
-														Carrie Anthony
-													</p>
-												</div>
-											</td> */}
+
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.category}
                         </td>
@@ -697,104 +662,16 @@ class ProductSetting extends React.Component {
         <div
           class={this.state.showModalCategory ? "h-screen " : "h-screen hidden"}
         >
-          <div class="mx-auto max-w-screen-lg h-full">
-            <div
-              className="z-20 absolute top-0 right-0 bottom-0 left-0"
-              id="modal"
-            >
-              <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
-              <div className="h-full overflow-auto w-full flex flex-col">
-                <div className="m-2 md:m-12">
-                  <form class="mt-9">
-                    <div className="relative p-4 md:p-8 bg-white dark:border-gray-700 shadow-md rounded border border-gray-400 ">
-                      <div class="text-left p-0 mb-8">
-                        <div>
-                          <i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{" "}
-                          <h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
-                            ABC Motor Parts
-                          </h1>
-                        </div>
-
-                        <h1 class="text-gray-800 text-3xl font-medium">
-                          Categories Setting
-                        </h1>
-                      </div>
-                      <table className="min-w-full bg-white p-28">
-                        <thead>
-                          <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                            <th className="pl-12 text-gray-600  font-normal pr-6 text-left text-sm ">
-                              ID
-                            </th>
-                            <th className="text-gray-600  font-normal pr-6 text-left text-sm">
-                              Category Name
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {this.props.categories.map((category) => (
-                            <tr
-                              key={category.id}
-                              className="h-24 border-gray-300 dark:border-gray-200 border-b"
-                            >
-                              <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
-                                {category.id}
-                              </td>
-                              <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
-                                {category.name}
-                              </td>
-                              <td className="text-gray-800">
-                                <div className="shadow rounded p-2 text-center cursor-pointer  text-sm py-3 bg-teal_custom text-white px-3 font-normal">
-                                  Edit
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                      {/* <div className="flex items-center justify-center w-full mt-4">
-                        <button
-                          value="Complete"
-                          type="submit"
-                          className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-md"
-                        >
-                          Confirm
-                        </button>
-                        <button
-                          onClick={this.handleModalCategory}
-                          className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-md"
-                        >
-                          Cancel
-                        </button>
-                      </div> */}
-
-                      <div
-                        onClick={this.handleModalCategory}
-                        className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-label="Close"
-                          className="icon icon-tabler icon-tabler-x"
-                          width={35}
-                          height={35}
-                          viewBox="0 0 24 24"
-                          strokeWidth="2.5"
-                          stroke="currentColor"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" />
-                          <line x1={18} y1={6} x2={6} y2={18} />
-                          <line x1={6} y1={6} x2={18} y2={18} />
-                        </svg>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+          <CategoryModal
+            categories={this.props.categories}
+            handleModalCategory={this.handleModalCategory}
+            onModalToggleCategoryEdit={this.onModalToggleCategoryEdit}
+            onChange={this.onChange}
+            state={this.state}
+            onSubmitCategory={this.onSubmitCategory}
+            handleModalCategoryAddEdit={this.handleModalCategoryAddEdit}
+            onSubmitUpdateCategory={this.onSubmitUpdateCategory}
+          />
         </div>
       </>
     );
@@ -815,5 +692,6 @@ export default connect(mapStateToProps, {
   deleteProduct,
   updateProduct,
   addCategory,
+  updateCategory,
   addProduct,
 })(ProductSetting);

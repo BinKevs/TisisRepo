@@ -50,15 +50,22 @@ export default function (state = initialState, action) {
     case UPDATE_TRANSACTION_STATUS:
       return {
         ...state,
-        transactions: [...state.transactions, action.payload],
+        transactions: [
+          action.payload,
+          ...state.transactions.filter(
+            (items) => items.id !== action.payload.id
+          ),
+        ],
       };
     case UPDATE_TRANSACTION_ITEMS:
       return {
         ...state,
-        transactions: state.transactions.filter(
-          (transaction) => transaction.id !== action.payload.id
-        ),
-        transactions: [...state.transactions, action.payload],
+        transactions: [
+          ...state.transactions.filter(
+            (items) => items.id !== action.payload.id
+          ),
+          action.payload,
+        ],
       };
     case GET_TRANSACTION_ITEM_LIST:
       return {

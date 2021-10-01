@@ -29,6 +29,7 @@ const ProductModal = (props) => {
     color,
     productID,
     ProductNameError,
+    weight,
     image,
     urlFile,
   } = props.state;
@@ -48,7 +49,7 @@ const ProductModal = (props) => {
                       : onUpdateSubmit(productID)
                   }
                 >
-                  <div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
+                  <div className="relative p-4 md:p-8 bg-white shadow-md rounded border border-gray-400 ">
                     <div className="flex items-center justify-start w-full">
                       <div class="text-left p-0 mb-8">
                         <div>
@@ -329,6 +330,28 @@ const ProductModal = (props) => {
                           class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
                         >
                           Color
+                        </label>
+                        {/* <span class="text-sm text-red-600" id="error">
+                          {ProductNameError}
+                        </span> */}
+                      </div>
+                      <div class="relative z-0 w-full mb-5">
+                        <input
+                          type="number"
+                          name="weight"
+                          required
+                          value={weight}
+                          onChange={onChange}
+                          placeholder=" "
+                          class={
+                            "pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+                          }
+                        />
+                        <label
+                          for="weight"
+                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+                        >
+                          Weight
                         </label>
                         {/* <span class="text-sm text-red-600" id="error">
                           {ProductNameError}

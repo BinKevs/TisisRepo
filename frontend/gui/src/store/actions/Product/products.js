@@ -9,7 +9,7 @@ import {
   UPDATE_PRODUCT,
   GET_CATEGORY_LIST,
   ADD_CATEGORY,
-  DELETE_CATEGORY,
+  UPDATE_CATEGORY,
   PRODUCT_LOADING,
   GET_VOUCHER_LIST,
   ADD_VOUCHER,
@@ -116,20 +116,28 @@ export const addCategory = (data) => (dispatch, getState) => {
     })
     .catch((err) => console.log(err));
 };
-export const deleteCategory = (CategoryID) => (dispatch, getState) => {
+export const updateCategory = (CategoryID, data) => (dispatch, getState) => {
   axios
-    .delete(
+    .put(
       URL_IMPORT + "/api/categories/" + CategoryID + "/",
+      data,
       tokenConfig(getState)
     )
     .then((res) => {
-      console.log("Category Deleted");
+      HandleSuccessMessages("Category Updated", "success");
       dispatch({
-        type: DELETE_CATEGORY,
-        payload: CategoryID,
+        type: UPDATE_CATEGORY,
+        payload: res.data,
+        categoryID: CategoryID,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Product Update Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 
 //Vocuhers
