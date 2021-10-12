@@ -7,10 +7,64 @@ import {
   AccordionItemPanel,
 } from "react-accessible-accordion";
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { loadUser } from "../../../store/actions/account/auth";
+import {
+  regions,
+  provinces,
+  cities,
+  barangays,
+} from "select-philippines-address";
+import ContactDetails from "./ContactDetails";
 let NavButton = document.getElementsByClassName("NavButton");
 let SectionPanelActive = document.getElementsByClassName("SectionPanelActive");
 let NavButtonActive = document.getElementsByClassName("NavButtonActive");
+
 class AccountSetting extends React.Component {
+  state = {
+    contact_number: "",
+    first_name: "",
+    last_name: "",
+    username: "",
+    email: "",
+    regionData: [],
+    provinceData: [],
+    cityData: [],
+    barangayData: [],
+    regionValue: "",
+    provinceValue: "",
+    cityValue: "",
+    barangayValue: "",
+    regionCode: "",
+    provinceCode: "",
+    cityCode: "",
+    barangayCode: "",
+    street: "",
+  };
+  onChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  componentDidMount() {
+    this.region();
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.AuthReducer != prevProps.AuthReducer) {
+      // const { user } = this.props.AuthReducer.user;
+      this.setState({
+        // first_name: this.props.AuthReduceruser.user
+        //   ? this.props.AuthReduceruser.user.first_name
+        //   : "",
+        // last_name: this.props.AuthReduceruser.user.last_name,
+        // username: this.props.AuthReduceruser.user.username,
+        // email: this.props.AuthReduceruser.user.email,
+      });
+      console.log(this.props.AuthReducer.user);
+    }
+  }
   onToggleNavButton = (DivTarget) => {
     return (event) => {
       event.preventDefault();
@@ -30,14 +84,66 @@ class AccountSetting extends React.Component {
       }
     };
   };
+  region = () => {
+    regions().then((response) => {
+      this.setState({
+        regionData: response,
+      });
+    });
+  };
+
+  province = (e) => {
+    this.setState({
+      regionValue: e.target.selectedOptions[0].text,
+      regionCode: e.target.value,
+    });
+    provinces(e.target.value).then((response) => {
+      this.setState({
+        provinceData: response,
+        cityData: [],
+        barangayData: [],
+      });
+    });
+  };
+
+  city = (e) => {
+    this.setState({
+      provinceValue: e.target.selectedOptions[0].text,
+      provinceCode: e.target.value,
+    });
+    cities(e.target.value).then((response) => {
+      this.setState({
+        cityData: response,
+      });
+    });
+  };
+
+  barangay = (e) => {
+    this.setState({
+      cityValue: e.target.selectedOptions[0].text,
+      cityCode: e.target.value,
+    });
+    barangays(e.target.value).then((response) => {
+      this.setState({
+        barangayData: response,
+      });
+    });
+  };
+
+  brgy = (e) => {
+    this.setState({
+      barangayValue: e.target.selectedOptions[0].text,
+      barangayCode: e.target.value,
+    });
+  };
   render() {
     return (
       <>
         {" "}
-        <div class="bg-gray-100 flex-1 mt-14">
-          <div class="bg-gray-800 pt-3">
-            <div class="rounded-tl-3xl bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white">
-              <h3 class="font-bold pl-2">Account Setting</h3>
+        <div class="bg-gray-100 flex-1 mt-28 md:mt-28 pb-24 md:pb-5">
+          <div class="bg-gray-100 pt-3">
+            <div class=" bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white text-center">
+              <h3 class="font-bold">Account Setting</h3>
             </div>
           </div>
           <div className="space-y-5 w-full">
@@ -173,7 +279,7 @@ class AccountSetting extends React.Component {
                       <div class="mt-10 w-1/2 flex justify-center">
                         <input
                           type="submit"
-                          value="Save"
+                          value="Submit"
                           class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
                         />
                       </div>
@@ -182,103 +288,15 @@ class AccountSetting extends React.Component {
                 </div>
               </div>
             </section>
-            <section class="mx-auto px-5 ContactPanel hidden">
-              <div class="w-full mb-8 rounded-lg shadow-lg ">
-                <div className="bg-white p-4">
-                  <div class="px-4 py-3 border-gray-300">
-                    <div class="text-left p-0 mt-4">
-                      <h1 class="px-4 py-6 text-gray-800 text-3xl font-medium border-b border-gray-300">
-                        Contact Details
-                      </h1>
-                    </div>
-                    <form class="mt-4">
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="street"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          House No., Street name, Building. Subd, Brgy
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="city"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          City Town
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="state"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          State Province Area
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="country"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          Country
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="country"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          Phone Number
-                        </label>
-                      </div>
-                      <div class="mt-10">
-                        <input
-                          type="submit"
-                          value="Save"
-                          class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
-                        />
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </section>
+            <ContactDetails
+              state={this.state}
+              region={this.region}
+              province={this.province}
+              city={this.city}
+              barangay={this.barangay}
+              brgy={this.brgy}
+              onChange={this.onChange}
+            />
             <section class="mx-auto px-5 PasswordPanel hidden">
               <div class="w-full mb-8 rounded-lg shadow-lg ">
                 <div className="bg-white p-4">
@@ -328,7 +346,7 @@ class AccountSetting extends React.Component {
                       <div class="mt-10">
                         <input
                           type="submit"
-                          value="Save"
+                          value="Submit"
                           class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
                         />
                       </div>
@@ -343,4 +361,12 @@ class AccountSetting extends React.Component {
     );
   }
 }
-export default AccountSetting;
+
+const mapStateToProps = (state) => {
+  return {
+    AuthReducer: state.AuthReducer,
+  };
+};
+export default withRouter(
+  connect(mapStateToProps, { loadUser })(AccountSetting)
+);

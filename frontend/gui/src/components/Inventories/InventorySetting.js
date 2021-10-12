@@ -101,12 +101,14 @@ class InventorySettingIndex extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.inventory !== prevProps.inventory) {
-      const { new_stock, product, supplier, id } = this.props.inventory;
+      const { new_stock, product, supplier, id, product_variation_info } =
+        this.props.inventory;
       this.setState({
         new_stock,
         product,
         supplier,
         inventoryID: id,
+        productVariation: product_variation_info.product_variation_id,
       });
       this.props.getInventoryList();
     }
@@ -283,6 +285,7 @@ class InventorySettingIndex extends React.Component {
     // 		});
     // 	}
     // }
+    console.log(this.props.inventories);
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -360,32 +363,13 @@ class InventorySettingIndex extends React.Component {
               <div className="w-full overflow-x-auto">
                 <table className="min-w-full bg-white">
                   <thead>
-                    <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                      <th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Inventory No.
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-1/5">
-                        Product Name
-                        {/* <select
-													onChange={this.onChange}
-													name="productForDropDownSelect"
-													class="w-full h-8 border rounded-lg text-xs my-2"
-												>
-													<option>Select Product</option>
-													{this.props.products.map((productFetch) => (
-														<option value={productFetch.name}>
-															{productFetch.name}{' '}
-														</option>
-													))}
-												</select> */}
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Stock Added
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Supplier
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4 w-2/12">
+                    <tr className="w-full h-16 border-gray-300 border-b py-8 text-left font-bold text-gray-500">
+                      <th className="pl-14 pr-6 text-md">ID</th>
+                      <th className=" pr-6 text-md">Product</th>
+                      <th className="  pr-6 text-md">Stock Added</th>
+                      <th className="pr-6 text-md">Supplier</th>
+                      <th className="pr-6 text-md w-2/12">
+                        {" "}
                         <div>Date : </div>
                         <DatePicker
                           selected={InputDate}
@@ -398,9 +382,7 @@ class InventorySettingIndex extends React.Component {
                           className="my-1 px-1 py-1 border-2 rounded-l"
                         />
                       </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        More
-                      </th>
+                      <th className="pr-6 text-md">More</th>
                     </tr>
                   </thead>
                   <tbody>

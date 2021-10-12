@@ -15,6 +15,7 @@ import {
   ADD_VOUCHER,
   ADD_REVIEW,
   GET_REVIEW_LIST,
+  UPDATE_PRODUCT_VARIATION,
 } from "./actionTypes";
 import { UPDATE_TRANSACTION_ITEMS } from "../transaction/actionTypes";
 import swal from "sweetalert";
@@ -92,6 +93,29 @@ export const updateProduct = (ProductID, data) => (dispatch, getState) => {
     );
 };
 
+export const updateProductVariation =
+  (ProductVariationID, data) => (dispatch, getState) => {
+    axios
+      .put(
+        URL_IMPORT + "/api/product_variation/" + ProductVariationID + "/",
+        data,
+        tokenConfig(getState)
+      )
+      .then((res) => {
+        HandleSuccessMessages("Product Variation Updated", "success");
+        dispatch({
+          type: UPDATE_PRODUCT_VARIATION,
+          payload: res.data,
+        });
+      })
+      .catch((err) =>
+        swal({
+          title: "Product Variation Update Failed",
+          text: "Error : " + err,
+          icon: "error",
+        })
+      );
+  };
 // Category part
 
 export const getCategoryList = () => (dispatch, getState) => {

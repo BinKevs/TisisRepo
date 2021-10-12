@@ -37,6 +37,7 @@ class VoucherSetting extends React.Component {
       showModal: !this.state.showModal,
     });
   };
+
   render() {
     return (
       <>
@@ -100,22 +101,13 @@ class VoucherSetting extends React.Component {
               <div className="w-full overflow-x-auto">
                 <table className="min-w-full bg-white dark:bg-gray-800">
                   <tbody>
-                    <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                      <th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        ID
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Code
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Value
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Date Created
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Status
-                      </th>
+                    <tr className="w-full h-16 border-gray-300 border-b py-8 text-left font-bold text-gray-500">
+                      <th className="pl-14 pr-6 text-md">ID</th>
+                      <th className=" pr-6 text-md">Code</th>
+
+                      <th className="pr-6 text-md">Value</th>
+                      <th className="pr-6 text-md">Date Created</th>
+                      <th className="pr-6 text-md">Status</th>
                     </tr>
                   </tbody>
                   <tbody>
@@ -135,7 +127,7 @@ class VoucherSetting extends React.Component {
                           {voucher.created_at}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {voucher.status}
+                          {voucher.status ? "Available" : "Unavailable"}
                         </td>
                       </tr>
                     ))}

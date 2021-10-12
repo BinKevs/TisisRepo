@@ -15,6 +15,7 @@ import {
   GET_ATTENDANCE_LOG_LIST,
   ADD_ACCOUNT,
   UPDATE_ACCOUNT,
+  UPDATE_ADDRESS,
 } from "./types";
 import swal from "sweetalert";
 import { HandleSuccessMessages } from "../../../Helpers/functions";
@@ -178,6 +179,23 @@ export const getAttendanceLogList = () => (dispatch, getState) => {
       });
     });
 };
+export const UpdateAddress = (AddressID, data) => (dispatch, getState) => {
+  axios
+    .put(
+      URL_IMPORT + "/api/address/" + AddressID + "/",
+      data,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      HandleSuccessMessages("Address Updated", "success");
+      dispatch({
+        type: UPDATE_ADDRESS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
 export const tokenConfig = (getState) => {
   // Get token from state
   const token = getState().AuthReducer.token;

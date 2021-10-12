@@ -15,7 +15,8 @@ class Transaction(models.Model):
     # change = models.DecimalField(max_digits=12, decimal_places=2,validators=[MinValueValidator(0.00)])
     quantity = models.IntegerField(blank=True,null=True)
     payment_method = models.CharField(max_length=255, null=False,blank=True)
-    status = models.CharField(max_length=255, null=True)
+    order_status = models.CharField(max_length=255, null=False,blank=True)
+    status = models.BooleanField(default=True)
     address = models.CharField(max_length=655, null=True,blank=True)
     contact_number = models.CharField(max_length=25, null=True,blank=True)
     items = models.ManyToManyField(

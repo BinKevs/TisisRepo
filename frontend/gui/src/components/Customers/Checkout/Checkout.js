@@ -2,7 +2,7 @@ import React from "react";
 import { PayPalButton } from "react-paypal-button-v2";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { loadUser } from "../../../store/actions/account/auth";
+import { loadUser, UpdateAddress } from "../../../store/actions/account/auth";
 import { addTransactionItems } from "../../../store/actions/transaction/transactions";
 import { getTransactionList } from "../../../store/actions/transaction/transactions.js";
 import {
@@ -10,6 +10,8 @@ import {
   changeCartValue,
   clearCart,
 } from "../../../store/actions/cart/cartActions";
+import AddressModal from "./AddressModal";
+import VoucherModal from "./VoucherModal";
 import { getVoucherList } from "../../../store/actions/product/products";
 import {
   regions,
@@ -17,21 +19,17 @@ import {
   cities,
   barangays,
 } from "select-philippines-address";
-let regionsArray = [];
-let provincesArray = [];
-let citiesArray = [];
-let barangaysArray = [];
-
+let shippingFee = 0;
+let TotalAmountToPay = 0;
+let TotalWeight = 0;
+let succeedingWeight = 0;
 class Checkout extends React.Component {
   state = {
-    address: "",
     contact_number: "",
-    showModal: false,
+    showModalAddress: false,
     showModalVoucher: false,
     showModalEWallet: false,
     totalAmount: 0,
-    Subtotal: 0,
-    tax: 0,
     amount_tendered: 0,
     change: -1,
     transanction_id: 0,
@@ -45,61 +43,56 @@ class Checkout extends React.Component {
     provinceData: [],
     cityData: [],
     barangayData: [],
-    regionAddr: "",
-    provinceAddr: "",
-    cityAddr: "",
-    barangayAddr: "",
+    regionValue: "",
+    provinceValue: "",
+    cityValue: "",
+    barangayValue: "",
+    regionCode: "",
+    provinceCode: "",
+    cityCode: "",
+    barangayCode: "",
+    street: "",
   };
-  region = () => {
-    regions().then((response) => {
-      this.setState({
-        regionData: response,
-      });
-    });
-  };
-
-  province = (e) => {
+  onChange = (e) => {
     this.setState({
-      regionAddr: e.target.selectedOptions[0].text,
-    });
-    provinces(e.target.value).then((response) => {
-      this.setState({
-        provinceData: response,
-        cityData: [],
-        barangayData: [],
-      });
+      [e.target.name]: e.target.value,
     });
   };
-
-  city = (e) => {
-    this.setState({
-      provinceAddr: e.target.selectedOptions[0].text,
-    });
-    cities(e.target.value).then((response) => {
-      this.setState({
-        cityData: response,
-      });
-    });
+  trimmedString(stringX) {
+    if (stringX.length === 12) {
+      return stringX;
+    } else {
+      return stringX.substring(0, 24) + "...";
+    }
+  }
+  HandleDecimalPlaces = (Variable) => {
+    return Math.round((Variable + Number.EPSILON) * 100) / 100;
   };
 
-  barangay = (e) => {
-    this.setState({
-      cityAddr: e.target.selectedOptions[0].text,
-    });
-    barangays(e.target.value).then((response) => {
-      this.setState({
-        barangayData: response,
-      });
-    });
-  };
+  numberWithCommas(x) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
 
-  brgy = (e) => {
-    this.setState({
-      barangayAddr: e.target.selectedOptions[0].text,
-    });
-  };
+  componentDidMount() {
+    this.props.getVoucherList();
+    this.props.loadUser();
+    let VariableTotalAmount = 0;
+    let Variablequantity = 0;
 
-  onSubmit = (event) => {
+    TotalAmountToPay = Object.values(this.props.cartItems).reduce(
+      (r, { price, quantity }) => parseFloat(r) + parseFloat(price * quantity),
+
+      0
+    );
+
+    // this.setState({
+    //   totalAmount: this.HandleDecimalPlaces(VariableTotalAmount + shippingFee),
+    //   quantity: Variablequantity,
+    // });
+
+    this.region();
+  }
+  onSubmitCashOnDelivery = (event) => {
     event.preventDefault();
     if (this.state.payment_method === "E-Wallet") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -112,24 +105,26 @@ class Checkout extends React.Component {
       const address =
         this.props.AuthReducer.addresses.street +
         " " +
-        this.props.AuthReducer.addresses.city_town +
+        this.props.AuthReducer.addresses.barangay +
         " " +
-        this.props.AuthReducer.addresses.state_province_area +
+        this.props.AuthReducer.addresses.city +
         " " +
-        this.props.AuthReducer.addresses.country;
+        this.props.AuthReducer.addresses.province +
+        " " +
+        this.props.AuthReducer.addresses.region;
       const contact_number = this.props.AuthReducer.contact_numbers;
       const action_done = "Transaction Added";
-      const status = "Pending";
+      const order_status = "Pending";
+
       const items = this.props.cartItems;
-      const { totalAmount, payment_method, amount_tendered, change } =
-        this.state;
+      const { payment_method, amount_tendered, change } = this.state;
       const data = {
-        totalAmount,
+        totalAmount: TotalAmountToPay + shippingFee - this.state.voucher_value,
         quantity,
         items,
         action_done,
         payment_method,
-        status,
+        order_status,
         address,
         contact_number,
       };
@@ -139,39 +134,178 @@ class Checkout extends React.Component {
       this.props.history.push("/account/purchases");
     }
   };
-  componentDidMount() {
-    this.props.getVoucherList();
-    this.props.loadUser();
-    let VariableTotalAmount = 0;
-    let Variablequantity = 0;
+  onSubmitEWallet() {
+    let quantity = 0;
+    this.props.cartItems.map((item) => (quantity += item.quantity));
+    const address =
+      this.props.AuthReducer.addresses.street +
+      " " +
+      this.props.AuthReducer.addresses.barangay +
+      " " +
+      this.props.AuthReducer.addresses.city +
+      " " +
+      this.props.AuthReducer.addresses.province +
+      " " +
+      this.props.AuthReducer.addresses.region;
+    const contact_number = this.props.AuthReducer.contact_numbers;
+    const action_done = "Transaction Added";
+    const order_status = "Pending";
 
-    this.props.cartItems.map(
-      (item) => (
-        (VariableTotalAmount += item.price * item.quantity),
-        (Variablequantity += item.quantity)
-      )
-    );
-    this.setState({
-      totalAmount: this.HandleDecimalPlaces(VariableTotalAmount),
-      Subtotal: this.HandleDecimalPlaces(
-        (VariableTotalAmount -= VariableTotalAmount * 0.12)
-      ),
-      tax: this.HandleDecimalPlaces(VariableTotalAmount * 0.12),
-      quantity: Variablequantity,
-    });
-    this.region();
+    const items = this.props.cartItems;
+    const { payment_method, amount_tendered, change } = this.state;
+    const data = {
+      totalAmount: TotalAmountToPay + shippingFee - this.state.voucher_value,
+      quantity,
+      items,
+      action_done,
+      payment_method,
+      order_status,
+      address,
+      contact_number,
+    };
+    this.props.addTransactionItems(data);
+    this.props.getTransactionList();
+    this.props.clearCart();
+    this.props.history.push("/account/purchases");
   }
+  handleUpdateContact = (AddressID) => {
+    return (event) => {
+      event.preventDefault();
+      const {
+        regionValue,
+        provinceValue,
+        cityValue,
+        barangayValue,
+        regionCode,
+        provinceCode,
+        cityCode,
+        barangayCode,
+        street,
+      } = this.state;
+      const data = {
+        region: regionValue,
+        province: provinceValue,
+        city: cityValue,
+        barangay: barangayValue,
+        region_code: regionCode,
+        province_code: provinceCode,
+        city_code: cityCode,
+        barangay_code: barangayCode,
+        street,
+      };
+      this.props.UpdateAddress(AddressID, data);
+      this.setState({
+        showModalAddress: !this.state.showModalAddress,
+        regionValue: "",
+        provinceValue: "",
+        cityValue: "",
+        barangayValue: "",
+        regionCode: "",
+        provinceCode: "",
+        cityCode: "",
+        barangayCode: "",
+        street: "",
+      });
+    };
+  };
+  handleModalContact = (e) => {
+    e.preventDefault();
+    const {
+      street,
+      barangay,
+      city,
+      province,
+      region,
+      barangay_code,
+      city_code,
+      province_code,
+      region_code,
+    } = this.props.AuthReducer.addresses;
+    this.setState({
+      showModalAddress: !this.state.showModalAddress,
+      regionValue: region,
+      provinceValue: province,
+      cityValue: city,
+      barangayValue: barangay,
+      regionCode: region_code,
+      provinceCode: province_code,
+      cityCode: city_code,
+      barangayCode: barangay_code,
+      street: street,
+    });
+  };
+  region = () => {
+    regions().then((response) => {
+      this.setState({
+        regionData: response,
+      });
+    });
+  };
+
+  province = (e) => {
+    this.setState({
+      regionValue: e.target.selectedOptions[0].text,
+      regionCode: e.target.value,
+    });
+    provinces(e.target.value).then((response) => {
+      this.setState({
+        provinceData: response,
+        cityData: [],
+        barangayData: [],
+      });
+    });
+  };
+
+  city = (e) => {
+    this.setState({
+      provinceValue: e.target.selectedOptions[0].text,
+      provinceCode: e.target.value,
+    });
+    cities(e.target.value).then((response) => {
+      this.setState({
+        cityData: response,
+      });
+    });
+  };
+
+  barangay = (e) => {
+    this.setState({
+      cityValue: e.target.selectedOptions[0].text,
+      cityCode: e.target.value,
+    });
+    barangays(e.target.value).then((response) => {
+      this.setState({
+        barangayData: response,
+      });
+    });
+  };
+
+  brgy = (e) => {
+    this.setState({
+      barangayValue: e.target.selectedOptions[0].text,
+      barangayCode: e.target.value,
+    });
+  };
 
   handlePaymentMethod(PaymentMethod) {
     return (event) => {
       event.preventDefault();
       this.setState({ payment_method: PaymentMethod });
+      // if (PaymentMethod === "Cash On Delivery") {
+      //   this.setState({
+      //     totalAmount: this.state.totalAmount + this.state.totalAmount * 0.0275,
+      //   });
+      // }
+      // if (
+      //   PaymentMethod === "E-Wallet" &&
+      //   this.state.payment_method === "Cash On Delivery"
+      // ) {
+      //   this.setState({
+      //     totalAmount: this.state.totalAmount - this.state.totalAmount * 0.0275,
+      //   });
+      // }
     };
   }
-  handleModalContact = (e) => {
-    e.preventDefault();
-    this.setState({ showModal: !this.state.showModal });
-  };
 
   handleModalVoucher = (e) => {
     e.preventDefault();
@@ -201,46 +335,96 @@ class Checkout extends React.Component {
     );
     window.scrollTo({ top: this.state.currentScrollState, behavior: "smooth" });
   };
-
-  onChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-  trimmedString(stringX) {
-    if (stringX.length === 12) {
-      return stringX;
-    } else {
-      return stringX.substring(0, 24) + "...";
+  HandleShippingCost() {
+    shippingFee = 0;
+    TotalWeight = 0;
+    succeedingWeight = 0;
+    const { cartItems } = this.props;
+    TotalWeight = Object.values(cartItems).reduce(
+      (r, { weight, quantity }) =>
+        parseFloat(r) + parseFloat(weight * quantity),
+      0
+    );
+    const { region } = this.props.AuthReducer.addresses;
+    if (region === "National Capital Region (NCR)") {
+      if (TotalWeight <= 1) {
+        shippingFee = 60;
+      } else if (TotalWeight <= 3) {
+        shippingFee = 80;
+      } else {
+        succeedingWeight = TotalWeight - 3;
+        shippingFee = succeedingWeight * 25 + 80;
+      }
+    } else if (
+      region === "Region I (Ilocos Region)" ||
+      region === "Region II (Cagayan Valley)" ||
+      region === "Region III (Central Luzon)" ||
+      region === "Region IV-A (CALABARZON)" ||
+      region === "Region IV-B (MIMAROPA)" ||
+      region === "Region V (Bicol Region)" ||
+      region === "Cordillera Administrative Region (CAR)"
+    ) {
+      if (TotalWeight <= 0.5) {
+        shippingFee = 90;
+      } else if (TotalWeight <= 1) {
+        shippingFee = 110;
+      } else if (TotalWeight <= 3) {
+        shippingFee = 180;
+      } else {
+        succeedingWeight = TotalWeight - 3;
+        shippingFee = succeedingWeight * 80 + 180;
+      }
+    } else if (
+      region === "Region VI (Western Visayas)" ||
+      region === "Region VII (Central Visayas)" ||
+      region === "Region VIII (Eastern Visayas)"
+    ) {
+      if (TotalWeight <= 0.5) {
+        shippingFee = 95;
+      } else if (TotalWeight <= 1) {
+        shippingFee = 110;
+      } else if (TotalWeight <= 3) {
+        shippingFee = 180;
+      } else {
+        succeedingWeight = TotalWeight - 3;
+        shippingFee = succeedingWeight * 80 + 180;
+      }
+    } else if (
+      region === "Region IX (Zamboanga Peninzula)" ||
+      region === "Region X (Northern Mindanao)" ||
+      region === "Region XI (Davao Region)" ||
+      region === "Region XII (SOCCSKSARGEN)" ||
+      region === "Autonomous Region in Muslim Mindanao (ARMM)" ||
+      region === "Region XIII (Caraga)"
+    ) {
+      if (TotalWeight <= 0.5) {
+        shippingFee = 100;
+      } else if (TotalWeight <= 1) {
+        shippingFee = 110;
+      } else if (TotalWeight <= 3) {
+        shippingFee = 180;
+      } else {
+        succeedingWeight = TotalWeight - 3;
+        shippingFee = succeedingWeight * 80 + 180;
+      }
     }
   }
-  HandleDecimalPlaces = (Variable) => {
-    return Math.round((Variable + Number.EPSILON) * 100) / 100;
-  };
-
-  numberWithCommas(x) {
-    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-  }
-
   render() {
-    let {
-      Subtotal,
-      tax,
-      totalAmount,
-      regionData,
-      provinceData,
-      cityData,
-      barangayData,
-    } = this.state;
-
+    let { totalAmount, regionData, provinceData, cityData, barangayData } =
+      this.state;
     const { cartItems } = this.props;
-
+    this.HandleShippingCost();
+    if (this.state.payment_method === "Cash On Delivery") {
+      shippingFee = this.HandleDecimalPlaces(
+        shippingFee + TotalAmountToPay * 0.0275
+      );
+    }
     return (
       <>
-        <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
-          <div class="bg-gray-800 pt-3">
-            <div class="rounded-tl-3xl bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow  text-2xl text-white">
-              <h3 class="font-bold pl-2">Check Out</h3>
+        <div class="bg-gray-100 flex-1 mt-28 md:mt-28 pb-24 md:pb-5">
+          <div class="bg-gray-100 pt-3">
+            <div class=" bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white text-center">
+              <h3 class="font-bold">Checkout</h3>
             </div>
           </div>
           <div className="p-5 w-full">
@@ -272,10 +456,9 @@ class Checkout extends React.Component {
                           <span class="ml-2">
                             {this.props.AuthReducer.addresses.street}{" "}
                             {this.props.AuthReducer.addresses.barangay}{" "}
-                            {this.props.AuthReducer.addresses.city_town}{" "}
+                            {this.props.AuthReducer.addresses.city}{" "}
                             {this.props.AuthReducer.addresses.province}{" "}
                             {this.props.AuthReducer.addresses.region}{" "}
-                            {this.props.AuthReducer.addresses.country}
                           </span>
                         </label>
                       </div>
@@ -404,39 +587,16 @@ class Checkout extends React.Component {
                       </div>
                     ))}
                   </div>
-                  <div class="flex justify-between border-t pt-8">
-                    <h1 class="font-medium text-2xl">Gift Voucher</h1>
-                    <button
-                      onClick={this.handleModalVoucher}
-                      class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded inline-flex items-center ml-4"
-                    >
-                      <i class="fal fa-plus fa-lg mr-2"></i>
-                      <span>Select Gift Voucher</span>
-                    </button>
-                  </div>
-                  {this.state.voucher_value > 0 ? (
-                    <div class="flex justify-between pt-8">
-                      <h1 class="font-medium text-2xl">Voucher:</h1>
-                      <h1 class="font-semibold text-2xl">
-                        - ₱{this.state.voucher_value}
-                      </h1>
-                    </div>
-                  ) : (
-                    ""
-                  )}
 
-                  <div class="flex justify-between pt-8">
+                  {/* <div class="flex justify-between pt-8">
                     <h1 class="font-medium text-2xl">Shipping Fee:</h1>
-                    <h1 class="font-semibold text-2xl">+ ₱40</h1>
-                  </div>
+                    <h1 class="font-semibold text-2xl">+ ₱{shippingFee}</h1>
+                  </div> */}
                   <div className="flex flex-col pt-8 gap-y-2">
                     <div class="flex justify-between">
                       <h1 class="font-semibold text-2xl">Order Total: </h1>
                       <h2 class="font-semibold text-2xl">
-                        ₱
-                        {this.numberWithCommas(
-                          totalAmount - this.state.voucher_value
-                        )}
+                        ₱{this.numberWithCommas(TotalAmountToPay)}
                       </h2>
                     </div>
                   </div>
@@ -454,7 +614,7 @@ class Checkout extends React.Component {
                   <div class="flex justify-between border-b pb-8">
                     <h1 class="font-medium text-3xl">Payment options</h1>
                   </div>
-                  <div class="flex flex-col xl:flex-row items-center justify-between mt-5 mb-5 space-x-3">
+                  <div class="flex flex-col xl:flex-row items-center justify-between mt-5 mb-5 space-x-0 xl:space-x-3 space-y-3 xl:space-y-0">
                     <button
                       onClick={this.handlePaymentMethod("Cash On Delivery")}
                       class={
@@ -528,24 +688,93 @@ class Checkout extends React.Component {
                       </span>
                     </button> */}
                   </div>
-                  <div className="flex justify-end mb-5">
-                    <div className="flex flex-col">
-                      <div class="flex justify-between gap-x-5">
-                        <h1 class="font-medium text-2xl">Shipping Fee:</h1>
-                        <h1 class="font-semibold text-2xl">₱40</h1>
-                      </div>
-
-                      <div class="flex justify-between gap-x-5">
+                  <div className="mb-5">
+                    <div className="flex flex-col space-y-6">
+                      <div class="flex justify-between">
                         <h1 class="font-semibold text-2xl">Order Total: </h1>
                         <h2 class="font-semibold text-2xl">
-                          ₱{this.numberWithCommas(totalAmount)}
+                          ₱{this.numberWithCommas(TotalAmountToPay)}
+                        </h2>
+                      </div>
+                      <div class="flex justify-between">
+                        <h1 class="font-medium text-md">
+                          Package Total Weight:
+                        </h1>
+                        <h1 class="font-semibold text-md"> {TotalWeight} Kg</h1>
+                      </div>
+                      <div class="flex justify-between">
+                        <h1 class="font-medium text-md">
+                          3kg rate on your location:
+                        </h1>
+                        <h1 class="font-semibold text-md"> ₱ 180</h1>
+                      </div>
+                      <div class="flex justify-between">
+                        <h1 class="font-medium text-md">
+                          Succeding kg / Cost:
+                        </h1>
+                        <h1 class="font-semibold text-md">
+                          {" "}
+                          {succeedingWeight}kg / ₱ {succeedingWeight * 80}
+                        </h1>
+                      </div>
+                      {this.state.payment_method === "Cash On Delivery" ? (
+                        <div class="flex justify-between">
+                          <h1 class="font-medium text-md">
+                            Cash on delivery fee:
+                          </h1>
+                          <h1 class="font-semibold text-md">
+                            {" "}
+                            ₱ {TotalAmountToPay * 0.0275}
+                          </h1>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+
+                      <div class="flex justify-between">
+                        <h1 class="font-medium text-2xl">Shipping Fee:</h1>
+                        <h1 class="font-semibold text-2xl">₱{shippingFee}</h1>
+                      </div>
+                      <div class="flex justify-between gap-x-5">
+                        <div class="flex flex-col">
+                          <h1 class="font-medium text-2xl">Gift Voucher</h1>
+                          <button
+                            onClick={this.handleModalVoucher}
+                            class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                          >
+                            <i class="fal fa-plus fa-lg"></i>
+                            <span>Select Gift Voucher</span>
+                          </button>
+                        </div>
+                      </div>
+                      {this.state.voucher_value > 0 ? (
+                        <div class="flex justify-between gap-x-5">
+                          <h1 class="font-medium text-2xl">Voucher:</h1>
+                          <h1 class="font-semibold text-2xl">
+                            - ₱{this.state.voucher_value}
+                          </h1>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      <div class="flex justify-between">
+                        <h1 class="font-semibold text-2xl">
+                          Total Amount To Pay:{" "}
+                        </h1>
+                        <h2 class="font-semibold text-2xl">
+                          ₱
+                          {this.numberWithCommas(
+                            TotalAmountToPay +
+                              shippingFee -
+                              this.state.voucher_value
+                          )}
                         </h2>
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-end pt-10">
                     <button
-                      onClick={this.onSubmit}
+                      onClick={this.onSubmitCashOnDelivery}
                       class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-xl"
                     >
                       <span>Place Order</span>
@@ -556,286 +785,7 @@ class Checkout extends React.Component {
             </section>
           </div>
         </div>
-        <div class={this.state.showModal ? "h-screen " : "h-screen hidden"}>
-          <div class="mx-auto max-w-screen-lg h-full">
-            <div
-              className="z-20 absolute top-0 right-0 bottom-0 left-0"
-              id="modal"
-            >
-              <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
-              <div className="h-full overflow-auto w-full flex flex-col">
-                <div className="m-2 md:m-12">
-                  <form class="mt-9">
-                    <div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
-                      <div class="text-left p-0 mb-8">
-                        <div>
-                          <i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{" "}
-                          <h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
-                            ABC Motor Parts
-                          </h1>
-                        </div>
 
-                        <h1 class="text-gray-800 text-3xl font-medium">
-                          Address
-                        </h1>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="phone_number"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          Phone Number
-                        </label>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <label class="block my-2">Select Region</label>
-                        <div class="relative inline-block w-full text-gray-700">
-                          <select
-                            onChange={this.province}
-                            onSelect={this.region}
-                            required
-                            name="region"
-                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
-                            placeholder="Region"
-                          >
-                            <option disabled>Select Region</option>
-                            {regionData &&
-                              regionData.length > 0 &&
-                              regionData.map((item) => (
-                                <option
-                                  key={item.region_code}
-                                  value={item.region_code}
-                                >
-                                  {item.region_name}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="relative z-0 w-full mb-5">
-                        <label class="block my-2">Select Province</label>
-                        <div class="relative inline-block w-full text-gray-700">
-                          <select
-                            onChange={this.city}
-                            required
-                            name="province"
-                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
-                            placeholder="Province"
-                          >
-                            <option disabled>Select Province</option>
-                            {provinceData &&
-                              provinceData.length > 0 &&
-                              provinceData.map((item) => (
-                                <option
-                                  key={item.province_code}
-                                  value={item.province_code}
-                                >
-                                  {item.province_name}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <label class="block my-2">Select City</label>
-                        <div class="relative inline-block w-full text-gray-700">
-                          <select
-                            onChange={this.barangay}
-                            required
-                            name="city"
-                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
-                            placeholder="City"
-                          >
-                            <option disabled>Select City</option>
-                            {cityData &&
-                              cityData.length > 0 &&
-                              cityData.map((item) => (
-                                <option
-                                  key={item.city_code}
-                                  value={item.city_code}
-                                >
-                                  {item.city_name}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="relative z-0 w-full mb-5">
-                        <label class="block my-2">Select Brgy</label>
-                        <div class="relative inline-block w-full text-gray-700">
-                          <select
-                            onChange={this.brgy}
-                            required
-                            name="brgy"
-                            class="w-full h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:border-cyan-700"
-                            placeholder="Brgy"
-                          >
-                            <option disabled>Select Barangay</option>
-                            {barangayData &&
-                              barangayData.length > 0 &&
-                              barangayData.map((item) => (
-                                <option
-                                  key={item.brgy_code}
-                                  value={item.brgy_code}
-                                >
-                                  {item.brgy_name}
-                                </option>
-                              ))}
-                          </select>
-                        </div>
-                      </div>
-                      <div class="relative z-0 w-full mb-5">
-                        <input
-                          type="text"
-                          name="street"
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="name"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          House No., Street name, Building. Subd
-                        </label>
-                      </div>
-
-                      <div className="flex items-center justify-center w-full">
-                        <button
-                          type="submit"
-                          className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
-                        >
-                          Submit
-                        </button>
-                        <button
-                          onClick={this.handleModalContact}
-                          className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-
-                      <div
-                        onClick={this.handleModalContact}
-                        className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-label="Close"
-                          className="icon icon-tabler icon-tabler-x"
-                          width={35}
-                          height={35}
-                          viewBox="0 0 24 24"
-                          strokeWidth="2.5"
-                          stroke="currentColor"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" />
-                          <line x1={18} y1={6} x2={6} y2={18} />
-                          <line x1={6} y1={6} x2={18} y2={18} />
-                        </svg>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class={this.state.showModalVoucher ? "h-screen " : "h-screen hidden"}
-        >
-          <div class="mx-auto max-w-screen-lg h-full">
-            <div
-              className="z-20 absolute top-0 right-0 bottom-0 left-0"
-              id="modal"
-            >
-              <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
-              <div className="h-full overflow-auto w-full flex flex-col">
-                <div className="m-2 md:m-12">
-                  <form class="mt-9">
-                    <div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
-                      <div class="text-left p-0 mb-8">
-                        <div>
-                          <i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{" "}
-                          <h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
-                            ABC Motor Parts
-                          </h1>
-                        </div>
-
-                        <h1 class="text-gray-800 text-3xl font-medium">
-                          Gift Vouchers
-                        </h1>
-                      </div>
-                      <div className="border-4 py-3">
-                        <div className="flex justify-center">
-                          <div class="relative z-0 mb-5 w-2/5">
-                            <input
-                              type="text"
-                              name="voucher_code"
-                              onChange={this.onChange}
-                              placeholder=" "
-                              required
-                              class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                            />
-                            <label
-                              for="voucher_code"
-                              class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                            >
-                              Gift Voucher Code
-                            </label>
-                          </div>
-                        </div>
-                        <div className="flex justify-center ">
-                          <button
-                            onClick={this.handleVoucherApply}
-                            class="bg-teal_custom hover:bg-gray-700 text-white font-bold p-2 rounded text-md w-2/5"
-                          >
-                            <span>Apply</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div
-                        onClick={this.handleModalVoucher}
-                        className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-label="Close"
-                          className="icon icon-tabler icon-tabler-x"
-                          width={35}
-                          height={35}
-                          viewBox="0 0 24 24"
-                          strokeWidth="2.5"
-                          stroke="currentColor"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" />
-                          <line x1={18} y1={6} x2={6} y2={18} />
-                          <line x1={6} y1={6} x2={18} y2={18} />
-                        </svg>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div
           class={this.state.showModalEWallet ? "h-screen " : "h-screen hidden"}
         >
@@ -873,7 +823,7 @@ class Checkout extends React.Component {
                                   {
                                     amount: {
                                       currency_code: "PHP",
-                                      value: totalAmount.toString(),
+                                      value: TotalAmountToPay.toString(),
                                     },
                                   },
                                 ],
@@ -884,8 +834,7 @@ class Checkout extends React.Component {
                             }}
                             onApprove={(data, actions) => {
                               // Capture the funds from the transaction
-                              this.handleClickPayPal(totalAmount);
-                              this.onModalToggleFunction();
+                              this.onSubmitEWallet();
                               return actions.order
                                 .capture()
                                 .then(function (details) {
@@ -936,6 +885,24 @@ class Checkout extends React.Component {
             </div>
           </div>
         </div>
+        <AddressModal
+          state={this.state}
+          region={this.region}
+          province={this.province}
+          city={this.city}
+          barangay={this.barangay}
+          brgy={this.brgy}
+          handleUpdateContact={this.handleUpdateContact}
+          onChange={this.onChange}
+          handleModalContact={this.handleModalContact}
+          address={this.props.AuthReducer.addresses}
+        />
+        <VoucherModal
+          state={this.state}
+          onChange={this.onChange}
+          handleVoucherApply={this.handleVoucherApply}
+          handleModalVoucher={this.handleModalVoucher}
+        />
       </>
     );
   }
@@ -954,5 +921,6 @@ export default withRouter(
     clearCart,
     getTransactionList,
     getVoucherList,
+    UpdateAddress,
   })(Checkout)
 );

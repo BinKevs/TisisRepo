@@ -1,18 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getProduct } from "../../store/actions/product/products";
-import { addToCart } from "../../store/actions/cart/cartActions";
+import { getProduct } from "../../../store/actions/product/products";
+import { addToCart } from "../../../store/actions/cart/cartActions";
 import ReactPlayer from "react-player";
-import { getReviewList } from "../../store/actions/product/products";
+import { getReviewList } from "../../../store/actions/product/products";
 import { Rating } from "react-simple-star-rating";
-import video1 from "../../Group2.mp4";
+import video1 from "../../../Group2.mp4";
 
 let color = [];
 let size = [];
 let variantStock = 0;
 let TempStock = 0;
 let variant_id = "";
+let weight = 0.0;
 let rates = 0;
 let count = 0;
 class ProductDetails extends React.Component {
@@ -83,7 +84,8 @@ class ProductDetails extends React.Component {
     size,
     color,
     quantity,
-    variant_id
+    variant_id,
+    weight
   ) {
     return (event) => {
       event.preventDefault();
@@ -96,6 +98,7 @@ class ProductDetails extends React.Component {
         color,
         quantity,
         product_with_variation: variant_id,
+        weight,
       };
       this.props.addToCart(product);
       // console.log(variant_id);
@@ -135,6 +138,7 @@ class ProductDetails extends React.Component {
     TempStock = 0;
     variantStock = 0;
     variant_id = "";
+    weight = 0.0;
     rates = 0;
     count = 0;
     const { product } = this.props;
@@ -170,7 +174,9 @@ class ProductDetails extends React.Component {
       if (product.variation) {
         product.variation.map((p) =>
           this.state.color === p.color && this.state.size === p.size
-            ? ((variantStock = p.stock), (variant_id = p.id))
+            ? ((variantStock = p.stock),
+              (variant_id = p.id),
+              (weight = p.weight))
             : ""
         );
       }
@@ -192,7 +198,7 @@ class ProductDetails extends React.Component {
     return (
       <>
         <section class="flex-1 w-full text-gray-700 body-font bg-white">
-          <div class="px-5 py-24 mx-auto">
+          <div class="px-5 mt-14 py-24 mx-auto">
             <div class="w-full mx-auto flex flex-wrap">
               <div className="lg:w-1/2 w-full">
                 {product.file_content ? (
@@ -200,7 +206,7 @@ class ProductDetails extends React.Component {
                     <img
                       alt="ecommerce"
                       id="featured"
-                      class="w-full object-cover object-center rounded border-2 border-gray-400 h-1/2"
+                      class="w-full object-cover object-center rounded-3xl border-2 border-gray-400 h-1/2"
                       src={product.file_content[0].image}
                     />
                   ) : (
@@ -246,7 +252,7 @@ class ProductDetails extends React.Component {
                                 file_content.image
                               )}
                               id="thumbnail"
-                              className="rounded thumbnail max-h-28"
+                              className="object-cover object-center rounded-3xl thumbnail max-h-28"
                               src="https://img.flaticon.com/icons/png/512/3204/3204323.png?size=1200x630f&pad=10,10,10,10&ext=png&bg=FFFFFFFF"
                             />
                           ) : (
@@ -255,7 +261,7 @@ class ProductDetails extends React.Component {
                                 file_content.image
                               )}
                               id="thumbnail"
-                              className="rounded thumbnail max-h-28"
+                              className="object-cover object-center rounded-3xl  thumbnail max-h-28"
                               src={file_content.image}
                             />
                           )
@@ -461,7 +467,8 @@ class ProductDetails extends React.Component {
                       this.state.size,
                       this.state.color,
                       this.state.quantity,
-                      variant_id
+                      variant_id,
+                      weight
                     )}
                   >
                     ADD TO CART

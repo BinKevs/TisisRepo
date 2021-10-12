@@ -11,7 +11,7 @@ class VoucherViewSet(viewsets.ModelViewSet):
     queryset = Voucher.objects.all()
     serializer_class = VoucherSerializer
 
-    def put(self,request,*args,**kwargs):
+    def update(self,request,*args,**kwargs):
         voucher = Voucher.objects.get()
         data = request.data
 

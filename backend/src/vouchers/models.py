@@ -6,4 +6,4 @@ class Voucher(models.Model):
     value = models.CharField(max_length=55, null=True,blank=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=True)
-    status = models.CharField(max_length=255, null=True,blank=True)
+    status =  models.BooleanField(default=True)

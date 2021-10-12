@@ -11,6 +11,7 @@ import {
   GET_VOUCHER_LIST,
   GET_REVIEW_LIST,
   ADD_REVIEW,
+  UPDATE_PRODUCT_VARIATION,
 } from "../../actions/product/actionTypes";
 
 const initialState = {
@@ -59,7 +60,17 @@ export default function (state = initialState, action) {
     case UPDATE_PRODUCT:
       return {
         ...state,
+        products: [
+          action.payload,
+          ...state.products.filter((prod) => prod.id !== action.payload.id),
+        ],
+      };
+    case UPDATE_PRODUCT_VARIATION:
+      return {
+        ...state,
         product: action.payload,
+        // supplier_name: action.payload.supplier_info.name,
+        // images: action.payload.file_content,
       };
     case GET_CATEGORY_LIST:
       return {

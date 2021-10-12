@@ -10,10 +10,12 @@ import {
   addCategory,
   updateCategory,
   getCategoryList,
+  updateProductVariation,
 } from "../../store/actions/product/products";
 import { getSupplierList } from "../../store/actions/supplier/suppliers";
 import ProductModal from "./ProductModal";
 import CategoryModal from "./CategoryModal";
+import ProductVariation from "./ProductVariation";
 import { ProductsTableExportModal } from "./Print/ProductsTableExportModal";
 
 let products = [];
@@ -44,10 +46,10 @@ class ProductSetting extends React.Component {
     size: "",
     color: "",
     weight: 0,
-    image: null,
     productID: 0,
     search: "",
     urlFile: [],
+    product_variation: [],
     modal: false,
     categoryForDropDownSelect: "",
     table_export_modal: false,
@@ -56,8 +58,41 @@ class ProductSetting extends React.Component {
     showModalCategory: false,
     categoryName: "",
     showModalCategoryAddEdit: false,
+    showModalProductVariation: false,
+    showModalProductVariationAddEdit: false,
+    stockProductVariation: 0,
+    sizeProductVariation: "",
+    colorProductVariation: "",
+    weightProductVariation: 0,
+    IDProductVariation: 0,
   };
+  handleUpdateProductVariation = (e) => {
+    e.preventDefault();
 
+    const {
+      stockProductVariation,
+      sizeProductVariation,
+      colorProductVariation,
+      weightProductVariation,
+      IDProductVariation,
+    } = this.state;
+    const formProductVariationData = new FormData();
+
+    formProductVariationData.append("stock", stockProductVariation);
+    formProductVariationData.append("size", sizeProductVariation);
+    formProductVariationData.append("color", colorProductVariation);
+    formProductVariationData.append("weight", weightProductVariation);
+    formProductVariationData.append("product_id", this.props.product.id);
+    this.props.updateProductVariation(
+      IDProductVariation,
+      formProductVariationData
+    );
+    this.setState({
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+      showModalProductVariation: !this.state.showModalProductVariation,
+    });
+  };
   handleModalCategory = () => {
     this.setState({
       showModalCategory: !this.state.showModalCategory,
@@ -67,6 +102,49 @@ class ProductSetting extends React.Component {
     this.setState({
       showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
     });
+  };
+  handleModalProductVaration = () => {
+    this.setState({
+      showModalProductVariation: !this.state.showModalProductVariation,
+      modal: !this.state.modal,
+    });
+  };
+  handleModalProductVarationAddEdit = () => {
+    this.setState({
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+    });
+  };
+  onModalToggleCategoryEdit = (categoryID, categoryName) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        categoryID: categoryID,
+        categoryName: categoryName,
+        showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
+      });
+    };
+  };
+  onModalToggleProductVarationEdit = (
+    IDProductVariation,
+    stockProductVariation,
+    sizeProductVariation,
+    colorProductVariation,
+    weightProductVariation
+  ) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        IDProductVariation: IDProductVariation,
+        stockProductVariation: stockProductVariation,
+        sizeProductVariation: sizeProductVariation,
+        colorProductVariation: colorProductVariation,
+        weightProductVariation: weightProductVariation,
+        showModalProductVariationAddEdit:
+          !this.state.showModalProductVariationAddEdit,
+      });
+      console.log(this.props.product.id);
+    };
   };
   handleCategoryDropDown(CategoryName) {
     return (event) => {
@@ -89,9 +167,6 @@ class ProductSetting extends React.Component {
     // this.props.getProduct(1);
   }
 
-  // when the image field changes it will save the image and also change the state of
-  // isImageChanged to true for the update Form component to know that we didnt change the image
-  // because we sent all data whenever we make a post or update so when the isImageChanged's status is false we will not include the field
   onRemoveImage = (fileID) => {
     return (e) => {
       e.preventDefault();
@@ -189,8 +264,17 @@ class ProductSetting extends React.Component {
   // then we will set it to the state and being passed on the formupdate component
   componentDidUpdate(prevProps, prevState) {
     if (this.props.product != prevProps.product) {
-      const { id, name, description, price, supplier, category, stock, image } =
-        this.props.product;
+      const {
+        id,
+        name,
+        description,
+        price,
+        supplier,
+        category,
+        stock,
+        file_content,
+        variation,
+      } = this.props.product;
       this.setState({
         productName: name,
         description,
@@ -198,11 +282,13 @@ class ProductSetting extends React.Component {
         supplierID: supplier,
         categoryID: category,
         stock,
-        image,
+        file_content,
         productID: id,
+        product_variation: variation,
       });
       this.props.getProductList();
     }
+
     if (isItemAdded === true) {
       this.props.getProductList();
       isItemAdded = false;
@@ -212,15 +298,8 @@ class ProductSetting extends React.Component {
   onUpdateSubmit = (productID) => {
     return (e) => {
       e.preventDefault();
-      const {
-        productName,
-        description,
-        price,
-        categoryID,
-        supplierID,
-        stock,
-        image,
-      } = this.state;
+      const { productName, description, price, categoryID, supplierID, stock } =
+        this.state;
       const formData = new FormData();
 
       formData.append("name", productName);
@@ -228,11 +307,6 @@ class ProductSetting extends React.Component {
       formData.append("price", price);
       formData.append("category", categoryID);
       formData.append("supplier", supplierID);
-      formData.append("stock", stock);
-
-      if (isImageChanged) {
-        formData.append("image", image);
-      }
 
       this.props.updateProduct(productID, formData);
       this.setState({
@@ -243,7 +317,6 @@ class ProductSetting extends React.Component {
         categoryID: 0,
         new_stock: 0,
         stock: 0,
-        image: null,
         productID: 0,
       });
       EditButtonIsClicked = false;
@@ -298,7 +371,6 @@ class ProductSetting extends React.Component {
         stock: 0,
         size: "",
         color: "",
-        image: null,
       });
       isImageChanged = false;
       this.ModalFunction();
@@ -321,7 +393,7 @@ class ProductSetting extends React.Component {
       size: "",
       color: "",
       stock: 0,
-      image: null,
+
       productID: 0,
     });
     EditButtonIsClicked = false;
@@ -348,6 +420,7 @@ class ProductSetting extends React.Component {
     this.setState({ modal: !this.state.modal });
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
+
     // document.getElementById("Body").classList.toggle("overflow-hidden");
   }
   OnToggleExportTable = (event) => {
@@ -421,7 +494,6 @@ class ProductSetting extends React.Component {
         );
       });
     }
-
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -496,19 +568,11 @@ class ProductSetting extends React.Component {
               <div className="w-full overflow-x-auto">
                 <table className="min-w-full bg-white">
                   <thead>
-                    <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                      <th className="pl-12 text-gray-600  font-normal pr-6 text-left text-sm ">
-                        Item No.
-                      </th>
-                      <th className="text-gray-600  font-normal pr-6 text-left text-sm w-1/5">
-                        Product
-                      </th>
-                      <th className="text-gray-600  font-normal pr-6 text-left text-sm ">
-                        (Variation) Stock
-                      </th>
-                      <th className="text-gray-600  font-normal pr-6 text-left text-sm ">
-                        Price
-                      </th>
+                    <tr className="w-full h-16 border-gray-300 border-b py-8 text-left font-bold text-gray-500">
+                      <th className="pl-14 pr-6 text-md">ID</th>
+                      <th className=" pr-6 text-md">Product</th>
+                      <th className="  pr-6 text-md">(Variation) Stock</th>
+                      <th className="pr-6 text-md">Price</th>
                       <th className="text-gray-600  font-normal pr-6 text-left text-sm w-2/12">
                         <select
                           onChange={this.onChange}
@@ -523,24 +587,16 @@ class ProductSetting extends React.Component {
                           ))}
                         </select>
                       </th>
-
-                      <th className="text-gray-600  font-normal pr-6 text-left text-sm">
-                        Supplier
-                      </th>
-
-                      <th className="text-gray-600  font-normal pr-6 text-left text-sm w-1/5">
-                        Description
-                      </th>
-                      <td className="text-gray-600  font-normal pr-6 text-left text-sm">
-                        More
-                      </td>
+                      <th className=" pr-6 text-md">Supplier</th>
+                      <th className="  pr-6 text-md">Description</th>
+                      <th className="pr-6 text-md">More</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredData.map((product) => (
                       <tr
                         key={product.id}
-                        className="h-24 border-gray-300 dark:border-gray-200 border-b"
+                        className="h-24 border-gray-300 border-b"
                       >
                         <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.product_id}
@@ -648,31 +704,38 @@ class ProductSetting extends React.Component {
           OnRightScroll={this.OnRightScroll}
           OnLeftScroll={this.OnLeftScroll}
           onRemoveImage={this.onRemoveImage}
+          handleModalProductVaration={this.handleModalProductVaration}
         />
-        <div
-          class={
-            this.state.table_export_modal ? "h-screen " : "h-screen hidden"
+
+        <ProductsTableExportModal
+          OnToggleExportTable={this.OnToggleExportTable}
+          products={filteredData}
+          table_export_modal={this.state.table_export_modal}
+        />
+
+        <CategoryModal
+          categories={this.props.categories}
+          handleModalCategory={this.handleModalCategory}
+          onModalToggleCategoryEdit={this.onModalToggleCategoryEdit}
+          onChange={this.onChange}
+          state={this.state}
+          onSubmitCategory={this.onSubmitCategory}
+          handleModalCategoryAddEdit={this.handleModalCategoryAddEdit}
+          onSubmitUpdateCategory={this.onSubmitUpdateCategory}
+        />
+
+        <ProductVariation
+          onChange={this.onChange}
+          handleModalProductVaration={this.handleModalProductVaration}
+          handleModalProductVarationAddEdit={
+            this.handleModalProductVarationAddEdit
           }
-        >
-          <ProductsTableExportModal
-            OnToggleExportTable={this.OnToggleExportTable}
-            products={filteredData}
-          />
-        </div>
-        <div
-          class={this.state.showModalCategory ? "h-screen " : "h-screen hidden"}
-        >
-          <CategoryModal
-            categories={this.props.categories}
-            handleModalCategory={this.handleModalCategory}
-            onModalToggleCategoryEdit={this.onModalToggleCategoryEdit}
-            onChange={this.onChange}
-            state={this.state}
-            onSubmitCategory={this.onSubmitCategory}
-            handleModalCategoryAddEdit={this.handleModalCategoryAddEdit}
-            onSubmitUpdateCategory={this.onSubmitUpdateCategory}
-          />
-        </div>
+          onModalToggleProductVarationEdit={
+            this.onModalToggleProductVarationEdit
+          }
+          handleUpdateProductVariation={this.handleUpdateProductVariation}
+          state={this.state}
+        />
       </>
     );
   }
@@ -694,4 +757,5 @@ export default connect(mapStateToProps, {
   addCategory,
   updateCategory,
   addProduct,
+  updateProductVariation,
 })(ProductSetting);

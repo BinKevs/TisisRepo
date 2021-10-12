@@ -21,9 +21,12 @@ urlpatterns = [
 
     
     path('api/product_files/', include('product_files.urls')),
+    path('api/product_variation/', include('product_variations.urls')),
     path('api/categories/', include('categories.urls')),
     path('api/vouchers/', include('vouchers.urls')),
+    path('api/refunds/', include('refunds.urls')),
     path('api/reviews/', include('reviews.urls')),
+     path('api/address/', include('addresses.urls')),
     path('api/suppliers/', include('suppliers.urls')),
     # path('api/suppliers/withPagination', include('suppliers.urlsWithPagination')),
     path('api/inventories/', include('inventories.urls')),

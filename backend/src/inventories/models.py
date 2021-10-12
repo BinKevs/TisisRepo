@@ -19,6 +19,7 @@ class Inventory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     product_with_variation = models.ForeignKey(
         Product_variation, related_name="product_with_variation_inventory_set", on_delete=models.CASCADE, null=True)
+    status = models.BooleanField(default=True)
     def __str__(self):
         return str(self.id)
     def save(self,*args, **kwargs):

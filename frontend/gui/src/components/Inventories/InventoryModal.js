@@ -125,17 +125,20 @@ const InventoryModal = (props) => {
                             {products.map((productItem) =>
                               parseInt(productItem.id) === parseInt(product)
                                 ? productItem.variation.map(
-                                    (productVariation) => (
+                                    (productVariationFetch) => (
                                       <option
-                                        // selected={
-                                        //   productItem.id === product ? "selected" : ""
-                                        // }
-                                        value={productVariation.id}
+                                        selected={
+                                          productVariationFetch.id ===
+                                          productVariation
+                                            ? "selected"
+                                            : ""
+                                        }
+                                        value={productVariationFetch.id}
                                         className="text-dark"
-                                        key={productVariation.id}
+                                        key={productVariationFetch.id}
                                       >
-                                        {productVariation.color}/{" "}
-                                        {productVariation.size}
+                                        {productVariationFetch.color}/{" "}
+                                        {productVariationFetch.size}
                                       </option>
                                     )
                                   )
@@ -183,7 +186,7 @@ const InventoryModal = (props) => {
                         type="submit"
                         className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
                       >
-                        {!EditButtonIsClicked ? "Add" : "Update"}
+                        Submit
                       </button>
                       <button
                         className="focus:outline-none ml-3 bg-gray-100 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"

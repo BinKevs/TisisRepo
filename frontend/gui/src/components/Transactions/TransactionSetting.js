@@ -183,14 +183,11 @@ class TransactionSettingIndex extends React.Component {
               <div className="w-full overflow-x-auto">
                 <table className="min-w-full bg-white ">
                   <thead>
-                    <tr className="w-full h-16 border-gray-300  border-b py-8">
-                      <th className="pl-14 text-gray-600 pr-6 text-left text-md font-normal">
-                        Transaction ID
-                      </th>
-                      <th className="text-gray-600 pr-6 text-left text-md font-normal">
-                        Creator Name
-                      </th>
-                      <th className="text-gray-600  pr-6 text-left text-md w-2/12 font-normal">
+                    <tr className="w-full h-16 border-gray-300 border-b py-8 text-left font-bold text-gray-500">
+                      <th className="pl-14 pr-6 text-md">ID</th>
+                      <th className=" pr-6 text-md">Creator</th>
+                      <th className="  pr-6 text-md w-2/12">
+                        {" "}
                         <div>Date</div>
                         <DatePicker
                           selected={this.state.InputDate}
@@ -203,30 +200,19 @@ class TransactionSettingIndex extends React.Component {
                           className="my-1 px-1 py-1 border-2 rounded-l"
                         />
                       </th>
-                      <th className="text-gray-600   pr-6 text-left text-md font-normal">
+                      <th className="pr-6 text-md">
                         <div className="text-center">Items</div>
-                        {/* <div className="flex justify-around">
-                          <div>Product Name</div> <div>Unit Price</div>{" "}
-                          <div>Quantity</div>{" "}
-                        </div> */}
                       </th>
-
-                      <th className="text-gray-600  pr-6 text-left text-md font-normal">
-                        Total Amount
-                      </th>
-                      <th className="text-gray-600   pr-6 text-left text-md font-normal">
-                        Total Number of Items
-                      </th>
-                      <th className="text-gray-600  pr-6 text-left text-md font-normal">
-                        Mode of Payment
-                      </th>
+                      <th className="pr-6 text-md">Total Amount</th>
+                      <th className="pr-6 text-md">Total Number of Items</th>
+                      <th className="pr-6 text-md">Mode of Payment</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredData.map((transaction) => (
                       <tr
                         key={transaction.id}
-                        className="h-24 border-gray-300  border-b font-semibold"
+                        className="h-24 border-gray-300  border-b"
                       >
                         <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {transaction.transaction_id}

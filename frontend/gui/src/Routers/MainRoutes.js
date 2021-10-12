@@ -1,9 +1,11 @@
 import { Route, Switch } from "react-router-dom";
 // import ProductListIndex from '../components/Products/ProductListIndex';
 import PurchasesIndex from "../components/Customers/Purchases/Purchases";
-import ProductListIndexOnlineCustomer from "../components/Customers/ProductListIndexOnlineCustomer";
-import ProductDetails from "../components/Customers/ProductDetails";
-import AccountSetting from "../components/Customers/AccountSetting";
+import ProductListIndexOnlineCustomer from "../components/Customers/Products/ProductListIndexOnlineCustomer";
+import ProductDetails from "../components/Customers/Products/ProductDetails";
+import Home from "../components/Customers/Products/Home";
+import Categories from "../components/Customers/Products/Categories";
+import AccountSetting from "../components/Customers/Accounts/AccountSetting";
 import Checkout from "../components/Customers/Checkout/Checkout";
 
 import TransactionQueuing from "../components/Transactions/TransactionQueuing";
@@ -12,6 +14,7 @@ import ProductListIndex from "../components/Products/ProductListIndex";
 import ProductSetting from "../components/Products/ProductSetting";
 import CheckoutIndex from "../components/Products/Checkout/CheckoutIndex";
 import VoucherSetting from "../components/Vouchers/VoucherSetting";
+import RefundsIndex from "../components/Refunds/RefundsIndex";
 
 import DashboardIndex from "../components/Dashboard/dashboard";
 
@@ -40,7 +43,7 @@ function MainBaseRouter() {
       <Switch>
         <PrivateRoute
           exact
-          path="/products"
+          path="/products/:categoryName"
           component={ProductListIndexOnlineCustomer}
         />
         <PrivateRoute
@@ -48,7 +51,12 @@ function MainBaseRouter() {
           path="/product/:productID"
           component={ProductDetails}
         />
+        <PrivateRoute exact path="/Home" component={Home} />
+        <PrivateRoute exact path="/Categories" component={Categories} />
+
         <PrivateRoute exact path="/vouchers" component={VoucherSetting} />
+        <PrivateRoute exact path="/refunds" component={RefundsIndex} />
+
         <PrivateRoute
           exact
           path="/account/settings"
@@ -71,7 +79,7 @@ function MainBaseRouter() {
         {/* <PrivateRoute exact path="/checkout" component={CheckoutIndex} /> */}
         <PrivateRoute
           exact
-          path="/products/settings"
+          path="/admin/products/settings"
           component={ProductSetting}
         />
         {/* <PrivateRoute exact path="/products" component={ProductListIndex} /> */}

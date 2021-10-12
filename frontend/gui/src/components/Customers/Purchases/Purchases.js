@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   getTransactionList,
@@ -12,20 +11,32 @@ import {
 
 import noImageAvailable from "../../../no-image-available.png";
 import ReviewsModal from "./ReviewsModal";
+import RefundsModal from "./RefundsModal";
 let NavButton = document.getElementsByClassName("NavButton");
 let NavButtonActive = document.getElementsByClassName("NavButtonActive");
-let SectionPanelActive = document.getElementsByClassName("SectionPanelActive");
 let filteredData = [];
-let reviews = [];
 class PurchasesIndex extends React.Component {
   componentDidMount() {
     this.props.getTransactionList();
     this.props.getReviewList();
   }
-
+  onChange = (e) => {
+    if (e.target.name === "VideoFile") {
+      this.setState({
+        [e.target.name]: e.target.files,
+        VideoFileURL: URL.createObjectURL(e.target.files[0]),
+      });
+      console.log(URL.createObjectURL(e.target.files[0]));
+    } else {
+      this.setState({
+        [e.target.name]: e.target.value,
+      });
+    }
+  };
   state = {
     showModal: false,
     showModalOrderReceived: false,
+    showModalRefund: false,
     comment: "",
     product_name: "",
     product_image: "",
@@ -33,7 +44,11 @@ class PurchasesIndex extends React.Component {
     transaction_item_id: 0,
     filter_nav: "All",
     transactionId: 0,
+    RefundVideo: "",
+    VideoFileURL: "",
+    refund_item: "",
   };
+
   onSubmit = (star_rate) => {
     return (e) => {
       e.preventDefault();
@@ -55,48 +70,19 @@ class PurchasesIndex extends React.Component {
         transaction_item_id: "",
         transaction_id: "",
       });
-      // filteredData = [];
-      // filteredData = this.props.transactions.filter((item) => {
-      //   return this.state.filter_nav === "All"
-      //     ? item.status.toString().includes("")
-      //     : this.state.filter_nav === "To Ship"
-      //     ? item.status.toString().includes(this.state.filter_nav) ||
-      //       item.status.toString().includes("Prefering")
-      //     : item.status.toString().includes(this.state.filter_nav);
-      // });
-      // filteredData = [];
-
-      // filteredData = this.props.transactions.filter((item) => {
-      //   return this.state.filter_nav === "All"
-      //     ? item.status.toString().includes("")
-      //     : this.state.filter_nav === "To Ship"
-      //     ? item.status.toString().includes(this.state.filter_nav) ||
-      //       item.status.toString().includes("Prefering")
-      //     : item.status.toString().includes(this.state.filter_nav);
-      // });
-      // window.location.reload();
+      this.props.getTransactionList();
     };
   };
   onUpdateSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("status", e.target.value);
+    formData.append("order_status", e.target.value);
     this.props.updateTransactionStatus(this.state.transactionId, formData);
     this.setState({
       showModalOrderReceived: !this.state.showModalOrderReceived,
       transactionId: 0,
       filter_nav: "Complete",
     });
-    // this.props.getTransactionList();
-    // filteredData = [];
-    // filteredData = this.props.transactions.filter((item) => {
-    //   return this.state.filter_nav === "All"
-    //     ? item.status.toString().includes("")
-    //     : this.state.filter_nav === "To Ship"
-    //     ? item.status.toString().includes(this.state.filter_nav) ||
-    //       item.status.toString().includes("Prefering")
-    //     : item.status.toString().includes(this.state.filter_nav);
-    // });
   };
 
   onToggleModalOrderReceive = (transactionId) => {
@@ -114,6 +100,7 @@ class PurchasesIndex extends React.Component {
       showModalOrderReceived: !this.state.showModalOrderReceived,
     });
   };
+
   onToggleModalReview = (
     product_name,
     product_image,
@@ -139,11 +126,22 @@ class PurchasesIndex extends React.Component {
       showModal: !this.state.showModal,
     });
   };
-  onChange = (e) => {
+  onToggleModalRefund = (refund_item) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        showModalRefund: !this.state.showModalRefund,
+        refund_item,
+      });
+    };
+  };
+  onToggleModalRefundClose = (event) => {
+    event.preventDefault();
     this.setState({
-      [e.target.name]: e.target.value,
+      showModalRefund: !this.state.showModalRefund,
     });
   };
+
   onToggleNavButton = (event) => {
     event.preventDefault();
     for (var i = 0; i < NavButton.length; i++) {
@@ -156,41 +154,24 @@ class PurchasesIndex extends React.Component {
       filter_nav: event.target.value,
     });
   };
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.props.transactions.items !== prevProps.transactions.items) {
 
-  //   }
-  // }
   render() {
     filteredData = [];
     filteredData = this.props.transactions.filter((item) => {
       return this.state.filter_nav === "All"
-        ? item.status.toString().includes("")
+        ? item.order_status.toString().includes("")
         : this.state.filter_nav === "To Ship"
-        ? item.status.toString().includes(this.state.filter_nav) ||
-          item.status.toString().includes("Prefering")
-        : item.status.toString().includes(this.state.filter_nav);
+        ? item.order_status.toString().includes(this.state.filter_nav) ||
+          item.order_status.toString().includes("Prefering")
+        : item.order_status.toString().includes(this.state.filter_nav);
     });
-    console.log(this.props.transactions);
-    // this.props.reviews.map((rev) => reviews.push(rev.id));
-    // filteredData.map((filtered) =>
-    //   filtered.items.map((item) =>
-    //     this.props.reviews
-    //       .filter(
-    //         (review) =>
-    //           review.user === this.props.AuthReducer.user.id &&
-    //           review.product === item.product.id
-    //       )
-    //       .map((filteredReview) => RatedProducts.push(filteredReview.product))
-    //   )
-    // );
 
     return (
       <>
-        <div class="bg-gray-200 flex-1 mt-14 pb-24 md:pb-5">
-          <div class="bg-gray-800 pt-3">
-            <div class="rounded-tl-3xl bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white">
-              <h3 class="font-bold pl-2">My Purchases</h3>
+        <div class="bg-gray-100 flex-1 mt-24 pb-24 md:pb-5">
+          <div class="bg-gray-100 pt-3">
+            <div class=" bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white text-center">
+              <h3 class="font-bold">Purchases</h3>
             </div>
           </div>
 
@@ -206,7 +187,7 @@ class PurchasesIndex extends React.Component {
                     All
                   </button>
                   <button
-                    value="To Ship"
+                    value="Pending"
                     onClick={this.onToggleNavButton}
                     class="NavButton"
                   >
@@ -239,103 +220,135 @@ class PurchasesIndex extends React.Component {
             </section>
 
             <div className="space-y-6">
-              {filteredData.map((transaction) => (
-                <div className="mx-4">
-                  <div className="mx-auto bg-white p-4">
-                    <div class="text-gray-800 text-2xl font-medium pb-4">
-                      Status : {transaction.status}
-                    </div>
-                    <div className="bg-white border-t-2 border-b-2">
-                      {transaction.items.map((item) => (
-                        <div className="p-2 flex justify-center">
-                          <div className="w-1/3 ">
-                            <img
-                              className="h-24 border-gray-400 border-2 my-auto"
-                              src={
-                                item.product.file_content
-                                  ? item.product.file_content[0].image
-                                  : noImageAvailable
-                              }
-                              alt=""
-                            />
-                          </div>
+              {filteredData.length > 0 ? (
+                filteredData.map((transaction) => (
+                  <div className="mx-4">
+                    <div className="mx-auto bg-white p-4">
+                      <div className="flex justify-between">
+                        <div class="text-gray-800 text-xl font-medium pb-4">
+                          Status : {transaction.order_status}
+                        </div>
+                        <div class="text-gray-800 text-xl font-medium pb-4">
+                          Date Created : {transaction.created_at}
+                        </div>
+                      </div>
 
-                          <div className="ml-2 space-y-5 w-1/2 ">
-                            <div>{item.product.name}</div>
-
-                            <div>
-                              {item.product_variation_info.color}/
-                              {item.product_variation_info.size}
+                      <div className="bg-white border-t-2 border-b-2">
+                        {transaction.items.map((item) => (
+                          <div className="p-2 flex justify-center w-full">
+                            <div className="w-1/3">
+                              <img
+                                className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
+                                src={
+                                  item.product.file_content
+                                    ? item.product.file_content[0].image
+                                    : noImageAvailable
+                                }
+                                alt=""
+                              />
                             </div>
-                            <div className="flex justify-between">
-                              <div>x{item.quantity}</div>
-                              <div className="text-teal-600">
-                                ₱{item.product.price}
+
+                            <div className="ml-2 space-y-5 w-1/2 ">
+                              <div>{item.product.name}</div>
+
+                              <div>
+                                {item.product_variation_info.color}/
+                                {item.product_variation_info.size}
                               </div>
-                            </div>
-                            <div className="flex justify-start pt-5 space-x-4">
-                              {transaction.status === "Complete" ? (
-                                <>
-                                  {/* {this.props.reviews.map((review) =>
+                              <div className="flex justify-between">
+                                <div>x{item.quantity}</div>
+                                <div className="text-teal-600">
+                                  ₱{item.product.price}
+                                </div>
+                              </div>
+                              <div className="flex justify-start pt-5 space-x-4">
+                                {transaction.order_status === "Complete" ? (
+                                  <>
+                                    {/* {this.props.reviews.map((review) =>
                                     review.product !== item.product.id ? (
                                       
                                     ) : (
                                       ""
                                     )
                                   )} */}
-                                  {item.review > 0 ? (
-                                    ""
-                                  ) : (
+                                    {item.review > 0 ? (
+                                      ""
+                                    ) : (
+                                      <>
+                                        <button
+                                          onClick={this.onToggleModalReview(
+                                            item.product.name,
+                                            item.product.file_content[0].image,
+                                            item.product.id,
+                                            item.id,
+                                            transaction.id
+                                          )}
+                                          class={
+                                            "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                                          }
+                                        >
+                                          <span>Rate</span>
+                                        </button>
+                                      </>
+                                    )}
+                                    <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md">
+                                      <span>Buy Again</span>
+                                    </button>{" "}
                                     <button
-                                      onClick={this.onToggleModalReview(
-                                        item.product.name,
-                                        item.product.file_content[0].image,
-                                        item.product.id,
-                                        item.id,
-                                        transaction.id
-                                      )}
+                                      onClick={this.onToggleModalRefund(item)}
                                       class={
-                                        "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                                        "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
                                       }
                                     >
-                                      <span>Rate</span>
+                                      <span>Refund</span>
                                     </button>
-                                  )}
-                                  <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md">
-                                    <span>Buy Again</span>
-                                  </button>{" "}
-                                </>
-                              ) : (
-                                ""
-                              )}
+                                  </>
+                                ) : (
+                                  ""
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div class="text-gray-800  font-medium pt-4 text-right">
-                      <span className="text-xl">Order Total :</span>{" "}
-                      <span className="text-2xl text-teal-600">
-                        ₱{transaction.totalAmount}
-                      </span>
-                    </div>
-                    {transaction.status !== "Complete" ? (
-                      <div className="flex justify-end my-5 ">
-                        <button
-                          onClick={this.onToggleModalOrderReceive(
-                            transaction.id
-                          )}
-                          class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
-                        >
-                          <span>Order Received</span>
-                        </button>
+                        ))}
                       </div>
-                    ) : (
-                      ""
-                    )}
+                      <div class="text-gray-800  font-medium pt-4 text-right">
+                        <span className="text-xl">Order Total :</span>{" "}
+                        <span className="text-2xl text-teal-600">
+                          ₱{transaction.totalAmount}
+                        </span>
+                      </div>
+                      {transaction.order_status !== "Complete" ? (
+                        <div className="flex justify-end my-5 ">
+                          <button
+                            onClick={this.onToggleModalOrderReceive(
+                              transaction.id
+                            )}
+                            class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                          >
+                            <span>Order Received</span>
+                          </button>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="mx-4">
+                  <div className="mx-auto bg-white p-4">
+                    <div className="text-center text-gray-500">
+                      <i class="fal fa-clipboard-list-check fa-7x"></i>
+                      <div className="font-semibold text-xl">
+                        No order/s yet.
+                      </div>
+                      <div className="font-semibold text-xl">
+                        Try refreshing the page.
+                      </div>
+                    </div>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -428,6 +441,13 @@ class PurchasesIndex extends React.Component {
             </div>
           </div>
         </div>
+        <RefundsModal
+          state={this.state}
+          onToggleModalRefund={this.onToggleModalRefund}
+          onToggleModalRefundClose={this.onToggleModalRefundClose}
+          filteredData={filteredData}
+          onChange={this.onChange}
+        />
       </>
     );
   }

@@ -316,34 +316,12 @@ class SupplierSettingIndex extends React.Component {
               <div className="w-full overflow-x-auto">
                 <table className="min-w-full bg-white dark:bg-gray-800">
                   <thead>
-                    <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                      {/* <th className="pl-8 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-												<input
-													type="checkbox"
-													className="cursor-pointer relative w-5 h-5 border rounded border-gray-400 dark:border-gray-200 bg-white dark:bg-gray-800 outline-none"
-													onclick="checkAll(this)"
-												/>
-											</th> */}
-                      <th className="pl-14 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Supplier ID
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Supplier Name
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Address
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        Phone Number
-                      </th>
-                      <th className="text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-                        More
-                      </th>
-                      {/* <th className="space-x-2 text-gray-600 dark:text-gray-400 font-normal pr-6 text-left text-sm tracking-normal leading-4">
-									<span>Date</span>
-									<i class="fal fa-arrow-up fa-lg"></i>
-									<i class="fal fa-arrow-down"></i>
-								</th> */}
+                    <tr className="w-full h-16 border-gray-300 border-b py-8 text-left font-bold text-gray-500">
+                      <th className="pl-14 pr-6 text-md">ID</th>
+                      <th className=" pr-6 text-md">Supplier</th>
+                      <th className="  pr-6 text-md">Address</th>
+                      <th className="pr-6 text-md">Phone Number</th>
+                      <th className="pr-6 text-md">More</th>
                     </tr>
                   </thead>
                   <tbody>

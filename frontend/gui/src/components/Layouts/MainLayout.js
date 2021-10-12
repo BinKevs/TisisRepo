@@ -13,6 +13,7 @@ class MainLayout extends React.Component {
     DashboardNavBtn: false,
     VoucherNavBtn: false,
     QueueNavBtn: false,
+    RefundNavBtn: false,
     ProductsNavBtn: true,
     ReportsNavBtn: false,
     ProductSettingNavBtn: false,
@@ -24,6 +25,7 @@ class MainLayout extends React.Component {
     ArchiveNavBtn: false,
     SideButton: false,
     cartShow: false,
+
     quantity: 0,
   };
 
@@ -97,6 +99,7 @@ class MainLayout extends React.Component {
         this.setState({
           DashboardNavBtn: true,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           VoucherNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
@@ -112,6 +115,7 @@ class MainLayout extends React.Component {
           VoucherNavBtn: true,
           DashboardNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -126,6 +130,22 @@ class MainLayout extends React.Component {
           DashboardNavBtn: false,
           VoucherNavBtn: false,
           QueueNavBtn: true,
+          RefundNavBtn: false,
+          ProductsNavBtn: false,
+          ReportsNavBtn: false,
+          ProductSettingNavBtn: false,
+          InventoryNavBtn: false,
+          SupplierNavBtn: false,
+          TransactionsNavBtn: false,
+          TransactionsItemsNavBtn: false,
+          ArchiveNavBtn: false,
+        });
+      } else if (NavBtn === "RefundNavBtn") {
+        this.setState({
+          DashboardNavBtn: false,
+          VoucherNavBtn: false,
+          QueueNavBtn: false,
+          RefundNavBtn: true,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -140,6 +160,7 @@ class MainLayout extends React.Component {
           DashboardNavBtn: false,
           VoucherNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           ProductsNavBtn: true,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -154,6 +175,7 @@ class MainLayout extends React.Component {
           DashboardNavBtn: false,
           VoucherNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: true,
           ProductSettingNavBtn: false,
@@ -168,6 +190,7 @@ class MainLayout extends React.Component {
           DashboardNavBtn: false,
           VoucherNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: true,
@@ -182,6 +205,7 @@ class MainLayout extends React.Component {
           DashboardNavBtn: false,
           VoucherNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
           ProductSettingNavBtn: false,
@@ -195,6 +219,7 @@ class MainLayout extends React.Component {
         this.setState({
           DashboardNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           VoucherNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
@@ -209,6 +234,7 @@ class MainLayout extends React.Component {
         this.setState({
           DashboardNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           VoucherNavBtn: false,
           ProductsNavBtn: false,
           ReportsNavBtn: false,
@@ -223,6 +249,7 @@ class MainLayout extends React.Component {
         this.setState({
           DashboardNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           ProductsNavBtn: false,
           VoucherNavBtn: false,
           ReportsNavBtn: false,
@@ -237,6 +264,7 @@ class MainLayout extends React.Component {
         this.setState({
           DashboardNavBtn: false,
           QueueNavBtn: false,
+          RefundNavBtn: false,
           ProductsNavBtn: false,
           VoucherNavBtn: false,
           ReportsNavBtn: false,
@@ -256,10 +284,10 @@ class MainLayout extends React.Component {
     this.props.logout();
     window.location.href = "http://localhost:3000/login";
   };
-  setDropDown(e) {
+  setDropDown = (e) => {
     e.preventDefault();
     document.getElementById("myDropdown").classList.toggle("invisible");
-  }
+  };
   setDropdownWithRedirect = (ComponentTogo) => {
     return (e) => {
       e.preventDefault();
@@ -278,6 +306,7 @@ class MainLayout extends React.Component {
       TransactionsNavBtn,
       TransactionsItemsNavBtn,
       QueueNavBtn,
+      RefundNavBtn,
       VoucherNavBtn,
       ArchiveNavBtn,
     } = this.state;
@@ -301,7 +330,7 @@ class MainLayout extends React.Component {
         <nav class="bg-gray-800 pt-2 pb-1 px-1 mt-0 h-auto fixed w-full z-20 top-0">
           <div class="flex flex-wrap justify-between items-center">
             <Link
-              to="/products"
+              to="/products/All"
               replace
               class="flex pt-2 w-1/2 md:w-1/3 justify-start text-white"
             >
@@ -325,6 +354,7 @@ class MainLayout extends React.Component {
                 <div class="relative inline-block space-x-4 lg:mr-2 py-2">
                   <div
                     onClick={this.handleCartShow}
+                    // onMouseLeave={this.handleCartShow}
                     className={
                       this.props.AuthReducer.user
                         ? this.props.AuthReducer.user.is_staff
@@ -340,7 +370,7 @@ class MainLayout extends React.Component {
                     </span>
                   </div>
                   <button
-                    onClick={this.setDropDown}
+                    onMouseEnter={this.setDropDown}
                     class=" text-white focus:outline-none"
                   >
                     {" "}
@@ -357,6 +387,7 @@ class MainLayout extends React.Component {
                     </svg>
                   </button>
                   <div
+                    onMouseLeave={this.setDropDown}
                     id="myDropdown"
                     class="dropdownlist absolute bg-gray-800 text-white right-0 mt-3 p-3 overflow-auto z-30 w-36 invisible"
                   >
@@ -432,6 +463,46 @@ class MainLayout extends React.Component {
             </div>
           </div>
         </nav>
+        <div
+          className={
+            this.props.AuthReducer.user
+              ? this.props.AuthReducer.user.is_staff
+                ? "hidden fixed w-full z-10 top-12 bg-gradient-to-r from-gray-800 to-teal_custom_darker "
+                : "fixed w-full z-10 top-12 bg-gradient-to-r from-gray-800 to-teal_custom_darker "
+              : ""
+          }
+        >
+          <div className="container mx-auto px-6 py-3">
+            <nav className={"flex justify-center items-center mt-4"}>
+              {/* flex-col sm:flex-row */}
+              <div className="flex text-lg font-semibold tracking-wide">
+                <Link
+                  to="/Home"
+                  className="text-white hover:underline mx-3 mt-0 "
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/products/All"
+                  className="text-white hover:underline mx-3 mt-0"
+                >
+                  Shop
+                </Link>
+
+                <Link
+                  to="/Categories"
+                  className=" text-white hover:underline mx-3 mt-0"
+                >
+                  Categories
+                </Link>
+
+                <div className=" text-white hover:underline mx-3 mt-0">
+                  About
+                </div>
+              </div>
+            </nav>
+          </div>
+        </div>
 
         <div class="relative flex flex-col lg:flex-row bg-gray-800">
           {this.props.AuthReducer.user ? (
@@ -487,6 +558,30 @@ class MainLayout extends React.Component {
                           }
                         >
                           Transaction Queue
+                        </span>
+                      </Link>
+                    </li>
+                    <li
+                      class="mr-3 flex-1 NavBtn"
+                      onClick={this.setActiveNav("RefundNavBtn")}
+                    >
+                      <Link
+                        to="/refunds"
+                        class={
+                          RefundNavBtn
+                            ? "MainLayoutNav MainLayoutNavActive"
+                            : "MainLayoutNav"
+                        }
+                      >
+                        <i className="fad fa-undo-alt pr-0 lg:pr-3"></i>
+                        <span
+                          class={
+                            RefundNavBtn
+                              ? "MainLayoutNav2 MainLayoutNavActive2"
+                              : "MainLayoutNav2"
+                          }
+                        >
+                          Refund/Return
                         </span>
                       </Link>
                     </li>
@@ -604,7 +699,7 @@ class MainLayout extends React.Component {
                       onClick={this.setActiveNav("ProductSettingNavBtn")}
                     >
                       <Link
-                        to="/products/settings"
+                        to="/admin/products/settings"
                         class={
                           ProductSettingNavBtn
                             ? "MainLayoutNav MainLayoutNavActive"
@@ -696,7 +791,7 @@ class MainLayout extends React.Component {
                         </span>
                       </Link>
                     </li>
-                    <li
+                    {/* <li
                       class="mr-3 flex-1 NavBtn"
                       onClick={this.setActiveNav("TransactionsItemsNavBtn")}
                     >
@@ -719,7 +814,7 @@ class MainLayout extends React.Component {
                           Transaction <div>Item's History</div>
                         </span>
                       </Link>
-                    </li>
+                    </li> */}
                     <li
                       class="mr-3 flex-1 NavBtn"
                       onClick={this.setActiveNav("VoucherNavBtn")}
@@ -783,8 +878,172 @@ class MainLayout extends React.Component {
             <div class="fixed w-full h-full bg-gray-900 opacity-50"></div>
             <CartIndex handleCartShow={this.handleCartShow} />
           </div>
+
           {this.props.children}
         </div>
+
+        <footer
+          className={
+            this.props.AuthReducer.user
+              ? this.props.AuthReducer.user.is_staff
+                ? "hidden bg-gray-800 pt-6 sm:mt-6 "
+                : "bg-gray-800 pt-6 sm:mt-6 "
+              : ""
+          }
+        >
+          <div class="max-w-6xl m-auto text-gray-800 flex flex-wrap justify-left">
+            <div class="p-5 w-1/2 sm:w-4/12 md:w-3/12">
+              <div class="text-md uppercase text-gray-400 font-medium mb-6">
+                Navigation
+              </div>
+
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Home
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Shop
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Categories
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                About
+              </a>
+            </div>
+
+            <div class="p-5 w-1/2 sm:w-4/12 md:w-3/12">
+              <div class="text-md uppercase text-gray-400 font-medium mb-6">
+                Categories
+              </div>
+
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Engine Parts and Accessories
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Exhaust
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Fuel and Air
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Drive
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Brakes
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Drive
+              </a>
+            </div>
+
+            <div class="p-5 w-1/2 sm:w-4/12 md:w-3/12">
+              <div class="text-md uppercase text-gray-400 font-medium mb-6">
+                Policy
+              </div>
+
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Terms of Use
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Shipping Policy
+              </a>
+            </div>
+
+            <div class="p-5 w-1/2 sm:w-4/12 md:w-3/12">
+              <div class="text-md uppercase text-gray-400 font-medium mb-6">
+                Developers
+              </div>
+
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Buenaseda, Kevin Bryan
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Lamera, Chountal Louise
+              </a>
+              <a
+                href="#"
+                class="my-3 block text-gray-300 hover:text-gray-100 text-md font-medium duration-700"
+              >
+                Mancio, Cedrick
+              </a>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <div
+              class="flex pb-5 px-3 m-auto pt-5 
+            border-t border-gray-500 text-gray-400 text-sm 
+            flex-col md:flex-row max-w-6xl"
+            >
+              <div class="mt-2">
+                Copyright 2021 ABC motor parts. All Rights Reserved.
+              </div>
+
+              <div class="md:flex-auto md:flex-row-reverse mt-2 flex-row flex">
+                <a href="#" class="w-6 mx-1">
+                  <i class="fab fa-facebook-square"></i>
+                </a>
+                <a href="#" class="w-6 mx-1">
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="w-6 mx-1">
+                  <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" class="w-6 mx-1">
+                  <i class="fab fa-instagram"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </footer>
       </>
     );
   }
