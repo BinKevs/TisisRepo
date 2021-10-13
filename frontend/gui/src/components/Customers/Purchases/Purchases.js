@@ -8,13 +8,14 @@ import {
   addReview,
   getReviewList,
 } from "../../../store/actions/product/products";
-
+import video1 from "../../../Group2.mp4";
+import ReactPlayer from "react-player";
 import noImageAvailable from "../../../no-image-available.png";
 import ReviewsModal from "./ReviewsModal";
 import RefundsModal from "./RefundsModal";
 let NavButton = document.getElementsByClassName("NavButton");
 let NavButtonActive = document.getElementsByClassName("NavButtonActive");
-let filteredData = [];
+let filteredTransactionData = [];
 class PurchasesIndex extends React.Component {
   componentDidMount() {
     this.props.getTransactionList();
@@ -37,6 +38,7 @@ class PurchasesIndex extends React.Component {
     showModal: false,
     showModalOrderReceived: false,
     showModalRefund: false,
+    showRefundInfo: false,
     comment: "",
     product_name: "",
     product_image: "",
@@ -73,7 +75,7 @@ class PurchasesIndex extends React.Component {
       this.props.getTransactionList();
     };
   };
-  onUpdateSubmit = (e) => {
+  onOrderReceivedSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("order_status", e.target.value);
@@ -88,6 +90,7 @@ class PurchasesIndex extends React.Component {
   onToggleModalOrderReceive = (transactionId) => {
     return (event) => {
       event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
       this.setState({
         showModalOrderReceived: !this.state.showModalOrderReceived,
         transactionId: transactionId,
@@ -96,6 +99,7 @@ class PurchasesIndex extends React.Component {
   };
   onToggleModalOrderReceiveClose = (event) => {
     event.preventDefault();
+
     this.setState({
       showModalOrderReceived: !this.state.showModalOrderReceived,
     });
@@ -110,6 +114,7 @@ class PurchasesIndex extends React.Component {
   ) => {
     return (event) => {
       event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
       this.setState({
         showModal: !this.state.showModal,
         product_name: product_name,
@@ -129,6 +134,7 @@ class PurchasesIndex extends React.Component {
   onToggleModalRefund = (refund_item) => {
     return (event) => {
       event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
       this.setState({
         showModalRefund: !this.state.showModalRefund,
         refund_item,
@@ -152,17 +158,29 @@ class PurchasesIndex extends React.Component {
     }
     this.setState({
       filter_nav: event.target.value,
+      showRefundInfo: false,
     });
   };
-
+  handleRefundNavigation = (event) => {
+    event.preventDefault();
+    for (var i = 0; i < NavButton.length; i++) {
+      if (NavButtonActive.length > 0) {
+        NavButtonActive[0].classList.remove("NavButtonActive");
+      }
+      event.target.classList.add("NavButtonActive");
+    }
+    this.setState({
+      showRefundInfo: true,
+    });
+  };
   render() {
-    filteredData = [];
-    filteredData = this.props.transactions.filter((item) => {
+    filteredTransactionData = [];
+    filteredTransactionData = this.props.transactions.filter((item) => {
       return this.state.filter_nav === "All"
         ? item.order_status.toString().includes("")
         : this.state.filter_nav === "To Ship"
         ? item.order_status.toString().includes(this.state.filter_nav) ||
-          item.order_status.toString().includes("Prefering")
+          item.order_status.toString().includes("Preferring")
         : item.order_status.toString().includes(this.state.filter_nav);
     });
 
@@ -215,85 +233,158 @@ class PurchasesIndex extends React.Component {
                   >
                     Complete
                   </button>
+                  <button
+                    onClick={this.handleRefundNavigation}
+                    class="NavButton"
+                  >
+                    Refund/Return
+                  </button>
                 </nav>
               </div>
             </section>
-
-            <div className="space-y-6">
-              {filteredData.length > 0 ? (
-                filteredData.map((transaction) => (
-                  <div className="mx-4">
-                    <div className="mx-auto bg-white p-4">
-                      <div className="flex justify-between">
-                        <div class="text-gray-800 text-xl font-medium pb-4">
-                          Status : {transaction.order_status}
+            {this.state.showRefundInfo ? (
+              <div className="space-y-6">
+                <div className="mx-4">
+                  <div className="mx-auto bg-white p-4">
+                    <div className="flex justify-between">
+                      <div class="text-gray-600 text-xl font-medium pb-4">
+                        Refund/Return Status :{" "}
+                        <span className="text-gray-900 tracking-widest">
+                          Pending
+                        </span>
+                      </div>
+                      <div class="text-gray-600 text-xl font-medium pb-4">
+                        Date Requested :{" "}
+                        <span className="text-gray-900 tracking-widest">
+                          Oct 13 2021 22:09:46
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex justify-center  border-t-2 pt-5">
+                      <div class="text-gray-900 text-2xl font-medium pb-4">
+                        Product Details
+                      </div>
+                    </div>
+                    <div className="bg-white mb-5">
+                      <div className="p-2 flex justify-center w-full">
+                        <div className="w-1/3">
+                          <img
+                            className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
+                            src="http://127.0.0.1:8000/images/Avon_Tire_3D_Ultra_EVO_Tire_Combo.jpg"
+                            alt=""
+                          />
                         </div>
-                        <div class="text-gray-800 text-xl font-medium pb-4">
-                          Date Created : {transaction.created_at}
+
+                        <div className="ml-2 space-y-5 w-1/2 ">
+                          <div>
+                            Dynojet Power Commander 5 With Auto Tune And K&N Air
+                            Filter Kit
+                          </div>
+
+                          <div>Brown/Large</div>
+                          <div className="flex justify-between">
+                            <div>x6</div>
+                            <div className="text-gray-900">₱4132.00</div>
+                          </div>
                         </div>
                       </div>
+                    </div>
+                    <div className="flex justify-center  border-t-2 pt-5">
+                      <div class="text-gray-900 text-2xl font-medium pb-4">
+                        Refund/Return Details
+                      </div>
+                    </div>
+                    <div className="bg-white border-b-2">
+                      <div className="p-2 flex justify-center w-full">
+                        <div className="w-1/3 border-4 h-60 rounded-3xl flex justify-center mb-5 ">
+                          <ReactPlayer
+                            width="80%"
+                            height="100%"
+                            playing={false}
+                            controls={true}
+                            url={video1}
+                          />
+                        </div>
 
-                      <div className="bg-white border-t-2 border-b-2">
-                        {transaction.items.map((item) => (
-                          <div className="p-2 flex justify-center w-full">
-                            <div className="w-1/3">
-                              <img
-                                className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
-                                src={
-                                  item.product.file_content
-                                    ? item.product.file_content[0].image
-                                    : noImageAvailable
-                                }
-                                alt=""
-                              />
-                            </div>
+                        <div className=" space-y-5 ml-14 w-1/2 ">
+                          <div>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Ea aspernatur, tenetur at delectus suscipit
+                            dolor non asperiores harum beatae error rem odit
+                            dignissimos adipisci laudantium vitae optio voluptas
+                            maxime placeat!
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-                            <div className="ml-2 space-y-5 w-1/2 ">
-                              <div>{item.product.name}</div>
+                {/* <div className="mx-4">
+                    <div className="mx-auto bg-white p-4">
+                      <div className="text-center text-gray-500">
+                        <i class="fal fa-clipboard-list-check fa-7x"></i>
+                        <div className="font-semibold text-xl">
+                          No order/s yet.
+                        </div>
+                        <div className="font-semibold text-xl">
+                          Try refreshing the page.
+                        </div>
+                      </div>
+                    </div>
+                  </div> */}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {filteredTransactionData.length > 0 ? (
+                  filteredTransactionData.map((transaction) => (
+                    <div className="mx-4">
+                      <div className="mx-auto bg-white p-4">
+                        <div className="flex justify-between">
+                          <div class="text-gray-600 text-xl font-medium pb-4">
+                            Status :{" "}
+                            <span className="text-gray-900 tracking-widest">
+                              {transaction.order_status}
+                            </span>
+                          </div>
+                          <div class="text-gray-600 text-xl font-medium pb-4">
+                            Date Created :{" "}
+                            <span className="text-gray-900 tracking-widest">
+                              {transaction.created_at}
+                            </span>
+                          </div>
+                        </div>
 
-                              <div>
-                                {item.product_variation_info.color}/
-                                {item.product_variation_info.size}
+                        <div className="bg-white border-t-2 border-b-2">
+                          {transaction.items.map((item) => (
+                            <div className="p-2 flex justify-center w-full">
+                              <div className="w-1/3">
+                                <img
+                                  className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
+                                  src={
+                                    item.product.file_content
+                                      ? item.product.file_content[0].image
+                                      : noImageAvailable
+                                  }
+                                  alt=""
+                                />
                               </div>
-                              <div className="flex justify-between">
-                                <div>x{item.quantity}</div>
-                                <div className="text-teal-600">
-                                  ₱{item.product.price}
+
+                              <div className="ml-2 space-y-5 w-1/2 ">
+                                <div>{item.product.name}</div>
+
+                                <div>
+                                  {item.product_variation_info.color}/
+                                  {item.product_variation_info.size}
                                 </div>
-                              </div>
-                              <div className="flex justify-start pt-5 space-x-4">
-                                {transaction.order_status === "Complete" ? (
-                                  <>
-                                    {/* {this.props.reviews.map((review) =>
-                                    review.product !== item.product.id ? (
-                                      
-                                    ) : (
-                                      ""
-                                    )
-                                  )} */}
-                                    {item.review > 0 ? (
-                                      ""
-                                    ) : (
-                                      <>
-                                        <button
-                                          onClick={this.onToggleModalReview(
-                                            item.product.name,
-                                            item.product.file_content[0].image,
-                                            item.product.id,
-                                            item.id,
-                                            transaction.id
-                                          )}
-                                          class={
-                                            "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
-                                          }
-                                        >
-                                          <span>Rate</span>
-                                        </button>
-                                      </>
-                                    )}
-                                    <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md">
-                                      <span>Buy Again</span>
-                                    </button>{" "}
+                                <div className="flex justify-between">
+                                  <div>x{item.quantity}</div>
+                                  <div className="text-gray-900">
+                                    ₱{item.product.price}
+                                  </div>
+                                </div>
+                                <div className="flex justify-start pt-5 space-x-4">
+                                  {transaction.order_status !== "Complete" ? (
                                     <button
                                       onClick={this.onToggleModalRefund(item)}
                                       class={
@@ -302,54 +393,94 @@ class PurchasesIndex extends React.Component {
                                     >
                                       <span>Refund</span>
                                     </button>
-                                  </>
-                                ) : (
-                                  ""
-                                )}
+                                  ) : (
+                                    ""
+                                  )}
+
+                                  {transaction.order_status === "Complete" ? (
+                                    <>
+                                      {/* {this.props.reviews.map((review) =>
+                                    review.product !== item.product.id ? (
+                                      
+                                    ) : (
+                                      ""
+                                    )
+                                  )} */}
+                                      {item.review > 0 ? (
+                                        ""
+                                      ) : (
+                                        <>
+                                          <button
+                                            onClick={this.onToggleModalReview(
+                                              item.product.name,
+                                              item.product.file_content[0]
+                                                .image,
+                                              item.product.id,
+                                              item.id,
+                                              transaction.id
+                                            )}
+                                            class={
+                                              "bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                                            }
+                                          >
+                                            <span>Rate</span>
+                                          </button>
+                                        </>
+                                      )}
+                                      <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md">
+                                        <span>Buy Again</span>
+                                      </button>{" "}
+                                    </>
+                                  ) : (
+                                    ""
+                                  )}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div class="text-gray-800  font-medium pt-4 text-right">
-                        <span className="text-xl">Order Total :</span>{" "}
-                        <span className="text-2xl text-teal-600">
-                          ₱{transaction.totalAmount}
-                        </span>
-                      </div>
-                      {transaction.order_status !== "Complete" ? (
-                        <div className="flex justify-end my-5 ">
-                          <button
-                            onClick={this.onToggleModalOrderReceive(
-                              transaction.id
-                            )}
-                            class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
-                          >
-                            <span>Order Received</span>
-                          </button>
+                          ))}
                         </div>
-                      ) : (
-                        ""
-                      )}
+                        <div class="text-gray-800  font-medium pt-4 text-right">
+                          <span className="text-xl text-gray-600">
+                            Order Total :
+                          </span>{" "}
+                          <span className="text-2xl text-gray-900 tracking-widest">
+                            ₱{transaction.totalAmount}
+                          </span>
+                        </div>
+                        {transaction.order_status !== "Complete" ? (
+                          <div className="flex justify-end my-5 ">
+                            <button
+                              onClick={this.onToggleModalOrderReceive(
+                                transaction.id
+                              )}
+                              class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
+                            >
+                              <span>Order Received</span>
+                            </button>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="mx-4">
+                    <div className="mx-auto bg-white p-4">
+                      <div className="text-center text-gray-500">
+                        <i class="fal fa-clipboard-list-check fa-7x"></i>
+                        <div className="font-semibold text-xl">
+                          No order/s yet.
+                        </div>
+                        <div className="font-semibold text-xl">
+                          Try refreshing the page.
+                        </div>
+                      </div>
                     </div>
                   </div>
-                ))
-              ) : (
-                <div className="mx-4">
-                  <div className="mx-auto bg-white p-4">
-                    <div className="text-center text-gray-500">
-                      <i class="fal fa-clipboard-list-check fa-7x"></i>
-                      <div className="font-semibold text-xl">
-                        No order/s yet.
-                      </div>
-                      <div className="font-semibold text-xl">
-                        Try refreshing the page.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <div class={this.state.showModal ? "h-screen " : "h-screen hidden"}>
@@ -398,7 +529,7 @@ class PurchasesIndex extends React.Component {
                       <div className="flex items-center justify-center w-full mt-4">
                         <button
                           value="Complete"
-                          onClick={this.onUpdateSubmit}
+                          onClick={this.onOrderReceivedSubmit}
                           type="submit"
                           className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-md"
                         >
@@ -445,7 +576,7 @@ class PurchasesIndex extends React.Component {
           state={this.state}
           onToggleModalRefund={this.onToggleModalRefund}
           onToggleModalRefundClose={this.onToggleModalRefundClose}
-          filteredData={filteredData}
+          filteredTransactionData={filteredTransactionData}
           onChange={this.onChange}
         />
       </>

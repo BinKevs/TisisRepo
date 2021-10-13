@@ -700,7 +700,11 @@ class Checkout extends React.Component {
                         <h1 class="font-medium text-md">
                           Package Total Weight:
                         </h1>
-                        <h1 class="font-semibold text-md"> {TotalWeight} Kg</h1>
+
+                        <h1 class="font-semibold text-md">
+                          {" "}
+                          {this.HandleDecimalPlaces(TotalWeight)} Kg
+                        </h1>
                       </div>
                       <div class="flex justify-between">
                         <h1 class="font-medium text-md">
@@ -714,7 +718,10 @@ class Checkout extends React.Component {
                         </h1>
                         <h1 class="font-semibold text-md">
                           {" "}
-                          {succeedingWeight}kg / ₱ {succeedingWeight * 80}
+                          {this.HandleDecimalPlaces(succeedingWeight)}kg / ₱{" "}
+                          {this.numberWithCommas(
+                            this.HandleDecimalPlaces(succeedingWeight * 80)
+                          )}
                         </h1>
                       </div>
                       {this.state.payment_method === "Cash On Delivery" ? (
@@ -724,7 +731,12 @@ class Checkout extends React.Component {
                           </h1>
                           <h1 class="font-semibold text-md">
                             {" "}
-                            ₱ {TotalAmountToPay * 0.0275}
+                            ₱{" "}
+                            {this.numberWithCommas(
+                              this.HandleDecimalPlaces(
+                                TotalAmountToPay * 0.0275
+                              )
+                            )}
                           </h1>
                         </div>
                       ) : (
@@ -733,7 +745,12 @@ class Checkout extends React.Component {
 
                       <div class="flex justify-between">
                         <h1 class="font-medium text-2xl">Shipping Fee:</h1>
-                        <h1 class="font-semibold text-2xl">₱{shippingFee}</h1>
+                        <h1 class="font-semibold text-2xl">
+                          ₱
+                          {this.numberWithCommas(
+                            this.HandleDecimalPlaces(shippingFee)
+                          )}
+                        </h1>
                       </div>
                       <div class="flex justify-between gap-x-5">
                         <div class="flex flex-col">
@@ -813,7 +830,11 @@ class Checkout extends React.Component {
                       </div>
                       <div className="flex justify-center">
                         <div className="flex items-center justify-center bg-gray-100 shadow-lg z-10 rounded-xl p-4 m-3 w-2/5">
-                          <i class="far fa-wallet fa-3x"></i>
+                          <img
+                            className="h-48"
+                            src="https://play-lh.googleusercontent.com/QNP0Aj2hyumAmYiWVAsJtY2LLTQnzHxdW7-DpwFUFNkPJjgRxi-BXg7A4yI6tgYKMeU"
+                            alt=""
+                          />
                         </div>
                         <div className="flex items-center justify-center bg-gray-100 shadow-lg z-10 rounded-xl p-4 m-3 w-2/5">
                           <PayPalButton

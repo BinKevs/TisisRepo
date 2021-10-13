@@ -19,6 +19,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
   };
   state = {
     search: "",
+    category: "",
   };
 
   numberWithCommas(x) {
@@ -33,6 +34,12 @@ class ProductListIndexOnlineCustomer extends React.Component {
     }
   }
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+  handleCategoryFiltering = (categoryName) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({ category: categoryName });
+    };
+  };
   onSubmit(product_id, product_name, price, supplier) {
     return (event) => {
       event.preventDefault();
@@ -77,13 +84,22 @@ class ProductListIndexOnlineCustomer extends React.Component {
     );
 
     const SearchFilter = this.state.search.toLowerCase();
+    const categoryFilter = this.state.category.toLowerCase();
     filteredDataProduct = products.filter((item) => {
-      if (item.status)
-        if (SearchFilter === "") {
-          return item;
+      if (item.status) {
+        if (categoryFilter === "") {
+          if (SearchFilter === "") {
+            return item;
+          } else {
+            return item.name.toString().toLowerCase().includes(SearchFilter);
+          }
         } else {
-          return item.name.toString().toLowerCase().includes(SearchFilter);
+          return item.category
+            .toString()
+            .toLowerCase()
+            .includes(categoryFilter);
         }
+      }
     });
 
     return (
@@ -114,37 +130,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
                     </div>
                   </div>
                 </div>
-                {/* <nav
-                  className={
-                    this.state.navigationHidden
-                      ? "sm:flex sm:justify-center sm:items-center mt-4 hidden"
-                      : "sm:flex sm:justify-center sm:items-center mt-4 hidden"
-                  }
-                >
-                  <div className="flex flex-col sm:flex-row">
-                    <div
-                      onClick={this.handleGoToHome}
-                      className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0"
-                    >
-                      Home
-                    </div>
-                    <div
-                      onClick={this.handleGoToShop}
-                      className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0"
-                    >
-                      Shop
-                    </div>
-                    <div className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">
-                      Categories
-                    </div>
-                    <div className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">
-                      Contact
-                    </div>
-                    <div className="mt-3 text-gray-600 hover:underline sm:mx-3 sm:mt-0">
-                      About
-                    </div>
-                  </div>
-                </nav> */}
+
                 <div className={"relative mt-6 max-w-lg mx-auto"}>
                   <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
                     <svg
@@ -190,7 +176,10 @@ class ProductListIndexOnlineCustomer extends React.Component {
                 className="w-full flex overflow-x-hidden space-x-4"
               >
                 {this.props.categories.map((category) => (
-                  <button className="text-white px-4 bg-gray-800 rounded-full hover:bg-teal-800 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none whitespace-nowrap h-10">
+                  <button
+                    onClick={this.handleCategoryFiltering(category.name)}
+                    className="text-white px-4 bg-gray-800 rounded-full hover:bg-teal-800 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none whitespace-nowrap h-10"
+                  >
                     {category.name}
                   </button>
                 ))}

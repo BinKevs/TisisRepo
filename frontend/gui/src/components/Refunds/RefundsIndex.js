@@ -205,6 +205,52 @@ class RefundsIndex extends React.Component {
                           consectetur facilis! Nisi fuga
                         </p>
                       </div>
+                      <div className="flex justify-center pt-5">
+                        <div class="text-gray-900 text-2xl font-medium pb-4">
+                          Course of Action
+                        </div>
+                      </div>
+
+                      <div className="w-full flex justify-center pr-6 mb-5">
+                        <div className="flex ml-4 bg-teal_custom text-white cursor-pointer h-12 rounded items-center justify-center px-3">
+                          <div>Accept Refund/Return</div>
+                        </div>
+                        <div className="flex ml-4 bg-teal_custom text-white cursor-pointer h-12 rounded items-center justify-center px-3">
+                          <div>Denied Refund/Return</div>
+                        </div>
+                      </div>
+                      <div class="flex flex-wrap mb-5">
+                        <h2 class="px-4 pt-3 pb-2 text-gray-800">Response</h2>
+                        <div class="w-full md:w-full px-3 mb-2 mt-2">
+                          <textarea
+                            class="rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 placeholder-gray-700 focus:outline-none"
+                            name="response"
+                            // onChange={onChange}
+                            // value={description}
+                            placeholder="Write Your Response Here"
+                            required
+                          ></textarea>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center w-full">
+                        <button className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm">
+                          Submit
+                        </button>
+                        <button className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm">
+                          Cancel
+                        </button>
+                        {/* <div
+													className="w-full flex justify-center py-12 items-center"
+													id="button"
+												>
+													<button
+														className="focus:outline-none mx-auto transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-4 sm:px-8 py-2 text-xs sm:text-sm"
+														onClick={() => showModal(!modal)}
+													>
+														Open Modal
+													</button>
+												</div> */}
+                      </div>
                       <div
                         onClick={this.onToggleViewMoreModal}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"

@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from product_variations.models import Product_variation
 from reviews.models import Review
+from refunds.models import Refund
 class Transaction_item(models.Model):
     transaction_item_id = models.CharField(max_length=255, null=True)
     product = models.ForeignKey(
@@ -18,6 +19,8 @@ class Transaction_item(models.Model):
     quantity = models.IntegerField(null=True)
     review = models.ForeignKey(
         Review, related_name="transaction_item_review", on_delete=models.CASCADE, null=True)
+    refund = models.ForeignKey(
+        Refund, related_name="transaction_item_refund", on_delete=models.CASCADE, null=True)
     def save(self,*args, **kwargs):
        if not self.transaction_item_id:
            prefix = 'TI-I{}-{}-'.format(timezone.now().strftime('%y'),timezone.now().strftime('%m%d'))

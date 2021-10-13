@@ -50,21 +50,23 @@ class AccountSetting extends React.Component {
 
   componentDidMount() {
     this.region();
+    // this.props.loadUser();
+    this.setState({
+      first_name: this.props.AuthReducer.user
+        ? this.props.AuthReducer.user.first_name
+        : "",
+      last_name: this.props.AuthReducer.user
+        ? this.props.AuthReducer.user.last_name
+        : "",
+      username: this.props.AuthReducer.user
+        ? this.props.AuthReducer.user.username
+        : "",
+      email: this.props.AuthReducer.user
+        ? this.props.AuthReducer.user.email
+        : "",
+    });
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.AuthReducer != prevProps.AuthReducer) {
-      // const { user } = this.props.AuthReducer.user;
-      this.setState({
-        // first_name: this.props.AuthReduceruser.user
-        //   ? this.props.AuthReduceruser.user.first_name
-        //   : "",
-        // last_name: this.props.AuthReduceruser.user.last_name,
-        // username: this.props.AuthReduceruser.user.username,
-        // email: this.props.AuthReduceruser.user.email,
-      });
-      console.log(this.props.AuthReducer.user);
-    }
-  }
+
   onToggleNavButton = (DivTarget) => {
     return (event) => {
       event.preventDefault();
@@ -176,7 +178,7 @@ class AccountSetting extends React.Component {
                 <div className="bg-white">
                   <form class="">
                     <div className="p-4">
-                      <div class="px-4 py-6 text-gray-800 text-3xl font-medium border-b border-gray-300">
+                      <div class="px-4 py-6 text-gray-800 text-3xl font-medium border-b border-gray-300 mb-10">
                         Edit your account here
                       </div>
                       <div className="flex justify-around">
@@ -186,6 +188,11 @@ class AccountSetting extends React.Component {
                               <input
                                 type="text"
                                 name="first_name"
+                                value={
+                                  this.state.first_name
+                                    ? this.state.first_name
+                                    : ""
+                                }
                                 placeholder=" "
                                 required
                                 class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -207,6 +214,11 @@ class AccountSetting extends React.Component {
                               <input
                                 type="text"
                                 name="last_name"
+                                value={
+                                  this.state.last_name
+                                    ? this.state.last_name
+                                    : ""
+                                }
                                 placeholder=" "
                                 required
                                 class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -229,6 +241,7 @@ class AccountSetting extends React.Component {
                             <input
                               type="text"
                               name="email"
+                              value={this.state.email ? this.state.email : ""}
                               placeholder=" "
                               required
                               class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -250,6 +263,9 @@ class AccountSetting extends React.Component {
                             <input
                               type="text"
                               name="username"
+                              value={
+                                this.state.username ? this.state.username : ""
+                              }
                               placeholder=" "
                               required
                               class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -268,15 +284,15 @@ class AccountSetting extends React.Component {
                             </span>
                           </div>
                         </div>
-                        <div className="border-4 inline-block align-middle">
+                        <div className=" inline-block align-middle">
                           <img
-                            className=""
+                            className="border-4 rounded-3xl"
                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuoovVYEMl5PlyrnrmjPY_0bH_k0RaXYByiMVOWeEhWeG9wxWP2ozVw0Ab51hiQzxErpo&usqp=CAU"
                             alt=""
                           />
                         </div>
                       </div>
-                      <div class="mt-10 w-1/2 flex justify-center">
+                      <div class="mt-5 w-1/2 flex justify-center">
                         <input
                           type="submit"
                           value="Submit"
