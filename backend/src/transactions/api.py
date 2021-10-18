@@ -12,10 +12,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
     ordering_fields = ['created_at'] 
     filter_backends = [filters.OrderingFilter]
-    def put(self,request,*args,**kwargs):
-        transaction = Transaction.objects.get()
+    def update(self,request,pk,*args,**kwargs):
+        transaction = Transaction.objects.get(pk=pk)
         data = request.data
-        transaction.transaction_id = data.get("transaction_id",transaction.code)
         transaction.user = data.get("user",transaction.user)
         transaction.created_at = data.get("created_at",transaction.created_at)
         transaction.totalAmount = data.get("totalAmount",transaction.totalAmount)
@@ -24,10 +23,11 @@ class TransactionViewSet(viewsets.ModelViewSet):
         transaction.status = data.get("status",transaction.status)
         transaction.address = data.get("address",transaction.address)
         transaction.contact_number = data.get("contact_number",transaction.contact_number)
-        transaction.items = data.get("items",transaction.items)
+        # transaction.items = data.get("items",transaction.items)
+        transaction.order_status = data.get("order_status",transaction.order_status)
+        transaction.tracking_number = data.get("tracking_number",transaction.tracking_number)
         transaction.save()
-        
-        return Response(self.get_serializer(transaction),status=status.HTTP_201_CREATED)
+        return Response(self.get_serializer(transaction).data,status=status.HTTP_201_CREATED)
 
 @api_view(["POST"])
 @parser_classes([MultiPartParser, FormParser])

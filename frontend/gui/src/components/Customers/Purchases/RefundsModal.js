@@ -4,9 +4,9 @@ import video1 from "../../../Group2.mp4";
 import ReactPlayer from "react-player";
 import { connect } from "react-redux";
 const RefundsModal = (props) => {
-  const { onToggleModalRefundClose, onChange } = props;
-  const { showModalRefund, VideoFileURL, refund_item } = props.state;
-  console.log(refund_item);
+  const { onToggleModalRefundClose, onChange, onSubmitRefund } = props;
+  const { showModalRefund, VideoFileURL, refund_item, RefundDescription } =
+    props.state;
   return (
     <>
       <div class={showModalRefund ? "h-screen " : "h-screen hidden"}>
@@ -18,7 +18,7 @@ const RefundsModal = (props) => {
             <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
             <div className="h-full overflow-auto w-full flex flex-col">
               <div className="m-2 md:m-12">
-                <form class="mt-9">
+                <form onSubmit={onSubmitRefund} class="mt-9">
                   <div className="relative p-4 md:p-8 bg-white shadow-md rounded border border-gray-400 ">
                     <div class="text-left p-0 mb-8">
                       <div>
@@ -45,10 +45,10 @@ const RefundsModal = (props) => {
                           </div>
 
                           <div className="bg-white border-t-2 border-b-2">
-                            <div className="p-2 flex justify-center">
-                              <div className="w-1/3 ">
+                            <div className="p-2 flex flex-col md:flex-row justify-center">
+                              <div className="md:w-1/3 w-full">
                                 <img
-                                  className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
+                                  className=" border-gray-400 border-2 my-auto mx-auto md:mx-0 max-h-56 object-cover object-center rounded-3xl"
                                   src={
                                     refund_item.product
                                       ? refund_item.product.file_content[0]
@@ -59,7 +59,7 @@ const RefundsModal = (props) => {
                                 />
                               </div>
 
-                              <div className="ml-2 space-y-5 w-1/2 ">
+                              <div className="md:ml-2 ml-0 mt-5 space-y-5  md:w-1/2 w-full">
                                 <div>
                                   {refund_item.product
                                     ? refund_item.product.name
@@ -96,9 +96,9 @@ const RefundsModal = (props) => {
                         <div class="w-full md:w-full px-3 mb-2 mt-2">
                           <textarea
                             class="rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 placeholder-gray-700 focus:outline-none"
-                            name="description"
-                            // onChange={onChange}
-                            // value={description}
+                            name="RefundDescription"
+                            onChange={onChange}
+                            value={RefundDescription}
                             placeholder="Return/ Refund Reason And Description"
                             required
                           ></textarea>
@@ -112,7 +112,7 @@ const RefundsModal = (props) => {
                         <ReactPlayer
                           width="100%"
                           height="100%"
-                          playing={true}
+                          playing={false}
                           controls={true}
                           url={VideoFileURL}
                         />
@@ -125,7 +125,7 @@ const RefundsModal = (props) => {
                           Upload a file
                           <input
                             type="file"
-                            name="VideoFile"
+                            name="RefundVideo"
                             onChange={onChange}
                             className="hidden"
                           />

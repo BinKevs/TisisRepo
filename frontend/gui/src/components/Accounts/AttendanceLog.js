@@ -32,7 +32,7 @@ class AttendanceLog extends React.Component {
     this.props.attendance_log.map((attendance_log) =>
       AttendanceLogItems.push({
         id: attendance_log.id,
-        attendance_log_id: attendance_log.attendance_log_id,
+
         account: attendance_log.user_info.name,
         login_at: attendance_log.login_at,
         logout_at: attendance_log.logout_at,
@@ -150,7 +150,7 @@ class AttendanceLog extends React.Component {
                         className="h-24 border-gray-300 dark:border-gray-200 border-b"
                       >
                         <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {item.attendance_log_id}
+                          {item.id}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {item.account}

@@ -6,6 +6,7 @@ import {
   GET_PRODUCT,
   DELETE_PRODUCT,
   ADD_PRODUCT,
+  CHANGE_STATUS_PRODUCT,
   UPDATE_PRODUCT,
   GET_CATEGORY_LIST,
   ADD_CATEGORY,
@@ -16,6 +17,7 @@ import {
   ADD_REVIEW,
   GET_REVIEW_LIST,
   UPDATE_PRODUCT_VARIATION,
+  ADD_PRODUCT_VARIATION,
 } from "./actionTypes";
 import { UPDATE_TRANSACTION_ITEMS } from "../transaction/actionTypes";
 import swal from "sweetalert";
@@ -45,7 +47,6 @@ export const deleteProduct = (ProductID) => (dispatch, getState) => {
   axios
     .delete(url + ProductID + "/", tokenConfig(getState))
     .then((res) => {
-      console.log("Product Deleted");
       dispatch({
         type: DELETE_PRODUCT,
         payload: ProductID,
@@ -92,7 +93,24 @@ export const updateProduct = (ProductID, data) => (dispatch, getState) => {
       })
     );
 };
-
+export const changeStatusProduct =
+  (ProductID, data) => (dispatch, getState) => {
+    axios
+      .put(url + ProductID + "/", data, tokenConfig(getState))
+      .then((res) => {
+        dispatch({
+          type: CHANGE_STATUS_PRODUCT,
+          payload: res.data,
+        });
+      })
+      .catch((err) =>
+        swal({
+          title: "Product Deletion Failed",
+          text: "Error : " + err,
+          icon: "error",
+        })
+      );
+  };
 export const updateProductVariation =
   (ProductVariationID, data) => (dispatch, getState) => {
     axios
@@ -116,11 +134,29 @@ export const updateProductVariation =
         })
       );
   };
+export const addProductVariation = (data) => (dispatch, getState) => {
+  axios
+    .post(URL_IMPORT + "/api/product_variation/", data, tokenConfig(getState))
+    .then((res) => {
+      HandleSuccessMessages("Product Variation Added", "success");
+      dispatch({
+        type: ADD_PRODUCT_VARIATION,
+        payload: res.data,
+      });
+    })
+    .catch((err) =>
+      swal({
+        title: "Product Variation Added Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
+};
 // Category part
 
 export const getCategoryList = () => (dispatch, getState) => {
   axios
-    .get(URL_IMPORT + "/api/categories/", tokenConfig(getState))
+    .get(URL_IMPORT + "/api/categories/?ordering=-id", tokenConfig(getState))
     .then((res) => {
       dispatch({
         type: GET_CATEGORY_LIST,
@@ -200,7 +236,6 @@ export const addReview = (data) => (dispatch, getState) => {
         type: UPDATE_TRANSACTION_ITEMS,
         payload: res.data.transactions,
       });
-      console.log(res.data.transactions);
     })
     .catch((err) => console.log(err));
 };

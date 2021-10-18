@@ -8,12 +8,16 @@ import {
   GET_TRANSACTION_ITEM_LIST,
   UPDATE_TRANSACTION_STATUS,
   UPDATE_TRANSACTION_ITEMS,
+  ADD_REFUND,
+  GET_REFUND_LIST,
+  UPDATE_REFUND,
 } from "../../actions/transaction/actionTypes";
 const initialState = {
   transactions: [],
   transaction: {},
   transaction_items: [],
   transaction_item_list: [],
+  refunds: [],
 };
 
 export default function (state = initialState, action) {
@@ -77,6 +81,25 @@ export default function (state = initialState, action) {
         ...state,
         transaction_items: [...state.transaction_items, action.payload],
       };
+    case ADD_REFUND:
+      return {
+        ...state,
+        refunds: [...state.refunds, action.payload],
+      };
+    case GET_REFUND_LIST:
+      return {
+        ...state,
+        refunds: action.payload,
+      };
+    case UPDATE_REFUND:
+      return {
+        ...state,
+        refunds: [
+          action.payload,
+          ...state.refunds.filter((items) => items.id !== action.payload.id),
+        ],
+      };
+
     default:
       return state;
   }

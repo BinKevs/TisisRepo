@@ -3,17 +3,66 @@ import { connect } from "react-redux";
 import ReactPlayer from "react-player";
 import video1 from "../../Group2.mp4";
 import noImageAvailable from "../../no-image-available.png";
+import {
+  getRefundList,
+  updateRefund,
+} from "../../store/actions/transaction/transactions.js";
 class RefundsIndex extends React.Component {
   state = {
     showViewMoreModal: false,
+    refundInfo: "",
+    response: "",
+    status: "",
   };
-  onToggleViewMoreModal = (event) => {
+  componentDidMount() {
+    this.props.getRefundList();
+  }
+  onChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+  onOpenViewMoreModal = (refundInfo) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        refundInfo: refundInfo,
+        showViewMoreModal: !this.state.showViewMoreModal,
+      });
+    };
+  };
+  handleRefundUpdate = (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("tranItemID", this.state.refundInfo.id);
+    formData.append("response", this.state.response);
+    formData.append("status", this.state.status);
+    this.props.updateRefund(this.state.refundInfo.id, formData);
+    this.setState({
+      refundInfo: "",
+      response: "",
+      status: "",
+      showViewMoreModal: !this.state.showViewMoreModal,
+    });
+  };
+  handleRefundStatus = (status) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        status: status,
+      });
+    };
+  };
+
+  onCloseViewMoreModal = (event) => {
     event.preventDefault();
     this.setState({
       showViewMoreModal: !this.state.showViewMoreModal,
     });
   };
   render() {
+    const { refundInfo } = this.state;
+    console.log(refundInfo);
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -74,42 +123,56 @@ class RefundsIndex extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="h-24 border-gray-300 border-b ">
-                      <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                        12323
-                      </td>
-                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                        trans.user_info.name
-                      </td>
-                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                        <div>
-                          Dynojet Power Commander 5 With Auto Tune And K&N Air
-                          Filter Kit
-                        </div>
-                        <div>
-                          <p>Size : XL</p>
-                          <p>Color : RED</p>
-                        </div>
-                      </td>
+                    {this.props.refunds.map((refund) => (
+                      <tr
+                        key={refund.id}
+                        className="h-24 border-gray-300 border-b "
+                      >
+                        <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800  tracking-normal leading-4">
+                          {refund.id}
+                        </td>
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800  tracking-normal leading-4">
+                          {refund.user_info.name}
+                        </td>
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800  tracking-normal leading-4">
+                          <div>{refund.transaction_item.product.name}</div>
+                          <div>
+                            <p>
+                              Size :{" "}
+                              {
+                                refund.transaction_item.product_variation_info
+                                  .size
+                              }
+                            </p>
+                            <p>
+                              Color :{" "}
+                              {
+                                refund.transaction_item.product_variation_info
+                                  .color
+                              }
+                            </p>
+                          </div>
+                        </td>
 
-                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                        Oct 09 2021 18:09:46
-                      </td>
-                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                        status
-                      </td>
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800  tracking-normal leading-4">
+                          {refund.created_at}
+                        </td>
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800  tracking-normal leading-4">
+                          {refund.status}
+                        </td>
 
-                      <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                        <div className="space-y-5">
-                          <button
-                            onClick={this.onToggleViewMoreModal}
-                            className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
-                          >
-                            View More Details
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800  tracking-normal leading-4">
+                          <div className="space-y-5">
+                            <button
+                              onClick={this.onOpenViewMoreModal(refund)}
+                              className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
+                            >
+                              View More Details
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -145,37 +208,70 @@ class RefundsIndex extends React.Component {
                         <div className="space-y-6 mx-4">
                           <div className="mx-auto bg-white p-4">
                             <div className="flex justify-between">
-                              <div class="text-gray-800 text-xl font-medium pb-4">
-                                Date Created : transaction.created_at
+                              <div class="text-gray-600 text-xl font-medium pb-4">
+                                Date created :{" "}
+                                <span className="text-gray-900">
+                                  {refundInfo ? refundInfo.created_at : ""}
+                                </span>
                               </div>
                             </div>
                             <div className="flex justify-between">
-                              <div class="text-gray-800 text-xl font-medium pb-4">
-                                User : Kevin Bryan P Buenaseda
+                              <div class="text-gray-600 text-xl font-medium pb-4">
+                                User :{" "}
+                                <span className="text-gray-900">
+                                  {refundInfo.user_info
+                                    ? refundInfo.user_info.name
+                                    : ""}
+                                </span>
                               </div>
                             </div>
 
                             <div className="bg-white border-t-2 border-b-2">
-                              <div className="p-2 flex justify-center">
-                                <div className="w-1/3 ">
+                              <div className="p-2 flex flex-col md:flex-row justify-center">
+                                <div className="md:w-1/3 w-full ">
                                   <img
-                                    className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
-                                    src={noImageAvailable}
+                                    className=" border-gray-400 border-2 my-auto mx-auto md:mx-0 max-h-56 object-cover object-center rounded-3xl"
+                                    src={
+                                      refundInfo.transaction_item
+                                        ? refundInfo.transaction_item.product
+                                            .file_content[0].image
+                                        : ""
+                                    }
                                     alt=""
                                   />
                                 </div>
 
-                                <div className="ml-2 space-y-5 w-1/2 ">
-                                  <div>item.product.name</div>
+                                <div className="md:ml-2 ml-0 mt-5 space-y-5  md:w-1/2 w-full">
+                                  <div>
+                                    {refundInfo.transaction_item
+                                      ? refundInfo.transaction_item.product.name
+                                      : ""}
+                                  </div>
 
                                   <div>
-                                    item.product_variation_info.color/
-                                    item.product_variation_info.size
+                                    {refundInfo.transaction_item
+                                      ? refundInfo.transaction_item
+                                          .product_variation_info.color
+                                      : ""}
+                                    /{" "}
+                                    {refundInfo.transaction_item
+                                      ? refundInfo.transaction_item
+                                          .product_variation_info.size
+                                      : ""}
                                   </div>
                                   <div className="flex justify-between">
-                                    <div>xitem.quantity</div>
-                                    <div className="text-teal-600">
-                                      ₱item.product.price
+                                    <div>
+                                      x
+                                      {refundInfo.transaction_item
+                                        ? refundInfo.transaction_item.quantity
+                                        : ""}
+                                    </div>
+                                    <div className="text-gray-900">
+                                      ₱{" "}
+                                      {refundInfo.transaction_item
+                                        ? refundInfo.transaction_item.product
+                                            .price
+                                        : ""}
                                     </div>
                                   </div>
                                 </div>
@@ -186,23 +282,25 @@ class RefundsIndex extends React.Component {
                         <h1 class="text-gray-800 text-xl font-medium mb-5">
                           Submitted Product Video
                         </h1>
-                        <div className="h-60  border-4 rounded-3xl flex justify-center mb-5 ">
-                          <video width="400" height="300" controls>
-                            <source src={video1} type="video/mp4" />
-                            Your browser does not support HTML video.
-                          </video>
+
+                        <div className=" w-full border-4 h-60 rounded-3xl flex justify-center mb-5 ">
+                          <ReactPlayer
+                            width="80%"
+                            height="100%"
+                            playing={false}
+                            controls={true}
+                            url={
+                              refundInfo
+                                ? refundInfo.product_condition_video
+                                : ""
+                            }
+                          />
                         </div>
                         <h1 class="text-gray-800 text-xl font-medium mb-5">
                           Description
                         </h1>
                         <p class="text-justify">
-                          cilis omnis nam illum maiores, porro velit deserunt
-                          neque. Lorem ipsum dolor, sit amet consectetur
-                          adipisicing elit. Esse, voluptates eveniet labore
-                          dolorum molestiae, modi saepe fugiat minima
-                          repudiandae repellendus obcaecati voluptatibus ab
-                          tenetur recusandae eius quos at maiores atque
-                          consectetur facilis! Nisi fuga
+                          {refundInfo ? refundInfo.description : ""}
                         </p>
                       </div>
                       <div className="flex justify-center pt-5">
@@ -211,11 +309,29 @@ class RefundsIndex extends React.Component {
                         </div>
                       </div>
 
-                      <div className="w-full flex justify-center pr-6 mb-5">
-                        <div className="flex ml-4 bg-teal_custom text-white cursor-pointer h-12 rounded items-center justify-center px-3">
+                      <div className="w-full flex flex-col md:flex-row md:space-x-4 space-x-0 md:space-y-0 space-y-4  justify-center mb-5">
+                        <div
+                          onClick={this.handleRefundStatus(
+                            "Your request is accepted"
+                          )}
+                          className={
+                            this.state.status === "Your request is accepted"
+                              ? "flex bg-teal_custom hover:bg-gray-400 text-white cursor-pointer rounded items-center justify-center px-3 h-16 border-4 border-gray-800"
+                              : "flex bg-teal_custom hover:bg-gray-400 text-white cursor-pointer rounded items-center justify-center px-3 h-12"
+                          }
+                        >
                           <div>Accept Refund/Return</div>
                         </div>
-                        <div className="flex ml-4 bg-teal_custom text-white cursor-pointer h-12 rounded items-center justify-center px-3">
+                        <div
+                          onClick={this.handleRefundStatus(
+                            "Your request is denied"
+                          )}
+                          className={
+                            this.state.status === "Your request is denied"
+                              ? "flex bg-teal_custom hover:bg-gray-400 text-white cursor-pointer rounded items-center justify-center px-3 h-16 border-4 border-gray-800"
+                              : "flex bg-teal_custom hover:bg-gray-400 text-white cursor-pointer rounded items-center justify-center px-3 h-12"
+                          }
+                        >
                           <div>Denied Refund/Return</div>
                         </div>
                       </div>
@@ -225,15 +341,18 @@ class RefundsIndex extends React.Component {
                           <textarea
                             class="rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 placeholder-gray-700 focus:outline-none"
                             name="response"
-                            // onChange={onChange}
-                            // value={description}
+                            onChange={this.onChange}
+                            value={this.state.response}
                             placeholder="Write Your Response Here"
                             required
                           ></textarea>
                         </div>
                       </div>
                       <div className="flex items-center justify-center w-full">
-                        <button className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm">
+                        <button
+                          onClick={this.handleRefundUpdate}
+                          className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
+                        >
                           Submit
                         </button>
                         <button className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm">
@@ -252,7 +371,7 @@ class RefundsIndex extends React.Component {
 												</div> */}
                       </div>
                       <div
-                        onClick={this.onToggleViewMoreModal}
+                        onClick={this.onCloseViewMoreModal}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       >
                         <svg
@@ -285,6 +404,8 @@ class RefundsIndex extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({ refunds: state.transactions.refunds });
 
-export default connect(mapStateToProps, {})(RefundsIndex);
+export default connect(mapStateToProps, { updateRefund, getRefundList })(
+  RefundsIndex
+);

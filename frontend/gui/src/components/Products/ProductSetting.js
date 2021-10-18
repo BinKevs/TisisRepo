@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import swal from "sweetalert";
 import {
   getProductList,
   deleteProduct,
@@ -11,6 +12,8 @@ import {
   updateCategory,
   getCategoryList,
   updateProductVariation,
+  addProductVariation,
+  changeStatusProduct,
 } from "../../store/actions/product/products";
 import { getSupplierList } from "../../store/actions/supplier/suppliers";
 import ProductModal from "./ProductModal";
@@ -22,7 +25,7 @@ let products = [];
 
 let FilesArray = [];
 let filteredData = [];
-let EditButtonIsClicked = false;
+let EditButtonProductIsClicked = false;
 let isImageChanged = false;
 let isItemAdded = false;
 class ProductSetting extends React.Component {
@@ -45,151 +48,74 @@ class ProductSetting extends React.Component {
     stock: 0,
     size: "",
     color: "",
-    weight: 0,
+    weight: "",
     productID: 0,
     search: "",
     urlFile: [],
-    product_variation: [],
-    modal: false,
-    categoryForDropDownSelect: "",
-    table_export_modal: false,
-    ProductNameError: "",
     file_content: "",
-    showModalCategory: false,
+    product_variation: [],
+    showProductModal: false,
+
+    categoryForDropDownSelect: "",
     categoryName: "",
+    showModalCategoryTable: false,
     showModalCategoryAddEdit: false,
+    EditButtonCategoryIsClicked: false,
+
     showModalProductVariation: false,
     showModalProductVariationAddEdit: false,
-    stockProductVariation: 0,
+    EditButtonProductVariationIsClicked: false,
+    stockProductVariation: "",
     sizeProductVariation: "",
     colorProductVariation: "",
-    weightProductVariation: 0,
-    IDProductVariation: 0,
-  };
-  handleUpdateProductVariation = (e) => {
-    e.preventDefault();
+    weightProductVariation: "",
+    IDProductVariation: "",
 
-    const {
-      stockProductVariation,
-      sizeProductVariation,
-      colorProductVariation,
-      weightProductVariation,
-      IDProductVariation,
-    } = this.state;
-    const formProductVariationData = new FormData();
-
-    formProductVariationData.append("stock", stockProductVariation);
-    formProductVariationData.append("size", sizeProductVariation);
-    formProductVariationData.append("color", colorProductVariation);
-    formProductVariationData.append("weight", weightProductVariation);
-    formProductVariationData.append("product_id", this.props.product.id);
-    this.props.updateProductVariation(
-      IDProductVariation,
-      formProductVariationData
-    );
-    this.setState({
-      showModalProductVariationAddEdit:
-        !this.state.showModalProductVariationAddEdit,
-      showModalProductVariation: !this.state.showModalProductVariation,
-    });
-  };
-  handleModalCategory = () => {
-    this.setState({
-      showModalCategory: !this.state.showModalCategory,
-    });
-  };
-  handleModalCategoryAddEdit = () => {
-    this.setState({
-      showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
-    });
-  };
-  handleModalProductVaration = () => {
-    this.setState({
-      showModalProductVariation: !this.state.showModalProductVariation,
-      modal: !this.state.modal,
-    });
-  };
-  handleModalProductVarationAddEdit = () => {
-    this.setState({
-      showModalProductVariationAddEdit:
-        !this.state.showModalProductVariationAddEdit,
-    });
-  };
-  onModalToggleCategoryEdit = (categoryID, categoryName) => {
-    return (event) => {
-      event.preventDefault();
-      this.setState({
-        categoryID: categoryID,
-        categoryName: categoryName,
-        showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
-      });
-    };
-  };
-  onModalToggleProductVarationEdit = (
-    IDProductVariation,
-    stockProductVariation,
-    sizeProductVariation,
-    colorProductVariation,
-    weightProductVariation
-  ) => {
-    return (event) => {
-      event.preventDefault();
-      this.setState({
-        IDProductVariation: IDProductVariation,
-        stockProductVariation: stockProductVariation,
-        sizeProductVariation: sizeProductVariation,
-        colorProductVariation: colorProductVariation,
-        weightProductVariation: weightProductVariation,
-        showModalProductVariationAddEdit:
-          !this.state.showModalProductVariationAddEdit,
-      });
-      console.log(this.props.product.id);
-    };
-  };
-  handleCategoryDropDown(CategoryName) {
-    return (event) => {
-      event.preventDefault();
-      this.setState({
-        categoryForDropDownSelect: CategoryName,
-      });
-    };
-  }
-  OnRightScroll = () => {
-    document.getElementById("slider").scrollLeft += 120;
-  };
-  OnLeftScroll = () => {
-    document.getElementById("slider").scrollLeft -= 120;
+    table_export_modal: false,
+    ProductNameError: "",
   };
   componentDidMount() {
     this.props.getProductList();
     this.props.getSupplierList();
     this.props.getCategoryList();
-    // this.props.getProduct(1);
   }
 
-  onRemoveImage = (fileID) => {
-    return (e) => {
-      e.preventDefault();
-      FilesArray = [];
-      const fileListArr = [...this.state.file_content];
-      if (fileID > -1) {
-        fileListArr.splice(fileID, 1);
-      }
+  // when the isEditButtonClicked status is change this.props.product
+  // *the product that will be edited* is being fetch because we trigger it in the bottom
+  // then we will set it to the state and being passed on the formupdate component
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.product != prevProps.product) {
+      const {
+        id,
+        name,
+        description,
+        price,
+        supplier,
+        category,
+        stock,
+        file_content,
+        variation,
+      } = this.props.product;
       this.setState({
-        file_content: fileListArr,
+        productName: name,
+        description,
+        price,
+        supplierID: supplier,
+        categoryID: category,
+        stock,
+        file_content,
+        productID: id,
+        product_variation: variation,
       });
+      this.props.getProductList();
+    }
 
-      for (let i = 0; i < fileListArr.length; i++) {
-        FilesArray.push({
-          file: URL.createObjectURL(fileListArr[i]),
-          type: fileListArr[i].type,
-        });
-      }
-      this.setState({
-        urlFile: FilesArray,
-      });
-    };
-  };
+    if (isItemAdded === true) {
+      this.props.getProductList();
+      isItemAdded = false;
+    }
+  }
+
   onChange = (e) => {
     if (e.target.name === "file_content") {
       FilesArray = [];
@@ -228,74 +154,8 @@ class ProductSetting extends React.Component {
       }
     }
   };
-  // Submitting the name in the add category action
-  onSubmitCategory = (event) => {
-    event.preventDefault();
-    let name = this.state.categoryName;
-    const categoryForCategoryAdd = { name };
-    this.props.addCategory(categoryForCategoryAdd);
-    this.setState({
-      categoryName: "",
-    });
-  };
-  onSubmitUpdateCategory = (event) => {
-    event.preventDefault();
-    let name = this.state.categoryName;
-    const categoryForCategoryAdd = { name };
-    this.props.updateCategory(this.state.categoryID, categoryForCategoryAdd);
-    this.setState({
-      categoryID: 0,
-      categoryName: "",
-      showModalCategoryAddEdit: false,
-    });
-  };
-  onModalToggleCategoryEdit = (categoryID, categoryName) => {
-    return (event) => {
-      event.preventDefault();
-      this.setState({
-        categoryID: categoryID,
-        categoryName: categoryName,
-        showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
-      });
-    };
-  };
-  // when the isEditButtonClicked status is change this.props.product
-  // *the product that will be edited* is being fetch because we trigger it in the bottom
-  // then we will set it to the state and being passed on the formupdate component
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.product != prevProps.product) {
-      const {
-        id,
-        name,
-        description,
-        price,
-        supplier,
-        category,
-        stock,
-        file_content,
-        variation,
-      } = this.props.product;
-      this.setState({
-        productName: name,
-        description,
-        price,
-        supplierID: supplier,
-        categoryID: category,
-        stock,
-        file_content,
-        productID: id,
-        product_variation: variation,
-      });
-      this.props.getProductList();
-    }
-
-    if (isItemAdded === true) {
-      this.props.getProductList();
-      isItemAdded = false;
-    }
-  }
   //this will sent the updated product in the this.props.updateProduct to the action and will reset the state
-  onUpdateSubmit = (productID) => {
+  handleSubmitUpdateProduct = (productID) => {
     return (e) => {
       e.preventDefault();
       const { productName, description, price, categoryID, supplierID, stock } =
@@ -319,15 +179,13 @@ class ProductSetting extends React.Component {
         stock: 0,
         productID: 0,
       });
-      EditButtonIsClicked = false;
+      EditButtonProductIsClicked = false;
       isImageChanged = false;
       this.ModalFunction();
     };
   };
-  // when edit button is close this will reset the state and EditButtonIsClicked, isImageChanged and isEditButtonClicked states
 
-  // sending the product that will be added to this.props.addProduct in the actions also reset the state
-  onAddSubmit = (e) => {
+  handleSubmitAddProduct = (e) => {
     e.preventDefault();
     if (this.state.ProductNameError === "") {
       const {
@@ -381,7 +239,7 @@ class ProductSetting extends React.Component {
   };
 
   // when edit button click this will fetch the supplier that will be edited and change the isEditButtonClicked status to true
-  onEditCloseButton = (event) => {
+  handleEditCloseButtonProduct = (event) => {
     event.preventDefault();
     this.setState({
       productName: "",
@@ -393,59 +251,311 @@ class ProductSetting extends React.Component {
       size: "",
       color: "",
       stock: 0,
-
       productID: 0,
     });
-    EditButtonIsClicked = false;
+    EditButtonProductIsClicked = false;
     isImageChanged = false;
     this.ModalFunction();
   };
-  //this will toggle the add modal form
-  onModalToggleAdd = (e) => {
+  //this will toggle the add showProductModal form
+  handleModalToggleAddProduct = (e) => {
     e.preventDefault();
     this.ModalFunction();
   };
-  //this will toggle the edit modal form
-  onModalToggleEdit(productID) {
+  //this will toggle the edit showProductModal form
+  handleModalToggleEditProduct(productID) {
     return (event) => {
       event.preventDefault();
       this.props.getProduct(productID);
       this.ModalFunction();
-      EditButtonIsClicked = true;
+      EditButtonProductIsClicked = true;
+    };
+  }
+  handleDeleteProduct(productID) {
+    return (event) => {
+      event.preventDefault();
+      swal("Do you really want to delete this?", {
+        buttons: {
+          catch: {
+            text: "Yes",
+            value: "delete",
+          },
+          cancel: "No",
+        },
+      }).then((value) => {
+        switch (value) {
+          case "delete":
+            const formData = new FormData();
+            formData.append("status", false);
+            this.props.changeStatusProduct(productID, formData);
+            swal(
+              "Successfully deleted!",
+              "You can retrive it in the archives",
+              "success"
+            );
+            break;
+          default:
+            break;
+        }
+      });
+    };
+  }
+  ModalFunction() {
+    this.setState({ showProductModal: !this.state.showProductModal });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  OnRightScroll = () => {
+    document.getElementById("slider").scrollLeft += 120;
+  };
+  OnLeftScroll = () => {
+    document.getElementById("slider").scrollLeft -= 120;
+  };
+
+  onRemoveImage = (fileID) => {
+    return (e) => {
+      e.preventDefault();
+      FilesArray = [];
+      const fileListArr = [...this.state.file_content];
+      if (fileID > -1) {
+        fileListArr.splice(fileID, 1);
+      }
+      this.setState({
+        file_content: fileListArr,
+      });
+
+      for (let i = 0; i < fileListArr.length; i++) {
+        FilesArray.push({
+          file: URL.createObjectURL(fileListArr[i]),
+          type: fileListArr[i].type,
+        });
+      }
+      this.setState({
+        urlFile: FilesArray,
+      });
+    };
+  };
+  handleAddProductVariation = (e) => {
+    e.preventDefault();
+    const {
+      stockProductVariation,
+      sizeProductVariation,
+      colorProductVariation,
+      weightProductVariation,
+    } = this.state;
+    const formProductVariationData = new FormData();
+
+    formProductVariationData.append("stock", stockProductVariation);
+    formProductVariationData.append("size", sizeProductVariation);
+    formProductVariationData.append("color", colorProductVariation);
+    formProductVariationData.append("weight", weightProductVariation);
+    formProductVariationData.append("product_id", this.props.product.id);
+    this.props.addProductVariation(formProductVariationData);
+    this.setState({
+      stockProductVariation: "",
+      sizeProductVariation: "",
+      colorProductVariation: "",
+      weightProductVariation: "",
+      IDProductVariation: "",
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+      EditButtonProductVariationIsClicked: false,
+      showModalProductVariation: !this.state.showModalProductVariation,
+    });
+  };
+  handleUpdateProductVariation = (e) => {
+    e.preventDefault();
+    const {
+      stockProductVariation,
+      sizeProductVariation,
+      colorProductVariation,
+      weightProductVariation,
+      IDProductVariation,
+    } = this.state;
+    const formProductVariationData = new FormData();
+
+    formProductVariationData.append("stock", stockProductVariation);
+    formProductVariationData.append("size", sizeProductVariation);
+    formProductVariationData.append("color", colorProductVariation);
+    formProductVariationData.append("weight", weightProductVariation);
+    formProductVariationData.append("product_id", this.props.product.id);
+    this.props.updateProductVariation(
+      IDProductVariation,
+      formProductVariationData
+    );
+    this.setState({
+      stockProductVariation: "",
+      sizeProductVariation: "",
+      colorProductVariation: "",
+      weightProductVariation: "",
+      IDProductVariation: "",
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+      EditButtonProductVariationIsClicked: false,
+      showModalProductVariation: !this.state.showModalProductVariation,
+    });
+  };
+  handleModalProductVarationTable = () => {
+    this.setState({
+      showModalProductVariation: !this.state.showModalProductVariation,
+      showProductModal: !this.state.showProductModal,
+    });
+  };
+  handleModalProductVarationAdd = () => {
+    this.setState({
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+      EditButtonProductVariationIsClicked: false,
+    });
+  };
+  handleModalProductVarationEdit = () => {
+    this.setState({
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+      EditButtonProductVariationIsClicked: true,
+    });
+  };
+  handleModalProductVarationEditClose = () => {
+    this.setState({
+      IDProductVariation: "",
+      stockProductVariation: "",
+      sizeProductVariation: "",
+      colorProductVariation: "",
+      weightProductVariation: "",
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+      EditButtonProductVariationIsClicked: false,
+    });
+  };
+  handleModalProductVarationAddClose = () => {
+    this.setState({
+      showModalProductVariationAddEdit:
+        !this.state.showModalProductVariationAddEdit,
+      EditButtonProductVariationIsClicked: false,
+    });
+  };
+  handleModalToggleProductVarationEdit = (
+    IDProductVariation,
+    stockProductVariation,
+    sizeProductVariation,
+    colorProductVariation,
+    weightProductVariation
+  ) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        IDProductVariation: IDProductVariation,
+        stockProductVariation: stockProductVariation,
+        sizeProductVariation: sizeProductVariation,
+        colorProductVariation: colorProductVariation,
+        weightProductVariation: weightProductVariation,
+        showModalProductVariationAddEdit:
+          !this.state.showModalProductVariationAddEdit,
+        EditButtonProductVariationIsClicked: true,
+      });
+      console.log(this.props.product.id);
+    };
+  };
+
+  handleModalCategory = () => {
+    this.setState({
+      showModalCategoryTable: !this.state.showModalCategoryTable,
+    });
+  };
+
+  handleModalCategoryAdd = () => {
+    this.setState({
+      showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
+      EditButtonCategoryIsClicked: false,
+    });
+  };
+  handleModalToggleCategoryEdit = (categoryID, categoryName) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        categoryID: categoryID,
+        categoryName: categoryName,
+        showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
+        EditButtonCategoryIsClicked: true,
+      });
+    };
+  };
+  handleModalCategoryEditClose = () => {
+    this.setState({
+      showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
+      EditButtonCategoryIsClicked: false,
+    });
+  };
+
+  handleCategoryDropDown(CategoryName) {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        categoryForDropDownSelect: CategoryName,
+      });
     };
   }
 
-  // function that called to open or close modal
-  ModalFunction() {
-    this.setState({ modal: !this.state.modal });
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+  // Submitting the name in the add category action
+  handleSubmitCategory = (event) => {
+    event.preventDefault();
+    let name = this.state.categoryName;
+    const categoryForCategoryAdd = { name };
+    this.props.addCategory(categoryForCategoryAdd);
+    this.setState({
+      categoryID: 0,
+      categoryName: "",
+      EditButtonCategoryIsClicked: false,
+      showModalCategoryAddEdit: false,
+    });
+  };
+  handleSubmitUpdateCategory = (event) => {
+    event.preventDefault();
+    let name = this.state.categoryName;
+    const categoryForCategoryAdd = { name };
+    this.props.updateCategory(this.state.categoryID, categoryForCategoryAdd);
+    this.setState({
+      categoryID: 0,
+      categoryName: "",
+      EditButtonCategoryIsClicked: false,
+      showModalCategoryAddEdit: false,
+    });
+  };
+  handleModalToggleCategoryEdit = (categoryID, categoryName) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        categoryID: categoryID,
+        categoryName: categoryName,
+        showModalCategoryAddEdit: !this.state.showModalCategoryAddEdit,
+        EditButtonCategoryIsClicked: true,
+      });
+    };
+  };
 
-    // document.getElementById("Body").classList.toggle("overflow-hidden");
-  }
   OnToggleExportTable = (event) => {
     event.preventDefault();
     this.setState({ table_export_modal: !this.state.table_export_modal });
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    document.getElementById("Body").classList.toggle("overflow-hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
   render() {
     // destructure the products that came from the reducer so it will be easier to filter and show
     products = [];
     filteredData = [];
-
+    console.log(this.props.products);
     this.props.products.map((product) =>
-      products.push({
-        id: product.id,
-        product_id: product.product_id,
-        name: product.name,
-        price: product.price,
-        category: product.category_info.name,
-        supplier: product.supplier_info.name,
-        description: product.description,
-        variation: product.variation,
-      })
+      product.status
+        ? products.push({
+            id: product.id,
+            product_id: product.product_id,
+            name: product.name,
+            price: product.price,
+            category: product.category_info.name,
+            supplier: product.supplier_info.name,
+            description: product.description,
+            variation: product.variation,
+          })
+        : ""
     );
     // This will filter the data from inventories array filtered at the top
     const lowercasedFilter = this.state.search.toLowerCase();
@@ -525,7 +635,7 @@ class ProductSetting extends React.Component {
                       <i class="fal fa-print fa-lg"></i>
                     </div>
                     <div
-                      onClick={this.onModalToggleAdd}
+                      onClick={this.handleModalToggleAddProduct}
                       className="ml-4 text-white cursor-pointer bg-teal_custom hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
                     >
                       <i class="fal fa-plus fa-lg"></i>
@@ -652,12 +762,17 @@ class ProductSetting extends React.Component {
                             <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
                               <ul className="bg-white shadow rounded p-2">
                                 <li
-                                  onClick={this.onModalToggleEdit(product.id)}
+                                  onClick={this.handleModalToggleEditProduct(
+                                    product.id
+                                  )}
                                   className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
                                 >
                                   Edit
                                 </li>
-                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 hover:text-white px-3 font-normal">
+                                <li
+                                  onClick={this.handleDeleteProduct(product.id)}
+                                  className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 hover:text-white px-3 font-normal"
+                                >
                                   Delete
                                 </li>
                               </ul>
@@ -690,21 +805,21 @@ class ProductSetting extends React.Component {
           </div>
         </div>
         <ProductModal
-          modal={this.state.modal}
-          onModalToggleAdd={this.onModalToggleAdd}
+          showProductModal={this.state.showProductModal}
+          handleModalToggleAddProduct={this.handleModalToggleAddProduct}
           state={this.state}
           onChange={this.onChange}
           suppliers={this.props.suppliers}
           categories={this.props.categories}
-          onAddSubmit={this.onAddSubmit}
-          onUpdateSubmit={this.onUpdateSubmit}
-          EditButtonIsClicked={EditButtonIsClicked}
+          handleSubmitAddProduct={this.handleSubmitAddProduct}
+          handleSubmitUpdateProduct={this.handleSubmitUpdateProduct}
+          EditButtonProductIsClicked={EditButtonProductIsClicked}
           isImageChanged={isImageChanged}
-          onEditCloseButton={this.onEditCloseButton}
+          handleEditCloseButtonProduct={this.handleEditCloseButtonProduct}
           OnRightScroll={this.OnRightScroll}
           OnLeftScroll={this.OnLeftScroll}
           onRemoveImage={this.onRemoveImage}
-          handleModalProductVaration={this.handleModalProductVaration}
+          handleModalProductVarationTable={this.handleModalProductVarationTable}
         />
 
         <ProductsTableExportModal
@@ -716,24 +831,30 @@ class ProductSetting extends React.Component {
         <CategoryModal
           categories={this.props.categories}
           handleModalCategory={this.handleModalCategory}
-          onModalToggleCategoryEdit={this.onModalToggleCategoryEdit}
+          handleModalToggleCategoryEdit={this.handleModalToggleCategoryEdit}
           onChange={this.onChange}
           state={this.state}
-          onSubmitCategory={this.onSubmitCategory}
-          handleModalCategoryAddEdit={this.handleModalCategoryAddEdit}
-          onSubmitUpdateCategory={this.onSubmitUpdateCategory}
+          handleSubmitCategory={this.handleSubmitCategory}
+          handleModalCategoryEditClose={this.handleModalCategoryEditClose}
+          handleModalCategoryAdd={this.handleModalCategoryAdd}
+          handleSubmitUpdateCategory={this.handleSubmitUpdateCategory}
         />
 
         <ProductVariation
           onChange={this.onChange}
-          handleModalProductVaration={this.handleModalProductVaration}
-          handleModalProductVarationAddEdit={
-            this.handleModalProductVarationAddEdit
+          handleModalProductVarationTable={this.handleModalProductVarationTable}
+          handleModalProductVarationEditClose={
+            this.handleModalProductVarationEditClose
           }
-          onModalToggleProductVarationEdit={
-            this.onModalToggleProductVarationEdit
+          handleModalProductVarationAddClose={
+            this.handleModalProductVarationAddClose
+          }
+          handleModalProductVarationAdd={this.handleModalProductVarationAdd}
+          handleModalToggleProductVarationEdit={
+            this.handleModalToggleProductVarationEdit
           }
           handleUpdateProductVariation={this.handleUpdateProductVariation}
+          handleAddProductVariation={this.handleAddProductVariation}
           state={this.state}
         />
       </>
@@ -758,4 +879,6 @@ export default connect(mapStateToProps, {
   updateCategory,
   addProduct,
   updateProductVariation,
+  addProductVariation,
+  changeStatusProduct,
 })(ProductSetting);

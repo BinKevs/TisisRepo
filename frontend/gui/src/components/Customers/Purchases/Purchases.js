@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import {
   getTransactionList,
   updateTransactionStatus,
+  addRefund,
+  getRefundList,
 } from "../../../store/actions/transaction/transactions.js";
 import {
   addReview,
@@ -20,14 +22,14 @@ class PurchasesIndex extends React.Component {
   componentDidMount() {
     this.props.getTransactionList();
     this.props.getReviewList();
+    this.props.getRefundList();
   }
   onChange = (e) => {
-    if (e.target.name === "VideoFile") {
+    if (e.target.name === "RefundVideo") {
       this.setState({
         [e.target.name]: e.target.files,
         VideoFileURL: URL.createObjectURL(e.target.files[0]),
       });
-      console.log(URL.createObjectURL(e.target.files[0]));
     } else {
       this.setState({
         [e.target.name]: e.target.value,
@@ -47,11 +49,12 @@ class PurchasesIndex extends React.Component {
     filter_nav: "All",
     transactionId: 0,
     RefundVideo: "",
+    RefundDescription: "",
     VideoFileURL: "",
     refund_item: "",
   };
 
-  onSubmit = (star_rate) => {
+  onSubmitReview = (star_rate) => {
     return (e) => {
       e.preventDefault();
       const { comment, product_id, transaction_item_id, transaction_id } =
@@ -131,6 +134,23 @@ class PurchasesIndex extends React.Component {
       showModal: !this.state.showModal,
     });
   };
+  onSubmitRefund = (e) => {
+    e.preventDefault();
+    const { refund_item, RefundVideo, RefundDescription } = this.state;
+    const formData = new FormData();
+    formData.append("user", this.props.AuthReducer.user.id);
+    formData.append("transaction_item", refund_item.id);
+    formData.append("product_condition_video", RefundVideo[0]);
+    formData.append("description", RefundDescription);
+    formData.append("status", "Pending");
+    this.props.addRefund(formData);
+    this.props.getRefundList();
+    this.setState({
+      showRefundInfo: true,
+      showModalRefund: !this.state.showModalRefund,
+    });
+  };
+
   onToggleModalRefund = (refund_item) => {
     return (event) => {
       event.preventDefault();
@@ -147,7 +167,18 @@ class PurchasesIndex extends React.Component {
       showModalRefund: !this.state.showModalRefund,
     });
   };
-
+  handleRefundNavigation = (event) => {
+    event.preventDefault();
+    for (var i = 0; i < NavButton.length; i++) {
+      if (NavButtonActive.length > 0) {
+        NavButtonActive[0].classList.remove("NavButtonActive");
+      }
+      event.target.classList.add("NavButtonActive");
+    }
+    this.setState({
+      showRefundInfo: true,
+    });
+  };
   onToggleNavButton = (event) => {
     event.preventDefault();
     for (var i = 0; i < NavButton.length; i++) {
@@ -161,19 +192,9 @@ class PurchasesIndex extends React.Component {
       showRefundInfo: false,
     });
   };
-  handleRefundNavigation = (event) => {
-    event.preventDefault();
-    for (var i = 0; i < NavButton.length; i++) {
-      if (NavButtonActive.length > 0) {
-        NavButtonActive[0].classList.remove("NavButtonActive");
-      }
-      event.target.classList.add("NavButtonActive");
-    }
-    this.setState({
-      showRefundInfo: true,
-    });
-  };
+
   render() {
+    console.log(this.props.transactions);
     filteredTransactionData = [];
     filteredTransactionData = this.props.transactions.filter((item) => {
       return this.state.filter_nav === "All"
@@ -244,82 +265,124 @@ class PurchasesIndex extends React.Component {
             </section>
             {this.state.showRefundInfo ? (
               <div className="space-y-6">
-                <div className="mx-4">
-                  <div className="mx-auto bg-white p-4">
-                    <div className="flex justify-between">
-                      <div class="text-gray-600 text-xl font-medium pb-4">
-                        Refund/Return Status :{" "}
-                        <span className="text-gray-900 tracking-widest">
-                          Pending
-                        </span>
-                      </div>
-                      <div class="text-gray-600 text-xl font-medium pb-4">
-                        Date Requested :{" "}
-                        <span className="text-gray-900 tracking-widest">
-                          Oct 13 2021 22:09:46
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex justify-center  border-t-2 pt-5">
-                      <div class="text-gray-900 text-2xl font-medium pb-4">
-                        Product Details
-                      </div>
-                    </div>
-                    <div className="bg-white mb-5">
-                      <div className="p-2 flex justify-center w-full">
-                        <div className="w-1/3">
-                          <img
-                            className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
-                            src="http://127.0.0.1:8000/images/Avon_Tire_3D_Ultra_EVO_Tire_Combo.jpg"
-                            alt=""
-                          />
+                {this.props.refunds.map((refund) => (
+                  <div className="mx-4">
+                    <div className="mx-auto bg-white p-4">
+                      <div className="flex flex-col md:flex-row justify-between">
+                        <div class="text-gray-600 text-xl font-medium pb-4">
+                          Refund/Return Status :{" "}
+                          <span className="text-gray-900 tracking-widest">
+                            {refund.status}
+                          </span>
                         </div>
-
-                        <div className="ml-2 space-y-5 w-1/2 ">
-                          <div>
-                            Dynojet Power Commander 5 With Auto Tune And K&N Air
-                            Filter Kit
+                        <div class="text-gray-600 text-xl font-medium pb-4">
+                          Date Requested :{" "}
+                          <span className="text-gray-900 tracking-widest">
+                            {refund.created_at}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-center  border-t-2 pt-5">
+                        <div class="text-gray-900 text-2xl font-medium pb-4">
+                          Product Details
+                        </div>
+                      </div>
+                      <div className="bg-white mb-5">
+                        <div className="p-2 flex flex-col md:flex-row justify-center w-full">
+                          <div className="md:w-1/3 w-full">
+                            <img
+                              className=" border-gray-400 border-2 my-auto mx-auto md:mx-0 max-h-56 object-cover object-center rounded-3xl"
+                              src={
+                                refund.transaction_item.product
+                                  ? refund.transaction_item.product
+                                      .file_content[0].image
+                                  : ""
+                              }
+                              alt=""
+                            />
                           </div>
 
-                          <div>Brown/Large</div>
-                          <div className="flex justify-between">
-                            <div>x6</div>
-                            <div className="text-gray-900">₱4132.00</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-center  border-t-2 pt-5">
-                      <div class="text-gray-900 text-2xl font-medium pb-4">
-                        Refund/Return Details
-                      </div>
-                    </div>
-                    <div className="bg-white border-b-2">
-                      <div className="p-2 flex justify-center w-full">
-                        <div className="w-1/3 border-4 h-60 rounded-3xl flex justify-center mb-5 ">
-                          <ReactPlayer
-                            width="80%"
-                            height="100%"
-                            playing={false}
-                            controls={true}
-                            url={video1}
-                          />
-                        </div>
+                          <div className="md:ml-2 ml-0 mt-5 space-y-5 md:w-1/2 w-full ">
+                            <div>{refund.transaction_item.product.name}</div>
 
-                        <div className=" space-y-5 ml-14 w-1/2 ">
-                          <div>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Ea aspernatur, tenetur at delectus suscipit
-                            dolor non asperiores harum beatae error rem odit
-                            dignissimos adipisci laudantium vitae optio voluptas
-                            maxime placeat!
+                            <div>
+                              {
+                                refund.transaction_item.product_variation_info
+                                  .color
+                              }
+                              /
+                              {
+                                refund.transaction_item.product_variation_info
+                                  .size
+                              }
+                            </div>
+                            <div className="flex justify-between">
+                              <div>x{refund.transaction_item.quantity}</div>
+                              <div className="text-gray-900">
+                                ₱{refund.transaction_item.product.price}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
+                      <div className="flex justify-center  border-t-2 pt-5">
+                        <div class="text-gray-900 text-2xl font-medium pb-4">
+                          Refund/Return Details
+                        </div>
+                      </div>
+                      <div className="bg-white border-b-4">
+                        <div className="p-2 flex flex-col md:flex-row justify-center w-full">
+                          <div className=" md:w-1/3 w-full border-4 h-60 rounded-3xl flex justify-center mb-5 ">
+                            <ReactPlayer
+                              width="80%"
+                              height="100%"
+                              playing={false}
+                              controls={true}
+                              url={
+                                refund.product_condition_video
+                                  ? refund.product_condition_video
+                                  : ""
+                              }
+                            />
+                          </div>
+
+                          <div className=" space-y-5 md:ml-14 ml-0 md:w-1/2 w-full  ">
+                            <div>{refund.description}</div>
+                          </div>
+                        </div>
+                      </div>
+                      {refund.response ? (
+                        <>
+                          {" "}
+                          <div className="flex justify-center pt-5">
+                            <div class="text-gray-900 text-2xl font-medium pb-4">
+                              Administration's Response
+                            </div>
+                          </div>
+                          <div className="flex justify-center pt-5 pb-5">
+                            <div class="">{refund.response}</div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="mx-4">
+                          <div className="mx-auto bg-white p-4">
+                            <div className="text-center text-gray-500">
+                              <i class="fad fa-clock fa-7x"></i>
+
+                              <div className="font-semibold text-xl">
+                                Administration will response as soon as
+                                possible.
+                              </div>
+                              <div className="font-semibold text-xl">
+                                Try refreshing the page.
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-
+                ))}
                 {/* <div className="mx-4">
                     <div className="mx-auto bg-white p-4">
                       <div className="text-center text-gray-500">
@@ -340,7 +403,7 @@ class PurchasesIndex extends React.Component {
                   filteredTransactionData.map((transaction) => (
                     <div className="mx-4">
                       <div className="mx-auto bg-white p-4">
-                        <div className="flex justify-between">
+                        <div className="flex flex-col md:flex-row justify-between">
                           <div class="text-gray-600 text-xl font-medium pb-4">
                             Status :{" "}
                             <span className="text-gray-900 tracking-widest">
@@ -357,10 +420,10 @@ class PurchasesIndex extends React.Component {
 
                         <div className="bg-white border-t-2 border-b-2">
                           {transaction.items.map((item) => (
-                            <div className="p-2 flex justify-center w-full">
-                              <div className="w-1/3">
+                            <div className="p-2 flex flex-col md:flex-row justify-center w-full">
+                              <div className="md:w-1/3 w-full ">
                                 <img
-                                  className=" border-gray-400 border-2 my-auto max-h-56 object-cover object-center rounded-3xl"
+                                  className=" border-gray-400 border-2 my-auto mx-auto md:mx-0 max-h-56 object-cover object-center rounded-3xl"
                                   src={
                                     item.product.file_content
                                       ? item.product.file_content[0].image
@@ -370,7 +433,7 @@ class PurchasesIndex extends React.Component {
                                 />
                               </div>
 
-                              <div className="ml-2 space-y-5 w-1/2 ">
+                              <div className="md:ml-2 ml-0 mt-5 space-y-5  md:w-1/2 w-full">
                                 <div>{item.product.name}</div>
 
                                 <div>
@@ -439,14 +502,36 @@ class PurchasesIndex extends React.Component {
                             </div>
                           ))}
                         </div>
-                        <div class="text-gray-800  font-medium pt-4 text-right">
-                          <span className="text-xl text-gray-600">
-                            Order Total :
-                          </span>{" "}
-                          <span className="text-2xl text-gray-900 tracking-widest">
-                            ₱{transaction.totalAmount}
-                          </span>
+                        <div className="flex justify-between">
+                          {transaction.tracking_number ? (
+                            <div className="my-5">
+                              <span className="text-md text-gray-700">
+                                <p>Track your parcel via </p>
+                                <p className="text-gray-900 font-semibold text-lg">
+                                  https://www.ninjavan.co/en-ph/tracking{" "}
+                                </p>
+                                <p>
+                                  Use this tracking number :{" "}
+                                  <span className="text-gray-900 font-semibold text-lg">
+                                    {transaction.tracking_number}
+                                  </span>
+                                </p>
+                              </span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+
+                          <div class="text-gray-800  font-medium pt-4 text-right">
+                            <span className="text-xl text-gray-600">
+                              Order Total :
+                            </span>{" "}
+                            <span className="text-2xl text-gray-900 tracking-widest">
+                              ₱{transaction.totalAmount}
+                            </span>
+                          </div>
                         </div>
+
                         {transaction.order_status !== "Complete" ? (
                           <div className="flex justify-end my-5 ">
                             <button
@@ -487,7 +572,7 @@ class PurchasesIndex extends React.Component {
           <ReviewsModal
             onToggleModal={this.onToggleModalReviewClose}
             onChange={this.onChange}
-            onSubmit={this.onSubmit}
+            onSubmitReview={this.onSubmitReview}
             state={this.state}
           />
         </div>
@@ -578,6 +663,7 @@ class PurchasesIndex extends React.Component {
           onToggleModalRefundClose={this.onToggleModalRefundClose}
           filteredTransactionData={filteredTransactionData}
           onChange={this.onChange}
+          onSubmitRefund={this.onSubmitRefund}
         />
       </>
     );
@@ -585,6 +671,7 @@ class PurchasesIndex extends React.Component {
 }
 const mapStateToProps = (state) => ({
   transactions: state.transactions.transactions,
+  refunds: state.transactions.refunds,
   reviews: state.products.reviews,
   AuthReducer: state.AuthReducer,
 });
@@ -593,4 +680,6 @@ export default connect(mapStateToProps, {
   addReview,
   updateTransactionStatus,
   getReviewList,
+  addRefund,
+  getRefundList,
 })(PurchasesIndex);

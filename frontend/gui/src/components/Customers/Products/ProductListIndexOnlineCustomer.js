@@ -109,26 +109,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
             <header>
               <div className="container mx-auto px-6 py-3">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center justify-end w-full">
-                    <div className="flex sm:hidden">
-                      <button
-                        type="button"
-                        onClick={this.handleHideNavigation}
-                        className="text-gray-600 hover:text-gray-500 focus:outline-none focus:text-gray-500"
-                        aria-label="toggle menu"
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          className="h-6 w-6 fill-current"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
-                          ></path>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
+                  <div className="flex items-center justify-end w-full"></div>
                 </div>
 
                 <div className={"relative mt-6 max-w-lg mx-auto"}>

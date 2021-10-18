@@ -199,14 +199,14 @@ class ProductDetails extends React.Component {
       <>
         <section class="flex-1 w-full text-gray-700 body-font bg-white">
           <div class="px-5 mt-14 py-24 mx-auto">
-            <div class="w-full mx-auto flex flex-wrap">
-              <div className="lg:w-1/2 w-full">
+            <div class="w-full flex flex-wrap">
+              <div className="md:w-1/2 w-full">
                 {product.file_content ? (
                   this.state.video_link === "" ? (
                     <img
                       alt="ecommerce"
                       id="featured"
-                      class="w-full object-cover object-center rounded-3xl border-2 border-gray-400 h-1/2"
+                      class="w-full object-cover object-center rounded-3xl border-2 border-gray-400 h-60 md:h-80"
                       src={product.file_content[0].image}
                     />
                   ) : (
@@ -277,7 +277,7 @@ class ProductDetails extends React.Component {
                   </span>
                 </div>
               </div>
-              <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+              <div class="md:w-1/2 w-full md:pl-10 mt-0 md:mt-6">
                 <h2 class="text-sm title-font text-gray-500 tracking-widest">
                   {product.supplier_info ? product.supplier_info.name : ""}
                 </h2>
@@ -340,7 +340,7 @@ class ProductDetails extends React.Component {
                 <p class="leading-relaxed">{product.description}</p>
                 <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5"></div>
                 <div class="border-b-2 border-gray-200 mb-5">
-                  <div className="flex mt-6 items-center border-gray-600">
+                  <div className="flex flex-col md:flex-row md:space-y-0 space-y-6 mt-6 items-center border-gray-600">
                     <div class="flex ml-6 items-center">
                       <span class="mr-3">Color</span>
                       {/* <button class="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none"></button>
@@ -412,7 +412,7 @@ class ProductDetails extends React.Component {
                     </div>
                   </div>
 
-                  <div className=" ml-6 mt-6  pb-5 text-lg font-medium text-gray-700">
+                  <div className=" ml-6 mt-6  pb-5 text-md font-medium text-gray-700">
                     {/* {this.state.color !== "" && this.state.size !== "" ? ( */}
                     <div className="flex items-center">
                       <span class="mr-3"> Stock : {TempStock}</span>
@@ -428,10 +428,10 @@ class ProductDetails extends React.Component {
                     {/* ) : (
                       ""
                     )} */}
-                    <div class="custom-number-input mt-6 h-10 flex items-center">
+                    <div class="custom-number-input mt-6 h-10 flex flex-col md:flex-row items-center">
                       {" "}
                       <span class="mr-3"> Quantity: </span>
-                      <div class="flex flex-row h-10  rounded-lg relative bg-transparent mt-1">
+                      <div class="flex flex-row h-10  rounded-md relative bg-transparent mt-1">
                         <button
                           onClick={this.DecrementQuantity}
                           class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
@@ -506,7 +506,7 @@ class ProductDetails extends React.Component {
                         />
                       </span>
                     </div>
-                    <p class="mt-1 text-lg leading-tight font-medium text-black">
+                    <p class="mt-1 text-md leading-tight font-medium text-black">
                       {rev.comment}
                     </p>
                   </div>

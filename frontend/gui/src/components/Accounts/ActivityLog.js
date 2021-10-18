@@ -32,7 +32,6 @@ class ActivityLog extends React.Component {
     this.props.activity_log.map((activity_log) =>
       ActivityLogItems.push({
         id: activity_log.id,
-        activity_log_id: activity_log.activity_log_id,
         creator: activity_log.user_info.name,
         created_at: activity_log.created_at,
         action_done: activity_log.action_done,
@@ -150,7 +149,7 @@ class ActivityLog extends React.Component {
                         className="h-24 border-gray-300 dark:border-gray-200 border-b"
                       >
                         <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {item.activity_log_id}
+                          {item.id}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {item.creator}

@@ -12,6 +12,8 @@ import {
   GET_REVIEW_LIST,
   ADD_REVIEW,
   UPDATE_PRODUCT_VARIATION,
+  ADD_PRODUCT_VARIATION,
+  CHANGE_STATUS_PRODUCT,
 } from "../../actions/product/actionTypes";
 
 const initialState = {
@@ -65,12 +67,30 @@ export default function (state = initialState, action) {
           ...state.products.filter((prod) => prod.id !== action.payload.id),
         ],
       };
+    case CHANGE_STATUS_PRODUCT:
+      return {
+        ...state,
+        products: [
+          action.payload,
+          ...state.products.filter((prod) => prod.id !== action.payload.id),
+        ],
+      };
+
     case UPDATE_PRODUCT_VARIATION:
       return {
         ...state,
         product: action.payload,
         // supplier_name: action.payload.supplier_info.name,
         // images: action.payload.file_content,
+      };
+    case ADD_PRODUCT_VARIATION:
+      return {
+        ...state,
+        // products: [ action.payload,...state.products],
+        products: [
+          action.payload,
+          ...state.products.filter((prod) => prod.id !== action.payload.id),
+        ],
       };
     case GET_CATEGORY_LIST:
       return {
@@ -80,14 +100,14 @@ export default function (state = initialState, action) {
     case ADD_CATEGORY:
       return {
         ...state,
-        categories: [...state.categories, action.payload],
+        categories: [action.payload, ...state.categories],
       };
     case UPDATE_CATEGORY:
       return {
         ...state,
         categories: [
-          ...state.categories.filter((cat) => cat.id !== action.payload.id),
           action.payload,
+          ...state.categories.filter((cat) => cat.id !== action.payload.id),
         ],
       };
     case GET_VOUCHER_LIST:
@@ -103,7 +123,7 @@ export default function (state = initialState, action) {
     case ADD_REVIEW:
       return {
         ...state,
-        reviews: [...state.reviews, action.payload],
+        reviews: [action.payload, ...state.reviews],
       };
     default:
       return state;

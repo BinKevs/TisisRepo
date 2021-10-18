@@ -108,7 +108,7 @@ class InventorySettingIndex extends React.Component {
         product,
         supplier,
         inventoryID: id,
-        productVariation: product_variation_info.product_variation_id,
+        productVariation: product_variation_info.product_variation.id,
       });
       this.props.getInventoryList();
     }
@@ -187,7 +187,6 @@ class InventorySettingIndex extends React.Component {
     this.props.inventories.map((inventory) =>
       inventories.push({
         id: inventory.id,
-        inventory_id: inventory.inventory_id,
         supplier: inventory.supplier_info.name,
         product: inventory.product_info.name,
         new_stock: inventory.new_stock,
@@ -198,25 +197,19 @@ class InventorySettingIndex extends React.Component {
     const lowercasedFilter = search.toLowerCase();
 
     filteredData = inventories.filter((item) => {
-      return (
-        item.product.toString().toLowerCase().includes(lowercasedFilter) ||
-        item.inventory_id.toString().toLowerCase().includes(lowercasedFilter)
-      );
+      return item.product.toString().toLowerCase().includes(lowercasedFilter);
     });
     if (InputDate === "") {
       filteredData = inventories.filter((item) => {
-        return (
-          item.product.toString().toLowerCase().includes(lowercasedFilter) ||
-          item.inventory_id.toString().toLowerCase().includes(lowercasedFilter)
-        );
+        return item.product.toString().toLowerCase().includes(lowercasedFilter);
       });
     } else {
       if (InputDate === null) {
         filteredData = inventories.filter((item) => {
-          return (
-            item.product.toString().toLowerCase().includes(lowercasedFilter) ||
-            item.inventory_id.toString().includes(lowercasedFilter)
-          );
+          return item.product
+            .toString()
+            .toLowerCase()
+            .includes(lowercasedFilter);
         });
       } else {
         let InputDateDateSeparated = InputDate.toString().split(" ");
@@ -246,8 +239,7 @@ class InventorySettingIndex extends React.Component {
                 " " +
                 InputDateDateSeparated[3]
             ) &&
-          (item.product.toString().toLowerCase().includes(lowercasedFilter) ||
-            item.inventory_id.toString().includes(lowercasedFilter))
+          item.product.toString().toLowerCase().includes(lowercasedFilter)
         );
       });
     }
@@ -392,7 +384,7 @@ class InventorySettingIndex extends React.Component {
                         className="h-24 border-gray-300 dark:border-gray-200 border-b"
                       >
                         <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {inventory.inventory_id}
+                          {inventory.id}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {inventory.product}
@@ -406,15 +398,19 @@ class InventorySettingIndex extends React.Component {
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {inventory.created_at}
                         </td>
+
                         <td className="pr-8 relative">
                           <button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
                             <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
-                              <ul className="bg-white dark:bg-gray-800 shadow rounded p-2">
+                              <ul className="bg-white shadow rounded p-2">
                                 <li
                                   onClick={this.onModalToggleEdit(inventory.id)}
-                                  className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
+                                  className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
                                 >
                                   Edit
+                                </li>
+                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 hover:text-white px-3 font-normal">
+                                  Delete
                                 </li>
                               </ul>
                             </div>

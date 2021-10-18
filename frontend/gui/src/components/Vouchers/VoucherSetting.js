@@ -107,7 +107,7 @@ class VoucherSetting extends React.Component {
 
                       <th className="pr-6 text-md">Value</th>
                       <th className="pr-6 text-md">Date Created</th>
-                      <th className="pr-6 text-md">Status</th>
+                      <th className="pr-6 text-md">Action</th>
                     </tr>
                   </tbody>
                   <tbody>
@@ -122,12 +122,46 @@ class VoucherSetting extends React.Component {
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {voucher.value}
                         </td>
-
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {voucher.created_at}
                         </td>
-                        <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
+                        {/* <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {voucher.status ? "Available" : "Unavailable"}
+                        </td> */}
+
+                        <td className="pr-8 relative">
+                          <button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
+                            <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
+                              <ul className="bg-white shadow rounded p-2">
+                                <li
+                                  // onClick={this.onModalToggleEdit(product.id)}
+                                  className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
+                                >
+                                  Edit
+                                </li>
+                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 hover:text-white px-3 font-normal">
+                                  Delete
+                                </li>
+                              </ul>
+                            </div>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="icon icon-tabler icon-tabler-dots-vertical dropbtn"
+                              width={28}
+                              height={28}
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path stroke="none" d="M0 0h24v24H0z" />
+                              <circle cx={12} cy={12} r={1} />
+                              <circle cx={12} cy={19} r={1} />
+                              <circle cx={12} cy={5} r={1} />
+                            </svg>
+                          </button>
                         </td>
                       </tr>
                     ))}

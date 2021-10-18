@@ -338,7 +338,7 @@ class SupplierSettingIndex extends React.Component {
 													/>
 												</td> */}
                         <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {supplier.supplier_id}
+                          {supplier.id}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {supplier.name}
@@ -366,15 +366,14 @@ class SupplierSettingIndex extends React.Component {
                         <td className="pr-8 relative">
                           <button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
                             <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
-                              <ul className="bg-white dark:bg-gray-800 shadow rounded p-2">
+                              <ul className="bg-white shadow rounded p-2">
                                 <li
-                                  // onClick={this.onModalToggle}
                                   onClick={this.onModalToggleEdit(supplier.id)}
-                                  className="cursor-pointer text-gray-600 dark:text-gray-400 text-sm leading-3 tracking-normal py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
+                                  className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
                                 >
                                   Edit
                                 </li>
-                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 text-white px-3 font-normal">
+                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 hover:text-white px-3 font-normal">
                                   Delete
                                 </li>
                               </ul>

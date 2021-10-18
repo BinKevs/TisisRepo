@@ -828,15 +828,15 @@ class Checkout extends React.Component {
                           E-Walley Payment
                         </h1>
                       </div>
-                      <div className="flex justify-center">
-                        <div className="flex items-center justify-center bg-gray-100 shadow-lg z-10 rounded-xl p-4 m-3 w-2/5">
+                      <div className="flex flex-col md:flex-row justify-center">
+                        <div className="flex items-center justify-center bg-gray-100 shadow-lg z-10 rounded-xl p-4 m-3 w-full md:w-2/5">
                           <img
                             className="h-48"
                             src="https://play-lh.googleusercontent.com/QNP0Aj2hyumAmYiWVAsJtY2LLTQnzHxdW7-DpwFUFNkPJjgRxi-BXg7A4yI6tgYKMeU"
                             alt=""
                           />
                         </div>
-                        <div className="flex items-center justify-center bg-gray-100 shadow-lg z-10 rounded-xl p-4 m-3 w-2/5">
+                        <div className="flex items-center justify-center bg-gray-100 shadow-lg z-10 rounded-xl p-4 m-3 w-full md:w-2/5">
                           <PayPalButton
                             createOrder={(data, actions) => {
                               return actions.order.create({

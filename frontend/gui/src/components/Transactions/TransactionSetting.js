@@ -18,12 +18,12 @@ class TransactionSettingIndex extends React.Component {
     search: "",
     InputDate: "",
   };
-  setSeeMore(transaction_id) {
-    return (e) => {
-      e.preventDefault();
-      document.getElementById(transaction_id).classList.toggle("hidden");
-    };
-  }
+  // setSeeMore(transaction_id) {
+  //   return (e) => {
+  //     e.preventDefault();
+  //     document.getElementById(transaction_id).classList.toggle("hidden");
+  //   };
+  // }
   onChange = (e) =>
     this.setState({ [e.target.name]: e.target.value, InputDate: "" });
   componentDidMount() {
@@ -44,7 +44,6 @@ class TransactionSettingIndex extends React.Component {
     this.props.transactions.map((trans) =>
       Transactions.push({
         id: trans.id,
-        transaction_id: trans.transaction_id,
         creator: trans.user_info.name
           ? trans.user_info.name.split(" ")[0]
           : "None",
@@ -58,28 +57,19 @@ class TransactionSettingIndex extends React.Component {
     filteredData = [];
     const lowercasedFilter = this.state.search.toLowerCase();
     filteredData = Transactions.filter((item) => {
-      return (
-        item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
-        item.transaction_id.toString().toLowerCase().includes(lowercasedFilter)
-      );
+      return item.creator.toString().toLowerCase().includes(lowercasedFilter);
     });
     if (InputDate === "") {
       filteredData = Transactions.filter((item) => {
-        return (
-          item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
-          item.transaction_id
-            .toString()
-            .toLowerCase()
-            .includes(lowercasedFilter)
-        );
+        return item.creator.toString().toLowerCase().includes(lowercasedFilter);
       });
     } else {
       if (InputDate === null) {
         filteredData = Transactions.filter((item) => {
-          return (
-            item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
-            item.transaction_id.toString().includes(lowercasedFilter)
-          );
+          return item.creator
+            .toString()
+            .toLowerCase()
+            .includes(lowercasedFilter);
         });
       } else {
         let InputDateDateSeparated = InputDate.toString().split(" ");
@@ -109,8 +99,7 @@ class TransactionSettingIndex extends React.Component {
                 " " +
                 InputDateDateSeparated[3]
             ) &&
-          (item.creator.toString().toLowerCase().includes(lowercasedFilter) ||
-            item.transaction_id.toString().includes(lowercasedFilter))
+          item.creator.toString().toLowerCase().includes(lowercasedFilter)
         );
       });
     }
@@ -206,6 +195,7 @@ class TransactionSettingIndex extends React.Component {
                       <th className="pr-6 text-md">Total Amount</th>
                       <th className="pr-6 text-md">Total Number of Items</th>
                       <th className="pr-6 text-md">Mode of Payment</th>
+                      <th className="pr-6 text-md">More</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -215,7 +205,7 @@ class TransactionSettingIndex extends React.Component {
                         className="h-24 border-gray-300  border-b"
                       >
                         <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
-                          {transaction.transaction_id}
+                          {transaction.id}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {transaction.creator}
@@ -260,6 +250,37 @@ class TransactionSettingIndex extends React.Component {
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {transaction.mode_of_payment}
+                        </td>
+                        <td className="pr-8 relative">
+                          <button className="button-see-more text-gray-500 rounded cursor-pointer border border-transparent focus:outline-none">
+                            <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
+                              <ul className="bg-white shadow rounded p-2">
+                                <li className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal">
+                                  Edit
+                                </li>
+                                <li className="cursor-pointer text-sm leading-3 py-3 hover:bg-red-500 hover:text-white px-3 font-normal">
+                                  Delete
+                                </li>
+                              </ul>
+                            </div>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="icon icon-tabler icon-tabler-dots-vertical dropbtn"
+                              width={28}
+                              height={28}
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path stroke="none" d="M0 0h24v24H0z" />
+                              <circle cx={12} cy={12} r={1} />
+                              <circle cx={12} cy={19} r={1} />
+                              <circle cx={12} cy={5} r={1} />
+                            </svg>
+                          </button>
                         </td>
                       </tr>
                     ))}

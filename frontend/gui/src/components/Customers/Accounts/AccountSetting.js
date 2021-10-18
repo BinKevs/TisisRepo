@@ -181,10 +181,10 @@ class AccountSetting extends React.Component {
                       <div class="px-4 py-6 text-gray-800 text-3xl font-medium border-b border-gray-300 mb-10">
                         Edit your account here
                       </div>
-                      <div className="flex justify-around">
+                      <div className="flex flex-col md:flex-row justify-around">
                         <div>
-                          <div class="mt-5 flex justify-between space-x-2">
-                            <div class="relative z-0 w-1/2 mb-5">
+                          <div class="mt-5 flex flex-col md:flex-row justify-between space-x-0 md:space-x-2">
+                            <div class="relative z-0 w-full md:w-1/2 mb-5">
                               <input
                                 type="text"
                                 name="first_name"
@@ -210,7 +210,7 @@ class AccountSetting extends React.Component {
                                 First name is required
                               </span>
                             </div>
-                            <div class="relative z-0 w-1/2 mb-5">
+                            <div class="relative z-0 w-full md:w-1/2 mb-5">
                               <input
                                 type="text"
                                 name="last_name"
@@ -284,7 +284,7 @@ class AccountSetting extends React.Component {
                             </span>
                           </div>
                         </div>
-                        <div className=" inline-block align-middle">
+                        <div className=" inline-block order-first md:order-last align-middle mx-auto md:mx-0">
                           <img
                             className="border-4 rounded-3xl"
                             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuoovVYEMl5PlyrnrmjPY_0bH_k0RaXYByiMVOWeEhWeG9wxWP2ozVw0Ab51hiQzxErpo&usqp=CAU"
@@ -292,7 +292,7 @@ class AccountSetting extends React.Component {
                           />
                         </div>
                       </div>
-                      <div class="mt-5 w-1/2 flex justify-center">
+                      <div class="mt-5 w-full md:w-1/2 flex justify-center">
                         <input
                           type="submit"
                           value="Submit"

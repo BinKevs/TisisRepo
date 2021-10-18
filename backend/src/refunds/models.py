@@ -13,4 +13,4 @@ class Refund(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, null=True, blank=True)
     response = models.TextField(null=True,blank=True)
-    status = models.CharField(max_length=255, null=True)
+    status = models.CharField(max_length=255, null=True,blank=True)

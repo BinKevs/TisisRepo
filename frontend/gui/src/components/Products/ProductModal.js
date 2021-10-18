@@ -2,23 +2,21 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ReactPlayer from "react-player";
-import { CSSTransition } from "react-transition-group";
 const ProductModal = (props) => {
   const {
     suppliers,
     categories,
     onChange,
-    onAddSubmit,
-    isImageChanged,
-    onUpdateSubmit,
-    EditButtonIsClicked,
-    onEditCloseButton,
-    onModalToggleAdd,
+    onSubmitAddProduct,
+    handleSubmitUpdateProduct,
+    EditButtonProductIsClicked,
+    handleEditCloseButtonProduct,
+    handleModalToggleAddProduct,
     OnLeftScroll,
     OnRightScroll,
     onRemoveImage,
-    modal,
-    handleModalProductVaration,
+    showProductModal,
+    handleModalProductVarationTable,
   } = props;
   const {
     productName,
@@ -38,12 +36,12 @@ const ProductModal = (props) => {
   } = props.state;
   return (
     <>
-      {/* <CSSTransition in={modal} timeout={500} classNames="alert" unmountOnExit> */}
-      <div class={modal ? "h-screen" : "h-screen hidden "}>
+      {/* <CSSTransition in={showProductModal} timeout={500} classNames="alert" unmountOnExit> */}
+      <div class={showProductModal ? "h-screen" : "h-screen hidden "}>
         <div class="mx-auto max-w-screen-lg h-full">
           <div
             className={
-              modal
+              showProductModal
                 ? "absolute top-0 bottom-0 left-0 right-0 animated fadeIn z-20"
                 : "absolute top-0 bottom-0 left-0 right-0 animated fadeOut z-20"
             }
@@ -53,14 +51,14 @@ const ProductModal = (props) => {
               <div className="m-2 md:m-12">
                 <form
                   onSubmit={
-                    !EditButtonIsClicked
-                      ? onAddSubmit
-                      : onUpdateSubmit(productID)
+                    !EditButtonProductIsClicked
+                      ? onSubmitAddProduct
+                      : handleSubmitUpdateProduct(productID)
                   }
                 >
                   <div className="relative p-4 md:p-8 bg-white shadow-md rounded border border-gray-400 w-full">
                     <div className="flex items-center justify-start w-full">
-                      <div class="text-left p-0 mb-8">
+                      <div class="text-left p-0 mb-8 w-full">
                         <div>
                           <i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{" "}
                           <h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
@@ -68,9 +66,27 @@ const ProductModal = (props) => {
                           </h1>
                         </div>
 
-                        <h1 class="text-gray-800 text-3xl font-medium">
-                          {!EditButtonIsClicked ? "Add" : "Update"} Product
-                        </h1>
+                        <div className="flex flex-col md:flex-row justify-between md:items-center">
+                          <h1 class="text-gray-800 text-3xl font-medium">
+                            {!EditButtonProductIsClicked ? "Add " : "Update "}
+                            Product
+                          </h1>
+                          <div>
+                            {EditButtonProductIsClicked ? (
+                              <div className="w-full flex justify-start my-5">
+                                <div
+                                  onClick={handleModalProductVarationTable}
+                                  className="flex md:ml-4 bg-teal_custom text-white cursor-pointer h-12 rounded items-center justify-center px-3"
+                                >
+                                  <i class="fal fa-sliders-v mr-2"></i>
+                                  <div>Variation Setting</div>
+                                </div>
+                              </div>
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="">
@@ -98,25 +114,7 @@ const ProductModal = (props) => {
                           {ProductNameError}
                         </span>
                       </div>
-                      {/* <div class="relative z-0 w-full mb-5">
-                        <textarea
-                          name="description"
-                          onChange={onChange}
-                          value={description}
-                          placeholder=" "
-                          required
-                          class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                        />
-                        <label
-                          for="description"
-                          class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                        >
-                          Description
-                        </label>
-                        <span class="text-sm text-red-600 hidden" id="error">
-                          Description is required
-                        </span>
-                      </div> */}
+
                       <div class="flex flex-wrap -mx-3 mb-5">
                         <h2 class="px-4 pt-3 pb-2 text-gray-800">
                           Description
@@ -132,12 +130,12 @@ const ProductModal = (props) => {
                           ></textarea>
                         </div>
                       </div>
-                      <div class="relative z-0 mb-5 space-y-4">
+                      <div class="relative z-0 mb-5 space-y-4 border-4 rounded-2xl p-2">
                         <label class="block">Image</label>
-                        {!EditButtonIsClicked ? (
+                        {!EditButtonProductIsClicked ? (
                           <>
                             <input
-                              class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 border-2 rounded-l focus:ring-0 active:border-cyan-700 border-gray-200"
+                              class="pt-3 pb-2 block w-full px-2 mt-0 text-gray-700 focus:ring-0 active:border-cyan-700 "
                               id="file_content"
                               type="file"
                               multiple
@@ -145,70 +143,74 @@ const ProductModal = (props) => {
                               required
                               onChange={onChange}
                             />
-                            <div className="relative flex items-center">
-                              <span
-                                onClick={OnLeftScroll}
-                                className="h-12 w-16 flex items-center justify-center text-gray-600"
-                              >
-                                <i class="fad fa-angle-left fa-3x"></i>
-                              </span>
-                              <div
-                                id="slider"
-                                className="flex overflow-x-hidden space-x-4 border-4"
-                              >
-                                {urlFile.map((url, index) =>
-                                  url.type.includes("video") ? (
-                                    <>
-                                      <div className="img-hover relative border-4 max-w-none rounded-3xl">
-                                        <div className="h-55">
-                                          <video
-                                            width="400"
-                                            height="300"
-                                            controls
+                            {urlFile === [] ? (
+                              <div className="relative flex items-center">
+                                <span
+                                  onClick={OnLeftScroll}
+                                  className="h-12 w-16 flex items-center justify-center text-gray-600"
+                                >
+                                  <i class="fad fa-angle-left fa-3x"></i>
+                                </span>
+                                <div
+                                  id="slider"
+                                  className="flex overflow-x-hidden space-x-4"
+                                >
+                                  {urlFile.map((url, index) =>
+                                    url.type.includes("video") ? (
+                                      <>
+                                        <div className="img-hover relative">
+                                          <div className="w-64">
+                                            <video
+                                              width="400"
+                                              height="300"
+                                              controls
+                                            >
+                                              <source
+                                                src={url.file}
+                                                type="video/mp4"
+                                              />
+                                              Your browser does not support HTML
+                                              video.
+                                            </video>
+                                          </div>
+                                          <button
+                                            onClick={onRemoveImage(index)}
+                                            className="middle"
                                           >
-                                            <source
-                                              src={url.file}
-                                              type="video/mp4"
-                                            />
-                                            Your browser does not support HTML
-                                            video.
-                                          </video>
+                                            <i class="far fa-trash-alt fa-3x"></i>
+                                          </button>{" "}
                                         </div>
-                                        <button
-                                          onClick={onRemoveImage(index)}
-                                          className="middle"
-                                        >
-                                          <i class="far fa-trash-alt fa-3x"></i>
-                                        </button>{" "}
-                                      </div>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <div className="img-hover relative ">
-                                        <img
-                                          alt="product image"
-                                          class="object-cover h-55 w-64 max-w-none border-4 rounded-3xl imgg"
-                                          src={url.file}
-                                        />
-                                        <button
-                                          onClick={onRemoveImage(index)}
-                                          className="middle"
-                                        >
-                                          <i class="far fa-trash-alt fa-3x"></i>
-                                        </button>{" "}
-                                      </div>
-                                    </>
-                                  )
-                                )}
-                              </div>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <div className="img-hover relative ">
+                                          <img
+                                            alt="product image"
+                                            class="object-cover h-55 w-64 max-w-none border-4 rounded-3xl imgg"
+                                            src={url.file}
+                                          />
+                                          <button
+                                            onClick={onRemoveImage(index)}
+                                            className="middle"
+                                          >
+                                            <i class="far fa-trash-alt fa-3x"></i>
+                                          </button>{" "}
+                                        </div>
+                                      </>
+                                    )
+                                  )}
+                                </div>
 
-                              <span
-                                onClick={OnRightScroll}
-                                className="h-12 w-16 flex items-center justify-center text-gray-600"
-                              >
-                                <i class="fad fa-angle-right fa-3x"></i>
-                              </span>
-                            </div>
+                                <span
+                                  onClick={OnRightScroll}
+                                  className="h-12 w-16 flex items-center justify-center text-gray-600"
+                                >
+                                  <i class="fad fa-angle-right fa-3x"></i>
+                                </span>
+                              </div>
+                            ) : (
+                              ""
+                            )}
                           </>
                         ) : (
                           <>
@@ -224,25 +226,50 @@ const ProductModal = (props) => {
                                 className="overflow-x-hidden flex space-x-4"
                               >
                                 {file_content
-                                  ? file_content.map((url, index) => (
-                                      <>
-                                        {/*  */}
-
-                                        <div className="img-hover relative ">
-                                          <img
-                                            alt="product image"
-                                            class="object-cover h-55 w-64 max-w-none border-4 rounded-3xl imgg"
-                                            src={url.image}
-                                          />
-                                          <button
-                                            // onClick={onRemoveImage(index)}
-                                            className="middle"
-                                          >
-                                            <i class="far fa-trash-alt fa-3x"></i>
-                                          </button>{" "}
-                                        </div>
-                                      </>
-                                    ))
+                                  ? file_content.map((url, index) =>
+                                      url.image.includes(".mp4") ? (
+                                        <>
+                                          <div className="img-hover relative">
+                                            <div className="w-64">
+                                              <video
+                                                width="400"
+                                                height="300"
+                                                controls
+                                              >
+                                                <source
+                                                  src={url.image}
+                                                  type="video/mp4"
+                                                />
+                                                Your browser does not support
+                                                HTML video.
+                                              </video>
+                                            </div>
+                                            <button
+                                              onClick={onRemoveImage(index)}
+                                              className="middle"
+                                            >
+                                              <i class="fad fa-trash-alt fa-3x"></i>
+                                            </button>{" "}
+                                          </div>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <div className="img-hover relative ">
+                                            <img
+                                              alt="product image"
+                                              class="object-cover h-55 w-64 max-w-none border-4 rounded-3xl imgg"
+                                              src={url.image}
+                                            />
+                                            <button
+                                              onClick={onRemoveImage(index)}
+                                              className="middle"
+                                            >
+                                              <i class="far fa-trash-alt fa-3x"></i>
+                                            </button>{" "}
+                                          </div>
+                                        </>
+                                      )
+                                    )
                                   : ""}
                               </div>
 
@@ -255,20 +282,6 @@ const ProductModal = (props) => {
                             </div>
                           </>
                         )}
-
-                        {/* {!EditButtonIsClicked ? (
-                          <></>
-                        ) : (
-                          <img
-                            alt="product image"
-                            class={
-                              EditButtonIsClicked
-                                ? "object-cover"
-                                : "object-cover h-52"
-                            }
-                            src={isImageChanged ? urlFile : image}
-                          />
-                        )} */}
                       </div>
                       {/* <div class="w-full mb-5">
 												<button className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm">
@@ -347,7 +360,7 @@ const ProductModal = (props) => {
                           </select>
                         </div>
                       </div>
-                      {!EditButtonIsClicked ? (
+                      {!EditButtonProductIsClicked ? (
                         <>
                           <div class="relative z-0 w-full mb-5">
                             <input
@@ -441,15 +454,7 @@ const ProductModal = (props) => {
                           </div>
                         </>
                       ) : (
-                        <div className="w-full flex justify-start my-5">
-                          <div
-                            onClick={handleModalProductVaration}
-                            className="flex ml-4 bg-teal_custom text-white cursor-pointer h-12 rounded items-center justify-center px-3"
-                          >
-                            <i class="fal fa-sliders-v mr-2"></i>
-                            <div>Variation Setting</div>
-                          </div>
-                        </div>
+                        ""
                       )}
 
                       <div class="relative z-0 w-full mb-5">
@@ -485,9 +490,9 @@ const ProductModal = (props) => {
                       <button
                         className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
                         onClick={
-                          !EditButtonIsClicked
-                            ? onModalToggleAdd
-                            : onEditCloseButton
+                          !EditButtonProductIsClicked
+                            ? handleModalToggleAddProduct
+                            : handleEditCloseButtonProduct
                         }
                       >
                         Cancel
@@ -498,7 +503,7 @@ const ProductModal = (props) => {
 												>
 													<button
 														className="focus:outline-none mx-auto transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-4 sm:px-8 py-2 text-xs sm:text-sm"
-														onClick={() => showModal(!modal)}
+														onClick={() => showModal(!showProductModal)}
 													>
 														Open Modal
 													</button>
@@ -507,9 +512,9 @@ const ProductModal = (props) => {
                     <div
                       className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       onClick={
-                        !EditButtonIsClicked
-                          ? onModalToggleAdd
-                          : onEditCloseButton
+                        !EditButtonProductIsClicked
+                          ? handleModalToggleAddProduct
+                          : handleEditCloseButtonProduct
                       }
                     >
                       <svg
@@ -542,7 +547,7 @@ const ProductModal = (props) => {
   );
 };
 ProductModal.propTypes = {
-  onAddSubmit: PropTypes.func.isRequired,
+  onSubmitAddProduct: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
   suppliers: PropTypes.array.isRequired,

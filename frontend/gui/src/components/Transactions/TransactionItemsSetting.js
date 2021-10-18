@@ -19,12 +19,12 @@ class TransactionItemsSettingIndex extends React.Component {
     productForDropDownSelect: "",
     table_export_modal: false,
   };
-  setSeeMore(transaction_items_id) {
-    return (e) => {
-      e.preventDefault();
-      document.getElementById(transaction_items_id).classList.toggle("hidden");
-    };
-  }
+  // setSeeMore(transaction_items_id) {
+  //   return (e) => {
+  //     e.preventDefault();
+  //     document.getElementById(transaction_items_id).classList.toggle("hidden");
+  //   };
+  // }
 
   componentDidMount() {
     this.props.getTransactionItemList();
@@ -47,7 +47,7 @@ class TransactionItemsSettingIndex extends React.Component {
     this.props.transaction_items.map((trans) =>
       TransactionItems.push({
         id: trans.id,
-        transaction_item_id: trans.transaction_item_id,
+
         productName: trans.product.name,
         productPrice: trans.product.price,
         transactionDate: trans.transaction_date.created_at,
@@ -58,37 +58,28 @@ class TransactionItemsSettingIndex extends React.Component {
     const lowercasedFilter = this.state.search.toLowerCase();
 
     filteredData = TransactionItems.filter((item) => {
-      return (
-        item.productName.toString().toLowerCase().includes(lowercasedFilter) ||
-        item.transaction_item_id
-          .toString()
-          .toLowerCase()
-          .includes(lowercasedFilter)
-      );
+      return item.productName
+        .toString()
+        .toLowerCase()
+        .includes(lowercasedFilter)
+        .toString()
+        .toLowerCase()
+        .includes(lowercasedFilter);
     });
     if (InputDate === "") {
       filteredData = TransactionItems.filter((item) => {
-        return (
-          item.productName
-            .toString()
-            .toLowerCase()
-            .includes(lowercasedFilter) ||
-          item.transaction_item_id
-            .toString()
-            .toLowerCase()
-            .includes(lowercasedFilter)
-        );
+        return item.productName
+          .toString()
+          .toLowerCase()
+          .includes(lowercasedFilter);
       });
     } else {
       if (InputDate === null) {
         filteredData = TransactionItems.filter((item) => {
-          return (
-            item.productName
-              .toString()
-              .toLowerCase()
-              .includes(lowercasedFilter) ||
-            item.transaction_item_id.toString().includes(lowercasedFilter)
-          );
+          return item.productName
+            .toString()
+            .toLowerCase()
+            .includes(lowercasedFilter);
         });
       } else {
         let InputDateDateSeparated = InputDate.toString().split(" ");
@@ -118,11 +109,7 @@ class TransactionItemsSettingIndex extends React.Component {
                 " " +
                 InputDateDateSeparated[3]
             ) &&
-          (item.productName
-            .toString()
-            .toLowerCase()
-            .includes(lowercasedFilter) ||
-            item.transaction_item_id.toString().includes(lowercasedFilter))
+          item.productName.toString().toLowerCase().includes(lowercasedFilter)
         );
       });
     }
@@ -249,7 +236,7 @@ class TransactionItemsSettingIndex extends React.Component {
                         className="h-24 border-gray-300 dark:border-gray-200 border-b"
                       >
                         <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {item.transaction_item_id}
+                          {item.id}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {item.productName}

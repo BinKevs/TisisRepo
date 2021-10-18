@@ -1,3 +1,4 @@
+from rest_framework.fields import NullBooleanField
 from products.models import Product
 from rest_framework import serializers, viewsets, permissions
 from .serializers import ProductSerializer
@@ -57,19 +58,24 @@ class ProductViewSet(viewsets.ModelViewSet):
         print(context)
         return Response(context, status=status.HTTP_201_CREATED)
 
-    def put(self,request,*args,**kwargs):
-        product = Product.objects.get()
+    def update(self,request,pk,*args,**kwargs):
+        product = Product.objects.get(pk=pk)
         data = request.data
-
-        # product.product_id = data.get("product_id",product.product_id)
+        if(data['status'] == 'false'):
+            status_update = False
+        elif(data['status'] == 'true'):
+            status_update = True
+        else:
+            status_update = product.status
+        product.product_id = data.get("product_id",product.product_id)
         product.name = data.get("name",product.name)
         product.category = data.get("category",product.category)
         product.supplier = data.get("supplier",product.supplier)
         product.description = data.get("description",product.description)
         product.price = data.get("price",product.price)
+        product.status = status_update
         product.save()
-        
-        return Response(self.get_serializer(product),status=status.HTTP_201_CREATED)
+        return Response(self.get_serializer(product).data,status=status.HTTP_201_CREATED)
    
         
 

@@ -10,6 +10,9 @@ import {
   ADD_TRANSACTION_ITEMS,
   GET_TRANSACTION_ITEM_LIST,
   UPDATE_TRANSACTION_STATUS,
+  ADD_REFUND,
+  GET_REFUND_LIST,
+  UPDATE_REFUND,
 } from "./actionTypes";
 import swal from "sweetalert";
 import { HandleSuccessMessages } from "../../../Helpers/functions";
@@ -118,3 +121,53 @@ export const updateTransactionStatus =
       })
       .catch((err) => console.log(err));
   };
+export const addRefund = (data) => (dispatch, getState) => {
+  axios
+    .post(
+      URL_IMPORT + "/api/refunds/?ordering=-created_at",
+      data,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      swal({
+        title: "Refund/Return Submitted Successfully",
+        text: "We notified the administration for you request. Just wait for their response. Thank you. Sorry for the inconvenience.",
+        icon: "success",
+      });
+      dispatch({
+        type: ADD_REFUND,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const getRefundList = () => (dispatch, getState) => {
+  axios
+    .get(
+      URL_IMPORT + "/api/refunds/?ordering=-created_at",
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      dispatch({
+        type: GET_REFUND_LIST,
+        payload: res.data,
+      });
+    });
+};
+export const updateRefund = (RefundID, data) => (dispatch, getState) => {
+  axios
+    .put(
+      URL_IMPORT + "/api/refunds/" + RefundID + "/",
+      data,
+      tokenConfig(getState)
+    )
+    .then((res) => {
+      HandleSuccessMessages("Refund Updated", "success");
+      dispatch({
+        type: UPDATE_REFUND,
+        payload: res.data,
+      });
+      console.log(res.data);
+    })
+    .catch((err) => console.log(err));
+};

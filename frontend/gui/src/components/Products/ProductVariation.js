@@ -2,21 +2,25 @@ import React, { useState } from "react";
 
 const ProductVariation = (props) => {
   const {
-    handleModalProductVaration,
-    handleModalProductVarationAddEdit,
-    onModalToggleProductVarationEdit,
+    handleModalProductVarationTable,
+
+    handleModalProductVarationEditClose,
+    handleModalProductVarationAddClose,
+    handleModalToggleProductVarationEdit,
     onChange,
     handleUpdateProductVariation,
+    handleAddProductVariation,
+    handleModalProductVarationAdd,
   } = props;
   const {
     showModalProductVariation,
     showModalProductVariationAddEdit,
     product_variation,
-    IDProductVariation,
     stockProductVariation,
     sizeProductVariation,
     colorProductVariation,
     weightProductVariation,
+    EditButtonProductVariationIsClicked,
   } = props.state;
 
   return (
@@ -49,7 +53,7 @@ const ProductVariation = (props) => {
                         </h1>
                       </div>
                       <div
-                        onClick={handleModalProductVarationAddEdit}
+                        onClick={handleModalProductVarationAdd}
                         className="ml-4 text-white cursor-pointer bg-teal_custom hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
                       >
                         <i class="fal fa-plus fa-lg"></i>
@@ -57,22 +61,12 @@ const ProductVariation = (props) => {
                     </div>
                     <table className="min-w-full bg-white p-28">
                       <thead>
-                        <tr className="w-full h-16 border-gray-300 dark:border-gray-200 border-b py-8">
-                          <th className="pl-12 text-gray-600  font-normal pr-6 text-left text-sm ">
-                            ID
-                          </th>
-                          <th className="text-gray-600  font-normal pr-6 text-left text-sm">
-                            Color
-                          </th>
-                          <th className="text-gray-600  font-normal pr-6 text-left text-sm">
-                            Size
-                          </th>
-                          <th className="text-gray-600  font-normal pr-6 text-left text-sm">
-                            Weight
-                          </th>
-                          <th className="text-gray-600  font-normal pr-6 text-left text-sm">
-                            Stock
-                          </th>
+                        <tr className="w-full h-16 border-gray-300 border-b py-8 text-left font-bold text-gray-500">
+                          <th className="pl-14 pr-6 text-md">ID</th>
+                          <th className=" pr-6 text-md">Color</th>
+                          <th className="  pr-6 text-md">Size</th>
+                          <th className=" pr-6 text-md">Weight</th>
+                          <th className="  pr-6 text-md">Stock</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -98,7 +92,7 @@ const ProductVariation = (props) => {
                             </td>
                             <td className="text-gray-800">
                               <div
-                                onClick={onModalToggleProductVarationEdit(
+                                onClick={handleModalToggleProductVarationEdit(
                                   variation.id,
                                   variation.stock,
                                   variation.size,
@@ -116,7 +110,7 @@ const ProductVariation = (props) => {
                     </table>
 
                     <div
-                      onClick={handleModalProductVaration}
+                      onClick={handleModalProductVarationTable}
                       className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                     >
                       <svg
@@ -161,7 +155,14 @@ const ProductVariation = (props) => {
             <div className="h-full overflow-auto w-full flex flex-col">
               <div className="m-2 md:m-12">
                 {/* onSubmit={onSubmitUpdateCategory} */}
-                <form onSubmit={handleUpdateProductVariation} class="mt-9">
+                <form
+                  onSubmit={
+                    EditButtonProductVariationIsClicked
+                      ? handleUpdateProductVariation
+                      : handleAddProductVariation
+                  }
+                  class="mt-9"
+                >
                   <div className="relative p-4 md:p-8 bg-white dark:border-gray-700 shadow-md rounded border border-gray-400 ">
                     <div class="text-left p-0 mb-8">
                       <div>
@@ -172,6 +173,9 @@ const ProductVariation = (props) => {
                       </div>
 
                       <h1 class="text-gray-800 text-3xl font-medium">
+                        {EditButtonProductVariationIsClicked
+                          ? "Update "
+                          : "Add "}
                         Product Variation Setting
                       </h1>
                     </div>
@@ -269,7 +273,6 @@ const ProductVariation = (props) => {
 
                     <div className="flex items-center justify-center w-full">
                       <button
-                        // onClick={handleModalCategoryAddEdit}
                         type="submit"
                         className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
                       >
@@ -277,13 +280,21 @@ const ProductVariation = (props) => {
                       </button>
                       <button
                         className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
-                        onClick={handleModalProductVarationAddEdit}
+                        onClick={
+                          showModalProductVariationAddEdit
+                            ? handleModalProductVarationEditClose
+                            : handleModalProductVarationAddClose
+                        }
                       >
                         Cancel
                       </button>
                     </div>
                     <div
-                      onClick={handleModalProductVarationAddEdit}
+                      onClick={
+                        showModalProductVariationAddEdit
+                          ? handleModalProductVarationEditClose
+                          : handleModalProductVarationAddClose
+                      }
                       className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                     >
                       <svg

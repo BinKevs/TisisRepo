@@ -9,22 +9,12 @@ from django.dispatch import receiver
 from django.utils import timezone
 # Create your models here.
 class Attendance_Log(models.Model):
-    attendance_log_id = models.CharField(max_length=255, null=True)
+    
     account = models.ForeignKey(
         User, related_name="user_accouunt_attendance_log", on_delete=models.CASCADE, null=True)
     login_at = models.DateTimeField(null=True)
     logout_at = models.DateTimeField(null=True)
-    def save(self,*args, **kwargs):
-       if not self.attendance_log_id:
-           prefix = 'AT-I{}-{}-'.format(timezone.now().strftime('%y'),timezone.now().strftime('%m%d'))
-           print(prefix)
-           prev_instances = self.__class__.objects.filter(attendance_log_id__contains=prefix)
-           if prev_instances.exists():
-              last_instance_id = prev_instances.last().attendance_log_id[-4:]
-              self.attendance_log_id = prefix+'{0:04d}'.format(int(last_instance_id)+1)
-           else:
-               self.attendance_log_id = prefix+'{0:04d}'.format(1)
-       super(Attendance_Log, self).save(*args, **kwargs)
+    
     def __str__(self):
         return str(self.id)
     @staticmethod

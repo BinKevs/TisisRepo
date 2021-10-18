@@ -4,16 +4,21 @@ const CategoryModal = (props) => {
   const {
     categories,
     onChange,
-    onSubmitCategory,
-    onModalToggleCategoryEdit,
-    handleModalCategoryAddEdit,
-    onSubmitUpdateCategory,
+    handleSubmitCategory,
+    handleModalToggleCategoryEdit,
+    handleModalCategoryEditClose,
+    handleModalCategoryAdd,
+    handleSubmitUpdateCategory,
   } = props;
-  const { categoryName, showModalCategoryAddEdit, showModalCategory } =
-    props.state;
+  const {
+    categoryName,
+    showModalCategoryAddEdit,
+    showModalCategoryTable,
+    EditButtonCategoryIsClicked,
+  } = props.state;
   return (
     <>
-      <div class={showModalCategory ? "h-screen " : "h-screen hidden"}>
+      <div class={showModalCategoryTable ? "h-screen " : "h-screen hidden"}>
         <div class="mx-auto max-w-screen-lg h-full">
           <div
             className="z-20 absolute top-0 right-0 bottom-0 left-0"
@@ -22,7 +27,7 @@ const CategoryModal = (props) => {
             <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
             <div className="h-full overflow-auto w-full flex flex-col">
               <div className="m-2 md:m-12">
-                <form onSubmit={handleModalCategoryAddEdit} class="mt-9">
+                <form class="mt-9">
                   <div className="relative p-4 md:p-8 bg-white dark:border-gray-700 shadow-md rounded border border-gray-400 ">
                     <div className="flex justify-between items-center">
                       <div class="text-left p-0 mb-8">
@@ -34,11 +39,12 @@ const CategoryModal = (props) => {
                         </div>
 
                         <h1 class="text-gray-800 text-3xl font-medium">
+                          {EditButtonCategoryIsClicked ? "Update " : "Add "}{" "}
                           Categories Setting
                         </h1>
                       </div>
                       <div
-                        onClick={handleModalCategoryAddEdit}
+                        onClick={handleModalCategoryAdd}
                         className="ml-4 text-white cursor-pointer bg-teal_custom hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
                       >
                         <i class="fal fa-plus fa-lg"></i>
@@ -69,7 +75,7 @@ const CategoryModal = (props) => {
                             </td>
                             <td className="text-gray-800">
                               <div
-                                onClick={onModalToggleCategoryEdit(
+                                onClick={handleModalToggleCategoryEdit(
                                   category.id,
                                   category.name
                                 )}
@@ -121,7 +127,14 @@ const CategoryModal = (props) => {
             <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
             <div className="h-full overflow-auto w-full flex flex-col">
               <div className="m-2 md:m-12">
-                <form onSubmit={onSubmitUpdateCategory} class="mt-9">
+                <form
+                  onSubmit={
+                    EditButtonCategoryIsClicked
+                      ? handleSubmitUpdateCategory
+                      : handleSubmitCategory
+                  }
+                  class="mt-9"
+                >
                   <div className="relative p-4 md:p-8 bg-white dark:border-gray-700 shadow-md rounded border border-gray-400 ">
                     <div class="text-left p-0 mb-8">
                       <div>
@@ -160,21 +173,21 @@ const CategoryModal = (props) => {
                     </div>
                     <div className="flex items-center justify-center w-full">
                       <button
-                        // onClick={handleModalCategoryAddEdit}
                         type="submit"
                         className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
                       >
                         Submit
                       </button>
-                      <button
-                        className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
-                        onClick={handleModalCategoryAddEdit}
-                      >
+                      <button className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm">
                         Cancel
                       </button>
                     </div>
                     <div
-                      onClick={handleModalCategoryAddEdit}
+                      onClick={
+                        EditButtonCategoryIsClicked
+                          ? handleModalCategoryEditClose
+                          : handleModalCategoryAdd
+                      }
                       className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                     >
                       <svg

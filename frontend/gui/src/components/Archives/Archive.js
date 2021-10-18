@@ -2,7 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getSupplierList } from "../../store/actions/supplier/suppliers";
-import { getProductList } from "../../store/actions/product/products";
+import {
+  getProductList,
+  changeStatusProduct,
+} from "../../store/actions/product/products";
 import { getAccountList } from "../../store/actions/account/auth";
 import { getInventoryList } from "../../store/actions/inventory/inventories";
 import { getTransactionList } from "../../store/actions/transaction/transactions.js";
@@ -15,7 +18,7 @@ import {
   AccordionItemButton,
   AccordionItemPanel,
 } from "react-accessible-accordion";
-
+import swal from "sweetalert";
 let ItemAdded = false;
 class Archive extends React.Component {
   state = { search: "" };
@@ -28,7 +31,31 @@ class Archive extends React.Component {
     this.props.getTransactionList();
     this.props.getVoucherList();
   }
-
+  handleRetriveProduct(productID) {
+    return (event) => {
+      event.preventDefault();
+      swal("Do you really want to delete this?", {
+        buttons: {
+          catch: {
+            text: "Yes",
+            value: "delete",
+          },
+          cancel: "No",
+        },
+      }).then((value) => {
+        switch (value) {
+          case "delete":
+            const formData = new FormData();
+            formData.append("status", true);
+            this.props.changeStatusProduct(productID, formData);
+            swal("Successfully retrive product!", "success");
+            break;
+          default:
+            break;
+        }
+      });
+    };
+  }
   render() {
     let lowercasedFilter = this.state.search.toLowerCase();
     let filteredDataSupplier;
@@ -154,7 +181,12 @@ class Archive extends React.Component {
                               </td>
 
                               <td className="pr-8 relative">
-                                <div className="cursor-pointer text-sm bg-teal_custom text-white px-3 py-3 font-normal hover:bg-gray-600 text-center">
+                                <div
+                                  onClick={this.handleRetriveProduct(
+                                    product.id
+                                  )}
+                                  className="cursor-pointer text-sm bg-teal_custom text-white px-3 py-3 font-normal hover:bg-gray-600 text-center"
+                                >
                                   Retrive
                                 </div>
                               </td>
@@ -218,7 +250,7 @@ class Archive extends React.Component {
                               className="h-24 border-gray-300 dark:border-gray-200 border-b"
                             >
                               <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                                {supplier.supplier_id}
+                                {supplier.id}
                               </td>
                               <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                                 {supplier.name}
@@ -449,7 +481,7 @@ class Archive extends React.Component {
                               className="h-24 border-gray-300 dark:border-gray-200 border-b"
                             >
                               <td className="pl-14 text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                                {trans.transaction_id}
+                                {trans.id}
                               </td>
 
                               <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
@@ -597,4 +629,5 @@ export default connect(mapStateToProps, {
   getInventoryList,
   getTransactionList,
   getVoucherList,
+  changeStatusProduct,
 })(Archive);

@@ -10,47 +10,66 @@ class TransactionQueuing extends React.Component {
     showActionButtonModal: false,
     showToReceiveModal: false,
     transactionId: 0,
-  };
-  onUpdateSubmit = (transactionID) => {
-    return (e) => {
-      if (transactionID === "To Receive") {
-        this.setState({
-          showToReceiveModal: !this.state.showToReceiveModal,
-          showActionButtonModal: !this.state.showActionButtonModal,
-        });
-      } else {
-        e.preventDefault();
-        const formData = new FormData();
-
-        formData.append("order_status", e.target.value);
-        this.props.updateTransactionStatus(transactionID, formData);
-        this.setState({
-          showActionButtonModal: !this.state.showActionButtonModal,
-          transactionId: 0,
-        });
-      }
-    };
+    tracking_number: "",
   };
   componentDidMount() {
     this.props.getTransactionList();
   }
+  onChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+  handleUpdateSubmitOrderStatus = (event) => {
+    event.preventDefault();
+    if (event.target.value === "To Receive") {
+      this.setState({
+        showToReceiveModal: !this.state.showToReceiveModal,
+        showActionButtonModal: !this.state.showActionButtonModal,
+      });
+    } else {
+      const formData = new FormData();
+      formData.append("order_status", event.target.value);
+      this.props.updateTransactionStatus(this.state.transactionId, formData);
+      this.setState({
+        showActionButtonModal: !this.state.showActionButtonModal,
+        transactionId: 0,
+      });
+    }
+  };
+  handleUpdateSubmitOrderStatusWithTrackingNumber = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("order_status", "To Receive");
+    formData.append("tracking_number", this.state.tracking_number);
+    this.props.updateTransactionStatus(this.state.transactionId, formData);
+    this.setState({
+      showActionButtonModal: false,
+      showToReceiveModal: !this.state.showToReceiveModal,
+      transactionId: 0,
+      tracking_number: "",
+    });
+  };
+
   onToggleActionButtonModal(transactionId) {
     return (event) => {
-      if (transactionId === "To Receive") {
-        this.setState({
-          showToReceiveModal: !this.state.showToReceiveModal,
-          showActionButtonModal: !this.state.showActionButtonModal,
-        });
-      } else {
-        event.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        this.setState({
-          showActionButtonModal: !this.state.showActionButtonModal,
-          transactionId: transactionId,
-        });
-      }
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      this.setState({
+        showActionButtonModal: !this.state.showActionButtonModal,
+        transactionId: transactionId,
+      });
     };
   }
+  onToggleReceiveModal = (event) => {
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    this.setState({
+      showActionButtonModal: !this.state.showActionButtonModal,
+      showToReceiveModal: !this.state.showToReceiveModal,
+    });
+  };
+
   render() {
     filteredData = [];
     filteredData = this.props.transactions.filter((item) => {
@@ -210,34 +229,28 @@ class TransactionQueuing extends React.Component {
 
                       <div className="flex flex-col gap-2.5">
                         <button
-                          onClick={this.onUpdateSubmit(
-                            this.state.transactionId
-                          )}
                           value="Pending"
+                          onClick={this.handleUpdateSubmitOrderStatus}
                           className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-4 text-md"
                         >
                           Pending
                         </button>
                         <button
-                          onClick={this.onUpdateSubmit(
-                            this.state.transactionId
-                          )}
+                          onClick={this.handleUpdateSubmitOrderStatus}
                           value="Preferring"
                           className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-4 text-md"
                         >
                           Preferring
                         </button>
                         <button
-                          onClick={this.onUpdateSubmit(
-                            this.state.transactionId
-                          )}
+                          onClick={this.handleUpdateSubmitOrderStatus}
                           value="To Ship"
                           className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-4 text-md"
                         >
                           To Ship
                         </button>
                         <button
-                          onClick={this.onUpdateSubmit("To Receive")}
+                          onClick={this.handleUpdateSubmitOrderStatus}
                           value="To Receive"
                           className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-4 text-md"
                         >
@@ -246,7 +259,7 @@ class TransactionQueuing extends React.Component {
                       </div>
 
                       <div
-                        onClick={this.onToggleActionButtonModal(2)}
+                        onClick={this.onToggleActionButtonModal(0)}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       >
                         <svg
@@ -309,18 +322,25 @@ class TransactionQueuing extends React.Component {
                           <input
                             class="rounded border-2 border-gray-600 w-full py-4 px-6 placeholder-gray-700 focus:outline-none"
                             name="tracking_number"
+                            onChange={this.onChange}
                             placeholder="Type The Tracking Number"
                             required
                           ></input>
                         </div>
                         <div className="flex justify-center w-full px-5">
-                          <button class="bg-teal_custom hover:bg-gray-700 text-white font-bold p-2 rounded text-md w-2/5">
+                          <button
+                            onClick={
+                              this
+                                .handleUpdateSubmitOrderStatusWithTrackingNumber
+                            }
+                            class="bg-teal_custom hover:bg-gray-700 text-white font-bold p-2 rounded text-md w-2/5"
+                          >
                             <span>Submit</span>
                           </button>
                         </div>
                       </div>
                       <div
-                        onClick={this.onToggleActionButtonModal("To Receive")}
+                        onClick={this.onToggleReceiveModal}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       >
                         <svg
