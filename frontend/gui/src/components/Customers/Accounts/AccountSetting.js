@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { loadUser } from "../../../store/actions/account/auth";
+import { loadUser, UpdateAccount } from "../../../store/actions/account/auth";
 import {
   regions,
   provinces,
@@ -23,6 +23,7 @@ let NavButtonActive = document.getElementsByClassName("NavButtonActive");
 
 class AccountSetting extends React.Component {
   state = {
+    edit_account_info: false,
     contact_number: "",
     first_name: "",
     last_name: "",
@@ -66,8 +67,27 @@ class AccountSetting extends React.Component {
         : "",
     });
   }
+  handleEditAccountInfoToggle = (event) => {
+    event.preventDefault();
+    this.setState({
+      edit_account_info: true,
+    });
+  };
+  handleEditAccountInfoSubmit = (event) => {
+    event.preventDefault();
+    const { first_name, last_name, username, email } = this.state;
+    const formAccountInfoData = new FormData();
+    formAccountInfoData.append("first_name", first_name);
+    formAccountInfoData.append("last_name", last_name);
+    formAccountInfoData.append("username", username);
+    formAccountInfoData.append("email", email);
+    this.props.UpdateAccount(97, formAccountInfoData);
+    this.setState({
+      edit_account_info: false,
+    });
+  };
 
-  onToggleNavButton = (DivTarget) => {
+  handleToggleNavButton = (DivTarget) => {
     return (event) => {
       event.preventDefault();
       for (var i = 0; i < NavButton.length; i++) {
@@ -139,10 +159,11 @@ class AccountSetting extends React.Component {
     });
   };
   render() {
+    console.log(this.props.AuthReducer.user);
     return (
       <>
         {" "}
-        <div class="bg-gray-100 flex-1 mt-28 md:mt-28 pb-24 md:pb-5">
+        <div class="bg-gray-100 flex-1 mt-24 pb-24 md:pb-5">
           <div class="bg-gray-100 pt-3">
             <div class=" bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white text-center">
               <h3 class="font-bold">Account Setting</h3>
@@ -153,19 +174,19 @@ class AccountSetting extends React.Component {
               <div class="w-full overflow-hidden shadow-lg bg-white p-1">
                 <nav class="flex flex-col justify-evenly sm:flex-row">
                   <button
-                    onClick={this.onToggleNavButton("ProfilePanel")}
+                    onClick={this.handleToggleNavButton("ProfilePanel")}
                     class="NavButton NavButtonActive"
                   >
                     Profile
                   </button>
                   <button
-                    onClick={this.onToggleNavButton("ContactPanel")}
+                    onClick={this.handleToggleNavButton("ContactPanel")}
                     class="NavButton"
                   >
                     Contact Details
                   </button>
                   <button
-                    onClick={this.onToggleNavButton("PasswordPanel")}
+                    onClick={this.handleToggleNavButton("PasswordPanel")}
                     class="NavButton"
                   >
                     Password
@@ -182,17 +203,23 @@ class AccountSetting extends React.Component {
                         Edit your account here
                       </div>
                       <div className="flex flex-col md:flex-row justify-around">
-                        <div>
+                        <div
+                          className={
+                            this.state.edit_account_info ? "" : "text-gray-400"
+                          }
+                        >
                           <div class="mt-5 flex flex-col md:flex-row justify-between space-x-0 md:space-x-2">
                             <div class="relative z-0 w-full md:w-1/2 mb-5">
                               <input
                                 type="text"
                                 name="first_name"
+                                disabled={!this.state.edit_account_info}
                                 value={
                                   this.state.first_name
                                     ? this.state.first_name
                                     : ""
                                 }
+                                onChange={this.onChange}
                                 placeholder=" "
                                 required
                                 class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -214,11 +241,13 @@ class AccountSetting extends React.Component {
                               <input
                                 type="text"
                                 name="last_name"
+                                disabled={!this.state.edit_account_info}
                                 value={
                                   this.state.last_name
                                     ? this.state.last_name
                                     : ""
                                 }
+                                onChange={this.onChange}
                                 placeholder=" "
                                 required
                                 class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -241,7 +270,9 @@ class AccountSetting extends React.Component {
                             <input
                               type="text"
                               name="email"
+                              disabled={!this.state.edit_account_info}
                               value={this.state.email ? this.state.email : ""}
+                              onChange={this.onChange}
                               placeholder=" "
                               required
                               class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -263,9 +294,11 @@ class AccountSetting extends React.Component {
                             <input
                               type="text"
                               name="username"
+                              disabled={!this.state.edit_account_info}
                               value={
                                 this.state.username ? this.state.username : ""
                               }
+                              onChange={this.onChange}
                               placeholder=" "
                               required
                               class="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
@@ -293,11 +326,21 @@ class AccountSetting extends React.Component {
                         </div>
                       </div>
                       <div class="mt-5 w-full md:w-1/2 flex justify-center">
-                        <input
-                          type="submit"
-                          value="Submit"
-                          class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
-                        />
+                        {this.state.edit_account_info ? (
+                          <button
+                            onClick={this.handleEditAccountInfoSubmit}
+                            class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
+                          >
+                            Submit
+                          </button>
+                        ) : (
+                          <button
+                            onClick={this.handleEditAccountInfoToggle}
+                            class="py-3 bg-gray-800 text-white w-1/5 rounded hover:bg-gray-600"
+                          >
+                            Edit
+                          </button>
+                        )}
                       </div>
                     </div>
                   </form>
@@ -384,5 +427,5 @@ const mapStateToProps = (state) => {
   };
 };
 export default withRouter(
-  connect(mapStateToProps, { loadUser })(AccountSetting)
+  connect(mapStateToProps, { loadUser, UpdateAccount })(AccountSetting)
 );

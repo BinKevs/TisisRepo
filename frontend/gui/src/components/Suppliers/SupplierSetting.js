@@ -14,7 +14,7 @@ import SupplierModal from "./SupplierModal";
 import { SupplierTableExportModal } from "./Print/SupplierTableExportModal";
 
 let EditButtonIsClicked = false;
-let ItemAdded = false;
+
 class SupplierSettingIndex extends React.Component {
   state = {
     name: "",
@@ -53,11 +53,6 @@ class SupplierSettingIndex extends React.Component {
         phone_number,
         supplierID: id,
       });
-      this.props.getSupplierList();
-    }
-    if (ItemAdded === true) {
-      this.props.getSupplierList();
-      ItemAdded = false;
     }
   }
   onChange = (e) => {
@@ -113,7 +108,7 @@ class SupplierSettingIndex extends React.Component {
   };
 
   // sending the product that will be added to this.props.addSupplier in the actions also reset the state
-  onAddSubmit = (e) => {
+  handleSubmitAddSupplier = (e) => {
     e.preventDefault();
     const { name, address, phone_number } = this.state;
     const action_done = "Supplier Added";
@@ -126,13 +121,10 @@ class SupplierSettingIndex extends React.Component {
       supplierID: 0,
     });
     this.ModalFunction();
-    ItemAdded = true;
-    this.props.getSupplierList();
   };
   //this will sent the updated product in the this.props.updateSupplier to the action and will reset the state
-  onUpdateSubmit = (supplierID) => {
+  handleUpdateSubmitSupplier = (supplierID) => {
     return (event) => {
-      console.log("asdasdsadsd");
       event.preventDefault();
       const { name, address, phone_number } = this.state;
       const supplier = { name, address, phone_number };
@@ -149,7 +141,7 @@ class SupplierSettingIndex extends React.Component {
     };
   };
   // when edit button click this will fetch the supplier that will be edited and change the isEditButtonClicked status to true
-  onEditCloseButton = (event) => {
+  handleEditCloseModal = (event) => {
     event.preventDefault();
     this.setState({
       name: "",
@@ -160,20 +152,13 @@ class SupplierSettingIndex extends React.Component {
     EditButtonIsClicked = false;
     this.ModalFunction();
   };
-  OnToggleExportTable = (event) => {
-    event.preventDefault();
-    this.setState({ table_export_modal: !this.state.table_export_modal });
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    document.getElementById("Body").classList.toggle("overflow-hidden");
-  };
   //this will toggle the add modal form
-  onModalToggleAdd = (e) => {
+  handleAddToggleModal = (e) => {
     e.preventDefault();
     this.ModalFunction();
   };
   //this will toggle the edit modal form
-  onModalToggleEdit(supplierID) {
+  handleModalToggleEdit(supplierID) {
     return (event) => {
       event.preventDefault();
       this.props.getSupplier(supplierID);
@@ -181,6 +166,14 @@ class SupplierSettingIndex extends React.Component {
       EditButtonIsClicked = true;
     };
   }
+  OnToggleExportTable = (event) => {
+    event.preventDefault();
+    this.setState({ table_export_modal: !this.state.table_export_modal });
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    document.getElementById("Body").classList.toggle("overflow-hidden");
+  };
+
   // function that called to open or close modal
   ModalFunction() {
     this.setState({ modal: !this.state.modal });
@@ -242,7 +235,7 @@ class SupplierSettingIndex extends React.Component {
                       <i class="fal fa-print fa-lg"></i>
                     </div>
                     <div
-                      onClick={this.onModalToggleAdd}
+                      onClick={this.handleAddToggleModal}
                       className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
                     >
                       <i class="fal fa-plus fa-lg"></i>
@@ -368,7 +361,9 @@ class SupplierSettingIndex extends React.Component {
                             <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
                               <ul className="bg-white shadow rounded p-2">
                                 <li
-                                  onClick={this.onModalToggleEdit(supplier.id)}
+                                  onClick={this.handleModalToggleEdit(
+                                    supplier.id
+                                  )}
                                   className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
                                 >
                                   Edit
@@ -407,13 +402,13 @@ class SupplierSettingIndex extends React.Component {
         </div>
         <SupplierModal
           modal={this.state.modal}
-          onModalToggleAdd={this.onModalToggleAdd}
+          handleAddToggleModal={this.handleAddToggleModal}
           state={this.state}
           onChange={this.onChange}
-          onAddSubmit={this.onAddSubmit}
-          onUpdateSubmit={this.onUpdateSubmit}
+          handleSubmitAddSupplier={this.handleSubmitAddSupplier}
+          handleUpdateSubmitSupplier={this.handleUpdateSubmitSupplier}
           EditButtonIsClicked={EditButtonIsClicked}
-          onEditCloseButton={this.onEditCloseButton}
+          handleEditCloseModal={this.handleEditCloseModal}
         />
         <div
           class={

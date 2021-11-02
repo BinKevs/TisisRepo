@@ -43,7 +43,7 @@ export default function (state = initialState, action) {
     case ADD_TRANSACTION:
       return {
         ...state,
-        transactions: [...state.transactions, action.payload],
+        transactions: [action.payload, ...state.transactions],
       };
 
     case UPDATE_TRANSACTION:
@@ -65,10 +65,10 @@ export default function (state = initialState, action) {
       return {
         ...state,
         transactions: [
+          action.payload,
           ...state.transactions.filter(
             (items) => items.id !== action.payload.id
           ),
-          action.payload,
         ],
       };
     case GET_TRANSACTION_ITEM_LIST:

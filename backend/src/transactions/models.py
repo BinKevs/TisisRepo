@@ -11,6 +11,8 @@ class Transaction(models.Model):
         auto_now_add=True, blank=True)
     totalAmount = models.DecimalField(
         max_digits=20, decimal_places=2, null=True)
+    shippingCost = models.DecimalField(
+        max_digits=20, decimal_places=2, null=True)
     # amount_tendered = models.DecimalField(max_digits=12, decimal_places=2)
     # change = models.DecimalField(max_digits=12, decimal_places=2,validators=[MinValueValidator(0.00)])
     quantity = models.IntegerField(blank=True,null=True)

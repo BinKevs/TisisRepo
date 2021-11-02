@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, AccountSettingSerializer, LoginSerializer
+from .serializers import UserSerializer, LoginSerializer
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions
 from .serializers import AccountSerializer
@@ -11,43 +11,26 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 # API
-
-
+# class AccountViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     ordering_fields = ['id'] 
+#     filter_backends = [filters.OrderingFilter]
 class AccountViewSet(viewsets.ModelViewSet):
-
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    ordering_fields = ['id'] 
-    filter_backends = [filters.OrderingFilter]
-# Register API
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+    parser_classes = (MultiPartParser,FormParser)
 
 
-class AccountSettingAPI(generics.GenericAPIView):
-    serializer_class = AccountSettingSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(AccountSettingSerializer(user, context=self.get_serializer_context()).data)
-    def put(self, request,pk, *args, **kwargs):
-        UserToUpdate = User.objects.get(id=pk)
-        serializer = self.get_serializer(UserToUpdate,data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response(AccountSettingSerializer(user, context=self.get_serializer_context()).data)
 # Login API
-
 
 class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
-
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         _, token = AuthToken.objects.create(user)
-    
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": token
@@ -55,36 +38,17 @@ class LoginAPI(generics.GenericAPIView):
 
 
 
-# class LogoutAPI(generics.GenericAPIView):
-#     def post(self, request, *args, **kwargs):
-#         request.user.AuthToken.objects.delete()
-#         return Response(status=status.HTTP_200_OK)
-
-
-# Get User API
-
-
-class UserAPI(generics.RetrieveAPIView):
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-    serializer_class = UserSerializer
-
-    def get_object(self):
-        # print(AccountSerializer(Account.objects.get(user=self.request.user)).data)
-        return self.request.user
-
-
 @api_view(["GET"])
 def LoadAccountUser(request):
-    # context = {}
-    # context["User"] = UserSerializer(User.objects.get(id=request.user.id)).data
-    # Account_info = Account.objects.get(user=request.user)
-    
     return Response(AccountSerializer(Account.objects.get(user=request.user.id)).data,status=status.HTTP_201_CREATED)
 
-
-class AccountViewSet(viewsets.ModelViewSet):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
-    parser_classes = (MultiPartParser,FormParser)
+@api_view(['PUT'])
+def EditAccountUser(request, pk):
+    user = User.objects.get(pk=pk)
+    data = request.data
+    user.first_name = data.get("first_name",user.first_name)
+    user.last_name = data.get("last_name",user.last_name)
+    user.username = data.get("username",user.username)
+    user.email = data.get("email",user.email)
+    user.save()
+    return Response(AccountSerializer(Account.objects.get(user=pk)).data,status=status.HTTP_201_CREATED)

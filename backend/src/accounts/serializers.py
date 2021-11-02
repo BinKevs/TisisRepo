@@ -16,15 +16,6 @@ from dj_rest_auth.serializers import UserDetailsSerializer as DefaultUserDetails
 from activities_log.models import Log_Activity
 from allauth.account.models import EmailAddress
 from django.http import HttpResponse
-# email_address_user = EmailAddress.objects.get(user_id=96)
-class AccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-        extra_kwargs = {'password': {'write_only': True},
-                        'password': {'read_only': True}}
-
-# User Serializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,33 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
         extra_kwargs = {'password': {'write_only': True}}
-        # fields = ('id', 'username', 'email','is_active','is_superuser','password','date_joined','first_name','last_name')
-# Register Serializer
-
-# class UserEmailSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = EmailAddress
-#         fields = '__all__'
-
-
-class AccountSettingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email','is_superuser','is_active',"first_name","last_name", 'password')
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            self.validated_data['username'],email=self.validated_data['email'],is_superuser=self.validated_data['is_superuser'],is_active=self.validated_data['is_active'], first_name=self.validated_data['first_name'],last_name=self.validated_data['last_name'],password=self.validated_data['password'])
-        return user
-    def put(self, validated_data):
-        user = User.objects.perform_update(
-            self.validated_data['username'],email=self.validated_data['email'], is_superuser=self.validated_data['is_superuser'],is_active=self.validated_data['is_active'],first_name=self.validated_data['first_name'],last_name=self.validated_data['last_name'],password=self.validated_data['password'])
-        return user
-
-
-# Login Serializer
-
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

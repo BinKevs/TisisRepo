@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   getVoucherList,
   addVoucher,
+  updateVoucher,
 } from "../../store/actions/product/products";
 class VoucherSetting extends React.Component {
   componentDidMount() {
@@ -16,25 +17,51 @@ class VoucherSetting extends React.Component {
   state = {
     code: "",
     value: "",
-    showModal: false,
+    voucher_id: "",
+    showVoucherModal: false,
+    EditButtonClicked: false,
   };
-  onSubmit = (e) => {
+  handleAddSubmitVoucher = (e) => {
     e.preventDefault();
     const { code, value } = this.state;
-    const status = "Active";
-    const voucher = { code, value, status };
+    const voucher = { code, value };
     this.props.addVoucher(voucher);
     this.setState({
       code: "",
       value: "",
-      showModal: !this.state.showModal,
+      showVoucherModal: !this.state.showVoucherModal,
     });
-    this.props.getVoucherList();
   };
-  onToggleModal = (event) => {
+  handleUpdateSubmitVoucher = (e) => {
+    e.preventDefault();
+    const { code, value, voucher_id } = this.state;
+    const voucher = { code, value };
+    this.props.updateVoucher(voucher_id, voucher);
+    this.setState({
+      code: "",
+      value: "",
+      voucher_id: "",
+      EditButtonClicked: false,
+      showVoucherModal: !this.state.showVoucherModal,
+    });
+  };
+
+  handleOpenUpdateVoucherModal = (voucher_id, code, value) => {
+    return (event) => {
+      event.preventDefault();
+      this.setState({
+        code,
+        value,
+        voucher_id,
+        showVoucherModal: true,
+        EditButtonClicked: true,
+      });
+    };
+  };
+  handleToggleModal = (event) => {
     event.preventDefault();
     this.setState({
-      showModal: !this.state.showModal,
+      showVoucherModal: !this.state.showVoucherModal,
     });
   };
 
@@ -56,7 +83,7 @@ class VoucherSetting extends React.Component {
                       <i class="fal fa-print fa-lg"></i>
                     </div>
                     <div
-                      onClick={this.onToggleModal}
+                      onClick={this.handleToggleModal}
                       className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
                     >
                       <i class="fal fa-plus fa-lg"></i>
@@ -134,7 +161,11 @@ class VoucherSetting extends React.Component {
                             <div className="seeMore absolute left-0 top-0 mt-2 -ml-20 shadow-md z-10 w-32">
                               <ul className="bg-white shadow rounded p-2">
                                 <li
-                                  // onClick={this.onModalToggleEdit(product.id)}
+                                  onClick={this.handleOpenUpdateVoucherModal(
+                                    voucher.id,
+                                    voucher.code,
+                                    voucher.value
+                                  )}
                                   className="cursor-pointer text-gray-600  text-sm leading-3 py-3 hover:bg-teal_custom hover:text-white px-3 font-normal"
                                 >
                                   Edit
@@ -171,7 +202,9 @@ class VoucherSetting extends React.Component {
             </div>
           </div>
         </div>
-        <div class={this.state.showModal ? "h-screen " : "h-screen hidden"}>
+        <div
+          class={this.state.showVoucherModal ? "h-screen " : "h-screen hidden"}
+        >
           <div class="mx-auto max-w-screen-lg h-full">
             <div
               className="z-20 absolute top-0 right-0 bottom-0 left-0"
@@ -180,7 +213,14 @@ class VoucherSetting extends React.Component {
               <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
               <div className="h-full overflow-auto w-full flex flex-col">
                 <div className="m-2 md:m-12">
-                  <form onSubmit={this.onSubmit} class="mt-9">
+                  <form
+                    onSubmit={
+                      this.state.EditButtonClicked
+                        ? this.handleUpdateSubmitVoucher
+                        : this.handleAddSubmitVoucher
+                    }
+                    class="mt-9"
+                  >
                     <div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
                       <div class="text-left p-0 mb-8">
                         <div>
@@ -198,6 +238,7 @@ class VoucherSetting extends React.Component {
                         <input
                           type="text"
                           name="code"
+                          value={this.state.code}
                           onChange={this.onChange}
                           placeholder=" "
                           required
@@ -217,6 +258,7 @@ class VoucherSetting extends React.Component {
                         <input
                           type="text"
                           name="value"
+                          value={this.state.value}
                           onChange={this.onChange}
                           placeholder=" "
                           required
@@ -245,7 +287,7 @@ class VoucherSetting extends React.Component {
                       </div>
 
                       <div
-                        onClick={this.onToggleModal}
+                        onClick={this.handleToggleModal}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       >
                         <svg
@@ -279,6 +321,8 @@ class VoucherSetting extends React.Component {
 }
 const mapStateToProps = (state) => ({ vouchers: state.products.vouchers });
 
-export default connect(mapStateToProps, { getVoucherList, addVoucher })(
-  VoucherSetting
-);
+export default connect(mapStateToProps, {
+  getVoucherList,
+  addVoucher,
+  updateVoucher,
+})(VoucherSetting);

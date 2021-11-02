@@ -11,11 +11,11 @@ const SupplierModal = (props) => {
   } = props.state;
   const {
     onChange,
-    onAddSubmit,
+    handleSubmitAddSupplier,
     EditButtonIsClicked,
-    onEditCloseButton,
-    onUpdateSubmit,
-    onModalToggleAdd,
+    handleEditCloseModal,
+    handleUpdateSubmitSupplier,
+    handleAddToggleModal,
     modal,
   } = props;
   return (
@@ -32,8 +32,8 @@ const SupplierModal = (props) => {
                 <form
                   onSubmit={
                     !EditButtonIsClicked
-                      ? onAddSubmit
-                      : onUpdateSubmit(supplierID)
+                      ? handleSubmitAddSupplier
+                      : handleUpdateSubmitSupplier(supplierID)
                   }
                   class="mt-9"
                 >
@@ -130,8 +130,8 @@ const SupplierModal = (props) => {
                         className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
                         onClick={
                           !EditButtonIsClicked
-                            ? onModalToggleAdd
-                            : onEditCloseButton
+                            ? handleAddToggleModal
+                            : handleEditCloseModal
                         }
                       >
                         Cancel
@@ -153,8 +153,8 @@ const SupplierModal = (props) => {
                       className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       onClick={
                         !EditButtonIsClicked
-                          ? onModalToggleAdd
-                          : onEditCloseButton
+                          ? handleAddToggleModal
+                          : handleEditCloseModal
                       }
                     >
                       <svg

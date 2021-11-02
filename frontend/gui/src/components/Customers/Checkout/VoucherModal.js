@@ -30,22 +30,6 @@ const VoucherModal = (props) => {
                     </div>
                     <div className="py-3">
                       <div className="flex justify-center">
-                        {/* <div class="relative z-0 mb-5 w-2/3">
-                          <input
-                            type="text"
-                            name="voucher_code"
-                            onChange={onChange}
-                            placeholder=" "
-                            required
-                            class="pt-3 pb-2 block w-full px-0 mt-0 border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 border-gray-200"
-                          />
-                          <label
-                            for="voucher_code"
-                            class="absolute duration-300 top-4 -z-1 origin-0 text-gray-500"
-                          >
-                            Gift Voucher Code
-                          </label>
-                        </div> */}
                         <div class="flex flex-wrap mb-5">
                           <h2 class="px-4 pt-3 pb-2 text-gray-800 text-xl">
                             Gift Voucher Code

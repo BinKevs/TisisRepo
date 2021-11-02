@@ -6,8 +6,8 @@ const InventoryModal = (props) => {
     products,
     suppliers,
     onChange,
-    onAddSubmit,
-    onUpdateSubmit,
+    handleSubmitAddInventory,
+    handleSubmitUpdateInventory,
     EditButtonIsClicked,
     onEditCloseButton,
     onModalToggleAdd,
@@ -29,8 +29,8 @@ const InventoryModal = (props) => {
                 <form
                   onSubmit={
                     !EditButtonIsClicked
-                      ? onAddSubmit
-                      : onUpdateSubmit(inventoryID)
+                      ? handleSubmitAddInventory
+                      : handleSubmitUpdateInventory(inventoryID)
                   }
                 >
                   <div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">

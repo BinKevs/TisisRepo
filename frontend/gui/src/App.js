@@ -2,9 +2,9 @@ import "./App.css";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import MainLayout from "./components/Layouts/MainLayout";
-import ReviewLayout from "./components/Layouts/ReviewLayout";
+
 import MainBaseRouter from "./Routers/MainRoutes";
-import ReviewBaseRouter from "./Routers/ReviewRoute";
+
 import store from "./store/store";
 import Login from "./components/Accounts/Login";
 import Registration from "./components/Accounts/Registration";

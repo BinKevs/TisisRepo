@@ -8,7 +8,7 @@ import {
   changeCartValue,
   clearCart,
 } from "../../../store/actions/cart/cartActions";
-import { addTransactionItems } from "../../../store/actions/transaction/transactions";
+import { addTransaction } from "../../../store/actions/transaction/transactions";
 import {
   HandleDecimalPlaces,
   numberWithCommas,
@@ -21,7 +21,7 @@ class CheckoutIndex extends React.Component {
   static propTypes = {
     removeFromCart: PropTypes.func.isRequired,
     changeCartValue: PropTypes.func.isRequired,
-    addTransactionItems: PropTypes.func.isRequired,
+    addTransaction: PropTypes.func.isRequired,
     cartItems: PropTypes.array.isRequired,
   };
   state = {
@@ -39,7 +39,7 @@ class CheckoutIndex extends React.Component {
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  // This will handle the submittion of data from cartItems, and state that will finish the transaction the data will go to store-action-transaction-transactions-addTransactionItems
+  // This will handle the submittion of data from cartItems, and state that will finish the transaction the data will go to store-action-transaction-transactions-addTransaction
   handleClick = (event) => {
     event.preventDefault();
     // this.OnToggleReceiptModal();
@@ -60,7 +60,7 @@ class CheckoutIndex extends React.Component {
       action_done,
       mode_of_payment,
     };
-    this.props.addTransactionItems(data);
+    this.props.addTransaction(data);
     this.props.clearCart();
     this.props.history.push("/products");
   };
@@ -84,7 +84,7 @@ class CheckoutIndex extends React.Component {
       action_done,
       mode_of_payment,
     };
-    this.props.addTransactionItems(data);
+    this.props.addTransaction(data);
     this.onModalToggleFunction();
 
     this.props.clearCart();
@@ -404,6 +404,6 @@ const mapToStateToProps = (state) => ({
 export default connect(mapToStateToProps, {
   removeFromCart,
   changeCartValue,
-  addTransactionItems,
+  addTransaction,
   clearCart,
 })(CheckoutIndex);

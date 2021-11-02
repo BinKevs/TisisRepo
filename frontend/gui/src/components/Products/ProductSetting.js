@@ -73,6 +73,10 @@ class ProductSetting extends React.Component {
 
     table_export_modal: false,
     ProductNameError: "",
+
+    product_name_attribute: "",
+    size_attribute: "",
+    color_attribute: "",
   };
   componentDidMount() {
     this.props.getProductList();
@@ -144,9 +148,26 @@ class ProductSetting extends React.Component {
         } else {
           this.setState({
             ProductNameError: "",
+            product_name_attribute: e.target.value
+              .substring(0, 3)
+              .toUpperCase(),
             [e.target.name]: e.target.value,
           });
         }
+      } else if (e.target.name === "size" || e.target.name === "color") {
+        if (e.target.name === "size") {
+          this.setState({
+            size_attribute: e.target.value.substring(0, 3).toUpperCase(),
+          });
+        } else if (e.target.name === "color") {
+          this.setState({
+            color_attribute: e.target.value.substring(0, 3).toUpperCase(),
+          });
+        }
+
+        this.setState({
+          [e.target.name]: e.target.value,
+        });
       } else {
         this.setState({
           [e.target.name]: e.target.value,
@@ -158,7 +179,7 @@ class ProductSetting extends React.Component {
   handleSubmitUpdateProduct = (productID) => {
     return (e) => {
       e.preventDefault();
-      const { productName, description, price, categoryID, supplierID, stock } =
+      const { productName, description, price, categoryID, supplierID } =
         this.state;
       const formData = new FormData();
 
@@ -167,7 +188,6 @@ class ProductSetting extends React.Component {
       formData.append("price", price);
       formData.append("category", categoryID);
       formData.append("supplier", supplierID);
-
       this.props.updateProduct(productID, formData);
       this.setState({
         productName: "",
@@ -175,12 +195,9 @@ class ProductSetting extends React.Component {
         price: 0,
         supplierID: 0,
         categoryID: 0,
-        new_stock: 0,
-        stock: 0,
         productID: 0,
       });
       EditButtonProductIsClicked = false;
-      isImageChanged = false;
       this.ModalFunction();
     };
   };
@@ -199,11 +216,12 @@ class ProductSetting extends React.Component {
         weight,
         color,
         file_content,
+        product_name_attribute,
+        size_attribute,
+        color_attribute,
       } = this.state;
       const action_done = "Product Added";
-
       const formData = new FormData();
-
       formData.append("name", productName);
       formData.append("description", description);
       formData.append("price", price);
@@ -211,8 +229,14 @@ class ProductSetting extends React.Component {
       formData.append("supplier", supplierID);
       formData.append("stock", stock);
       formData.append("size", size);
+      formData.append(
+        "SKU",
+        product_name_attribute + "-" + size_attribute + "-" + color_attribute
+      );
       formData.append("color", color);
       formData.append("weight", weight);
+      formData.append("status", true);
+
       formData.append("action_done", action_done);
       for (let i = 0; i < file_content.length; i++) {
         formData.append("file_content", file_content[i]);
@@ -230,10 +254,7 @@ class ProductSetting extends React.Component {
         size: "",
         color: "",
       });
-      isImageChanged = false;
       this.ModalFunction();
-      isItemAdded = true;
-      this.props.getProductList();
       FilesArray = [];
     }
   };
@@ -304,14 +325,14 @@ class ProductSetting extends React.Component {
     this.setState({ showProductModal: !this.state.showProductModal });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  OnRightScroll = () => {
+  handelRightScroll = () => {
     document.getElementById("slider").scrollLeft += 120;
   };
-  OnLeftScroll = () => {
+  handleLeftScroll = () => {
     document.getElementById("slider").scrollLeft -= 120;
   };
 
-  onRemoveImage = (fileID) => {
+  handleRemoveImage = (fileID) => {
     return (e) => {
       e.preventDefault();
       FilesArray = [];
@@ -542,12 +563,12 @@ class ProductSetting extends React.Component {
     // destructure the products that came from the reducer so it will be easier to filter and show
     products = [];
     filteredData = [];
-    console.log(this.props.products);
+
     this.props.products.map((product) =>
       product.status
         ? products.push({
             id: product.id,
-            product_id: product.product_id,
+            SKU: product.SKU,
             name: product.name,
             price: product.price,
             category: product.category_info.name,
@@ -561,25 +582,16 @@ class ProductSetting extends React.Component {
     const lowercasedFilter = this.state.search.toLowerCase();
 
     filteredData = products.filter((item) => {
-      return (
-        item.name.toString().toLowerCase().includes(lowercasedFilter) ||
-        item.product_id.toString().toLowerCase().includes(lowercasedFilter)
-      );
+      return item.name.toString().toLowerCase().includes(lowercasedFilter);
     });
     if (this.state.categoryForDropDownSelect === "") {
       filteredData = products.filter((item) => {
-        return (
-          item.name.toString().toLowerCase().includes(lowercasedFilter) ||
-          item.product_id.toString().toLowerCase().includes(lowercasedFilter)
-        );
+        return item.name.toString().toLowerCase().includes(lowercasedFilter);
       });
     } else {
       if (this.state.categoryForDropDownSelect === "Select Category") {
         filteredData = products.filter((item) => {
-          return (
-            item.name.toString().toLowerCase().includes(lowercasedFilter) ||
-            item.product_id.toString().toLowerCase().includes(lowercasedFilter)
-          );
+          return item.name.toString().toLowerCase().includes(lowercasedFilter);
         });
       } else {
         filteredData = products.filter((item) => {
@@ -599,8 +611,7 @@ class ProductSetting extends React.Component {
           item.category
             .toString()
             .includes(this.state.categoryForDropDownSelect) &&
-          (item.name.toString().toLowerCase().includes(lowercasedFilter) ||
-            item.product_id.toString().toLowerCase().includes(lowercasedFilter))
+          item.name.toString().toLowerCase().includes(lowercasedFilter)
         );
       });
     }
@@ -680,6 +691,7 @@ class ProductSetting extends React.Component {
                   <thead>
                     <tr className="w-full h-16 border-gray-300 border-b py-8 text-left font-bold text-gray-500">
                       <th className="pl-14 pr-6 text-md">ID</th>
+                      <th className=" pr-6 text-md">SKU</th>
                       <th className=" pr-6 text-md">Product</th>
                       <th className="  pr-6 text-md">(Variation) Stock</th>
                       <th className="pr-6 text-md">Price</th>
@@ -709,7 +721,10 @@ class ProductSetting extends React.Component {
                         className="h-24 border-gray-300 border-b"
                       >
                         <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
-                          {product.product_id}
+                          {product.id}
+                        </td>
+                        <td className="pl-12 text-sm pr-6 whitespace-no-wrap text-gray-800 ">
+                          {product.SKU}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 ">
                           {product.name}
@@ -816,9 +831,9 @@ class ProductSetting extends React.Component {
           EditButtonProductIsClicked={EditButtonProductIsClicked}
           isImageChanged={isImageChanged}
           handleEditCloseButtonProduct={this.handleEditCloseButtonProduct}
-          OnRightScroll={this.OnRightScroll}
-          OnLeftScroll={this.OnLeftScroll}
-          onRemoveImage={this.onRemoveImage}
+          handelRightScroll={this.handelRightScroll}
+          handleLeftScroll={this.handleLeftScroll}
+          handleRemoveImage={this.handleRemoveImage}
           handleModalProductVarationTable={this.handleModalProductVarationTable}
         />
 

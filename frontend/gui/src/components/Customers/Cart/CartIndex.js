@@ -104,81 +104,129 @@ class CartIndex extends React.Component {
                 <h1 class="font-semibold text-2xl">Shopping Cart</h1>
                 <h2 class="font-semibold text-2xl">{quantity} Items</h2>
               </div>
-              <div class="flex justify-between mt-5 mb-2">
-                <h3 class="font-semibold text-gray-600 text-xs uppercase w-full">
-                  Product Details
-                </h3>
-                <h3 class="font-semibold text-gray-600 text-xs uppercase w-full text-center">
-                  Quantity
-                </h3>
-                <h3 class="font-semibold text-gray-600 text-xs uppercase w-full text-center">
-                  Unit Price
-                </h3>
-                <h3 class="font-semibold text-gray-600 text-xs uppercase w-full text-center">
-                  Sub Total
-                </h3>
-              </div>
-              <div className="max-h-64 overflow-y-scroll">
-                {cartItems.map((item) => (
-                  <div class=" flex items-center justify-between hover:bg-gray-100 py-2">
-                    <>
-                      <div class="flex w-full">
-                        <div class="HoverCartProductName flex flex-col justify-between flex-grow h-14 relative">
-                          <span class="font-bold text-sm">
-                            {/* {item.product_name} */}
-                            {this.trimmedString(item.product_name)}
-                            <div className="CartProductName bg-gray-100 absolute top-0 z-10 w-full">
-                              {item.product_name}
-                            </div>
-                          </span>
-                          <span class="text-gray-600 text-sm">
-                            {item.color}
-                            {" / "}
-                            {item.size}
-                          </span>
-                          <div
-                            href="#"
-                            class="font-semibold hover:text-red-500 text-gray-500 text-xs"
-                            onClick={() => removeFromCart(item)}
-                          >
-                            Remove
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="flex xl:flex-row lg:flex-col items-center justify-between w-full h-24 my-1">
-                        <i
-                          class="fal fa-minus xl:order-first lg:order-last fill-current text-gray-600 w-3"
-                          onClick={() => {
-                            changeCartValue("minus", item.product_id, item);
-                          }}
-                        ></i>
-                        <input
-                          class="mx-2 border text-center w-14 rounded-md"
-                          type="text"
-                          value={item.quantity}
-                          onChange={this.onChange(item.product_id)}
-                        />
-                        <i
-                          class="fal fa-plus xl:order-last lg:order-first fill-current text-gray-600 w-3"
-                          onClick={() => {
-                            changeCartValue("plus", item.product_id);
-                          }}
-                        ></i>
-                      </div>
-                      <span class="text-center w-full font-semibold text-sm pr-2 break-words">
-                        ₱{this.numberWithCommas(item.price)}
-                      </span>
-                      <span class="text-center w-full font-semibold text-sm break-words">
-                        ₱
-                        {this.numberWithCommas(
-                          this.HandleDecimalPlaces(item.price * item.quantity)
-                        )}
-                      </span>
-                    </>
+              {cartItems.length > 0 ? (
+                <>
+                  {" "}
+                  <div class="flex justify-between mt-5 mb-2">
+                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-full">
+                      Product Details
+                    </h3>
+                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-full text-center">
+                      Quantity
+                    </h3>
+                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-full text-center">
+                      Unit Price
+                    </h3>
+                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-full text-center">
+                      Sub Total
+                    </h3>
                   </div>
-                ))}
-              </div>
+                  <div className="max-h-64 overflow-y-scroll">
+                    {cartItems.map((item) => (
+                      <div class=" flex items-center justify-between hover:bg-gray-100 py-2">
+                        <>
+                          <div class="flex w-full">
+                            <div class="HoverCartProductName flex flex-col justify-between flex-grow h-14 relative">
+                              <span class="font-bold text-sm">
+                                {/* {item.product_name} */}
+                                {this.trimmedString(item.product_name)}
+                                <div className="CartProductName bg-gray-100 absolute top-0 z-10 w-full">
+                                  {item.product_name}
+                                </div>
+                              </span>
+                              <span class="text-gray-600 text-sm">
+                                {item.color}
+                                {" / "}
+                                {item.size}
+                              </span>
+                              <div
+                                href="#"
+                                class="font-semibold hover:text-red-500 text-gray-500 text-xs"
+                                onClick={() => removeFromCart(item)}
+                              >
+                                Remove
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="flex xl:flex-row lg:flex-col items-center justify-between w-full h-24 my-1">
+                            <i
+                              class="fal fa-minus xl:order-first lg:order-last fill-current text-gray-600 w-3"
+                              onClick={() => {
+                                changeCartValue("minus", item.product_id, item);
+                              }}
+                            ></i>
+                            <input
+                              class="mx-2 border text-center w-14 rounded-md"
+                              type="text"
+                              value={item.quantity}
+                              onChange={this.onChange(item.product_id)}
+                            />
+                            <i
+                              class="fal fa-plus xl:order-last lg:order-first fill-current text-gray-600 w-3"
+                              onClick={() => {
+                                changeCartValue("plus", item.product_id);
+                              }}
+                            ></i>
+                          </div>
+                          <span class="text-center w-full font-semibold text-sm pr-2 break-words">
+                            ₱{this.numberWithCommas(item.price)}
+                          </span>
+                          <span class="text-center w-full font-semibold text-sm break-words">
+                            ₱
+                            {this.numberWithCommas(
+                              this.HandleDecimalPlaces(
+                                item.price * item.quantity
+                              )
+                            )}
+                          </span>
+                        </>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-col border-t pt-8 gap-y-2">
+                    <div class="flex justify-between">
+                      <h1 class="font-semibold text-2xl">Total: </h1>
+                      <h2 class="font-semibold text-2xl">
+                        ₱{this.numberWithCommas(totalAmount)}
+                      </h2>
+                    </div>
+
+                    <button
+                      onClick={this.handleRedirect}
+                      class="
+                    bg-teal_custom 
+                    font-semibold
+                    py-3
+                    mt-2
+                    text-sm text-white
+                    uppercase
+                    w-full
+                    rounded-lg
+                  "
+                    >
+                      Checkout
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="mx-auto bg-white p-4">
+                  <div className="text-center text-gray-500">
+                    <img
+                      src="https://www.clipartmax.com/png/full/92-924544_sign-in-empty-shopping-cart-icon.png"
+                      className="w-48 mx-auto mb-4"
+                      alt=""
+                    />
+                    <div className="font-semibold text-xl text-red-500">
+                      Oops! Your cart is empty!
+                    </div>
+                    <div className="font-semibold text-lg">
+                      Looks like you haven't added anything to your cart yet.
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* <a
 										href="#"
 										class="flex font-semibold text-indigo-600 text-sm mt-10"
@@ -191,30 +239,6 @@ class CartIndex extends React.Component {
 										</svg>
 										Continue Shopping
 									</a> */}
-              <div className="flex flex-col border-t pt-8 gap-y-2">
-                <div class="flex justify-between">
-                  <h1 class="font-semibold text-2xl">Total: </h1>
-                  <h2 class="font-semibold text-2xl">
-                    ₱{this.numberWithCommas(totalAmount)}
-                  </h2>
-                </div>
-
-                <button
-                  onClick={this.handleRedirect}
-                  class="
-							bg-teal_custom 
-							font-semibold
-							py-3
-							mt-2
-							text-sm text-white
-							uppercase
-							w-full
-							rounded-lg
-						"
-                >
-                  Checkout
-                </button>
-              </div>
             </div>
           </div>
         </div>

@@ -5,24 +5,23 @@ import {
   updateTransactionStatus,
   addRefund,
   getRefundList,
-} from "../../../store/actions/transaction/transactions.js";
-import {
   addReview,
-  getReviewList,
-} from "../../../store/actions/product/products";
+} from "../../../store/actions/transaction/transactions.js";
+import { getReviewList } from "../../../store/actions/product/products";
 import video1 from "../../../Group2.mp4";
 import ReactPlayer from "react-player";
 import noImageAvailable from "../../../no-image-available.png";
 import ReviewsModal from "./ReviewsModal";
 import RefundsModal from "./RefundsModal";
+import swal from "sweetalert";
 let NavButton = document.getElementsByClassName("NavButton");
 let NavButtonActive = document.getElementsByClassName("NavButtonActive");
 let filteredTransactionData = [];
 class PurchasesIndex extends React.Component {
   componentDidMount() {
-    this.props.getTransactionList();
     this.props.getReviewList();
     this.props.getRefundList();
+    this.props.getTransactionList();
   }
   onChange = (e) => {
     if (e.target.name === "RefundVideo") {
@@ -38,7 +37,7 @@ class PurchasesIndex extends React.Component {
   };
   state = {
     showModal: false,
-    showModalOrderReceived: false,
+
     showModalRefund: false,
     showRefundInfo: false,
     comment: "",
@@ -54,7 +53,39 @@ class PurchasesIndex extends React.Component {
     refund_item: "",
   };
 
-  onSubmitReview = (star_rate) => {
+  handleOrderReceivedSubmit = (transactionId) => {
+    return (e) => {
+      e.preventDefault();
+
+      swal(
+        'By clicking "Confirm". You will not be able to return or refund after you confirm. Please ensure you have received the products and are satisfied with their condition.',
+        {
+          buttons: {
+            catch: {
+              text: "Confirm",
+              value: "Confirm",
+            },
+            cancel: "Cancel",
+          },
+        }
+      ).then((value) => {
+        switch (value) {
+          case "Confirm":
+            const formData = new FormData();
+            formData.append("order_status", "Complete");
+            this.props.updateTransactionStatus(transactionId, formData);
+            this.setState({
+              transactionId: 0,
+              filter_nav: "Complete",
+            });
+            break;
+          default:
+            break;
+        }
+      });
+    };
+  };
+  handleSubmitReview = (star_rate) => {
     return (e) => {
       e.preventDefault();
       const { comment, product_id, transaction_item_id, transaction_id } =
@@ -66,49 +97,17 @@ class PurchasesIndex extends React.Component {
         transaction_item_id,
         transaction_id,
       };
-      this.props.addReview(review);
+      this.props.addReview(transaction_id, review);
       this.setState({
         showModal: !this.state.showModal,
-        product_name: "",
-        product_image: "",
-        product_id: "",
+        comment: "",
         transaction_item_id: "",
+        product_id: "",
         transaction_id: "",
       });
-      this.props.getTransactionList();
     };
   };
-  onOrderReceivedSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("order_status", e.target.value);
-    this.props.updateTransactionStatus(this.state.transactionId, formData);
-    this.setState({
-      showModalOrderReceived: !this.state.showModalOrderReceived,
-      transactionId: 0,
-      filter_nav: "Complete",
-    });
-  };
-
-  onToggleModalOrderReceive = (transactionId) => {
-    return (event) => {
-      event.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      this.setState({
-        showModalOrderReceived: !this.state.showModalOrderReceived,
-        transactionId: transactionId,
-      });
-    };
-  };
-  onToggleModalOrderReceiveClose = (event) => {
-    event.preventDefault();
-
-    this.setState({
-      showModalOrderReceived: !this.state.showModalOrderReceived,
-    });
-  };
-
-  onToggleModalReview = (
+  handleToggleModalReview = (
     product_name,
     product_image,
     product_id,
@@ -128,13 +127,13 @@ class PurchasesIndex extends React.Component {
       });
     };
   };
-  onToggleModalReviewClose = (event) => {
+  handleToggleModalReviewClose = (event) => {
     event.preventDefault();
     this.setState({
       showModal: !this.state.showModal,
     });
   };
-  onSubmitRefund = (e) => {
+  handleSubmitRefund = (e) => {
     e.preventDefault();
     const { refund_item, RefundVideo, RefundDescription } = this.state;
     const formData = new FormData();
@@ -151,7 +150,7 @@ class PurchasesIndex extends React.Component {
     });
   };
 
-  onToggleModalRefund = (refund_item) => {
+  handleToggleModalRefund = (refund_item) => {
     return (event) => {
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -161,7 +160,7 @@ class PurchasesIndex extends React.Component {
       });
     };
   };
-  onToggleModalRefundClose = (event) => {
+  handleToggleModalRefundClose = (event) => {
     event.preventDefault();
     this.setState({
       showModalRefund: !this.state.showModalRefund,
@@ -179,7 +178,7 @@ class PurchasesIndex extends React.Component {
       showRefundInfo: true,
     });
   };
-  onToggleNavButton = (event) => {
+  handelToggleNavButton = (event) => {
     event.preventDefault();
     for (var i = 0; i < NavButton.length; i++) {
       if (NavButtonActive.length > 0) {
@@ -194,7 +193,6 @@ class PurchasesIndex extends React.Component {
   };
 
   render() {
-    console.log(this.props.transactions);
     filteredTransactionData = [];
     filteredTransactionData = this.props.transactions.filter((item) => {
       return this.state.filter_nav === "All"
@@ -204,7 +202,6 @@ class PurchasesIndex extends React.Component {
           item.order_status.toString().includes("Preferring")
         : item.order_status.toString().includes(this.state.filter_nav);
     });
-
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-24 pb-24 md:pb-5">
@@ -220,28 +217,28 @@ class PurchasesIndex extends React.Component {
                 <nav class="flex flex-col justify-evenly sm:flex-row">
                   <button
                     value="All"
-                    onClick={this.onToggleNavButton}
+                    onClick={this.handelToggleNavButton}
                     class="NavButton NavButtonActive"
                   >
                     All
                   </button>
                   <button
                     value="Pending"
-                    onClick={this.onToggleNavButton}
+                    onClick={this.handelToggleNavButton}
                     class="NavButton"
                   >
                     Pending
                   </button>
                   <button
                     value="To Ship"
-                    onClick={this.onToggleNavButton}
+                    onClick={this.handelToggleNavButton}
                     class="NavButton "
                   >
                     To Ship
                   </button>
                   <button
                     value="To Receive"
-                    onClick={this.onToggleNavButton}
+                    onClick={this.handelToggleNavButton}
                     class="NavButton"
                   >
                     To Receive
@@ -249,7 +246,7 @@ class PurchasesIndex extends React.Component {
 
                   <button
                     value="Complete"
-                    onClick={this.onToggleNavButton}
+                    onClick={this.handelToggleNavButton}
                     class="NavButton"
                   >
                     Complete
@@ -265,137 +262,140 @@ class PurchasesIndex extends React.Component {
             </section>
             {this.state.showRefundInfo ? (
               <div className="space-y-6">
-                {this.props.refunds.map((refund) => (
-                  <div className="mx-4">
-                    <div className="mx-auto bg-white p-4">
-                      <div className="flex flex-col md:flex-row justify-between">
-                        <div class="text-gray-600 text-xl font-medium pb-4">
-                          Refund/Return Status :{" "}
-                          <span className="text-gray-900 tracking-widest">
-                            {refund.status}
-                          </span>
-                        </div>
-                        <div class="text-gray-600 text-xl font-medium pb-4">
-                          Date Requested :{" "}
-                          <span className="text-gray-900 tracking-widest">
-                            {refund.created_at}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex justify-center  border-t-2 pt-5">
-                        <div class="text-gray-900 text-2xl font-medium pb-4">
-                          Product Details
-                        </div>
-                      </div>
-                      <div className="bg-white mb-5">
-                        <div className="p-2 flex flex-col md:flex-row justify-center w-full">
-                          <div className="md:w-1/3 w-full">
-                            <img
-                              className=" border-gray-400 border-2 my-auto mx-auto md:mx-0 max-h-56 object-cover object-center rounded-3xl"
-                              src={
-                                refund.transaction_item.product
-                                  ? refund.transaction_item.product
-                                      .file_content[0].image
-                                  : ""
-                              }
-                              alt=""
-                            />
+                {this.props.refunds.length > 0 ? (
+                  this.props.refunds.map((refund) => (
+                    <div className="mx-4">
+                      <div className="mx-auto bg-white p-4">
+                        <div className="flex flex-col md:flex-row justify-between">
+                          <div class="text-gray-600 text-xl font-medium pb-4">
+                            Refund/Return Status :{" "}
+                            <span className="text-gray-900 tracking-widest">
+                              {refund.status}
+                            </span>
                           </div>
-
-                          <div className="md:ml-2 ml-0 mt-5 space-y-5 md:w-1/2 w-full ">
-                            <div>{refund.transaction_item.product.name}</div>
-
-                            <div>
-                              {
-                                refund.transaction_item.product_variation_info
-                                  .color
-                              }
-                              /
-                              {
-                                refund.transaction_item.product_variation_info
-                                  .size
-                              }
+                          <div class="text-gray-600 text-xl font-medium pb-4">
+                            Date Requested :{" "}
+                            <span className="text-gray-900 tracking-widest">
+                              {refund.created_at}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex justify-center  border-t-2 pt-5">
+                          <div class="text-gray-900 text-2xl font-medium pb-4">
+                            Product Details
+                          </div>
+                        </div>
+                        <div className="bg-white mb-5">
+                          <div className="p-2 flex flex-col md:flex-row justify-center w-full">
+                            <div className="md:w-1/3 w-full">
+                              <img
+                                className=" border-gray-400 border-2 my-auto mx-auto md:mx-0 max-h-56 object-cover object-center rounded-3xl"
+                                src={
+                                  refund.transaction_item.product
+                                    ? refund.transaction_item.product
+                                        .file_content[0].image
+                                    : ""
+                                }
+                                alt=""
+                              />
                             </div>
-                            <div className="flex justify-between">
-                              <div>x{refund.transaction_item.quantity}</div>
-                              <div className="text-gray-900">
-                                ₱{refund.transaction_item.product.price}
+
+                            <div className="md:ml-2 ml-0 mt-5 space-y-5 md:w-1/2 w-full ">
+                              <div>{refund.transaction_item.product.name}</div>
+
+                              <div>
+                                {
+                                  refund.transaction_item.product_variation_info
+                                    .color
+                                }
+                                /
+                                {
+                                  refund.transaction_item.product_variation_info
+                                    .size
+                                }
+                              </div>
+                              <div className="flex justify-between">
+                                <div>x{refund.transaction_item.quantity}</div>
+                                <div className="text-gray-900">
+                                  ₱{refund.transaction_item.product.price}
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex justify-center  border-t-2 pt-5">
-                        <div class="text-gray-900 text-2xl font-medium pb-4">
-                          Refund/Return Details
-                        </div>
-                      </div>
-                      <div className="bg-white border-b-4">
-                        <div className="p-2 flex flex-col md:flex-row justify-center w-full">
-                          <div className=" md:w-1/3 w-full border-4 h-60 rounded-3xl flex justify-center mb-5 ">
-                            <ReactPlayer
-                              width="80%"
-                              height="100%"
-                              playing={false}
-                              controls={true}
-                              url={
-                                refund.product_condition_video
-                                  ? refund.product_condition_video
-                                  : ""
-                              }
-                            />
-                          </div>
-
-                          <div className=" space-y-5 md:ml-14 ml-0 md:w-1/2 w-full  ">
-                            <div>{refund.description}</div>
+                        <div className="flex justify-center  border-t-2 pt-5">
+                          <div class="text-gray-900 text-2xl font-medium pb-4">
+                            Refund/Return Details
                           </div>
                         </div>
-                      </div>
-                      {refund.response ? (
-                        <>
-                          {" "}
-                          <div className="flex justify-center pt-5">
-                            <div class="text-gray-900 text-2xl font-medium pb-4">
-                              Administration's Response
+                        <div className="bg-white border-b-4">
+                          <div className="p-2 flex flex-col md:flex-row justify-center w-full">
+                            <div className=" md:w-1/3 w-full border-4 h-60 rounded-3xl flex justify-center mb-5 ">
+                              <ReactPlayer
+                                width="80%"
+                                height="100%"
+                                playing={false}
+                                controls={true}
+                                url={
+                                  refund.product_condition_video
+                                    ? refund.product_condition_video
+                                    : ""
+                                }
+                              />
                             </div>
-                          </div>
-                          <div className="flex justify-center pt-5 pb-5">
-                            <div class="">{refund.response}</div>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="mx-4">
-                          <div className="mx-auto bg-white p-4">
-                            <div className="text-center text-gray-500">
-                              <i class="fad fa-clock fa-7x"></i>
 
-                              <div className="font-semibold text-xl">
-                                Administration will response as soon as
-                                possible.
-                              </div>
-                              <div className="font-semibold text-xl">
-                                Try refreshing the page.
-                              </div>
+                            <div className=" space-y-5 md:ml-14 ml-0 md:w-1/2 w-full  ">
+                              <div>{refund.description}</div>
                             </div>
                           </div>
                         </div>
-                      )}
+                        {refund.response ? (
+                          <>
+                            {" "}
+                            <div className="flex justify-center pt-5">
+                              <div class="text-gray-900 text-2xl font-medium pb-4">
+                                Administration's Response
+                              </div>
+                            </div>
+                            <div className="flex justify-center pt-5 pb-5">
+                              <div class="">{refund.response}</div>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="mx-4">
+                            <div className="mx-auto bg-white p-4">
+                              <div className="text-center text-gray-500">
+                                <i class="fad fa-clock fa-7x"></i>
+
+                                <div className="font-semibold text-xl">
+                                  Administration will response as soon as
+                                  possible.
+                                </div>
+                                <div className="font-semibold text-xl">
+                                  Try refreshing the page.
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-                {/* <div className="mx-4">
+                  ))
+                ) : (
+                  <div className="mx-4">
                     <div className="mx-auto bg-white p-4">
                       <div className="text-center text-gray-500">
                         <i class="fal fa-clipboard-list-check fa-7x"></i>
                         <div className="font-semibold text-xl">
-                          No order/s yet.
+                          No Refund/s / Return/s yet.
                         </div>
                         <div className="font-semibold text-xl">
                           Try refreshing the page.
                         </div>
                       </div>
                     </div>
-                  </div> */}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-6">
@@ -449,7 +449,9 @@ class PurchasesIndex extends React.Component {
                                 <div className="flex justify-start pt-5 space-x-4">
                                   {transaction.order_status !== "Complete" ? (
                                     <button
-                                      onClick={this.onToggleModalRefund(item)}
+                                      onClick={this.handleToggleModalRefund(
+                                        item
+                                      )}
                                       class={
                                         "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
                                       }
@@ -474,7 +476,7 @@ class PurchasesIndex extends React.Component {
                                       ) : (
                                         <>
                                           <button
-                                            onClick={this.onToggleModalReview(
+                                            onClick={this.handleToggleModalReview(
                                               item.product.name,
                                               item.product.file_content[0]
                                                 .image,
@@ -535,7 +537,7 @@ class PurchasesIndex extends React.Component {
                         {transaction.order_status !== "Complete" ? (
                           <div className="flex justify-end my-5 ">
                             <button
-                              onClick={this.onToggleModalOrderReceive(
+                              onClick={this.handleOrderReceivedSubmit(
                                 transaction.id
                               )}
                               class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-md"
@@ -570,100 +572,19 @@ class PurchasesIndex extends React.Component {
         </div>
         <div class={this.state.showModal ? "h-screen " : "h-screen hidden"}>
           <ReviewsModal
-            onToggleModal={this.onToggleModalReviewClose}
+            handleToggleModalReviewClose={this.handleToggleModalReviewClose}
             onChange={this.onChange}
-            onSubmitReview={this.onSubmitReview}
+            handleSubmitReview={this.handleSubmitReview}
             state={this.state}
           />
         </div>
-        <div
-          class={
-            this.state.showModalOrderReceived ? "h-screen " : "h-screen hidden"
-          }
-        >
-          <div class="mx-auto max-w-screen-lg h-full">
-            <div
-              className="z-20 absolute top-0 right-0 bottom-0 left-0"
-              id="modal"
-            >
-              <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
-              <div className="h-full overflow-auto w-full flex flex-col">
-                <div className="m-2 md:m-12">
-                  <form class="mt-9">
-                    <div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
-                      <div class="text-left p-0 mb-8">
-                        <div>
-                          <i class="far fa-motorcycle fa-3x mb-3 inline-block"></i>{" "}
-                          <h1 class="font-Montserrat text-gray-800 text-2xl inline-block">
-                            ABC Motor Parts
-                          </h1>
-                        </div>
 
-                        <h1 class="text-gray-800 text-3xl font-medium">
-                          Order Receive
-                        </h1>
-                      </div>
-                      <div>
-                        <div className="flex justify-center text-center font-medium text-xl">
-                          By clicking "Confirm". You will not be able to return
-                          or refund after you confirm. Please ensure you have
-                          received the product/s and are satisfied with their
-                          condition.
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-center w-full mt-4">
-                        <button
-                          value="Complete"
-                          onClick={this.onOrderReceivedSubmit}
-                          type="submit"
-                          className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-md"
-                        >
-                          Confirm
-                        </button>
-                        <button
-                          onClick={this.onToggleModalOrderReceiveClose}
-                          className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-md"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-
-                      <div
-                        onClick={this.onToggleModalOrderReceiveClose}
-                        className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-label="Close"
-                          className="icon icon-tabler icon-tabler-x"
-                          width={35}
-                          height={35}
-                          viewBox="0 0 24 24"
-                          strokeWidth="2.5"
-                          stroke="currentColor"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" />
-                          <line x1={18} y1={6} x2={6} y2={18} />
-                          <line x1={6} y1={6} x2={18} y2={18} />
-                        </svg>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <RefundsModal
           state={this.state}
-          onToggleModalRefund={this.onToggleModalRefund}
-          onToggleModalRefundClose={this.onToggleModalRefundClose}
+          handleToggleModalRefundClose={this.handleToggleModalRefundClose}
           filteredTransactionData={filteredTransactionData}
           onChange={this.onChange}
-          onSubmitRefund={this.onSubmitRefund}
+          handleSubmitRefund={this.handleSubmitRefund}
         />
       </>
     );

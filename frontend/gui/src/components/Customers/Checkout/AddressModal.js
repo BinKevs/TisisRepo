@@ -20,17 +20,7 @@ const AddressModal = (props) => {
     barangayData,
     contact_number,
   } = props.state;
-  // this.props.AuthReducer.addresses.id
-  // regionValue,
-  // provinceValue,
-  // cityValue,
-  // barangayValue,
-  // regionCode,
-  // provinceCode,
-  // cityCode,
-  // barangayCode,
-  // street,
-  console.log(props.state);
+
   return (
     <>
       <div class={showModalAddress ? "h-screen " : "h-screen hidden"}>

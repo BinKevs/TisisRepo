@@ -50,11 +50,7 @@ export const AddAccount = (data) => (dispatch, getState) => {
 };
 export const UpdateAccount = (AccountID, data) => (dispatch, getState) => {
   axios
-    .put(
-      URL_IMPORT + "/api/auth/setting/" + AccountID + "/",
-      data,
-      tokenConfig(getState)
-    )
+    .put(URL_IMPORT + "/api/auth/" + AccountID, data, tokenConfig(getState))
     .then((res) => {
       HandleSuccessMessages("Account Updated", "success");
       dispatch({
@@ -179,6 +175,22 @@ export const getAttendanceLogList = () => (dispatch, getState) => {
       });
     });
 };
+// export const UpdateAccountInfo = (AccountID, data) => (dispatch, getState) => {
+//   axios
+//     .put(
+//       URL_IMPORT + "/api/address/" + AccountID + "/",
+//       data,
+//       tokenConfig(getState)
+//     )
+//     .then((res) => {
+//       HandleSuccessMessages("Address Updated", "success");
+//       dispatch({
+//         type: UPDATE_ADDRESS,
+//         payload: res.data,
+//       });
+//     })
+//     .catch((err) => console.log(err));
+// };
 export const UpdateAddress = (AddressID, data) => (dispatch, getState) => {
   axios
     .put(

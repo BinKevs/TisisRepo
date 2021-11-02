@@ -29,7 +29,7 @@ class TransactionSettingIndex extends React.Component {
   componentDidMount() {
     this.props.getTransactionList();
   }
-  OnToggleExportTable = (event) => {
+  handleToggleExportTable = (event) => {
     event.preventDefault();
     this.setState({ table_export_modal: !this.state.table_export_modal });
     document.body.scrollTop = 0;
@@ -128,7 +128,7 @@ class TransactionSettingIndex extends React.Component {
                 <div className="w-full lg:w-2/3 flex flex-col lg:flex-row items-start lg:items-center justify-end">
                   <div className="lg:ml-6 flex items-start w-full">
                     <div
-                      onClick={this.OnToggleExportTable}
+                      onClick={this.handleToggleExportTable}
                       className="text-white cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-teal_custom transition duration-150 ease-in-out hover:bg-gray-600 w-12 h-12 rounded flex items-center justify-center"
                     >
                       <i class="fal fa-print fa-lg"></i>
@@ -296,7 +296,7 @@ class TransactionSettingIndex extends React.Component {
           }
         >
           <TransactionsTableExportModal
-            OnToggleExportTable={this.OnToggleExportTable}
+            handleToggleExportTable={this.handleToggleExportTable}
             Transactions={filteredData}
           />
         </div>

@@ -64,7 +64,7 @@ const AuthReducer = (state = initialState, action) => {
     case UPDATE_ACCOUNT:
       return {
         ...state,
-        accounts: [action.payload, ...state.accounts],
+        user: action.payload.user,
       };
     case UPDATE_ADDRESS:
       return {

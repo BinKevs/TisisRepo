@@ -22,7 +22,7 @@ class RefundsIndex extends React.Component {
       [e.target.name]: e.target.value,
     });
   };
-  onOpenViewMoreModal = (refundInfo) => {
+  handleOpenViewMoreModal = (refundInfo) => {
     return (event) => {
       event.preventDefault();
       this.setState({
@@ -54,7 +54,7 @@ class RefundsIndex extends React.Component {
     };
   };
 
-  onCloseViewMoreModal = (event) => {
+  handleCloseViewMoreModal = (event) => {
     event.preventDefault();
     this.setState({
       showViewMoreModal: !this.state.showViewMoreModal,
@@ -164,7 +164,7 @@ class RefundsIndex extends React.Component {
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800  tracking-normal leading-4">
                           <div className="space-y-5">
                             <button
-                              onClick={this.onOpenViewMoreModal(refund)}
+                              onClick={this.handleOpenViewMoreModal(refund)}
                               className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
                             >
                               View More Details
@@ -371,7 +371,7 @@ class RefundsIndex extends React.Component {
 												</div> */}
                       </div>
                       <div
-                        onClick={this.onCloseViewMoreModal}
+                        onClick={this.handleCloseViewMoreModal}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       >
                         <svg

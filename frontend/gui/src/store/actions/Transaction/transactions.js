@@ -25,15 +25,19 @@ export const getTransactionList = () => (dispatch, getState) => {
         type: GET_TRANSACTION_LIST,
         payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err));
 };
 export const getTransactionListNotOrderByDate = () => (dispatch, getState) => {
-  axios.get(url, tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: GET_TRANSACTION_LIST,
-      payload: res.data,
-    });
-  });
+  axios
+    .get(url, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_TRANSACTION_LIST,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 export const getTransaction = (TransactionID) => (dispatch, getState) => {
@@ -57,7 +61,13 @@ export const deleteTransaction = (TransactionID) => (dispatch, getState) => {
         payload: TransactionID,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Transaction Deletion Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 
 export const updateTransaction =
@@ -71,7 +81,13 @@ export const updateTransaction =
           payload: res.data,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        swal({
+          title: "Transaction Update Failed",
+          text: "Error : " + err,
+          icon: "error",
+        })
+      );
   };
 
 // Transaction Items part
@@ -86,14 +102,15 @@ export const getTransactionItemList = () => (dispatch, getState) => {
         type: GET_TRANSACTION_ITEM_LIST,
         payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err));
 };
 
 // Sending the transaction items together with the transaction information such as amount rendered, change, total amount and quantity
 
-export const addTransactionItems = (data) => (dispatch, getState) => {
+export const addTransaction = (data) => (dispatch, getState) => {
   axios
-    .post(URL_IMPORT + "/api/transactions/items/", data, tokenConfig(getState))
+    .post(url, data, tokenConfig(getState))
     .then((res) => {
       swal({
         title: "Transaction Success",
@@ -101,11 +118,17 @@ export const addTransactionItems = (data) => (dispatch, getState) => {
         icon: "success",
       });
       dispatch({
-        type: ADD_TRANSACTION_ITEMS,
+        type: ADD_TRANSACTION,
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Transaction Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 export const updateTransactionStatus =
   (TransactionID, data) => (dispatch, getState) => {
@@ -117,10 +140,35 @@ export const updateTransactionStatus =
           type: UPDATE_TRANSACTION_STATUS,
           payload: res.data,
         });
-        console.log(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        swal({
+          title: "Transaction Update Status Failed",
+          text: "Error : " + err,
+          icon: "error",
+        })
+      );
   };
+
+export const addReview = (TransactionID, data) => (dispatch, getState) => {
+  axios
+    .put(url + TransactionID + "/", data, tokenConfig(getState))
+    .then((res) => {
+      HandleSuccessMessages("Review Added", "success");
+
+      dispatch({
+        type: UPDATE_TRANSACTION_STATUS,
+        payload: res.data,
+      });
+    })
+    .catch((err) =>
+      swal({
+        title: "Review Addition Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
+};
 export const addRefund = (data) => (dispatch, getState) => {
   axios
     .post(
@@ -139,7 +187,13 @@ export const addRefund = (data) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Refund Addition Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 export const getRefundList = () => (dispatch, getState) => {
   axios
@@ -152,7 +206,8 @@ export const getRefundList = () => (dispatch, getState) => {
         type: GET_REFUND_LIST,
         payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err));
 };
 export const updateRefund = (RefundID, data) => (dispatch, getState) => {
   axios
@@ -169,5 +224,11 @@ export const updateRefund = (RefundID, data) => (dispatch, getState) => {
       });
       console.log(res.data);
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Refund Update Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };

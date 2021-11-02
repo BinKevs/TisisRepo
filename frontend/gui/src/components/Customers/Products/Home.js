@@ -5,12 +5,14 @@ import {
 } from "../../../store/actions/product/products";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
+import { getTransactionItemList } from "../../../store/actions/transaction/transactions.js";
 import noImageAvailable from "../../../no-image-available.png";
-
+let transactionItemsFiltered = [];
 class Home extends React.Component {
   componentDidMount() {
     this.props.getProductList();
     this.props.getCategoryList();
+    this.props.getTransactionItemList();
     document.getElementById("slider-2").style.display = "none";
     document.getElementById("sButton2").classList.add("bg-gray-800");
   }
@@ -63,9 +65,21 @@ class Home extends React.Component {
         (temp = 0)
       )
     );
+
+    transactionItemsFiltered = [];
+
+    this.props.transaction_items.forEach(function (obj) {
+      var productNameX = obj.product.name;
+      if (!this[productNameX])
+        transactionItemsFiltered.push((this[productNameX] = obj));
+      else this[productNameX].quantity += obj.quantity;
+    }, Object.create(null));
     filteredDataProduct = products.filter((item) => {
-      return item;
+      if (transactionItemsFiltered.find((TIF) => TIF.product.id === item.id))
+        return item;
     });
+
+    console.log(filteredDataProduct);
     return (
       <>
         <div className="flex-1 w-full  lg:w-2/3 bg-gray-100 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -92,7 +106,7 @@ class Home extends React.Component {
                           Purchase yours now
                         </p>
                         <Link
-                          to="/products/All"
+                          to="/products/Crash Protection"
                           class="bg-gray-900 py-4 px-8 text-white font-bold uppercase text-xs rounded hover:bg-teal_custom "
                         >
                           Shop now
@@ -123,7 +137,7 @@ class Home extends React.Component {
                           Purchase yours now
                         </p>
                         <Link
-                          to="/products/All"
+                          to="/products/Crash Protection"
                           class="bg-gray-900 py-4 px-8 text-white font-bold uppercase text-xs rounded hover:bg-teal_custom "
                         >
                           Shop now
@@ -196,27 +210,29 @@ class Home extends React.Component {
                     <div className="bg-gray-900 bg-opacity-50 flex items-center h-full">
                       <div className="px-10 max-w-xl">
                         <h2 className="text-2xl text-white font-semibold">
-                          Breaks
+                          Brakes
                         </h2>
                         <p className="mt-2 text-gray-400">
                           Lorem ipsum dolor, sit amet consectetur adipisicing
                           elit. Tempore facere provident molestias ipsam sint
                           voluptatum pariatur.
                         </p>
-                        <button className="flex items-center mt-4 text-white text-sm uppercase font-medium rounded hover:underline focus:outline-none">
-                          <span>Shop Now</span>
-                          <svg
-                            className="h-5 w-5 mx-2"
-                            fill="none"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                          </svg>
-                        </button>
+                        <Link to="/products/Brakes">
+                          <button className="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
+                            <span>Shop Now</span>
+                            <svg
+                              className="h-5 w-5 mx-2"
+                              fill="none"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                          </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -230,27 +246,29 @@ class Home extends React.Component {
                     <div className="bg-gray-900 bg-opacity-50 flex items-center h-full">
                       <div className="px-10 max-w-xl">
                         <h2 className="text-2xl text-white font-semibold">
-                          Tires
+                          Tires and Wheels
                         </h2>
                         <p className="mt-2 text-gray-400">
                           Lorem ipsum dolor, sit amet consectetur adipisicing
                           elit. Tempore facere provident molestias ipsam sint
                           voluptatum pariatur.
                         </p>
-                        <button className="flex items-center mt-4 text-white text-sm uppercase font-medium rounded hover:underline focus:outline-none">
-                          <span>Shop Now</span>
-                          <svg
-                            className="h-5 w-5 mx-2"
-                            fill="none"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                          </svg>
-                        </button>
+                        <Link to="/products/Tires and Wheels">
+                          <button className="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
+                            <span>Shop Now</span>
+                            <svg
+                              className="h-5 w-5 mx-2"
+                              fill="none"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                          </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -266,27 +284,29 @@ class Home extends React.Component {
                     <div className="bg-gray-900 bg-opacity-50 flex items-center h-full">
                       <div className="px-10 max-w-xl">
                         <h2 className="text-2xl text-white font-semibold">
-                          Engine
+                          Engine Parts and Accessories
                         </h2>
                         <p className="mt-2 text-gray-400">
                           Lorem ipsum dolor, sit amet consectetur adipisicing
                           elit. Tempore facere provident molestias ipsam sint
                           voluptatum pariatur.
                         </p>
-                        <button className="flex items-center mt-4 text-white text-sm uppercase font-medium rounded hover:underline focus:outline-none">
-                          <span>Shop Now</span>
-                          <svg
-                            className="h-5 w-5 mx-2"
-                            fill="none"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                          </svg>
-                        </button>
+                        <Link to="/products/Engine Parts and Accessories">
+                          <button className="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
+                            <span>Shop Now</span>
+                            <svg
+                              className="h-5 w-5 mx-2"
+                              fill="none"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                          </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -307,20 +327,22 @@ class Home extends React.Component {
                           elit. Tempore facere provident molestias ipsam sint
                           voluptatum pariatur.
                         </p>
-                        <button className="flex items-center mt-4 text-white text-sm uppercase font-medium rounded hover:underline focus:outline-none">
-                          <span>Shop Now</span>
-                          <svg
-                            className="h-5 w-5 mx-2"
-                            fill="none"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                          </svg>
-                        </button>
+                        <Link to="/products/Exhaust">
+                          <button className="flex items-center mt-4 px-3 py-2 bg-blue-600 text-white text-sm uppercase font-medium rounded hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
+                            <span>Shop Now</span>
+                            <svg
+                              className="h-5 w-5 mx-2"
+                              fill="none"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                          </button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -404,8 +426,11 @@ class Home extends React.Component {
 const mapToStateToProps = (state) => ({
   products: state.products.products,
   categories: state.products.categories,
+  transaction_items: state.transactions.transaction_item_list,
 });
 export default connect(mapToStateToProps, {
   getCategoryList,
   getProductList,
+
+  getTransactionItemList,
 })(Home);

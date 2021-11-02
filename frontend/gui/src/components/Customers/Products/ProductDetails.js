@@ -24,6 +24,11 @@ class ProductDetails extends React.Component {
     video_link: "",
     product_rate: 0,
   };
+  componentDidMount() {
+    const productID = this.props.match.params.productID;
+    this.props.getProduct(productID);
+    this.props.getReviewList();
+  }
   onChange = (e) => {
     if (e.target.name === "quantity") {
       if (e.target.value > variantStock) {
@@ -41,42 +46,7 @@ class ProductDetails extends React.Component {
       }
     }
   };
-  static propTypes = {
-    product: PropTypes.object.isRequired,
-    getProduct: PropTypes.func.isRequired,
-    deleteProduct: PropTypes.func.isRequired,
-  };
-
-  componentDidMount() {
-    const productID = this.props.match.params.productID;
-    this.props.getProduct(productID);
-    this.props.getReviewList();
-  }
-  IncrementQuantity = (e) => {
-    e.preventDefault();
-    if (this.state.quantity >= variantStock) {
-      this.setState({
-        quantity: parseInt(variantStock),
-      });
-    } else {
-      this.setState({
-        quantity: parseInt(this.state.quantity + 1),
-      });
-    }
-  };
-  DecrementQuantity = (e) => {
-    e.preventDefault();
-    if (this.state.quantity === 0) {
-      this.setState({
-        quantity: parseInt(0),
-      });
-    } else {
-      this.setState({
-        quantity: parseInt(this.state.quantity - 1),
-      });
-    }
-  };
-  onSubmit(
+  handleSubmitToCart(
     product_id,
     product_name,
     price,
@@ -101,19 +71,47 @@ class ProductDetails extends React.Component {
         weight,
       };
       this.props.addToCart(product);
-      // console.log(variant_id);
-      // console.log(this.state);
-      // console.log(this.props);
     };
   }
-  OnRightScroll = () => {
+  static propTypes = {
+    product: PropTypes.object.isRequired,
+    getProduct: PropTypes.func.isRequired,
+    deleteProduct: PropTypes.func.isRequired,
+  };
+
+  handleIncrementQuantity = (e) => {
+    e.preventDefault();
+    if (this.state.quantity >= variantStock) {
+      this.setState({
+        quantity: parseInt(variantStock),
+      });
+    } else {
+      this.setState({
+        quantity: parseInt(this.state.quantity + 1),
+      });
+    }
+  };
+  handleDecrementQuantity = (e) => {
+    e.preventDefault();
+    if (this.state.quantity === 0) {
+      this.setState({
+        quantity: parseInt(0),
+      });
+    } else {
+      this.setState({
+        quantity: parseInt(this.state.quantity - 1),
+      });
+    }
+  };
+
+  handleRightScroll = () => {
     document.getElementById("slider").scrollLeft += 120;
   };
-  OnLeftScroll = () => {
+  handleLeftScroll = () => {
     document.getElementById("slider").scrollLeft -= 120;
   };
 
-  OnClickHoverImage(ImageSrc) {
+  handleClickHoverImage(ImageSrc) {
     return (event) => {
       event.preventDefault();
       if (ImageSrc.includes(".mp4")) {
@@ -228,7 +226,7 @@ class ProductDetails extends React.Component {
 
                 <div className="relative w-full flex items-center">
                   <span
-                    onClick={this.OnLeftScroll}
+                    onClick={this.handleLeftScroll}
                     className="h-12 w-16 flex items-center justify-center text-gray-600"
                   >
                     <i class="fad fa-angle-left fa-3x"></i>
@@ -238,7 +236,7 @@ class ProductDetails extends React.Component {
                     className="w-full flex overflow-x-hidden space-x-4"
                   >
                     {/* <img
-                      // onClick={this.OnClickHoverImage(
+                      // onClick={this.handleClickHoverImage(
                       //   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuOP3QcMLRg8bxBQRR6DGaHmSPzwolfRO7Qw&usqp=CAU"
                       // )}
                       className="rounded thumbnail max-h-28"
@@ -248,7 +246,7 @@ class ProductDetails extends React.Component {
                       ? product.file_content.map((file_content) =>
                           file_content.image.includes(".mp4") ? (
                             <img
-                              onClick={this.OnClickHoverImage(
+                              onClick={this.handleClickHoverImage(
                                 file_content.image
                               )}
                               id="thumbnail"
@@ -257,7 +255,7 @@ class ProductDetails extends React.Component {
                             />
                           ) : (
                             <img
-                              onClick={this.OnClickHoverImage(
+                              onClick={this.handleClickHoverImage(
                                 file_content.image
                               )}
                               id="thumbnail"
@@ -270,7 +268,7 @@ class ProductDetails extends React.Component {
                   </div>
 
                   <span
-                    onClick={this.OnRightScroll}
+                    onClick={this.handleRightScroll}
                     className="h-12 w-16 flex items-center justify-center text-gray-600"
                   >
                     <i class="fad fa-angle-right fa-3x"></i>
@@ -433,7 +431,7 @@ class ProductDetails extends React.Component {
                       <span class="mr-3"> Quantity: </span>
                       <div class="flex flex-row h-10  rounded-md relative bg-transparent mt-1">
                         <button
-                          onClick={this.DecrementQuantity}
+                          onClick={this.handleDecrementQuantity}
                           class=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
                         >
                           <span class="m-auto text-2xl font-thin">−</span>
@@ -446,7 +444,7 @@ class ProductDetails extends React.Component {
                           value={this.state.quantity}
                         ></input>
                         <button
-                          onClick={this.IncrementQuantity}
+                          onClick={this.handleIncrementQuantity}
                           class="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
                         >
                           <span class="m-auto text-2xl font-thin">+</span>
@@ -459,7 +457,7 @@ class ProductDetails extends React.Component {
                 <div class="flex">
                   <button
                     class="flex ml-auto text-white bg-teal_custom border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded cursor-pointer"
-                    onClick={this.onSubmit(
+                    onClick={this.handleSubmitToCart(
                       product.id,
                       product.name,
                       product.price,

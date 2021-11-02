@@ -10,6 +10,7 @@ import {
   GET_SUPPLIER_LIST_WITH_PAGINATION,
 } from "./actionTypes";
 import { HandleSuccessMessages } from "../../../Helpers/functions";
+import swal from "sweetalert";
 let url = URL_IMPORT + "/api/suppliers/";
 let urlWithPagination = "http://127.0.0.1:8000/api/suppliers/withPagination/";
 
@@ -47,6 +48,7 @@ export const getSupplierList = () => (dispatch, getState) => {
     })
     .catch((err) => console.log(err));
 };
+
 export const getSupplier = (SupplierID) => (dispatch, getState) => {
   axios
     .get(url + SupplierID + "/", tokenConfig(getState))
@@ -68,7 +70,13 @@ export const deleteSupplier = (SupplierID) => (dispatch, getState) => {
         payload: SupplierID,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Supplier Deletion Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 export const addSupplier = (data) => (dispatch, getState) => {
   axios
@@ -80,7 +88,13 @@ export const addSupplier = (data) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Supplier Addition Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 export const updateSupplier = (SupplierID, data) => (dispatch, getState) => {
   axios
@@ -92,5 +106,11 @@ export const updateSupplier = (SupplierID, data) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Supplier Update Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };

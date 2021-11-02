@@ -3,7 +3,7 @@ import { PayPalButton } from "react-paypal-button-v2";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import { loadUser, UpdateAddress } from "../../../store/actions/account/auth";
-import { addTransactionItems } from "../../../store/actions/transaction/transactions";
+import { addTransaction } from "../../../store/actions/transaction/transactions";
 import { getTransactionList } from "../../../store/actions/transaction/transactions.js";
 import {
   removeFromCart,
@@ -92,7 +92,7 @@ class Checkout extends React.Component {
 
     this.region();
   }
-  onSubmitCashOnDelivery = (event) => {
+  handleSubmitCashOnDelivery = (event) => {
     event.preventDefault();
     if (this.state.payment_method === "E-Wallet") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -119,7 +119,8 @@ class Checkout extends React.Component {
       const items = this.props.cartItems;
       const { payment_method, amount_tendered, change } = this.state;
       const data = {
-        totalAmount: TotalAmountToPay + shippingFee - this.state.voucher_value,
+        totalAmount: TotalAmountToPay - this.state.voucher_value,
+        shippingCost: shippingFee,
         quantity,
         items,
         action_done,
@@ -128,46 +129,13 @@ class Checkout extends React.Component {
         address,
         contact_number,
       };
-      this.props.addTransactionItems(data);
-      this.props.getTransactionList();
-      this.props.clearCart();
+      this.props.addTransaction(data);
+      // this.props.getTransactionList();
+      // this.props.clearCart();
       this.props.history.push("/account/purchases");
     }
   };
-  onSubmitEWallet() {
-    let quantity = 0;
-    this.props.cartItems.map((item) => (quantity += item.quantity));
-    const address =
-      this.props.AuthReducer.addresses.street +
-      " " +
-      this.props.AuthReducer.addresses.barangay +
-      " " +
-      this.props.AuthReducer.addresses.city +
-      " " +
-      this.props.AuthReducer.addresses.province +
-      " " +
-      this.props.AuthReducer.addresses.region;
-    const contact_number = this.props.AuthReducer.contact_numbers;
-    const action_done = "Transaction Added";
-    const order_status = "Pending";
 
-    const items = this.props.cartItems;
-    const { payment_method, amount_tendered, change } = this.state;
-    const data = {
-      totalAmount: TotalAmountToPay + shippingFee - this.state.voucher_value,
-      quantity,
-      items,
-      action_done,
-      payment_method,
-      order_status,
-      address,
-      contact_number,
-    };
-    this.props.addTransactionItems(data);
-    this.props.getTransactionList();
-    this.props.clearCart();
-    this.props.history.push("/account/purchases");
-  }
   handleUpdateContact = (AddressID) => {
     return (event) => {
       event.preventDefault();
@@ -234,6 +202,76 @@ class Checkout extends React.Component {
       street: street,
     });
   };
+  handleSubmitEWallet() {
+    let quantity = 0;
+    this.props.cartItems.map((item) => (quantity += item.quantity));
+    const address =
+      this.props.AuthReducer.addresses.street +
+      " " +
+      this.props.AuthReducer.addresses.barangay +
+      " " +
+      this.props.AuthReducer.addresses.city +
+      " " +
+      this.props.AuthReducer.addresses.province +
+      " " +
+      this.props.AuthReducer.addresses.region;
+    const contact_number = this.props.AuthReducer.contact_numbers;
+    const action_done = "Transaction Added";
+    const order_status = "Pending";
+
+    const items = this.props.cartItems;
+    const { payment_method, amount_tendered, change } = this.state;
+    const data = {
+      totalAmount: TotalAmountToPay - this.state.voucher_value,
+      shippingCost: shippingFee,
+      quantity,
+      items,
+      action_done,
+      payment_method,
+      order_status,
+      address,
+      contact_number,
+    };
+    this.props.addTransaction(data);
+    this.props.getTransactionList();
+    this.props.clearCart();
+    this.props.history.push("/account/purchases");
+  }
+  handleModalEWallet = (e) => {
+    e.preventDefault();
+    this.setState({ showModalEWallet: !this.state.showModalEWallet });
+  };
+
+  handlePaymentMethod(PaymentMethod) {
+    return (event) => {
+      event.preventDefault();
+      this.setState({ payment_method: PaymentMethod });
+    };
+  }
+
+  handleModalVoucher = (e) => {
+    e.preventDefault();
+
+    this.setState({
+      currentScrollState:
+        window.pageYOffset || document.documentElement.scrollTop,
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    this.setState({ showModalVoucher: !this.state.showModalVoucher });
+  };
+  handleVoucherApply = (e) => {
+    e.preventDefault();
+    this.props.vouchers.map((voucher) =>
+      voucher.code === this.state.voucher_code
+        ? this.setState({
+            voucher_value: voucher.value,
+            showModalVoucher: !this.state.showModalVoucher,
+          })
+        : this.setState({ voucher_value: 0 })
+    );
+    window.scrollTo({ top: this.state.currentScrollState, behavior: "smooth" });
+  };
+
   region = () => {
     regions().then((response) => {
       this.setState({
@@ -287,54 +325,6 @@ class Checkout extends React.Component {
     });
   };
 
-  handlePaymentMethod(PaymentMethod) {
-    return (event) => {
-      event.preventDefault();
-      this.setState({ payment_method: PaymentMethod });
-      // if (PaymentMethod === "Cash On Delivery") {
-      //   this.setState({
-      //     totalAmount: this.state.totalAmount + this.state.totalAmount * 0.0275,
-      //   });
-      // }
-      // if (
-      //   PaymentMethod === "E-Wallet" &&
-      //   this.state.payment_method === "Cash On Delivery"
-      // ) {
-      //   this.setState({
-      //     totalAmount: this.state.totalAmount - this.state.totalAmount * 0.0275,
-      //   });
-      // }
-    };
-  }
-
-  handleModalVoucher = (e) => {
-    e.preventDefault();
-
-    this.setState({
-      currentScrollState:
-        window.pageYOffset || document.documentElement.scrollTop,
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    this.setState({ showModalVoucher: !this.state.showModalVoucher });
-  };
-
-  handleModalEWallet = (e) => {
-    e.preventDefault();
-    this.setState({ showModalEWallet: !this.state.showModalEWallet });
-  };
-
-  handleVoucherApply = (e) => {
-    e.preventDefault();
-    this.props.vouchers.map((voucher) =>
-      voucher.code === this.state.voucher_code
-        ? this.setState({
-            voucher_value: voucher.value,
-            showModalVoucher: !this.state.showModalVoucher,
-          })
-        : this.setState({ voucher_value: 0 })
-    );
-    window.scrollTo({ top: this.state.currentScrollState, behavior: "smooth" });
-  };
   HandleShippingCost() {
     shippingFee = 0;
     TotalWeight = 0;
@@ -421,7 +411,7 @@ class Checkout extends React.Component {
     }
     return (
       <>
-        <div class="bg-gray-100 flex-1 mt-28 md:mt-28 pb-24 md:pb-5">
+        <div class="bg-gray-100 flex-1 mt-24 pb-24 md:pb-5">
           <div class="bg-gray-100 pt-3">
             <div class=" bg-gradient-to-r from-teal_custom to-gray-800 p-4 shadow text-2xl text-white text-center">
               <h3 class="font-bold">Checkout</h3>
@@ -639,54 +629,6 @@ class Checkout extends React.Component {
                       <i class="block pt-3 far fa-wallet fa-lg"></i>
                       <span className="block pb-3 font-semibold">E-Wallet</span>
                     </button>
-                    {/* <div className="flex items-center justify-center bg-gray-100 shadow-lg z-0 rounded-xl p-4 m-3 w-full">
-                      <PayPalButton
-                        createOrder={(data, actions) => {
-                          return actions.order.create({
-                            purchase_units: [
-                              {
-                                amount: {
-                                  currency_code: "PHP",
-                                  value: "12",
-                                },
-                              },
-                            ],
-                            // application_context: {
-                            //   shipping_preference: "NO_SHIPPING" // default is "GET_FROM_FILE"
-                            // }
-                          });
-                        }}
-                        onApprove={(data, actions) => {
-                          // Capture the funds from the transaction
-
-                          this.onModalToggleFunction();
-                          return actions.order
-                            .capture()
-                            .then(function (details) {
-                              // Show a success message to your buyer
-                              alert(
-                                "Transaction completed by " +
-                                  details.payer.name.given_name
-                              );
-
-                              // OPTIONAL: Call your server to save the transaction
-                              return fetch("/paypal-transaction-complete", {
-                                method: "post",
-                                body: JSON.stringify({
-                                  orderID: data.orderID,
-                                }),
-                              });
-                            });
-                        }}
-                      />
-                    </div> */}
-
-                    {/* <button class="space-x-1 w-full text-lg text-gray-700 transition-colors duration-150 border border-gray-500 rounded-lg focus:shadow-outline hover:bg-gray-500 hover:text-white">
-                      <i class="block pt-3 fad fa-gift-card fa-lg"></i>
-                      <span className="block pb-3 font-semibold">
-                        Gift check
-                      </span>
-                    </button> */}
                   </div>
                   <div className="mb-5">
                     <div className="flex flex-col space-y-6">
@@ -757,7 +699,7 @@ class Checkout extends React.Component {
                           <h1 class="font-medium text-2xl">Gift Voucher</h1>
                           <button
                             onClick={this.handleModalVoucher}
-                            class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+                            class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 my-2 px-4 rounded inline-flex items-center"
                           >
                             <i class="fal fa-plus fa-lg"></i>
                             <span>Select Gift Voucher</span>
@@ -791,7 +733,7 @@ class Checkout extends React.Component {
                   </div>
                   <div className="flex justify-end pt-10">
                     <button
-                      onClick={this.onSubmitCashOnDelivery}
+                      onClick={this.handleSubmitCashOnDelivery}
                       class="bg-teal_custom hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-xl"
                     >
                       <span>Place Order</span>
@@ -855,7 +797,7 @@ class Checkout extends React.Component {
                             }}
                             onApprove={(data, actions) => {
                               // Capture the funds from the transaction
-                              this.onSubmitEWallet();
+                              this.handleSubmitEWallet();
                               return actions.order
                                 .capture()
                                 .then(function (details) {
@@ -938,7 +880,7 @@ const mapStateToProps = (state) => {
 export default withRouter(
   connect(mapStateToProps, {
     loadUser,
-    addTransactionItems,
+    addTransaction,
     clearCart,
     getTransactionList,
     getVoucherList,

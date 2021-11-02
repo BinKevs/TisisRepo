@@ -9,14 +9,10 @@ from product_variations.serializers import Product_VariationSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    
     supplier_info = serializers.SerializerMethodField()
-    
     category_info = serializers.SerializerMethodField()
-    
     file_content = Product_FileSerializer(many=True,read_only=True)
     variation = Product_VariationSerializer(many=True,read_only=True)
-   
     class Meta:
         model = Product
         fields = '__all__'

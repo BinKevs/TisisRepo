@@ -23,7 +23,5 @@ class ReviewViewSet(viewsets.ModelViewSet):
         transaction_item_current.review = Review.objects.get(id=Serializer.data["id"]) 
         transaction_item_current.save()
         transaction_current = Transaction.objects.get(id=request.data['transaction_id'])
-        context["transactions"] = TransactionSerializer(transaction_current).data
-        print(context)
-        return Response(context,status=status.HTTP_201_CREATED)
+        return Response(TransactionSerializer(transaction_current).data,status=status.HTTP_201_CREATED)
         # Transaction_item.objects.get(id=request.data['transaction_item_id'])

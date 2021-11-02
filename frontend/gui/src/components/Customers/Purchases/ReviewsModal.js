@@ -13,7 +13,7 @@ export default function ReviewsModal(props) {
         <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
         <div className="h-full overflow-auto w-full flex flex-col">
           <div className="m-2 md:m-12">
-            <form onSubmit={props.onSubmitReview(rating)} class="mt-9">
+            <form onSubmit={props.handleSubmitReview(rating)} class="mt-9">
               <div className="relative p-4 md:p-8 bg-white dark:bg-gray-800 dark:border-gray-700 shadow-md rounded border border-gray-400 ">
                 <div class="text-left p-0 mb-8">
                   <div>
@@ -44,8 +44,23 @@ export default function ReviewsModal(props) {
                     size={40}
                   />
                 </div>
-
-                <div class="relative z-0 w-full mb-5">
+                <div class="flex flex-wrap -mx-3 mb-5">
+                  <h2 class="px-4 pt-3 pb-2 text-gray-800">
+                    Tell others what do you think about{" "}
+                    {props.state.product_name}
+                  </h2>
+                  <div class="w-full md:w-full px-3 mb-2 mt-2">
+                    <textarea
+                      class="rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 placeholder-gray-700 focus:outline-none"
+                      name="comment"
+                      value={props.state.comment}
+                      onChange={props.onChange}
+                      placeholder="Type Your Review"
+                      required
+                    ></textarea>
+                  </div>
+                </div>
+                {/* <div class="relative z-0 w-full mb-5">
                   <textarea
                     name="comment"
                     onChange={props.onChange}
@@ -63,7 +78,7 @@ export default function ReviewsModal(props) {
                   <span class="text-sm text-red-600 hidden" id="error">
                     Comment is required
                   </span>
-                </div>
+                </div> */}
                 <div className="flex items-center justify-center w-full">
                   <button
                     type="submit"
@@ -71,13 +86,16 @@ export default function ReviewsModal(props) {
                   >
                     Submit
                   </button>
-                  <button className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm">
+                  <button
+                    onClick={props.handleToggleModalReviewClose}
+                    className="focus:outline-none ml-3 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 dark:hover:bg-gray-600 transition duration-150 text-gray-600 dark:text-gray-400 ease-in-out hover:border-gray-400 hover:bg-gray-300 border rounded px-8 py-2 text-sm"
+                  >
                     Cancel
                   </button>
                 </div>
 
                 <div
-                  onClick={props.onToggleModal}
+                  onClick={props.handleToggleModalReviewClose}
                   className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                 >
                   <svg

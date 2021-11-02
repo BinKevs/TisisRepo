@@ -25,7 +25,7 @@ class MainLayout extends React.Component {
     ArchiveNavBtn: false,
     SideButton: false,
     cartShow: false,
-
+    dropDownSetting: false,
     quantity: 0,
   };
 
@@ -286,12 +286,16 @@ class MainLayout extends React.Component {
   };
   setDropDown = (e) => {
     e.preventDefault();
-    document.getElementById("myDropdown").classList.toggle("invisible");
+    this.setState({
+      dropDownSetting: !this.state.dropDownSetting,
+    });
   };
   setDropdownWithRedirect = (ComponentTogo) => {
     return (e) => {
       e.preventDefault();
-      document.getElementById("myDropdown").classList.toggle("invisible");
+      this.setState({
+        dropDownSetting: !this.state.dropDownSetting,
+      });
       this.props.history.push(ComponentTogo);
     };
   };
@@ -370,7 +374,7 @@ class MainLayout extends React.Component {
                     </span>
                   </div>
                   <button
-                    onMouseEnter={this.setDropDown}
+                    onClick={this.setDropDown}
                     class=" text-white focus:outline-none"
                   >
                     {" "}
@@ -386,10 +390,12 @@ class MainLayout extends React.Component {
                       <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                     </svg>
                   </button>
+
                   <div
-                    onMouseLeave={this.setDropDown}
                     id="myDropdown"
-                    class="dropdownlist absolute bg-gray-800 text-white right-0 mt-3 p-3 overflow-auto z-30 w-36 invisible"
+                    class={`absolute bg-gray-800 text-white right-0 mt-3 p-3 overflow-auto z-30 w-36 ${
+                      this.state.dropDownSetting ? "" : "invisible"
+                    }`}
                   >
                     <div className="">
                       {this.props.AuthReducer.user ? (
@@ -875,10 +881,18 @@ class MainLayout extends React.Component {
           )}
 
           <div className={!this.state.cartShow ? "hidden" : "z-10"}>
-            <div class="fixed w-full h-full bg-gray-900 opacity-50"></div>
+            <div
+              onClick={this.handleCartShow}
+              class="fixed w-full h-full bg-gray-900 opacity-50"
+            ></div>
             <CartIndex handleCartShow={this.handleCartShow} />
           </div>
-
+          <div
+            onClick={this.setDropDown}
+            class={`fixed w-full h-full bg-gray-900 opacity-50 z-10 ${
+              this.state.dropDownSetting ? "" : "hidden"
+            }`}
+          ></div>
           {this.props.children}
         </div>
 

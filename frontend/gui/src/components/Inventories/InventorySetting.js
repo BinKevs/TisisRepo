@@ -18,7 +18,7 @@ import DatePicker from "react-datepicker";
 
 import { InventoriesTableExportModal } from "./Print/InventoriesTableExportModal";
 let EditButtonIsClicked = false;
-let ItemAdded = false;
+
 let inventories = [];
 let filteredData = [];
 class InventorySettingIndex extends React.Component {
@@ -45,28 +45,21 @@ class InventorySettingIndex extends React.Component {
     productForDropDownSelect: "",
   };
 
+  componentDidMount() {
+    this.props.getInventoryList();
+    this.props.getSupplierList();
+    this.props.getProductList();
+    this.props.getCategoryList();
+    // this.props.getInventory(1);
+  }
   onChange = (e) => {
-    // productVariationArray = [];
-    // if (e.target.name === "product") {
-    //   this.props.products.map((productItem) =>
-    //     parseInt(productItem.id) === parseInt(e.target.value)
-    //       ? productItem.variation.map((productVariation) =>
-    //           productVariationArray.push({
-    //             id: productVariation.id,
-    //             color: productVariation.color,
-    //             size: productVariation.size,
-    //           })
-    //         )
-    //       : ""
-    //   );
-    // }
     this.setState({ [e.target.name]: e.target.value });
   };
   // this will be passed to the form add component
   // when this function called it will get the state values and pass it
   // to addInventory action and it called the getInventoryList where it updated the current list
   // and clear the state for adding a new inventory
-  onAddSubmit = (event) => {
+  handleSubmitAddInventory = (event) => {
     event.preventDefault();
     const { new_stock, product, supplier, productVariation } = this.state;
     const action_done = "Inventory Added";
@@ -78,7 +71,6 @@ class InventorySettingIndex extends React.Component {
       productVariation,
     };
     this.props.addInventory(inventory);
-
     this.setState({
       new_stock: 0,
       product: 0,
@@ -87,17 +79,7 @@ class InventorySettingIndex extends React.Component {
       productVariation: 0,
     });
     this.ModalFunction();
-    ItemAdded = true;
-    this.props.getInventoryList();
   };
-
-  componentDidMount() {
-    this.props.getInventoryList();
-    this.props.getSupplierList();
-    this.props.getProductList();
-    this.props.getCategoryList();
-    // this.props.getInventory(1);
-  }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.inventory !== prevProps.inventory) {
@@ -108,26 +90,20 @@ class InventorySettingIndex extends React.Component {
         product,
         supplier,
         inventoryID: id,
-        productVariation: product_variation_info.product_variation.id,
+        productVariation: product_variation_info.product_variation_id,
       });
-      this.props.getInventoryList();
-    }
-    if (ItemAdded === true) {
-      this.props.getInventoryList();
-      ItemAdded = false;
+      // this.props.getInventoryList();
     }
   }
 
   // When Updating this will sent the new stock, product and supplier together with id
   // to the updateInventory in the action and reset the state.
-  onUpdateSubmit = (InventoryID) => {
+  handleSubmitUpdateInventory = (InventoryID) => {
     return (event) => {
       event.preventDefault();
       const { new_stock, product, supplier } = this.state;
       const inventory = { new_stock, product, supplier };
-
       this.props.updateInventory(InventoryID, inventory);
-
       this.setState({
         new_stock: 0,
         product: 0,
@@ -180,6 +156,7 @@ class InventorySettingIndex extends React.Component {
     document.getElementById("Body").classList.toggle("overflow-hidden");
   };
   render() {
+    console.log(this.props.inventories);
     const { InputDate, search, productForDropDownSelect } = this.state;
     // destructure the inventories that came from the reducer so it will be easier to filter and show
     inventories = [];
@@ -188,7 +165,12 @@ class InventorySettingIndex extends React.Component {
       inventories.push({
         id: inventory.id,
         supplier: inventory.supplier_info.name,
+
         product: inventory.product_info.name,
+        product_variation:
+          inventory.product_variation_info.color +
+          "/" +
+          inventory.product_variation_info.size,
         new_stock: inventory.new_stock,
         created_at: inventory.created_at,
       })
@@ -277,7 +259,7 @@ class InventorySettingIndex extends React.Component {
     // 		});
     // 	}
     // }
-    console.log(this.props.inventories);
+
     return (
       <>
         <div class="bg-gray-100 flex-1 mt-20 md:mt-14 pb-24 md:pb-5">
@@ -387,7 +369,8 @@ class InventorySettingIndex extends React.Component {
                           {inventory.id}
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
-                          {inventory.product}
+                          <div>{inventory.product}</div>(
+                          {inventory.product_variation})
                         </td>
                         <td className="text-sm pr-6 whitespace-no-wrap text-gray-800 dark:text-gray-100 tracking-normal leading-4">
                           {inventory.new_stock}
@@ -448,8 +431,8 @@ class InventorySettingIndex extends React.Component {
           onChange={this.onChange}
           suppliers={this.props.suppliers}
           products={this.props.products}
-          onAddSubmit={this.onAddSubmit}
-          onUpdateSubmit={this.onUpdateSubmit}
+          handleSubmitAddInventory={this.handleSubmitAddInventory}
+          handleSubmitUpdateInventory={this.handleSubmitUpdateInventory}
           EditButtonIsClicked={EditButtonIsClicked}
           onEditCloseButton={this.onEditCloseButton}
         />

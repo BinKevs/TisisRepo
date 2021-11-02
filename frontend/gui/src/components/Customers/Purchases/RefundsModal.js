@@ -4,7 +4,7 @@ import video1 from "../../../Group2.mp4";
 import ReactPlayer from "react-player";
 import { connect } from "react-redux";
 const RefundsModal = (props) => {
-  const { onToggleModalRefundClose, onChange, onSubmitRefund } = props;
+  const { handleToggleModalRefundClose, onChange, handleSubmitRefund } = props;
   const { showModalRefund, VideoFileURL, refund_item, RefundDescription } =
     props.state;
   return (
@@ -18,7 +18,7 @@ const RefundsModal = (props) => {
             <div class="modal-overlay absolute w-full h-full z-25 bg-gray-900 opacity-50"></div>
             <div className="h-full overflow-auto w-full flex flex-col">
               <div className="m-2 md:m-12">
-                <form onSubmit={onSubmitRefund} class="mt-9">
+                <form onSubmit={handleSubmitRefund} class="mt-9">
                   <div className="relative p-4 md:p-8 bg-white shadow-md rounded border border-gray-400 ">
                     <div class="text-left p-0 mb-8">
                       <div>
@@ -145,7 +145,7 @@ const RefundsModal = (props) => {
                       </button>
                     </div>
                     <div
-                      onClick={onToggleModalRefundClose}
+                      onClick={handleToggleModalRefundClose}
                       className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                     >
                       <svg

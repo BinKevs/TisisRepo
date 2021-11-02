@@ -7,14 +7,14 @@ const ProductModal = (props) => {
     suppliers,
     categories,
     onChange,
-    onSubmitAddProduct,
+    handleSubmitAddProduct,
     handleSubmitUpdateProduct,
     EditButtonProductIsClicked,
     handleEditCloseButtonProduct,
     handleModalToggleAddProduct,
-    OnLeftScroll,
-    OnRightScroll,
-    onRemoveImage,
+    handleLeftScroll,
+    handelRightScroll,
+    handleRemoveImage,
     showProductModal,
     handleModalProductVarationTable,
   } = props;
@@ -33,6 +33,10 @@ const ProductModal = (props) => {
     image,
     urlFile,
     file_content,
+
+    product_name_attribute,
+    size_attribute,
+    color_attribute,
   } = props.state;
   return (
     <>
@@ -52,7 +56,7 @@ const ProductModal = (props) => {
                 <form
                   onSubmit={
                     !EditButtonProductIsClicked
-                      ? onSubmitAddProduct
+                      ? handleSubmitAddProduct
                       : handleSubmitUpdateProduct(productID)
                   }
                 >
@@ -114,7 +118,90 @@ const ProductModal = (props) => {
                           {ProductNameError}
                         </span>
                       </div>
-
+                      {!EditButtonProductIsClicked ? (
+                        <div>
+                          <div class="relative z-0 w-full mb-5">
+                            <input
+                              type="text"
+                              name="size"
+                              required
+                              value={size}
+                              onChange={onChange}
+                              placeholder=" "
+                              class={
+                                "pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+                              }
+                            />
+                            <label
+                              for="size"
+                              class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+                            >
+                              Size
+                            </label>
+                            {/* <span class="text-sm text-red-600" id="error">
+                          {ProductNameError}
+                          </span> */}
+                          </div>
+                          <div class="relative z-0 w-full mb-5">
+                            <input
+                              type="text"
+                              name="color"
+                              required
+                              value={color}
+                              onChange={onChange}
+                              placeholder=" "
+                              class={
+                                "pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
+                              }
+                            />
+                            <label
+                              for="color"
+                              class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
+                            >
+                              Color
+                            </label>
+                            {/* <span class="text-sm text-red-600" id="error">
+                          {ProductNameError}
+                          </span> */}
+                          </div>
+                          <div className="pt-3 pb-2 text-gray-800">
+                            Stock-keeping unit(SKU)
+                          </div>
+                          <div class="mt-5 flex flex-col md:flex-row justify-center space-x-0 md:space-x-2">
+                            <div class="mb-5">
+                              <input
+                                className="w-full border rounded-md pl-4 py-2 focus:ring-0 focus:border-cyan-700"
+                                type="text"
+                                name="product_name_attribute"
+                                value={product_name_attribute}
+                                placeholder="Product name"
+                              />
+                            </div>
+                            <span className="text-2xl font-bold">-</span>
+                            <div class="mb-5">
+                              <input
+                                className="w-full border rounded-md pl-4 py-2 focus:ring-0 focus:border-cyan-700"
+                                type="text"
+                                name="size_attribute"
+                                value={size_attribute}
+                                placeholder="Size attribute"
+                              />
+                            </div>
+                            <span className="text-2xl font-bold">-</span>
+                            <div class="mb-5">
+                              <input
+                                className="w-full border rounded-md pl-4 py-2 focus:ring-0 focus:border-cyan-700"
+                                type="text"
+                                name="color_attribute"
+                                value={color_attribute}
+                                placeholder="Color attribute"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                       <div class="flex flex-wrap -mx-3 mb-5">
                         <h2 class="px-4 pt-3 pb-2 text-gray-800">
                           Description
@@ -146,7 +233,7 @@ const ProductModal = (props) => {
                             {urlFile === [] ? (
                               <div className="relative flex items-center">
                                 <span
-                                  onClick={OnLeftScroll}
+                                  onClick={handleLeftScroll}
                                   className="h-12 w-16 flex items-center justify-center text-gray-600"
                                 >
                                   <i class="fad fa-angle-left fa-3x"></i>
@@ -174,7 +261,7 @@ const ProductModal = (props) => {
                                             </video>
                                           </div>
                                           <button
-                                            onClick={onRemoveImage(index)}
+                                            onClick={handleRemoveImage(index)}
                                             className="middle"
                                           >
                                             <i class="far fa-trash-alt fa-3x"></i>
@@ -190,7 +277,7 @@ const ProductModal = (props) => {
                                             src={url.file}
                                           />
                                           <button
-                                            onClick={onRemoveImage(index)}
+                                            onClick={handleRemoveImage(index)}
                                             className="middle"
                                           >
                                             <i class="far fa-trash-alt fa-3x"></i>
@@ -202,7 +289,7 @@ const ProductModal = (props) => {
                                 </div>
 
                                 <span
-                                  onClick={OnRightScroll}
+                                  onClick={handelRightScroll}
                                   className="h-12 w-16 flex items-center justify-center text-gray-600"
                                 >
                                   <i class="fad fa-angle-right fa-3x"></i>
@@ -216,7 +303,7 @@ const ProductModal = (props) => {
                           <>
                             <div className="relative flex items-center">
                               <span
-                                onClick={OnLeftScroll}
+                                onClick={handleLeftScroll}
                                 className="h-12 w-16 flex items-center justify-center text-gray-600"
                               >
                                 <i class="fad fa-angle-left fa-3x"></i>
@@ -245,7 +332,7 @@ const ProductModal = (props) => {
                                               </video>
                                             </div>
                                             <button
-                                              onClick={onRemoveImage(index)}
+                                              onClick={handleRemoveImage(index)}
                                               className="middle"
                                             >
                                               <i class="fad fa-trash-alt fa-3x"></i>
@@ -261,7 +348,7 @@ const ProductModal = (props) => {
                                               src={url.image}
                                             />
                                             <button
-                                              onClick={onRemoveImage(index)}
+                                              onClick={handleRemoveImage(index)}
                                               className="middle"
                                             >
                                               <i class="far fa-trash-alt fa-3x"></i>
@@ -274,7 +361,7 @@ const ProductModal = (props) => {
                               </div>
 
                               <span
-                                onClick={OnRightScroll}
+                                onClick={handelRightScroll}
                                 className="h-12 w-16 flex items-center justify-center text-gray-600"
                               >
                                 <i class="fad fa-angle-right fa-3x"></i>
@@ -362,50 +449,6 @@ const ProductModal = (props) => {
                       </div>
                       {!EditButtonProductIsClicked ? (
                         <>
-                          <div class="relative z-0 w-full mb-5">
-                            <input
-                              type="text"
-                              name="size"
-                              required
-                              value={size}
-                              onChange={onChange}
-                              placeholder=" "
-                              class={
-                                "pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                              }
-                            />
-                            <label
-                              for="size"
-                              class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                            >
-                              Size
-                            </label>
-                            {/* <span class="text-sm text-red-600" id="error">
-                          {ProductNameError}
-                        </span> */}
-                          </div>
-                          <div class="relative z-0 w-full mb-5">
-                            <input
-                              type="text"
-                              name="color"
-                              required
-                              value={color}
-                              onChange={onChange}
-                              placeholder=" "
-                              class={
-                                "pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-700 border-gray-200"
-                              }
-                            />
-                            <label
-                              for="color"
-                              class="absolute duration-300 top-3 -z-1 origin-0 text-gray-500"
-                            >
-                              Color
-                            </label>
-                            {/* <span class="text-sm text-red-600" id="error">
-                          {ProductNameError}
-                        </span> */}
-                          </div>
                           <div class="relative z-0 w-full mb-5">
                             <input
                               type="number"
@@ -547,7 +590,7 @@ const ProductModal = (props) => {
   );
 };
 ProductModal.propTypes = {
-  onSubmitAddProduct: PropTypes.func.isRequired,
+  handleSubmitAddProduct: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   state: PropTypes.object.isRequired,
   suppliers: PropTypes.array.isRequired,

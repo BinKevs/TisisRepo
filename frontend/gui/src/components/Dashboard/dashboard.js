@@ -57,8 +57,6 @@ class DashboardIndex extends React.Component {
       if (!this.props.AuthReducer.user.is_staff) {
         return <Redirect to="/Home" />;
       }
-    console.log(this.props.AuthReducer.user);
-    // console.log(Date(start.toLocaleString()), end.toLocaleString());
     const { transactions, products, transaction_items } = this.props;
     monthlySalesTransaction = 0;
     dailySalesTransaction = 0;

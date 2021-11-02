@@ -19,7 +19,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
   };
   state = {
     search: "",
-    category: "",
+    category: this.props.match.params.categoryName,
   };
 
   numberWithCommas(x) {
@@ -40,22 +40,18 @@ class ProductListIndexOnlineCustomer extends React.Component {
       this.setState({ category: categoryName });
     };
   };
-  onSubmit(product_id, product_name, price, supplier) {
-    return (event) => {
-      event.preventDefault();
-      const product = { product_id, product_name, price, supplier };
-      this.props.addToCart(product);
-    };
-  }
+  handleClearFilter = (event) => {
+    event.preventDefault();
+    this.setState({ category: "" });
+  };
   componentDidMount() {
     this.props.getProductList();
     this.props.getCategoryList();
-    console.log(this.props.match.params.categoryName);
   }
-  OnRightScroll = () => {
+  handleRightScroll = () => {
     document.getElementById("slider").scrollLeft += 120;
   };
-  OnLeftScroll = () => {
+  handleLeftScroll = () => {
     document.getElementById("slider").scrollLeft -= 120;
   };
 
@@ -85,19 +81,19 @@ class ProductListIndexOnlineCustomer extends React.Component {
 
     const SearchFilter = this.state.search.toLowerCase();
     const categoryFilter = this.state.category.toLowerCase();
+
     filteredDataProduct = products.filter((item) => {
       if (item.status) {
-        if (categoryFilter === "") {
-          if (SearchFilter === "") {
-            return item;
-          } else {
-            return item.name.toString().toLowerCase().includes(SearchFilter);
-          }
+        if (
+          SearchFilter === "" &&
+          (categoryFilter === "" || categoryFilter === "all")
+        ) {
+          return item;
         } else {
-          return item.category
-            .toString()
-            .toLowerCase()
-            .includes(categoryFilter);
+          return (
+            item.category.toString().toLowerCase().includes(categoryFilter) &&
+            item.name.toString().toLowerCase().includes(SearchFilter)
+          );
         }
       }
     });
@@ -147,7 +143,7 @@ class ProductListIndexOnlineCustomer extends React.Component {
               }
             >
               <span
-                onClick={this.OnLeftScroll}
+                onClick={this.handleLeftScroll}
                 className="h-12 w-16 flex items-center justify-center text-gray-600"
               >
                 <i className="fal fa-chevron-left fa-2x"></i>
@@ -159,7 +155,11 @@ class ProductListIndexOnlineCustomer extends React.Component {
                 {this.props.categories.map((category) => (
                   <button
                     onClick={this.handleCategoryFiltering(category.name)}
-                    className="text-white px-4 bg-gray-800 rounded-full hover:bg-teal-800 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none whitespace-nowrap h-10"
+                    className={
+                      this.state.category === category.name
+                        ? "text-white px-4 bg-teal-600 rounded-full hover:bg-gray-800 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none whitespace-nowrap h-14 my-2 border-gray-900 border-2"
+                        : "text-white px-4 bg-gray-800 rounded-full hover:bg-teal-800 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none whitespace-nowrap h-10 my-auto"
+                    }
                   >
                     {category.name}
                   </button>
@@ -167,12 +167,28 @@ class ProductListIndexOnlineCustomer extends React.Component {
               </div>
 
               <span
-                onClick={this.OnRightScroll}
+                onClick={this.handleRightScroll}
                 className="h-12 w-16 flex items-center justify-center text-gray-600"
               >
                 <i className="fal fa-chevron-right fa-2x"></i>
               </span>
             </div>
+            {this.state.category === "" || this.state.category === "All" ? (
+              ""
+            ) : (
+              <div className="flex gap-x-4 mt-4 flex-col md:flex-row w-1/3">
+                <div className="text-xl text-gray-900 font-semibold ">
+                  <span className="text-gray-500">Filtering : </span>{" "}
+                  {this.state.category}
+                </div>
+                <button
+                  onClick={this.handleClearFilter}
+                  class="bg-gray-500 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded my-auto"
+                >
+                  Clear Filter
+                </button>
+              </div>
+            )}
 
             <div className="mt-8 grid 2xl:grid-cols-6 xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 gap-5">
               {filteredDataProduct.map((product) => (

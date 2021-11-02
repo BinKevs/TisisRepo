@@ -14,6 +14,8 @@ import {
   UPDATE_PRODUCT_VARIATION,
   ADD_PRODUCT_VARIATION,
   CHANGE_STATUS_PRODUCT,
+  ADD_VOUCHER,
+  UPDATE_VOUCHER,
 } from "../../actions/product/actionTypes";
 
 const initialState = {
@@ -57,15 +59,21 @@ export default function (state = initialState, action) {
     case ADD_PRODUCT:
       return {
         ...state,
-        products: [...state.products, action.payload],
+        products: [action.payload, ...state.products],
       };
     case UPDATE_PRODUCT:
+      const index = state.products.findIndex(
+        (prod) => prod.id === action.payload.id
+      );
+      const newArray = [...state.products];
+      newArray[index] = action.payload;
       return {
         ...state,
-        products: [
-          action.payload,
-          ...state.products.filter((prod) => prod.id !== action.payload.id),
-        ],
+        // products: [
+        //   action.payload,
+        //   ...state.products.filter((prod) => prod.id !== action.payload.id),
+        // ],
+        products: newArray,
       };
     case CHANGE_STATUS_PRODUCT:
       return {
@@ -110,6 +118,21 @@ export default function (state = initialState, action) {
           ...state.categories.filter((cat) => cat.id !== action.payload.id),
         ],
       };
+
+    case ADD_VOUCHER:
+      return {
+        ...state,
+        vouchers: [action.payload, ...state.vouchers],
+      };
+    case UPDATE_VOUCHER:
+      return {
+        ...state,
+        vouchers: [
+          action.payload,
+          ...state.vouchers.filter((vou) => vou.id !== action.payload.id),
+        ],
+      };
+
     case GET_VOUCHER_LIST:
       return {
         ...state,

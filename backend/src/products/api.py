@@ -22,7 +22,7 @@ from product_files.models import Product_file
 from suppliers.models import Supplier
 from product_variations.serializers import Product_VariationSerializer
 from .serializers import ProductSerializer
-
+from categories.models import Category
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -37,7 +37,8 @@ class ProductViewSet(viewsets.ModelViewSet):
                 action_done = request.data['action_done'],
             )
         files = request.FILES.getlist('file_content')
-        request.data.pop('file_content') 
+        request.data.pop('file_content')
+        request.data['status'] = True 
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -61,16 +62,23 @@ class ProductViewSet(viewsets.ModelViewSet):
     def update(self,request,pk,*args,**kwargs):
         product = Product.objects.get(pk=pk)
         data = request.data
-        if(data['status'] == 'false'):
-            status_update = False
-        elif(data['status'] == 'true'):
+        if(request.data.get('status') == None):
             status_update = True
+            category_current = Category.objects.get(id=data['category'])
+            supplier_current = Supplier.objects.get(id=data['supplier'])
         else:
-            status_update = product.status
+            if(data['status'] == 'false'):
+                status_update = False
+                category_current = product.category
+                supplier_current = product.supplier
+            else:
+                category_current = product.category
+                supplier_current = product.supplier
+                status_update = True
         product.product_id = data.get("product_id",product.product_id)
         product.name = data.get("name",product.name)
-        product.category = data.get("category",product.category)
-        product.supplier = data.get("supplier",product.supplier)
+        product.category = category_current
+        product.supplier = supplier_current
         product.description = data.get("description",product.description)
         product.price = data.get("price",product.price)
         product.status = status_update

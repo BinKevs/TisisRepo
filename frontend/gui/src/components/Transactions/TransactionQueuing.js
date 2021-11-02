@@ -51,7 +51,7 @@ class TransactionQueuing extends React.Component {
     });
   };
 
-  onToggleActionButtonModal(transactionId) {
+  handleToggleActionModal(transactionId) {
     return (event) => {
       event.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -61,7 +61,7 @@ class TransactionQueuing extends React.Component {
       });
     };
   }
-  onToggleReceiveModal = (event) => {
+  handleToggleReceiveModal = (event) => {
     event.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
     this.setState({
@@ -173,9 +173,7 @@ class TransactionQueuing extends React.Component {
                             <div className="space-y-5">
                               <p>{trans.order_status}</p>
                               <button
-                                onClick={this.onToggleActionButtonModal(
-                                  trans.id
-                                )}
+                                onClick={this.handleToggleActionModal(trans.id)}
                                 className="focus:outline-none transition duration-150 ease-in-out hover:bg-cyan-700 bg-cyan-700 rounded text-white px-8 py-2 text-sm"
                               >
                                 Change
@@ -259,7 +257,7 @@ class TransactionQueuing extends React.Component {
                       </div>
 
                       <div
-                        onClick={this.onToggleActionButtonModal(0)}
+                        onClick={this.handleToggleActionModal(0)}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       >
                         <svg
@@ -340,7 +338,7 @@ class TransactionQueuing extends React.Component {
                         </div>
                       </div>
                       <div
-                        onClick={this.onToggleReceiveModal}
+                        onClick={this.handleToggleReceiveModal}
                         className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-gray-400 hover:text-gray-600 dark:text-gray-400 transition duration-150 ease-in-out"
                       >
                         <svg

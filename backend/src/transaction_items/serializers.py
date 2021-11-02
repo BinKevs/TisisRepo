@@ -12,9 +12,9 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
     #     queryset=Transaction.objects.all())
     transaction_date = serializers.SerializerMethodField()
     # online_transaction_info = serializers.SerializerMethodField()
-    product = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all())
-    product = Product_serializer_for_transaction(read_only=True)
+    # product = serializers.PrimaryKeyRelatedField(
+    #     queryset=Product.objects.all())
+    product = ProductSerializer(read_only=True)
     # product_info = serializers.SerializerMethodField()
     # category_info = serializers.SerializerMethodField()
     product_variation_info = serializers.SerializerMethodField()
@@ -24,16 +24,16 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
         model = Transaction_item
         fields = "__all__"
 
-    @ staticmethod
-    def get_product_info(obj):
-        product = Product.objects.get(pk=obj.product.id)
-        return {
-            "id": product.id,
-            "name": product.name,
-            "description": product.description,
-            "price": product.price,
+    # @ staticmethod
+    # def get_product_info(obj):
+    #     product = Product.objects.get(pk=obj.product.id)
+    #     return {
+    #         "id": product.id,
+    #         "name": product.name,
+    #         "description": product.description,
+    #         "price": product.price,
 
-        }
+    #     }
     @staticmethod
     def get_product_variation_info(obj):
         try :
@@ -59,11 +59,8 @@ class Transaction_itemSerializer(serializers.ModelSerializer):
             "id": category.id,
             "name": category.name,
         }
-
-
     @staticmethod
     def get_transaction_date(obj):
-        
         try:
             transaction = Transaction.objects.get(pk=obj.transaction.id)
             

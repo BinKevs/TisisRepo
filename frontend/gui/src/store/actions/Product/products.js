@@ -18,19 +18,29 @@ import {
   GET_REVIEW_LIST,
   UPDATE_PRODUCT_VARIATION,
   ADD_PRODUCT_VARIATION,
+  UPDATE_VOUCHER,
 } from "./actionTypes";
-import { UPDATE_TRANSACTION_ITEMS } from "../transaction/actionTypes";
 import swal from "sweetalert";
 import { HandleSuccessMessages } from "../../../Helpers/functions";
 const url = URL_IMPORT + "/api/products/";
 export const getProductList = () => (dispatch, getState) => {
   dispatch({ type: PRODUCT_LOADING });
-  axios.get(url + "?ordering=-id", tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: GET_PRODUCT_LIST,
-      payload: res.data,
-    });
-  });
+  axios
+    .get(url + "?ordering=-id", tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: GET_PRODUCT_LIST,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+  // .catch((err) =>
+  //   swal({
+  //     title: "Getting Product List Failed",
+  //     text: "Error : " + err,
+  //     icon: "error",
+  //   })
+  // );
 };
 export const getProduct = (ProductID) => (dispatch, getState) => {
   axios
@@ -42,6 +52,13 @@ export const getProduct = (ProductID) => (dispatch, getState) => {
       });
     })
     .catch((err) => console.log(err));
+  // .catch((err) =>
+  //   swal({
+  //     title: "Getting Product Failed",
+  //     text: "Error : " + err,
+  //     icon: "error",
+  //   })
+  // );
 };
 export const deleteProduct = (ProductID) => (dispatch, getState) => {
   axios
@@ -52,7 +69,13 @@ export const deleteProduct = (ProductID) => (dispatch, getState) => {
         payload: ProductID,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Product Deletion Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 export const addProduct = (data) => (dispatch, getState) => {
   console.log(data);
@@ -68,7 +91,7 @@ export const addProduct = (data) => (dispatch, getState) => {
     .catch(
       (err) =>
         swal({
-          title: "Product Added Failed",
+          title: "Product Addition Failed",
           text: "Error : " + err,
           icon: "error",
         })
@@ -93,6 +116,7 @@ export const updateProduct = (ProductID, data) => (dispatch, getState) => {
       })
     );
 };
+
 export const changeStatusProduct =
   (ProductID, data) => (dispatch, getState) => {
     axios
@@ -105,12 +129,32 @@ export const changeStatusProduct =
       })
       .catch((err) =>
         swal({
-          title: "Product Deletion Failed",
+          title: "Change Status Failed",
           text: "Error : " + err,
           icon: "error",
         })
       );
   };
+
+export const addProductVariation = (data) => (dispatch, getState) => {
+  axios
+    .post(URL_IMPORT + "/api/product_variation/", data, tokenConfig(getState))
+    .then((res) => {
+      HandleSuccessMessages("Product Variation Added", "success");
+      dispatch({
+        type: ADD_PRODUCT_VARIATION,
+        payload: res.data,
+      });
+    })
+    .catch((err) =>
+      swal({
+        title: "Product Variation Addition Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
+};
+
 export const updateProductVariation =
   (ProductVariationID, data) => (dispatch, getState) => {
     axios
@@ -134,24 +178,7 @@ export const updateProductVariation =
         })
       );
   };
-export const addProductVariation = (data) => (dispatch, getState) => {
-  axios
-    .post(URL_IMPORT + "/api/product_variation/", data, tokenConfig(getState))
-    .then((res) => {
-      HandleSuccessMessages("Product Variation Added", "success");
-      dispatch({
-        type: ADD_PRODUCT_VARIATION,
-        payload: res.data,
-      });
-    })
-    .catch((err) =>
-      swal({
-        title: "Product Variation Added Failed",
-        text: "Error : " + err,
-        icon: "error",
-      })
-    );
-};
+
 // Category part
 
 export const getCategoryList = () => (dispatch, getState) => {
@@ -162,8 +189,17 @@ export const getCategoryList = () => (dispatch, getState) => {
         type: GET_CATEGORY_LIST,
         payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err));
+  // .catch((err) =>
+  //   swal({
+  //     title: "Category Get List Failed",
+  //     text: "Error : " + err,
+  //     icon: "error",
+  //   })
+  // );
 };
+
 export const addCategory = (data) => (dispatch, getState) => {
   axios
     .post(URL_IMPORT + "/api/categories/", data, tokenConfig(getState))
@@ -174,7 +210,13 @@ export const addCategory = (data) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Category Addition Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
 export const updateCategory = (CategoryID, data) => (dispatch, getState) => {
   axios
@@ -193,7 +235,7 @@ export const updateCategory = (CategoryID, data) => (dispatch, getState) => {
     })
     .catch((err) =>
       swal({
-        title: "Product Update Failed",
+        title: "Category Update Failed",
         text: "Error : " + err,
         icon: "error",
       })
@@ -203,13 +245,17 @@ export const updateCategory = (CategoryID, data) => (dispatch, getState) => {
 //Vocuhers
 export const getVoucherList = () => (dispatch, getState) => {
   axios
-    .get(URL_IMPORT + "/api/vouchers/", tokenConfig(getState))
+    .get(
+      URL_IMPORT + "/api/vouchers/?ordering=-created_at",
+      tokenConfig(getState)
+    )
     .then((res) => {
       dispatch({
         type: GET_VOUCHER_LIST,
         payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err));
 };
 export const addVoucher = (data) => (dispatch, getState) => {
   axios
@@ -221,29 +267,52 @@ export const addVoucher = (data) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      swal({
+        title: "Vouchers Addition Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
 };
-export const addReview = (data) => (dispatch, getState) => {
+export const updateVoucher = (VoucherID, data) => (dispatch, getState) => {
   axios
-    .post(URL_IMPORT + "/api/reviews/", data, tokenConfig(getState))
+    .put(
+      URL_IMPORT + "/api/vouchers/" + VoucherID + "/",
+      data,
+      tokenConfig(getState)
+    )
     .then((res) => {
-      HandleSuccessMessages("Review Added", "success");
+      HandleSuccessMessages("Voucher Updated", "success");
       dispatch({
-        type: ADD_REVIEW,
+        type: UPDATE_VOUCHER,
         payload: res.data,
       });
+    })
+    .catch((err) =>
+      swal({
+        title: "Voucher Update Failed",
+        text: "Error : " + err,
+        icon: "error",
+      })
+    );
+};
+
+export const getReviewList = () => (dispatch, getState) => {
+  axios
+    .get(URL_IMPORT + "/api/reviews/", tokenConfig(getState))
+    .then((res) => {
       dispatch({
-        type: UPDATE_TRANSACTION_ITEMS,
-        payload: res.data.transactions,
+        type: GET_REVIEW_LIST,
+        payload: res.data,
       });
     })
     .catch((err) => console.log(err));
-};
-export const getReviewList = () => (dispatch, getState) => {
-  axios.get(URL_IMPORT + "/api/reviews/", tokenConfig(getState)).then((res) => {
-    dispatch({
-      type: GET_REVIEW_LIST,
-      payload: res.data,
-    });
-  });
+  // .catch((err) =>
+  //   swal({
+  //     title: "Review Get List Failed",
+  //     text: "Error : " + err,
+  //     icon: "error",
+  //   })
+  // );
 };
